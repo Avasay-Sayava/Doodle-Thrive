@@ -1,14 +1,14 @@
 services:
-  gtest:
-    build:
-      context: ./tests
-      dockerfile: Dockerfile
-    env_file:
-      - tests/.env
-  
   app:
     build:
-      context: ./src
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/Dockerfile
     env_file:
       - .env
+
+  gtest:
+    build:
+      context: .
+      dockerfile: tests/Dockerfile
+    env_file:
+      - tests/.env

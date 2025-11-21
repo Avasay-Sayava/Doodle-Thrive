@@ -2,13 +2,13 @@ FROM gcc:latest
 
 RUN apt-get update && apt-get install -y cmake
 
-COPY . /usr/tests/
-
 WORKDIR /usr/tests/
 
-RUN mkdir build
+COPY . .
+
+RUN mkdir -p build
 WORKDIR /usr/tests/build
 
-RUN cmake .. && make
+RUN cmake ../tests && make
 
 CMD ["./tests"]

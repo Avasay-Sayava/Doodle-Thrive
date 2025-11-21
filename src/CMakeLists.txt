@@ -3,6 +3,9 @@ project(app)
 
 set(CMAKE_CXX_STANDARD 11)
 
+file(GLOB_RECURSE SRC_FILES "*.*")
+list(FILTER SRC_FILES INCLUDE REGEX "\\.(cpp|h)$")
+
 add_executable(app
-        main.cpp
+    ${SRC_FILES}
 )
