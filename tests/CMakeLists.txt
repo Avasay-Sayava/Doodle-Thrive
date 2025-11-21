@@ -13,9 +13,16 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(tests
-    main.cpp
-)
+set(PROJECT_DIR "..")
+file(GLOB_RECURSE SRC_FILES "${PROJECT_DIR}/src/*.*")
+list(FILTER SRC_FILES INCLUDE REGEX "\\.(cpp|h)$")
+list(FILTER SRC_FILES EXCLUDE REGEX "main\\..*$")
+file(GLOB_RECURSE TESTS_FILES "*.*")
+list(FILTER TESTS_FILES INCLUDE REGEX "\\.(cpp|h)$")
 
+add_executable(tests
+    ${TESTS_FILES}
+    ${SRC_FILES}
+)
 
 target_link_libraries(tests gtest_main)

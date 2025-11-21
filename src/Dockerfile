@@ -2,13 +2,13 @@ FROM gcc:latest
 
 RUN apt-get update && apt-get install -y cmake
 
-COPY . /usr/src/
-
 WORKDIR /usr/src/
 
-RUN mkdir build
+COPY . .
+
+RUN mkdir -p build
 WORKDIR /usr/src/build
 
-RUN cmake .. && make
+RUN cmake ../src && make
 
 CMD ["./app"]
