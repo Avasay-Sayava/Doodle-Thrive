@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(tests)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -23,6 +23,8 @@ list(FILTER TESTS_FILES INCLUDE REGEX "\\.(cpp|h)$")
 add_executable(tests
     ${TESTS_FILES}
     ${SRC_FILES}
+        ../src/add.cpp
+        ../src/rle.cpp
 )
 
 target_link_libraries(tests gtest_main)

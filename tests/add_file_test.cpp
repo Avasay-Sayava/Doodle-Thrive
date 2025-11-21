@@ -1,34 +1,36 @@
 #include <gtest/gtest.h>
 #include <cstdlib>
-#include "rle.h"
-#include "../src/add.h"
+#include <string>
+#include <gtest/gtest.h>
+#include <fstream>
 #include <filesystem>
+#include "../src/rle.h"
+#include "../src/add.h"
 
 TEST(AddFileTest, FileExists) {
-    // Call the function that should create the file
-    add("MyFileForTesting", "content");
+    // Create file
+    add("MyFileForTesting_Exists", "content");
 
     const char* env = std::getenv("DOODLE_DRIVE_DATA_PATH");
-    ASSERT_NE(env, nullptr); // Ensure env variable exists
+    ASSERT_NE(env, nullptr); // Make sure env variable exists
 
-    std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting";
+    std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting_Exists";
 
     EXPECT_TRUE(std::filesystem::exists(filePath));
 }
 
 TEST(AddFileTest, CorrespondenceToEncryption) {
     std::string content = "aaaaabbbbbbbbbbbbbbbb77788888888dddDDDDDDDDD";
-    add("MyFileForTesting2", content);
+
+    add("MyFileForTesting_Correspondence", content);
 
     const char* env = std::getenv("DOODLE_DRIVE_DATA_PATH");
     ASSERT_NE(env, nullptr);
 
-    std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting2";
+    std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting_Correspondence";
 
-    // Ensure the file exists
     ASSERT_TRUE(std::filesystem::exists(filePath));
 
-    // Read the file
     std::ifstream file(filePath, std::ios::binary);
     ASSERT_TRUE(file.is_open());
 
@@ -37,24 +39,23 @@ TEST(AddFileTest, CorrespondenceToEncryption) {
         std::istreambuf_iterator<char>()
     );
 
-    // Decrypt and compare
     std::string decrypted = rle_decrypt(encrypted);
 
     EXPECT_EQ(decrypted, content);
 }
+
 TEST(AddFileTest, TestEmptyFile) {
     std::string content = "";
-    add("MyFileForTesting2", content);
+
+    add("MyFileForTesting_Empty", content);
 
     const char* env = std::getenv("DOODLE_DRIVE_DATA_PATH");
     ASSERT_NE(env, nullptr);
 
-    std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting2";
+    std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting_Empty";
 
-    // Ensure the file exists
     ASSERT_TRUE(std::filesystem::exists(filePath));
 
-    // Read the file
     std::ifstream file(filePath, std::ios::binary);
     ASSERT_TRUE(file.is_open());
 
@@ -63,7 +64,6 @@ TEST(AddFileTest, TestEmptyFile) {
         std::istreambuf_iterator<char>()
     );
 
-    // Decrypt and compare
     std::string decrypted = rle_decrypt(encrypted);
 
     EXPECT_EQ(decrypted, content);
