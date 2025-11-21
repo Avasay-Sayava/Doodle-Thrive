@@ -11,7 +11,7 @@ TEST(AddFileTest, FileExists) {
     // Create file
     add("MyFileForTesting_Exists", "content");
 
-    const char* env = std::getenv("DOODLE_DRIVE_DATA_PATH");
+    const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr); // Make sure env variable exists
 
     std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting_Exists";
@@ -24,7 +24,7 @@ TEST(AddFileTest, CorrespondenceToEncryption) {
 
     add("MyFileForTesting_Correspondence", content);
 
-    const char* env = std::getenv("DOODLE_DRIVE_DATA_PATH");
+    const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr);
 
     std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting_Correspondence";
@@ -49,7 +49,7 @@ TEST(AddFileTest, TestEmptyFile) {
 
     add("MyFileForTesting_Empty", content);
 
-    const char* env = std::getenv("DOODLE_DRIVE_DATA_PATH");
+    const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr);
 
     std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting_Empty";
