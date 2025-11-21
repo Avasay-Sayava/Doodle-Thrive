@@ -15,7 +15,6 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(tests
     main.cpp
-    main.h
 )
 
 
