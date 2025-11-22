@@ -21,7 +21,8 @@ file(GLOB_RECURSE TESTS_FILES "*.*")
 list(FILTER TESTS_FILES INCLUDE REGEX "\\.(cpp|h)$")
 
 add_executable(tests
-    ${TESTS_FILES}
+    tests_rle.cpp
+    tests_get.cpp
     ${SRC_FILES}
 )
 
