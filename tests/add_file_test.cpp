@@ -6,6 +6,9 @@
 #include "../src/rle.h"
 #include "../src/add.h"
 
+/**
+ * @brief Test existance of a file added through add command
+ */
 TEST(AddFileTest, FileExists) {
     // Create file
     add("MyFileForTesting_Exists", "content");
@@ -19,18 +22,26 @@ TEST(AddFileTest, FileExists) {
     EXPECT_TRUE(std::filesystem::exists(filePath));
 }
 
+/**
+ * @brief Test correspondance to content added
+ */
 TEST(AddFileTest, CorrespondenceToEncryption) {
+    // Create the content of the file
     std::string content = "aaaaabbbbbbbbbbbbbbbb77788888888dddDDDDDDDDD";
 
+    // Create file
     add("MyFileForTesting_Correspondence", content);
 
+    // Assert existance of the env variable
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr);
 
     std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting_Correspondence";
 
+    // Assert existance of file
     ASSERT_TRUE(std::filesystem::exists(filePath));
 
+    // Assert equality of the added content with the content of the file
     std::ifstream file(filePath, std::ios::binary);
     ASSERT_TRUE(file.is_open());
 
@@ -44,6 +55,9 @@ TEST(AddFileTest, CorrespondenceToEncryption) {
     EXPECT_EQ(decrypted, content);
 }
 
+/**
+ * @brief Test adding an empty file
+ */
 TEST(AddFileTest, TestEmptyFile) {
     // Create an empty string to use as the content
     std::string content = "";
