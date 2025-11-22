@@ -7,7 +7,7 @@
  * @brief Encrypts a string using RLE.
  *
  * The function compresses sequences of identical characters into a Count-Character pair.
- * The count is stored as an unsigned char, limiting runs to UCHAR_MAX characters.
+ * The count is stored as an unsigned char, limiting squences to UCHAR_MAX - 1 characters.
  *
  * @param text The input string to be compressed.
  * @return The compressed string.
