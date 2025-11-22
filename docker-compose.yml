@@ -3,12 +3,8 @@ services:
     build:
       context: .
       dockerfile: src/Dockerfile
-    env_file:
-      - .env
 
   gtest:
     build:
       context: .
       dockerfile: tests/Dockerfile
-    env_file:
-      - tests/.env
