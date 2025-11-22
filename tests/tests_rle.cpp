@@ -18,7 +18,7 @@ TEST(RLE_EncodeTest, EmptyStringReturnsEmpty) {
 
     EXPECT_TRUE(encoded.empty());
 
-    std::string encoded = "";
+    encoded = "";
     std::string decoded = rle_decrypt(encoded);
 
     EXPECT_TRUE(decoded.empty());
