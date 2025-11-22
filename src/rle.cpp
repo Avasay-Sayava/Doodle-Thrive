@@ -37,3 +37,24 @@ string rle_encrypt(const string& text)
 
     return encrypted;
 }
+
+string rle_decrypt(const string& text)
+{
+    // empty edge case
+    if (text.empty()) return text;
+
+    // init value
+    string decrypted;
+
+    // decompression loop
+    for (size_t i = 0; text.length() != i; i += 2)
+    {
+        // for every compressed sequence decompress the sequence
+        for (unsigned char j = static_cast<unsigned char>(text.substr(i, 1)[0]); j > 0; --j)
+        {
+            decrypted.push_back(text[i + 1]);
+        }
+    }
+
+    return decrypted;
+}
