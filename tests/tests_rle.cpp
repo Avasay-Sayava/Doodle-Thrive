@@ -1,5 +1,4 @@
 /**
- * @file tests_rle.cpp
  * @brief Tests for the RLE encode() and decode() functions.
  *
  * These tests verify: empty input, long runs, alternating characters,
