@@ -47,7 +47,7 @@ string rle_decrypt(const string& text)
     string decrypted;
 
     // decompression loop
-    for (size_t i = 0; text.length() != i; i += 2)
+    for (size_t i = 0; i < text.length(); i += 2)
     {
         // for every compressed sequence decompress the sequence
         for (unsigned char j = static_cast<unsigned char>(text.substr(i, 1)[0]); j > 0; --j)
