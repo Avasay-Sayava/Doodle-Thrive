@@ -5,3 +5,4 @@
 *.env
 /src/cmake-build-debug/
 /tests/cmake-build-debug/
+/build/
