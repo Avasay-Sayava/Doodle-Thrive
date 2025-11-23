@@ -1,6 +1,8 @@
-#include <string>
 #include "get.h"
+#include <string>
+#include <cstdlib>
 #include "rle_fstream.h"
+
 
 using namespace std;
 

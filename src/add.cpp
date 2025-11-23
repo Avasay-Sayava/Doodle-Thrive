@@ -1,4 +1,7 @@
+#include "add.h"
 #include <string>
+#include <cstdlib>
+#include "rle_fstream.h"
 
 #include "rle_fstream.h"
 using namespace std;
