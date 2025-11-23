@@ -1,7 +1,13 @@
-#include "add.h"
-#include <fstream>
 #include <string>
 
-void add(const std::string& filename, const std::string& content) {
-    return;
+#include "rle_fstream.h"
+using namespace std;
+
+void add(const string& file_name, const string& text)
+{
+    // open stream to file
+    rle_fstream file(getenv("DOODLE_DRIVE_PATH"), file_name);
+
+    // input text to stream
+    file << text;
 }
