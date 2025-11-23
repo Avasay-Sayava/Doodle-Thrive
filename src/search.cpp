@@ -1,5 +1,6 @@
 #include "search.h"
 #include "rle_fstream.h"
+#include "get.h"
 #include <cstdlib>
 #include <sstream>
 #include <filesystem>
@@ -23,10 +24,7 @@ string search(const std::string& content) {
 
         std::string file_name = entry.path().filename().string();
 
-        rle_fstream fstream(directory.string(), file_name);
-        // Read file content
-        std::string file_content;
-        fstream >> file_content;
+        std::string file_content = get(file_name);
         if (file_content.find(content) == std::string::npos) {
             // The file does not contain "content"
             continue;
