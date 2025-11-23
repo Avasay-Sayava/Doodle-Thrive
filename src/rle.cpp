@@ -58,7 +58,3 @@ string rle_decrypt(const string& text)
 
     return decrypted;
 }
-
-std::string rle_encrypt(const std::string& input) {
-    return input;
-}
