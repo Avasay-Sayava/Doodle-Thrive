@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include "rle_fstream.h"
 
-#include "rle_fstream.h"
 using namespace std;
 
 void add(const string& file_name, const string& text)
