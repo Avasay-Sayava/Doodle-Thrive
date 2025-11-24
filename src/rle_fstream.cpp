@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <streambuf>
+#include <optional>
 
 using namespace std;
 
@@ -13,7 +14,7 @@ rle_fstream::rle_fstream(const string& file_path, const string& file_name)
     path = file_path + file_name;
 }
 
-rle_fstream& rle_fstream::operator>>(string& str)
+rle_fstream& rle_fstream::operator>>(optional<string>& str)
 {
     // if the path was initialized
     if (!path.empty())
@@ -29,6 +30,8 @@ rle_fstream& rle_fstream::operator>>(string& str)
             str = rle_decrypt(content);
             fstream.close();
         }
+    } else {
+        str = nullopt;
     }
 
     // return itself for chain calls

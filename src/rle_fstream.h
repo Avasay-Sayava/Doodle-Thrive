@@ -1,6 +1,7 @@
 #ifndef RLE_FSTREAM_H
 #define RLE_FSTREAM_H
 
+#include <optional>
 #include <string>
 #include <fstream>
 
@@ -25,7 +26,7 @@ public:
      * @param str A reference to the string where the decrypted content will be stored.
      * @return A reference to itself.
      */
-    rle_fstream& operator>>(std::string& str);
+    rle_fstream& operator>>(std::optional<std::string>& str);
 
     /**
      * @brief Encrypts the provided string using RLE encryption and writes the
