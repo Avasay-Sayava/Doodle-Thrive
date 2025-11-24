@@ -24,7 +24,7 @@ string search(const std::string& content) {
 
         std::string file_name = entry.path().filename().string();
 
-        std::string file_content = get(file_name);
+        std::string file_content = get(file_name).value();
         if (file_content.find(content) == std::string::npos) {
             // The file does not contain "content"
             continue;

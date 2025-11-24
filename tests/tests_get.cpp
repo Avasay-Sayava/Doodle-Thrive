@@ -11,6 +11,7 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
+#include <optional>
 
 #include "../src/add.h"
 #include "../src/get.h"
@@ -34,7 +35,7 @@ TEST(GetFileTest, GetReturnsSameContentAsAddStored) {
 
     ASSERT_TRUE(std::filesystem::exists(filePath));
 
-    std::string result = get("TestFile");
+    std::string result = get("TestFile").value();
 
     EXPECT_EQ(result, content);  // Should match exactly
 }
@@ -56,7 +57,7 @@ TEST(GetFileTest, GetReturnsEmptyForEmptyFileCreatedByAdd) {
 
     ASSERT_TRUE(std::filesystem::exists(filePath));
 
-    std::string result = get("MyFileForTesting_GetEmpty");
+    std::string result = get("MyFileForTesting_GetEmpty").value();
 
     EXPECT_EQ(result, content);  // Should be an empty string
 }
@@ -78,15 +79,15 @@ TEST(GetFileTest, GetHandlesComplexContent) {
 
     ASSERT_TRUE(std::filesystem::exists(filePath));
 
-    std::string result = get("MyFileForTesting_GetComplex");
+    std::string result = get("MyFileForTesting_GetComplex").value();
 
     EXPECT_EQ(result, content);  // Must match exactly
 }
 
 /**
- * @brief Checks that get() returns an empty string when the requested file does not exist.
+ * @brief Checks that get() returns nullopt when the requested file does not exist.
  */
-TEST(GetFileTest, GetReturnsEmptyStringForMissingFile) {
+TEST(GetFileTest, GetReturnsNulloptForNonExistentFile) {
     // Ensure the file doesnt exist, then call get().
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr);
@@ -98,9 +99,9 @@ TEST(GetFileTest, GetReturnsEmptyStringForMissingFile) {
         std::filesystem::remove(filePath);
     }
 
-    std::string result = get("TestFile");
+    std::optional<std::string> result = get("TestFile");
 
-    EXPECT_EQ(result, "");  // Should return an empty string
+    EXPECT_EQ(result, std::nullopt);  // Should return nullopt
 }
 
 /**
@@ -114,6 +115,6 @@ TEST(GetFileTest, MultipleFilesIndependence) {
     add("MyFileForTesting_GetMulti1", content1);
     add("MyFileForTesting_GetMulti2", content2);
 
-    EXPECT_EQ(get("MyFileForTesting_GetMulti1"), content1);
-    EXPECT_EQ(get("MyFileForTesting_GetMulti2"), content2);
+    EXPECT_EQ(get("MyFileForTesting_GetMulti1").value(), content1);
+    EXPECT_EQ(get("MyFileForTesting_GetMulti2").value(), content2);
 }

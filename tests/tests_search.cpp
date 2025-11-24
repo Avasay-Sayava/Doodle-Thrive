@@ -58,7 +58,6 @@ TEST(SearchTest, TestMultipleFileMatches) {
     int count = 0;
     while (std::getline(iss, line)) {
         if (line == "file1" || line == "file2") {
-            std::cout << line << std::endl;
             count++;
         }
     }
