@@ -4,6 +4,7 @@
 #include <fstream>
 #include <filesystem>
 #include "../src/rle.h"
+#include "../src/get.h"
 #include "../src/add.h"
 
 /**
@@ -87,4 +88,52 @@ TEST(AddFileTest, TestEmptyFile) {
     std::string decrypted = rle_decrypt(encrypted);
 
     EXPECT_EQ(decrypted, content);
+}
+
+/**
+ * @brief Test adding two files with the same name
+ */
+TEST(AddFileTest, TestDuplicateFileNames) {
+    // Create content for the files
+    std::string content1 = "First content";
+    std::string content2 = "Second content";
+
+    // Add the first file
+    add("MyFileForTesting_Duplicate", content1);
+
+    // Add the second file with the same name
+    try {
+        // Should not throw an exception. Should instead ignore the second add.
+        add("MyFileForTesting_Duplicate", content2);
+    } catch (const std::exception& e) {
+        // If an exception is thrown, the test should fail
+        FAIL() << "Exception thrown when adding duplicate file names: " << e.what();
+    }
+    // Get the file using get()
+    std::string content = get("MyFileForTesting_Duplicate").value();
+    EXPECT_EQ(content, content1);
+}
+
+/**
+ * @brief Test adding two files with the same name when the first file is empty
+ */
+TEST(AddFileTest, TestDuplicateFileNames_EmptyFirst) {
+    // Create content for the files
+    std::string content1 = "";
+    std::string content2 = "Second content";
+
+    // Add the first file
+    add("MyFileForTesting_Duplicate_EmptyFirst", content1);
+
+    // Add the second file with the same name
+    try {
+        // Should not throw an exception. Should instead ignore the second add.
+        add("MyFileForTesting_Duplicate_EmptyFirst", content2);
+    } catch (const std::exception& e) {
+        // If an exception is thrown, the test should fail
+        FAIL() << "Exception thrown when adding duplicate file names: " << e.what();
+    }
+    // Get the file using get()
+    std::string content = get("MyFileForTesting_Duplicate_EmptyFirst").value();
+    EXPECT_EQ(content, content1);
 }
