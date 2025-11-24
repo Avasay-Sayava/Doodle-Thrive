@@ -16,10 +16,10 @@ TEST(SearchTest, EmptyStringSearch) {
 
     // Check that both files are returned
     std::istringstream iss(results);
-    std::string line;
+    std::string word;
     int count = 0;
-    while (std::getline(iss, line)) {
-        if (line == "testfile1" || line == "testfile2") {
+    while (iss >> word) {
+        if (word == "testfile1" || word == "testfile2") {
             count++;
         }
     }
@@ -54,10 +54,10 @@ TEST(SearchTest, TestMultipleFileMatches) {
     add("file2", "Common content in file two.");
     std::string results = search("Common content");
     std::istringstream iss(results);
-    std::string line;
+    std::string word;
     int count = 0;
-    while (std::getline(iss, line)) {
-        if (line == "file1" || line == "file2") {
+    while (iss >> word) {
+        if (word == "file1" || word == "file2") {
             count++;
         }
     }
