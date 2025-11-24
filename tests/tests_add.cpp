@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
+#include "../src/get.h"
 #include <filesystem>
 #include "../src/rle.h"
 #include "../src/get.h"
