@@ -9,6 +9,10 @@ Run the application with Docker Compose:
 ```bash
 docker-compose run -it --build --remove-orphans app
 ```
+If you did it once, you dont need to build again, so you can run:
+```bash
+docker-compose run -it --remove-orphans app
+```
 
 ## Commands
 
@@ -45,7 +49,11 @@ search milk
 ## Tests
 Run tests with Docker Compose:
 ```bash
-docker-compose run -it --build --remove-orphans gtest
+docker-compose run --build --remove-orphans gtest
+```
+If you did it once, you dont need to build again, so you can run:
+```bash
+docker-compose run --remove-orphans gtest
 ```
 Tests are located in the `tests` directory.
 ### Example Test Output
