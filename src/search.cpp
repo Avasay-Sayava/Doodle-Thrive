@@ -30,7 +30,11 @@ string search(const std::string& content) {
             continue;
         }
         // The file contains "content"
-        result += file_name + "\n";
+        result += file_name + " ";
+    }
+    // Remove trailing space if result is not empty
+    if (!result.empty()) {
+        result.pop_back();
     }
     return result;
 }
