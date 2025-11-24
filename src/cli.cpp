@@ -98,12 +98,6 @@ std::vector<std::string> CLI::cli_command(const std::string& command) {
     // SEARCH command: "search <term>"
     if (command.rfind("search ", 0) == 0) {
         std::string term = command.substr(7);
-        if (term.empty()) {
-            // Missing search term.
-            return empty_result;
-        }
-
-
         return {"search", term};
     }
 
