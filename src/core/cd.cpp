@@ -1,25 +1,21 @@
 #include "cd.h"
+#include "statusCodes.h"
 
 namespace ddrive {
 
-void cd::registerHandler(const std::string& command, HandlerFn handler)
+CommandDirector::CommandDirector(
+    Storage& storage,
+    const std::unordered_map<std::string,
+        std::function<std::string(const std::vector<std::string>&, Storage&)>>& handlerMap)
+    : storage(storage)
 {
-    // Empty implementation for TDD purposes
-    (void)command;
-    (void)handler;
+
 }
 
-HandlerResult cd::process(const std::string& line) const
+std::string CommandDirector::process(const std::string& line) const
 {
     // Empty implementation for TDD purposes
-    (void)line;
-    return HandlerResult{"", StatusCode::BadRequest};
-}
-
-std::string cd::normalize(const std::string& cmd) const
-{
-    // Empty implementation for TDD purposes
-    return cmd;
+    return "";
 }
 
 } // namespace ddrive

@@ -13,9 +13,9 @@
 #include <filesystem>
 #include <optional>
 
-#include "../src/add.h"
-#include "../src/get.h"
-#include "../src/rle.h"   
+#include "../src/core/storageMethods/add.h"
+#include "../src/core/storageMethods/get.h"
+#include "../src/core/storageMethods/rle.h"   
 
 
 /**

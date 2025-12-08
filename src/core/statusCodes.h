@@ -1,4 +1,5 @@
-#pragma once
+#ifndef STATUSCODES_H
+#define STATUSCODES_H
 
 #include <string>
 
@@ -25,3 +26,5 @@ std::string codeToString(StatusCode code);
 
 
 } // namespace ddrive
+
+#endif // STATUSCODES_H

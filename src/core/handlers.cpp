@@ -1,8 +1,8 @@
 #include "handlers.h"
 
-#include "add.h"
-#include "get.h"
-#include "search.h"
+#include "storageMethods/add.h"
+#include "storageMethods/get.h"
+#include "storageMethods/search.h"
 
 #include <filesystem>
 

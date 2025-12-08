@@ -1,37 +1,58 @@
-#pragma once
+#ifndef CD_H
+#define CD_H
 
 #include <string>
 #include <unordered_map>
-#include <vector>
 #include <functional>
+#include <vector>
 
-#include "statusCodes.h"
 #include "splitter.h"
+#include "storage.h"
 
 namespace ddrive {
 
-// HandlerResult = (body, status)
-using HandlerResult = std::pair<std::string, StatusCode>;
-
-// HandlerFn = function taking arg vector
-using HandlerFn = std::function<HandlerResult(const std::vector<std::string>&)>;
-
 /**
- * @brief Responsible for routing commands to handlers.
+ * @brief Routes raw client input to the correct command handler.
  */
-class cd {
+class CommandDirector {
 public:
-    cd();
+    /**
+     * @brief Construct a CommandDirector with a handler map.
+     *
+     * @param storage Shared storage object used by all handlers.
+     * @param handlerMap A map from command names to handler functions.
+     *
+     */
+    CommandDirector(Storage& storage,const std::unordered_map<std::string, 
+        std::function<std::string(const std::vector<std::string>&, Storage&)>>& handlerMap);
 
-    void registerHandler(const std::string& command, HandlerFn handler);
-
-    HandlerResult process(const std::string& line) const;
+    /**
+     * @brief Process one line of client input.
+     *
+     * @param line Raw input string.
+     * @return Full response string returned by the matched handler.
+     *         If no handler matches, returns a "400 Bad Request" formatted string.
+     */
+    std::string process(const std::string& line) const;
 
 private:
-    std::unordered_map<std::string, HandlerFn> handlers;
+    /**
+     * @brief Shared storage object for file operations.
+     */
+    Storage& storage; 
+
+    /**
+     * @brief Splits raw input lines into arguments.
+     */
     Splitter splitter;
 
-    std::string normalize(const std::string& cmd) const;
+    /**
+     * @brief Map from command names to their handler functions.
+     */
+    std::unordered_map<std::string,
+        std::function<std::string(const std::vector<std::string>&, Storage&)>> handlers; 
 };
 
 } // namespace ddrive
+
+#endif // CD_H

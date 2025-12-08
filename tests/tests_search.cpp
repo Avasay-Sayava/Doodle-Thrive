@@ -3,8 +3,8 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
-#include "../src/add.h"
-#include "../src/search.h"
+#include "../src/core/storageMethods/add.h"
+#include "../src/core/storageMethods/search.h"
 
 /**
  * @brief Test looking for an empty string (should return all files)
