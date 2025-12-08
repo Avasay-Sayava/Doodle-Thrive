@@ -13,14 +13,7 @@ namespace ddrive {
  *
  * This class provides the POST/GET/SEARCH/DELETE operations.
  * Internally it protects file operations using a mutex to ensure thread safety
- * when multiple client threads access the filesystem concurrently.
- *
- * The methods here will later call:
- *  - add_file(filename, content)
- *  - get_file(filename)
- *  - search_files(term)
- *  - std::filesystem::remove(...)
- *
+ * when multiple client threads access the filesystem.
  */
 class Storage {
 public:

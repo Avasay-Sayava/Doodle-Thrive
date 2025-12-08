@@ -12,8 +12,8 @@ namespace ddrive {
 /**
  * @brief Result returned by a command handler.
  *
- * body- content (used for GET and SEARCH)
- * code- protocol status code
+ * body- content (used for GET and SEARCH).
+ * code- protocol status code.
  */
 using HandlerResult = std::pair<std::string, StatusCode>;
 

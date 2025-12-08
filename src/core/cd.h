@@ -31,7 +31,7 @@ public:
      *
      * @param line Raw input string.
      * @return Full response string returned by the matched handler.
-     *         If no handler matches, returns a "400 Bad Request" formatted string.
+     * If no handler matches, returns a "400 Bad Request" formatted string.
      */
     std::string process(const std::string& line) const;
 
