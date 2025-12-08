@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include "../src/cli.h"
+#include "../src/core/storageMethods/cli.h"
 
 /**
  * @brief Ensures a simple valid add command is parsed correctly.

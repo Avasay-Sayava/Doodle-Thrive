@@ -2,11 +2,10 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
-#include "../src/get.h"
+#include "../src/core/storageMethods/get.h"
 #include <filesystem>
-#include "../src/rle.h"
-#include "../src/get.h"
-#include "../src/add.h"
+#include "../src/core/storageMethods/rle.h"
+#include "../src/core/storageMethods/add.h"
 
 /**
  * @brief Test existance of a file added through add command

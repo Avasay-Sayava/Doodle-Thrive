@@ -7,7 +7,7 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include "../src/rle.h"
+#include "../src/core/storageMethods/rle.h"
 
 /**
  * @brief Encoding and decoding an empty string should return an empty string.
