@@ -25,7 +25,7 @@ std::optional<std::string> Storage::get(const std::string& filename) const
     return get(filename);
 }
 
-std::vector<std::string> Storage::search(const std::string& term) const
+std::string Storage::search(const std::string& term) const
 {
     std::scoped_lock lock(mtx);
 
