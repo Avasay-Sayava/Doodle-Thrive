@@ -2,7 +2,7 @@
 
 namespace ddrive {
 
-constexpr std::string_view codeToString(StatusCode code)
+std::string codeToString(StatusCode code)
 {
     switch (code) {
         case StatusCode::Ok:
