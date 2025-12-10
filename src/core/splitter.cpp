@@ -3,7 +3,24 @@
 #include <algorithm> // std::transform
 #include <cctype>    // std::toupper
 
+#include <algorithm> // std::transform
+#include <cctype>    // std::toupper
+
 namespace ddrive {
+
+Splitter::Splitter(CommandArityMap commandArgCounts)
+    : commandArgCounts(std::move(commandArgCounts))
+{
+}
+
+// helper: uppercase a string in-place
+static void toUpperInPlace(std::string& s)
+{
+    std::transform(
+        s.begin(), s.end(), s.begin(),
+        [](unsigned char c) { return static_cast<char>(std::toupper(c)); }
+    );
+}
 
 Splitter::Splitter(CommandArityMap commandArgCounts)
     : commandArgCounts(std::move(commandArgCounts))
@@ -61,7 +78,7 @@ std::vector<std::string> Splitter::split(const std::string& line) const
     args.reserve(static_cast<std::size_t>(expectedCount));
     args.push_back(commandToken); // args[0] = COMMAND (uppercased)
 
-    // 2. If expectedCount == 1, we require no extra text.
+    // 3. If expectedCount == 1, we require no extra text.
     if (expectedCount == 1) {
         if (!rest.empty()) {
             // Extra text after command that expects no args → invalid.
@@ -70,7 +87,7 @@ std::vector<std::string> Splitter::split(const std::string& line) const
         return args;
     }
 
-    // 3. For expectedCount >= 2:
+    // 4. For expectedCount >= 2:
     // We need (expectedCount - 2) "header" args, all the args before content.
     // The last argument is the rest of the line after skipping spaces.
 
@@ -102,12 +119,7 @@ std::vector<std::string> Splitter::split(const std::string& line) const
         // Advance remaining to character after the space we just used.
         remaining = remaining.substr(spacePos + 1);
     }
-    if (headerArgs == 0) {
-        if (remaining.empty() || remaining[0] == ' ') {
-            // Either no argument at all ("GET") or a double space after command ("GET  X").
-            return {};
-        }
-    }
+
     args.push_back(remaining);
 
     // We must have exactly expectedCount tokens now.
