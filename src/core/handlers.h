@@ -8,34 +8,25 @@
 
 namespace ddrive {
 
-
-/**
- * @brief Result returned by a command handler.
- *
- * body- content (used for GET and SEARCH).
- * code- protocol status code.
- */
-using HandlerResult = std::pair<std::string, StatusCode>;
-
 /**
  * @brief Handle POST command.
  */
-HandlerResult handlePost(const std::vector<std::string>& args, Storage& storage);
+std::string handlePost(const std::vector<std::string>& args, Storage& storage);
 
 /**
  * @brief Handle GET command.
  */
-HandlerResult handleGet(const std::vector<std::string>& args, Storage& storage);
+std::string handleGet(const std::vector<std::string>& args, Storage& storage);
 
 /**
  * @brief Handle SEARCH command.
  */
-HandlerResult handleSearch(const std::vector<std::string>& args, Storage& storage);
+std::string handleSearch(const std::vector<std::string>& args, Storage& storage);
 
 /**
  * @brief Handle DELETE command.
  */
-HandlerResult handleDelete(const std::vector<std::string>& args, Storage& storage);
+std::string handleDelete(const std::vector<std::string>& args, Storage& storage);
 
 } // namespace ddrive
 
