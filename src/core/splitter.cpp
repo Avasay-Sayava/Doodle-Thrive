@@ -78,7 +78,7 @@ std::vector<std::string> Splitter::split(const std::string& line) const
     args.reserve(static_cast<std::size_t>(expectedCount));
     args.push_back(commandToken); // args[0] = COMMAND (uppercased)
 
-    // 3. If expectedCount == 1, we require no extra text.
+    // 2. If expectedCount == 1, we require no extra text.
     if (expectedCount == 1) {
         if (!rest.empty()) {
             // Extra text after command that expects no args → invalid.
@@ -87,7 +87,7 @@ std::vector<std::string> Splitter::split(const std::string& line) const
         return args;
     }
 
-    // 4. For expectedCount >= 2:
+    // 3. For expectedCount >= 2:
     // We need (expectedCount - 2) "header" args, all the args before content.
     // The last argument is the rest of the line after skipping spaces.
 
@@ -119,7 +119,12 @@ std::vector<std::string> Splitter::split(const std::string& line) const
         // Advance remaining to character after the space we just used.
         remaining = remaining.substr(spacePos + 1);
     }
-
+    if (headerArgs == 0) {
+        if (remaining.empty() || remaining[0] == ' ') {
+            // Either no argument at all ("GET") or a double space after command ("GET  X").
+            return {};
+        }
+    }
     args.push_back(remaining);
 
     // We must have exactly expectedCount tokens now.
