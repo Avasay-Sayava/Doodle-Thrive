@@ -16,7 +16,4 @@ int runServer(int argc, char* argv[])
 
 } // namespace ddrive
 
-int main(int argc, char* argv[])
-{
-    return ddrive::runServer(argc, argv);
-}
+

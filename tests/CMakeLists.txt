@@ -14,7 +14,10 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 set(PROJECT_DIR "..")
-file(GLOB_RECURSE SRC_FILES "${PROJECT_DIR}/src/*.*")
+file(GLOB_RECURSE SRC_FILES
+    "${PROJECT_DIR}/src/server/*.*"
+    "${PROJECT_DIR}/src/core/*.*"
+)
 list(FILTER SRC_FILES INCLUDE REGEX "\\.(cpp|h)$")
 list(FILTER SRC_FILES EXCLUDE REGEX "main\\..*$")
 file(GLOB_RECURSE TESTS_FILES "*.*")
