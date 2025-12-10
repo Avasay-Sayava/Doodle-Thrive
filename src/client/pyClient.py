@@ -18,9 +18,9 @@ class Client:
         while True:
             command = input()
             response = self.send_command(command)
-            print(response)
+            print(response, end='')
 
-    
+
     def send_command(self, command):
         self.client_socket.sendall(command.encode())
         response = self.client_socket.recv(self.SIZE).decode()
