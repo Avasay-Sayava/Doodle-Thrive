@@ -2,22 +2,45 @@
 #define SPLITTER_H
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace ddrive {
 
 /**
- * @brief Splits a raw input line into space separated arguments.
+ * @brief Splits a raw input line into command + arguments
+ *        based on a configured command, arg count map.
+ *
+ * General rules:
+ *  - The command name (first token) is uppercased.
+ *  - If the command is unknown (not in the map), returns empty vector.
+ *  - If the format does not match the expected arg count, returns empty vector.
+ *  - For commands with N ≥ 2 arguments:
+ *      * args[0] = COMMAND (uppercased)
+ *      * args[1..N-2] are single tokens with no spaces.
+ *      * args[N-1] (the last argument) is the rest of the line
+ *        after skipping spaces, it may contain spaces and may be empty.
  */
 class Splitter {
 public:
+    using CommandArityMap = std::unordered_map<std::string, size_t>;
+
     /**
-     * @brief Split an input line into components.
+     * @brief Construct a Splitter with a map from command name (UPPERCASE)
+     *        to expected argument count.
+     */
+    explicit Splitter(CommandArityMap commandArgCounts);
+
+    /**
+     * @brief Split a raw line into [COMMAND, arg1, arg2, ...].
      *
-     * @param line Raw input string.
-     * @return A vector of tokens in the order they appear in the line.
+     * On failure (unknown command, wrong number of parts, invalid spacing),
+     * returns an empty vector.
      */
     std::vector<std::string> split(const std::string& line) const;
+
+private:
+    CommandArityMap commandArgCounts;
 };
 
 } // namespace ddrive
