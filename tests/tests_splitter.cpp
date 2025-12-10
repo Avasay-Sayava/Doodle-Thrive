@@ -153,7 +153,7 @@ TEST(SplitterTest, Search_DoubleSpaceAfterCommandIsPartOfTerm) {
 
     auto tokens = splitter.split("SEARCH  hello");
 
-    ASSERT_EQ(tokens.size(), 2u);
+    ASSERT_EQ(tokens.size(), 2);
     EXPECT_EQ(tokens[0], "SEARCH");
     EXPECT_EQ(tokens[1], " hello"); // term starts with a space
 }
@@ -179,9 +179,7 @@ TEST(SplitterTest, Search_NoTerm_GivesEmptyLastArg) {
 
     auto tokens = splitter.split("SEARCH");
 
-    ASSERT_EQ(tokens.size(), 2u);
-    EXPECT_EQ(tokens[0], "SEARCH");
-    EXPECT_EQ(tokens[1], ""); // empty term; semantic validation is handler's job
+    ASSERT_EQ(tokens.size(), 0u);
 }
 
 /**
@@ -215,9 +213,7 @@ TEST(SplitterTest, Get_NoArg_GivesEmptyLastArg) {
 
     auto tokens = splitter.split("GET");
 
-    ASSERT_EQ(tokens.size(), 2u);
-    EXPECT_EQ(tokens[0], "GET");
-    EXPECT_EQ(tokens[1], "");
+    ASSERT_EQ(tokens.size(), 0u);
 }
 
 /**
@@ -251,9 +247,7 @@ TEST(SplitterTest, Delete_NoArg_GivesEmptyLastArg) {
 
     auto tokens = splitter.split("DELETE");
 
-    ASSERT_EQ(tokens.size(), 2u);
-    EXPECT_EQ(tokens[0], "DELETE");
-    EXPECT_EQ(tokens[1], "");
+    ASSERT_EQ(tokens.size(), 0u);
 }
 
 /**
