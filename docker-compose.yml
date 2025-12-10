@@ -4,11 +4,15 @@ services:
       context: .
       dockerfile: src/server/Dockerfile
   
-  client:
+  cpp-client:
     build:
       context: .
-      dockerfile: src/client/Dockerfile
+      dockerfile: src/client/Dockerfile.cpp
 
+  py-client:
+    build:
+      context: .
+      dockerfile: src/client/Dockerfile.py
   gtest:
     build:
       context: .

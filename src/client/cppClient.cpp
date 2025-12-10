@@ -12,8 +12,3 @@ int runClient(int argc, char* argv[])
 }
 
 } // namespace ddrive
-
-int main(int argc, char* argv[])
-{
-    return ddrive::runClient(argc, argv);
-}
