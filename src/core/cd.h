@@ -20,11 +20,11 @@ public:
      * @brief Construct a CommandDirector with a handler map.
      *
      * @param storage Shared storage object used by all handlers.
-     * @param handlerMap A map from command names to handler functions.
+     * @param handlerMap A map from command names to handler functions, command names need to be uppercase.
      *
      */
     CommandDirector(Storage& storage,const std::unordered_map<std::string, 
-        std::function<std::string(const std::vector<std::string>&, Storage&)>>& handlerMap);
+        std::function<std::string(const std::vector<std::string>&, Storage&)>>& handlerMap, Splitter splitter);
 
     /**
      * @brief Process one line of client input.
