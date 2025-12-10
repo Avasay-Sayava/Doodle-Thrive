@@ -14,4 +14,4 @@ ENV DOODLE_DRIVE_PATH="/usr/src/files/"
 
 RUN cmake ../src && make
 
-CMD ["./app"]
+CMD ["./server"]

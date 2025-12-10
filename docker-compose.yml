@@ -1,8 +1,13 @@
 services:
-  app:
+  server:
     build:
       context: .
-      dockerfile: src/Dockerfile
+      dockerfile: src/server/Dockerfile
+  
+  client:
+    build:
+      context: .
+      dockerfile: src/client/Dockerfile
 
   gtest:
     build:
