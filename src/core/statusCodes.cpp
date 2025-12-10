@@ -15,10 +15,11 @@ std::string codeToString(StatusCode code)
             return "400 Bad Request\n";
         case StatusCode::NotFound:
             return "404 Not Found\n";
+        case StatusCode::InternalServerError:
+            return "500 Internal Server Error\n";
         default:
-            return "500 Internal Server Error\n"; // Fallback for unknown codes
+            return "500 Internal Server Error\n";
     }
 }
-
 
 } // namespace ddrive

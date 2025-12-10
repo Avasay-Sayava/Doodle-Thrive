@@ -13,14 +13,15 @@ enum class StatusCode {
     Created = 201,
     NoContent = 204,
     BadRequest = 400,
-    NotFound = 404
+    NotFound = 404,
+    InternalServerError = 500
 };
 
 /**
  * @brief Converts a StatusCode to its string representation.
  *
  * @param code The StatusCode to convert.
- * @return A string representing the StatusCode.
+ * @return A string representing the StatusCode with a new line.
  */
 std::string codeToString(StatusCode code);
 
