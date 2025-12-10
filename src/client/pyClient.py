@@ -4,6 +4,7 @@ import sys
 from socket import socket
 
 class Client:
+    SIZE = 4096
     def __init__(self, host, port):
         self.host = host
         self.port = port
@@ -21,8 +22,8 @@ class Client:
 
     
     def send_command(self, command):
-        self.client.sendall(command.encode())
-        response = self.client.recv(1024).decode()
+        self.client_socket.sendall(command.encode())
+        response = self.client_socket.recv(self.SIZE).decode()
         return response
 
 if __name__ == "__main__":
