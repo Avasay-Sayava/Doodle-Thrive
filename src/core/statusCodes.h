@@ -23,7 +23,7 @@ enum class StatusCode {
  * @param code The StatusCode to convert.
  * @return A string representing the StatusCode with a new line.
  */
-std::string codeToString(StatusCode code);
+constexpr std::string_view codeToString(StatusCode code);
 
 
 } // namespace ddrive
