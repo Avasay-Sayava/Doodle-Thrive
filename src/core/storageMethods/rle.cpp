@@ -1,8 +1,11 @@
 #include <string>
 #include <climits>
 #include "rle.h"
+
+using namespace storageMethods;
 using namespace std;
 
+namespace storageMethods {
 string rle_encrypt(const string& text)
 {
     // empty edge case
@@ -57,4 +60,5 @@ string rle_decrypt(const string& text)
     }
 
     return decrypted;
+}
 }

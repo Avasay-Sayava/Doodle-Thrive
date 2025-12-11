@@ -9,17 +9,18 @@
 #include <string>
 #include "../src/core/storageMethods/rle.h"
 
+using namespace storageMethods;
 /**
  * @brief Encoding and decoding an empty string should return an empty string.
  */
 TEST(RLE_EncodeTest, EmptyStringReturnsEmpty) {
     std::string input = "";
-    std::string encoded = rle_encrypt(input);
+    std::string encoded = storageMethods::rle_encrypt(input);
 
     EXPECT_TRUE(encoded.empty());
 
     encoded = "";
-    std::string decoded = rle_decrypt(encoded);
+    std::string decoded = storageMethods::rle_decrypt(encoded);
 
     EXPECT_TRUE(decoded.empty());
 }
@@ -30,8 +31,8 @@ TEST(RLE_EncodeTest, EmptyStringReturnsEmpty) {
  */
 TEST(RLE_RoundTripTest, SimpleRun) {
     std::string input = "aaaaabbbcc";
-    std::string encoded = rle_encrypt(input);
-    std::string decoded = rle_decrypt(encoded);
+    std::string encoded = storageMethods::rle_encrypt(input);
+    std::string decoded = storageMethods::rle_decrypt(encoded);
 
     EXPECT_EQ(decoded, input);
 }
@@ -41,8 +42,8 @@ TEST(RLE_RoundTripTest, SimpleRun) {
  */
 TEST(RLE_RoundTripTest, AlternatingCharacters) {
     std::string input = "abababababab";
-    std::string encoded = rle_encrypt(input);
-    std::string decoded = rle_decrypt(encoded);
+    std::string encoded = storageMethods::rle_encrypt(input);
+    std::string decoded = storageMethods::rle_decrypt(encoded);
 
     EXPECT_EQ(decoded, input);
 }
@@ -54,8 +55,8 @@ TEST(RLE_RoundTripTest, LongRunOverflowsUnsignedChar) {
     // 300 'x' string.
     std::string input(300, 'x');
 
-    std::string encoded = rle_encrypt(input);
-    std::string decoded = rle_decrypt(encoded);
+    std::string encoded = storageMethods::rle_encrypt(input);
+    std::string decoded = storageMethods::rle_decrypt(encoded);
 
     EXPECT_EQ(decoded, input);
 }
@@ -67,7 +68,7 @@ TEST(RLE_InvalidDecodeTest, OddLengthInputThrows) {
 
     std::string invalid = "\x05"; 
 
-    EXPECT_NO_THROW(rle_decrypt(invalid)); // This should not throw
+    EXPECT_NO_THROW(storageMethods::rle_decrypt(invalid)); // This should not throw
 }
 
 /**
@@ -75,8 +76,8 @@ TEST(RLE_InvalidDecodeTest, OddLengthInputThrows) {
  */
 TEST(RLE_RoundTripTest, MixedContent) {
     std::string input = "XXXXYYYYZZZ1233333333AAAAA";
-    std::string encoded = rle_encrypt(input);
-    std::string decoded = rle_decrypt(encoded);
+    std::string encoded = storageMethods::rle_encrypt(input);
+    std::string decoded = storageMethods::rle_decrypt(encoded);
 
     EXPECT_EQ(decoded, input);
 }

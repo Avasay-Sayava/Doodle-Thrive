@@ -6,14 +6,15 @@
 #include "../src/core/storageMethods/add.h"
 #include "../src/core/storageMethods/fdelete.h"
 
+using namespace storageMethods;
 /**
  * @brief Test a simple deletion.
  */
 TEST(DeleteFileTest, SimpleDelete) {
     // Add a file with some data
-    add("file1", "DATA");
+    storageMethods::add("file1", "DATA");
     // Delete it and assert it was deleted
-    bool deleted = fdelete("file1");
+    bool deleted = storageMethods::fdelete("file1");
     EXPECT_TRUE(deleted);
     EXPECT_FALSE(std::filesystem::exists(std::filesystem::path(std::getenv("DOODLE_DRIVE_PATH")) / "file1"));
 }
@@ -23,7 +24,7 @@ TEST(DeleteFileTest, SimpleDelete) {
  */
 TEST(DeleteFileTest, NonExistentFile) {
     // Use the deletion function on a file that does not exist it should return false
-    bool deleted = fdelete("non_existent_file");
+    bool deleted = storageMethods::fdelete("non_existent_file");
     EXPECT_FALSE(deleted);
 }
 
@@ -32,18 +33,18 @@ TEST(DeleteFileTest, NonExistentFile) {
  */
 TEST(DelteFileTest, DeleteTwice) {
     // Add a file
-    add("file2", "DATA");
+    storageMethods::add("file2", "DATA");
     // Try to delete it, the first time should work
-    bool first_delete = fdelete("file2");
+    bool first_delete = storageMethods::fdelete("file2");
     // The second time should fail
-    bool second_delete = fdelete("file2");
+    bool second_delete = storageMethods::fdelete("file2");
     EXPECT_TRUE(first_delete);
     // Assert that the file does not exist
     EXPECT_FALSE(std::filesystem::exists(std::filesystem::path(std::getenv("DOODLE_DRIVE_PATH")) / "file2"));
     EXPECT_FALSE(second_delete);
     // Add it again and delete it again
-    add("file2", "DATA");
-    bool third_delete = fdelete("file2");
+    storageMethods::add("file2", "DATA");
+    bool third_delete = storageMethods::fdelete("file2");
     EXPECT_TRUE(third_delete);
     EXPECT_FALSE(std::filesystem::exists(std::filesystem::path(std::getenv("DOODLE_DRIVE_PATH")) / "file2"));
 }

@@ -11,6 +11,8 @@
  * @param file_name The name of the file to create or overwrite.
  * @param text The plain text content to encrypt and store.
  */
-void add(const std::string& file_name, const std::string& text);
 
+namespace storageMethods {
+bool add(const std::string& file_name, const std::string& text);
+}
 #endif // ADD_H

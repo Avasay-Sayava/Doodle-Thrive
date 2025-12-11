@@ -7,12 +7,13 @@
 #include "../src/core/storageMethods/rle.h"
 #include "../src/core/storageMethods/add.h"
 
+using namespace storageMethods;
 /**
  * @brief Test existance of a file added through add command
  */
 TEST(AddFileTest, FileExists) {
     // Create file
-    add("MyFileForTesting_Exists", "content");
+    storageMethods::add("MyFileForTesting_Exists", "content");
 
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr); // Make sure env variable exists
@@ -31,7 +32,7 @@ TEST(AddFileTest, CorrespondenceToEncryption) {
     std::string content = "aaaaabbbbbbbbbbbbbbbb77788888888dddDDDDDDDDD";
 
     // Create file
-    add("MyFileForTesting_Correspondence", content);
+    storageMethods::add("MyFileForTesting_Correspondence", content);
 
     // Assert existance of the env variable
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
@@ -64,7 +65,7 @@ TEST(AddFileTest, TestEmptyFile) {
     std::string content = "";
 
     // Add the file using the add function
-    add("MyFileForTesting_Empty", content);
+    storageMethods::add("MyFileForTesting_Empty", content);
 
     // Get the env variable and make sure it exists
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
@@ -99,18 +100,18 @@ TEST(AddFileTest, TestDuplicateFileNames) {
     std::string content2 = "Second content";
 
     // Add the first file
-    add("MyFileForTesting_Duplicate", content1);
+    storageMethods::add("MyFileForTesting_Duplicate", content1);
 
     // Add the second file with the same name
     try {
         // Should not throw an exception. Should instead ignore the second add.
-        add("MyFileForTesting_Duplicate", content2);
+        storageMethods::add("MyFileForTesting_Duplicate", content2);
     } catch (const std::exception& e) {
         // If an exception is thrown, the test should fail
         FAIL() << "Exception thrown when adding duplicate file names: " << e.what();
     }
     // Get the file using get()
-    std::string content = get("MyFileForTesting_Duplicate").value();
+    std::string content = storageMethods::get("MyFileForTesting_Duplicate").value();
     EXPECT_EQ(content, content1);
 }
 
@@ -123,17 +124,17 @@ TEST(AddFileTest, TestDuplicateFileNames_EmptyFirst) {
     std::string content2 = "Second content";
 
     // Add the first file
-    add("MyFileForTesting_Duplicate_EmptyFirst", content1);
+    storageMethods::add("MyFileForTesting_Duplicate_EmptyFirst", content1);
 
     // Add the second file with the same name
     try {
         // Should not throw an exception. Should instead ignore the second add.
-        add("MyFileForTesting_Duplicate_EmptyFirst", content2);
+        storageMethods::add("MyFileForTesting_Duplicate_EmptyFirst", content2);
     } catch (const std::exception& e) {
         // If an exception is thrown, the test should fail
         FAIL() << "Exception thrown when adding duplicate file names: " << e.what();
     }
     // Get the file using get()
-    std::string content = get("MyFileForTesting_Duplicate_EmptyFirst").value();
+    std::string content = storageMethods::get("MyFileForTesting_Duplicate_EmptyFirst").value();
     EXPECT_EQ(content, content1);
 }
