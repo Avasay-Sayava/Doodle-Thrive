@@ -4,39 +4,34 @@
 #include <unordered_map>
 #include <vector>
 
-// Adjust include paths as needed for your project structure:
-#include "cd.h"
-#include "splitter.h"
-#include "statusCodes.h"
-#include "storage.h"
+#include "../core/cd.h"
+#include "../core/splitter.h"
+#include "../core/statusCodes.h"
+#include "../core/storage.h"
 
 namespace ddrive {
 
-// Convenience alias for the handler function type used in CommandDirector.
+
 using HandlerFn = std::function<std::string(const std::vector<std::string>&, Storage&)>;
 
-// Helper to create a Splitter configured for simple test commands.
+
 static Splitter makeTestSplitter()
 {
     ddrive::Splitter::CommandArityMap splitterMap = {
-        {"PING",  2}, // PING <payload>
+        {"PING",  2},
         {"ECHO",  2}
     };
     return Splitter(splitterMap);
 }
 
-// NOTE: You may need to adjust this depending on your Storage constructor.
-// For example, if Storage(const std::string& rootDir) is your ctor:
+
 static Storage makeTestStorage()
 {
-    // Use a temporary directory name that your Storage can safely handle.
-    // If your Storage has a different ctor signature, change this.
+
     return Storage();
 }
 
 /**
- * CommandDirectorTest.UnknownCommand_ReturnsBadRequest
- *
  * - Splitter only knows about PING and ECHO.
  * - Input line uses an unknown command "FOO".
  * - Splitter returns an empty args vector for this line.
@@ -49,7 +44,6 @@ TEST(CommandDirectorTest, UnknownCommand_ReturnsBadRequest)
     // Splitter only knows PING/ECHO
     Splitter splitter = makeTestSplitter();
 
-    // No handlers needed for this test.
     std::unordered_map<std::string, HandlerFn> handlers;
 
     CommandDirector cd(storage, handlers, splitter);
@@ -60,8 +54,6 @@ TEST(CommandDirectorTest, UnknownCommand_ReturnsBadRequest)
 }
 
 /**
- * CommandDirectorTest.EmptyLine_ReturnsBadRequest
- *
  * - Empty input line should produce an empty args vector from Splitter.
  * - CommandDirector should respond with 400 BadRequest.
  */
@@ -79,8 +71,6 @@ TEST(CommandDirectorTest, EmptyLine_ReturnsBadRequest)
 }
 
 /**
- * CommandDirectorTest.KnownCommandWithoutHandler_ReturnsBadRequest
- *
  * - Splitter knows the command PING (in its COMMAND→argCount map).
  * - handlerMap does NOT contain a handler for "PING".
  * - Splitter returns args[0] = "PING", but CommandDirector cannot find a handler.
@@ -91,7 +81,6 @@ TEST(CommandDirectorTest, KnownCommandWithoutHandler_ReturnsBadRequest)
     Storage storage = makeTestStorage();
     Splitter splitter = makeTestSplitter();
 
-    // Intentionally no "PING" entry here.
     std::unordered_map<std::string, HandlerFn> handlers;
 
     CommandDirector cd(storage, handlers, splitter);
@@ -102,8 +91,6 @@ TEST(CommandDirectorTest, KnownCommandWithoutHandler_ReturnsBadRequest)
 }
 
 /**
- * CommandDirectorTest.RoutesToCorrectHandler
- *
  * - Splitter knows PING with 2 tokens: ["PING", <payload>].
  * - handlerMap registers a handler for "PING".
  * - Input line "PING hello world" should be split into:
@@ -120,8 +107,6 @@ TEST(CommandDirectorTest, RoutesToCorrectHandler)
 
     handlers.emplace("PING",
         [](const std::vector<std::string>& args, Storage&) -> std::string {
-            // Expect exactly ["PING", <payload>].
-            // Return a deterministic string that test can assert.
             if (args.size() != 2) {
                 return "BAD_ARGS";
             }
@@ -136,14 +121,12 @@ TEST(CommandDirectorTest, RoutesToCorrectHandler)
 }
 
 /**
- * CommandDirectorTest.CommandCaseInsensitiveViaSplitter
- *
  * - Splitter uppercases the command token.
  * - handlerMap is keyed by "PING".
  * - Input line uses lowercase "ping".
  * - Splitter should output args[0] == "PING", and CommandDirector
  *   should still find the handler and execute it.
- */
+*/
 TEST(CommandDirectorTest, CommandCaseInsensitiveViaSplitter)
 {
     Storage storage = makeTestStorage();
@@ -156,7 +139,6 @@ TEST(CommandDirectorTest, CommandCaseInsensitiveViaSplitter)
             if (args.size() != 2) {
                 return "BAD_ARGS";
             }
-            // Return just the command + payload for simplicity.
             return args[0] + ":" + args[1];
         });
 
@@ -164,7 +146,6 @@ TEST(CommandDirectorTest, CommandCaseInsensitiveViaSplitter)
 
     const std::string response = cd.process("ping SomePayload");
 
-    // Expect uppercased command name from Splitter.
     EXPECT_EQ(response, "PING:SomePayload");
 }
 
