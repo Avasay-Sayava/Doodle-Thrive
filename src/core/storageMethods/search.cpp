@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <fstream>
 
+using namespace storageMethods;
 using namespace std;
 using namespace std::filesystem;
 

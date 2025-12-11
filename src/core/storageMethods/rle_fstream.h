@@ -8,6 +8,7 @@
 /**
  * @brief A custom file stream operator warper that uses RLE.
  */
+namespace storageMethods {
 class rle_fstream
 {
 public:
@@ -41,5 +42,5 @@ private:
     std::fstream fstream;
     std::string path;
 };
-
+}
 #endif // RLE_FSTREAM_H

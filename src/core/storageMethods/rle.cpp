@@ -1,6 +1,8 @@
 #include <string>
 #include <climits>
 #include "rle.h"
+
+using namespace storageMethods;
 using namespace std;
 
 string rle_encrypt(const string& text)

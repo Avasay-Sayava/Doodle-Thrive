@@ -6,6 +6,7 @@
 #include <streambuf>
 #include <optional>
 
+using namespace storageMethods;
 using namespace std;
 
 rle_fstream::rle_fstream(const string& file_path, const string& file_name)

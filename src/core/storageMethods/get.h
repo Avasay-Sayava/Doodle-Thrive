@@ -12,7 +12,8 @@
  * @param file_name The name of the file to retrieve.
  * @return The string content of the file.
  */
+namespace storageMethods {
 std::optional<std::string> get(const std::string& file_name);
-
+}
 
 #endif // GET_H

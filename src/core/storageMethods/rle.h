@@ -3,6 +3,7 @@
 
 #include <string>
 
+namespace storageMethods {
 /**
  * @brief Encrypts a string using RLE.
  *
@@ -24,4 +25,5 @@ std::string rle_encrypt(const std::string& text);
  */
 std::string rle_decrypt(const std::string& text);
 
+}
 #endif // RLE_H

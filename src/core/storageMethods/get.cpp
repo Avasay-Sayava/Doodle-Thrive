@@ -4,7 +4,7 @@
 #include <optional>
 #include "rle_fstream.h"
 
-
+using namespace storageMethods;
 using namespace std;
 
 optional<string> get(const string& file_name)
