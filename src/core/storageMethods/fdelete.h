@@ -9,6 +9,8 @@
  * @param file_name The name of the file to delete.
  * @return true if the file was successfully deleted, false otherwise.
  */
+namespace storageMethods {
 bool fdelete(const std::string& file_name);
+}
 
 #endif
