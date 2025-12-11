@@ -40,7 +40,7 @@ public:
      * @param term The search term.
      * @return List of matching filenames.
      */
-    std::vector<std::string> search(const std::string& term) const;
+    std::string search(const std::string& term) const;
 
     /**
      * @brief Delete a file.

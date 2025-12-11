@@ -1,0 +1,152 @@
+#include <gtest/gtest.h>
+#include <functional>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#include "../src/core/cd.h"
+#include "../src/core/splitter.h"
+#include "../src/core/statusCodes.h"
+#include "../src/core/storage.h"
+
+namespace ddrive {
+
+
+using HandlerFn = std::function<std::string(const std::vector<std::string>&, Storage&)>;
+
+
+static Splitter makeTestSplitter()
+{
+    ddrive::Splitter::CommandArityMap splitterMap = {
+        {"PING",  2},
+        {"ECHO",  2}
+    };
+    return Splitter(splitterMap);
+}
+
+
+static Storage makeTestStorage()
+{
+
+    return Storage();
+}
+
+/**
+ * - Splitter only knows about PING and ECHO.
+ * - Input line uses an unknown command "FOO".
+ * - Splitter returns an empty args vector for this line.
+ * - CommandDirector should map that to a 400 BadRequest response.
+ */
+TEST(CommandDirectorTest, UnknownCommand_ReturnsBadRequest)
+{
+    Storage storage = makeTestStorage();
+
+    // Splitter only knows PING/ECHO
+    Splitter splitter = makeTestSplitter();
+
+    std::unordered_map<std::string, HandlerFn> handlers;
+
+    CommandDirector cd(storage, handlers, splitter);
+
+    const std::string response = cd.process("FOO something");
+
+    EXPECT_EQ(response, codeToString(StatusCode::BadRequest));
+}
+
+/**
+ * - Empty input line should produce an empty args vector from Splitter.
+ * - CommandDirector should respond with 400 BadRequest.
+ */
+TEST(CommandDirectorTest, EmptyLine_ReturnsBadRequest)
+{
+    Storage storage = makeTestStorage();
+    Splitter splitter = makeTestSplitter();
+    std::unordered_map<std::string, HandlerFn> handlers;
+
+    CommandDirector cd(storage, handlers, splitter);
+
+    const std::string response = cd.process("");
+
+    EXPECT_EQ(response, codeToString(StatusCode::BadRequest));
+}
+
+/**
+ * - Splitter knows the command PING (in its COMMAND→argCount map).
+ * - handlerMap does NOT contain a handler for "PING".
+ * - Splitter returns args[0] = "PING", but CommandDirector cannot find a handler.
+ * - Should return 400 BadRequest.
+ */
+TEST(CommandDirectorTest, KnownCommandWithoutHandler_ReturnsBadRequest)
+{
+    Storage storage = makeTestStorage();
+    Splitter splitter = makeTestSplitter();
+
+    std::unordered_map<std::string, HandlerFn> handlers;
+
+    CommandDirector cd(storage, handlers, splitter);
+
+    const std::string response = cd.process("PING payload");
+
+    EXPECT_EQ(response, codeToString(StatusCode::BadRequest));
+}
+
+/**
+ * - Splitter knows PING with 2 tokens: ["PING", <payload>].
+ * - handlerMap registers a handler for "PING".
+ * - Input line "PING hello world" should be split into:
+ *     args[0] = "PING"
+ *     args[1] = "hello world"  (because argCount=2 so last arg is "rest of line")
+ * - CommandDirector should call the correct handler and return its string.
+ */
+TEST(CommandDirectorTest, RoutesToCorrectHandler)
+{
+    Storage storage = makeTestStorage();
+    Splitter splitter = makeTestSplitter();
+
+    std::unordered_map<std::string, HandlerFn> handlers;
+
+    handlers.emplace("PING",
+        [](const std::vector<std::string>& args, Storage&) -> std::string {
+            if (args.size() != 2) {
+                return "BAD_ARGS";
+            }
+            return std::string("HANDLER_PING:") + args[0] + ":" + args[1];
+        });
+
+    CommandDirector cd(storage, handlers, splitter);
+
+    const std::string response = cd.process("PING hello world");
+
+    EXPECT_EQ(response, "HANDLER_PING:PING:hello world");
+}
+
+/**
+ * - Splitter uppercases the command token.
+ * - handlerMap is keyed by "PING".
+ * - Input line uses lowercase "ping".
+ * - Splitter should output args[0] == "PING", and CommandDirector
+ *   should still find the handler and execute it.
+*/
+TEST(CommandDirectorTest, CommandCaseInsensitiveViaSplitter)
+{
+    Storage storage = makeTestStorage();
+    Splitter splitter = makeTestSplitter();
+
+    std::unordered_map<std::string, HandlerFn> handlers;
+
+    handlers.emplace("PING",
+        [](const std::vector<std::string>& args, Storage&) -> std::string {
+            if (args.size() != 2) {
+                return "BAD_ARGS";
+            }
+            return args[0] + ":" + args[1];
+        });
+
+    CommandDirector cd(storage, handlers, splitter);
+
+    const std::string response = cd.process("ping SomePayload");
+
+    EXPECT_EQ(response, "PING:SomePayload");
+}
+
+} // namespace ddrive
