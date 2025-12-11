@@ -10,15 +10,6 @@ Splitter::Splitter(CommandArityMap commandArgCounts)
 {
 }
 
-// helper: uppercase a string in-place
-static void toUpperInPlace(std::string& s)
-{
-    std::transform(
-        s.begin(), s.end(), s.begin(),
-        [](unsigned char c) { return static_cast<char>(std::toupper(c)); }
-    );
-}
-
 std::vector<std::string> Splitter::split(const std::string& line) const
 {
     std::vector<std::string> args;
@@ -45,7 +36,7 @@ std::vector<std::string> Splitter::split(const std::string& line) const
         return {};
     }
 
-    toUpperInPlace(commandToken);
+    std::transform(commandToken.begin(), commandToken.end(), commandToken.begin(), [](unsigned char c) { return static_cast<char>(std::toupper(c)); });
 
     auto it = commandArgCounts.find(commandToken);
     if (it == commandArgCounts.end()) {
