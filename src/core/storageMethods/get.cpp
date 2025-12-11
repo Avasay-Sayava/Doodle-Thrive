@@ -7,6 +7,7 @@
 using namespace storageMethods;
 using namespace std;
 
+namespace storageMethods {
 optional<string> get(const string& file_name)
 {
     // open stream to file
@@ -16,4 +17,5 @@ optional<string> get(const string& file_name)
     optional<string> text;
     file >> text;
     return text;
+}
 }

@@ -10,6 +10,7 @@ using namespace storageMethods;
 using namespace std;
 using namespace std::filesystem;
 
+namespace storageMethods {
 string search(const std::string& content) {
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     // If environment variable does not exist, return an empty string.
@@ -38,4 +39,5 @@ string search(const std::string& content) {
         result.pop_back();
     }
     return result;
+}
 }

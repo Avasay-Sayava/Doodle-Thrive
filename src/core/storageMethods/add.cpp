@@ -7,6 +7,7 @@
 using namespace storageMethods;
 using namespace std;
 
+namespace storageMethods {
 bool add(const string& file_name, const string& text)
 {
     // open stream to file
@@ -19,4 +20,5 @@ bool add(const string& file_name, const string& text)
         return true;
     }
     return false;
+}
 }

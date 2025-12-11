@@ -9,6 +9,7 @@
 using namespace storageMethods;
 using namespace std;
 
+namespace storageMethods {
 rle_fstream::rle_fstream(const string& file_path, const string& file_name)
 {
     // save the full file path
@@ -58,4 +59,5 @@ rle_fstream& rle_fstream::operator<<(const string& str)
 
     // return itself for chain calls
     return *this;
+}
 }
