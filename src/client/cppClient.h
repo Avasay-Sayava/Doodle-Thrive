@@ -1,6 +1,10 @@
-#include <iostream>
-#include <string>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netdb.h>
 #include <cstring>
+#include <string>
+#include <iostream>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>

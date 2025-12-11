@@ -17,6 +17,8 @@ class Client:
         # User interaction loop
         while True:
             command = input()
+            if command == '':
+                break
             response = self.send_command(command)
             print(response, end='')
 
