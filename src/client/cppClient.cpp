@@ -1,21 +1,31 @@
 #include "cppClient.h"
 
 Client::Client(const std::string& host, int port) {
-    // Initialize the socket
-    client_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (client_socket < 1) {
+    struct addrinfo hints{}, *res = nullptr;
+
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+
+    std::string port_str = std::to_string(port);
+
+    int status = getaddrinfo(host.c_str(), port_str.c_str(), &hints, &res);
+    if (status != 0) {
         return;
     }
-    // Set address
-    memset(&server_addr, 0, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    // Set port and IP address
-    server_addr.sin_port = htons(port);
-    server_addr.sin_addr.s_addr = inet_addr(host.c_str());
-    if (connect(client_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+
+    client_socket = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    if (client_socket < 0) {
+        freeaddrinfo(res);
+        return;
+    }
+
+    if (connect(client_socket, res->ai_addr, res->ai_addrlen) < 0) {
         close(client_socket);
+        freeaddrinfo(res);
         return;
     }
+
+    freeaddrinfo(res);
 }
 
 void Client::run_client() {
@@ -23,6 +33,9 @@ void Client::run_client() {
     while (true) {
         std::string user_request;
         std::getline(std::cin, user_request);
+        if (user_request.empty()) {
+            continue;
+        }
         std::string response = send_command(user_request);
         std::cout << response;
     }
