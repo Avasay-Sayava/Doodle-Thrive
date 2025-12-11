@@ -4,10 +4,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../core/cd.h"
-#include "../core/splitter.h"
-#include "../core/statusCodes.h"
-#include "../core/storage.h"
+#include "../src/core/cd.h"
+#include "../src/core/splitter.h"
+#include "../src/core/statusCodes.h"
+#include "../src/core/storage.h"
 
 namespace ddrive {
 
