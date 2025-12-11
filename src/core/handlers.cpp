@@ -25,7 +25,7 @@ std::string makeNoContent()
 std::string makeOk(const std::string& body)
 {
     std::string output = ddrive::codeToString(StatusCode::Ok);
-    output += "\n";
+    output += "\n\n";
     output += body;
     output += "\n";
     return output;  
