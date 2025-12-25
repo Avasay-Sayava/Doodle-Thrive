@@ -1,0 +1,23 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "API for Doodle Drive Storage System",
+  "main": "src/app.js",
+  "directories": {
+    "lib": "lib",
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/app.js",
+    "doc": "node_modules/.bin/jsdoc --configure jsdoc.json --verbose"
+  },
+  "keywords": [],
+  "author": "Avasay-Sayava, IddoBA, niki66MC",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
