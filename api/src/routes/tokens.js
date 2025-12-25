@@ -1,4 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-// Empty implemntation
+const tokensController = require("../controllers/tokens");
+
+router.route("/")
+    .post(tokensController.find);
+
+module.exports = router;
