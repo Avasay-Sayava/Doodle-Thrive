@@ -10,3 +10,11 @@ build/
 .vscode/
 *.user
 *.idea/
+
+node_modules/
+package-lock.json
+doc/
+docs/
+jsdoc.json
+
+README.md
