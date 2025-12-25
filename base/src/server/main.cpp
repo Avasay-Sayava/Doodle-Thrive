@@ -3,7 +3,7 @@
 #include "../core/splitter.h"
 #include "../core/cd.h"
 #include "../core/handlers.h"
-#include "../core/ThreadForEveryRunnable.h"
+#include "../core/ThreadPool.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,6 +11,7 @@ int main(int argc, char* argv[])
         return 1;
     }
     unsigned int port = static_cast<unsigned int>(std::stoi(argv[1]));
+    unsigned int threadCount = static_cast<unsigned int>(std::stoi(getenv("THREADS")));
 
     ddrive::Splitter::CommandArityMap splitterMap = {
         { "POST",   3 },
@@ -31,7 +32,7 @@ int main(int argc, char* argv[])
     ddrive::Splitter splitter(splitterMap);
     ddrive::CommandDirector commandDirector(storage, handlerMap, splitter);
 
-    ddrive::ThreadForEveryRunnable executor;
+    ddrive::ThreadPool executor = ddrive::ThreadPool(threadCount);
     ddrive::Server server(commandDirector, executor, port);
     server.runServer();
 }
