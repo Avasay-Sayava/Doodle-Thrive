@@ -1,102 +1,262 @@
-# Doodle-Drive
-Doodle-Drive is divided into two main components: A server that handles file storage and retrieval, and two command-line interface (CLI) clients that allows users to interact with the server. The server uses RLE compression to store files efficiently.
+# Doodle Drive
 
-This app was developed by Iddo Ben-Ari, Shahar Zuckerman, and Aviv Sayer
-## Running
-To run the application, start by initializing the server with Docker Compose:
+## Overview
+This project implements a distributed file system inspired by Google Drive, consisting of a NodeJS API Gateway and a C++ Backend Server.
+
+## Project Structure
+* **API**: NodeJS Express Server (MVC Architecture)
+* **base**: C++ TCP Server
+
+## Disabling Changes to Branches of Parts
+To disable changes to branches of finished parts of the project, you create a ruleset in GitHub repository settings:
+1. Go to "Settings" -> "Rules" -> "Rulesets" -> "New ruleset"
+2. Name the ruleset (e.g., "No touching to completed assignments")
+3. Under "Target branches", add the regex of "Part-*" (all of the completed parts branches start with "Part-")
+4. Under "Rules", add the rules:
+   * Restrict creations
+   * Restrict updates
+   * Restrict deletions
+   * Require linear history
+   * Block force pushes
+5. Save the ruleset
+
+## Installation & Running
+The project is containerized using Docker. For running parts of the project, there are predefined bash files.
+* **To enable the usage of the bash files**, you need to run this command in the root directory:
+   ```bash
+   chmod +x ./api-server.sh ./api-console.sh ./api-tests.sh ./base-server.sh ./base-client.sh ./base-tests.sh
+   ```
+
+* **To start the backend base C++ server**, you need to run the `./base-server.sh` file:
+    ```bash
+    build=<true|false> name=<host_name> port=<port> threads=<thread_count> ./base-server.sh
+    ```
+    You can run the file without defining the `build`, `name`, `port`, `threads` variables, and it will sign them the default values `true`, `base-server`, `3000`, `10` each.
+
+* **To run a C++/Python client on a base server**, you need to run the `./base-client.sh` file:
+    ```bash
+    build=<true|false> type=<1=cpp|2=python> name=<cpp_server_host_name> port=<cpp_server_port> ./base-client.sh
+    ```
+    You can run the file without defining the `build`, `type` variables, and it will sign them the default values `true`, and ask for the client type on runtime. Note that you are required to define the `name` and `port` variables to connect the client to the C++ backend server.
+
+* **To run the tests for the backend base C++ server**, you need to run the `./base-tests.sh` file:
+    ```bash
+    build=<true|false> ./base-tests.sh
+    ```
+    You can run the file without defining the `build` variable, and it will sign it the default value `true`.
+
+* **To start the API server**, you need to run the `./api-server.sh` file:
+    ```bash
+    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> name=<host_name> port=<port> timeout=<requests_timeout_ms> ./api-server.sh
+    ```
+    You can run the file without defining the `build`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `api-server`, `3300`, `5` each. Note that you are required to define the `server_name` and `server_port` variables to connect the API server to the C++ backend server.
+
+* **To get to an API server's console**, you can reply 'Y' in the end of `./base-server.sh` execution, or run the `./api-console.sh` file:
+   ```bash
+   name=<api_host_name> port=<api_port> ./api-console.sh
+   ```
+   You can run the file without defining the `name`, `port` variables, and it will sign them the default values `api-server`, `3300` each.
+
+* **To run the tests for the API server**, you need to run the `./api-tests.sh` file:
+    ```bash
+    build=<true|false> ./api-tests.sh
+    ```
+    You can run the file without defining the `build` variable, and it will sign it the default value `true`.
+
+## C++ Server Usage Examples
+
+For the full protocol, documentation can be found in [`base/README.md`](base/README.md).
+
+### Startup Example
+**Start the server:** (with default variables)
 ```bash
-docker-compose run -d --build --remove-orphans --name server server <port>
+./base-server.sh
 ```
-If you did it once, you dont need to build again, so you can run:
+
+**Then you can run your client of choice**:
+* **Run a C++ client:** (connecting to server at `base-server:3000`)
+   ```bash
+   type=1 name=base-server port=3000 ./base-client.sh
+   ```
+
+* **Run a Python client:** (connecting to server at `base-server:3000`)
+   ```bash
+   type=2 name=base-server port=3000 ./base-client.sh
+   ```
+
+### Commands Examples
+* **Create a file:**
+   ```
+   POST Hello, World!
+   ```
+   ```
+   201 Created
+   ```
+
+* **Read a file:**
+   ```
+   GET Hello,
+   ```
+   ```
+   200 Ok
+
+   World!
+   ```
+
+* **Search a string:**
+   ```
+   SEARCH orl
+   ```
+   ```
+   200 Ok
+
+   Hello,
+   ```
+
+* **Delete a file:**
+   ```
+   DELETE Hello,
+   ```
+   ```
+   204 No Content
+   ```
+
+## API Usage Examples
+
+For the full protocol, documentation can be found in [`base/README.md`](api/README.md).
+
+### Startup Example
+**Start the API server:** (connecting to C++ server at `base-server:3000`, with default variables)
 ```bash
-docker-compose run -d --remove-orphans --name server server <port>
+server_name=base-server server_port=3000 ./api-server.sh
 ```
-Replace `<port>` with the desired port number for the server to listen on.
-Next, you can use either of the two CLI clients to interact with the server. To use the python client, run:
+
+**Connect to the API server's console:** (with default variables)
 ```bash
-docker-compose run --build --remove-orphans py-client <server-name> <server-port>
-```
-Or, if you did it once, you can run:
-```bash
-docker-compose run --remove-orphans py-client <server-name> <server-port>
-```
-To use the C++ client, run:
-```bash
-docker-compose run --build --remove-orphans cpp-client <server-name> <server-port>
-```
-Or, if you did it once, you can run:
-```bash
-docker-compose run --remove-orphans cpp-client <server-name> <server-port>
-```
-Replace `<server-name>` with the server's hostname; if using the commands above, use `server`. Replace `<server-port>` with the port number you specified when starting the server.
-
-## Commands
-
-The following commands are supported, keep in mind that commands and filenames are not case-sensitive:
-**POST** - Add a new file with specified content.
-```
-POST <filename> <content>
-```
-Example:
-``` 
-POST notes Important meeting tomorrow at 2 PM
-POST todo Buy groceries and milk
+./api-console.sh
 ```
 
-**GET** - Retrieve a file's contents. If the file does not exist, command is ignored.
-```
-GET <filename>
-```
-Example:
-``` 
-GET notes
-```
-**SEARCH** - Find files that contain a string (returns space-separated filenames). The content can be anything, and could even be empty by putting a space and then no content after it (would return all of the files)
-```
-SEARCH <search-term>
-```
-Example:
-``` 
-SEARCH milk
-```
-**DELETE** - Delete a specified file. If the file does not exist, command is ignored.
-```
-DELETE <filename>
-```
-Example:
-``` 
-DELETE todo
-```
+### Possible Requests
+* **Create user:**
+   ```bash
+   curl -i -X POST http://localhost:3300/api/users -H "Content-Type: application/json" -d '{"username": "USERNAME", "password": "PASSWORD", "info": {"image": "data:image/png;base64,BASE64/STRING", "description": "DESCRIPTION"}}'
+   ```
+   ```
+   HTTP/1.1 201 Created
+   X-Powered-By: Express
+   Location: /api/users/ebe7aa8d-e2c0-496b-93ca-41f015cfe29b
+   Date: Wed, 24 Dec 2025 20:35:34 GMT
+   Connection: keep-alive
+   Keep-Alive: timeout=5
+   Content-Length: 0
+   ```
 
-## Example
-<img src="./images/full_example.png" alt="Docker Compose command to start the Doodle-Drive application in an interactive terminal with build and orphan removal flags" width="1200" />
+* **Get user info:**
+   ```bash
+   curl -i http://localhost:3300/api/users/ebe7aa8d-e2c0-496b-93ca-41f015cfe29b
+   ```
+   ```
+   HTTP/1.1 200 OK
+   X-Powered-By: Express
+   Content-Type: application/json; charset=utf-8
+   Content-Length: 79
+   ETag: W/"4f-n/7UR/+HDnWF83Yfto44xNgrJYw"
+   Date: Wed, 24 Dec 2025 20:36:17 GMT
+   Connection: keep-alive
+   Keep-Alive: timeout=5
 
-## Tests
-Run tests with Docker Compose:
-```bash
-docker-compose run --build --remove-orphans gtest
-```
-If you did it once, you dont need to build again, so you can run:
-```bash
-docker-compose run --remove-orphans gtest
-```
-Tests are located in the `tests` directory.
-### Example Test Output
-<img src="./images/tests.png"/>
+   {"id":"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b","username":"USERNAME","info":{"image":"data:image/png;base64,BASE64/STRING","description":"DESCRIPTION"}}
+   ```
 
-# Loose-coupling and SOLID principles questions:
-In Ex2 we refactored Ex1 with a core folder that included storage, handlers, cd, splitter and statusCodes. For I/O we used the clients and server, and the server is pretty much dumb, it takes messages from the user, gives the string to the cd, and returns the output from the cd (while also accounting for multiple clients). Storage was added for dealing with multi-threading, to use any sort of function that alters a file you have to use a storage object, which is locked when you call a function that uses file logic (all functions from Ex1).
+* **Get all info by username and password:**
+   ```bash
+   curl -i http://localhost:3300/api/tokens -H "Content-Type: application/json" -d '{"username": "USERNAME", "password": "PASSWORD"}'
+   ```
+   ```
+   HTTP/1.1 200 OK
+   X-Powered-By: Express
+   Content-Type: application/json; charset=utf-8
+   Content-Length: 45
+   ETag: W/"2d-NCQl3Cc/bgZV4e5JIj+cMb0/ayA"
+   Date: Wed, 24 Dec 2025 21:24:47 GMT
+   Connection: keep-alive
+   Keep-Alive: timeout=5
 
-These changes, mainly the ones to the Ex1 code, were done for abstraction purposes, we realised when looking at the task that if we wanted to complete it without changing the code, we would need to reorder some logic.
+   {"id":"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b"}
+   ```
 
-This is the new logic we used, we have a CommandDirector which gets a map at the start of the server of the commands and their handler (explained later), the command director splits the string it receives using the splitter, and calls the handler that match the first arg from the vector that splitter returned. Splitter gets a map of commands, and the amount of argos they receive, and it splits them accordingly, and returns a vector of args, it also uppers the first arg this time, since we are case-insensitive, new splitters can be added for different logic. Finally handlers: each command has a handler which is responsible for the correct output and validation of the command, it gets a vector of arg, it validates that it fits our command, then calls the right function from Ex1. so if we want to change commands, we only need to change their handler, not implementation.
+* **Create a folder:**
+   ```bash
+   curl -i -X POST http://localhost:3300/api/files -H "Username: USERNAME" -H "Password: PASSWORD" -H "Content-Type: application/json" -d '{"name": "folder"}'
+   ```
+   ```
+   HTTP/1.1 201 Created
+   X-Powered-By: Express
+   Location: /api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082
+   Date: Wed, 24 Dec 2025 20:54:09 GMT
+   Connection: keep-alive
+   Keep-Alive: timeout=5
+   Content-Length: 0
+   ```
 
-Now with this new logic, we were able to address the mentioned problems. 
-## Changing command names
-To change command names, we simply needed to pass to the splitter and cd a map with the needed command names, and create a handler for each, which did not require any changes to Ex1 code.
-## Adding new commands
-In order to add delete, or any new command, we simply need to add its logic, add a simple method for it to Storage, to address multi-threading, then add a handler for it, pass its name and its handler to cd, and its name and arg count to splitter. We only need to add new code.
-## Changing output format
-The output is simply decided in the handler, so if we want a different output for a command, we just change its handler.
-## Switching from console to sockets
-This required us to add clients, and a server of course. And we did get rid of our cli code, since we realised it was not up to standard with loose-coupling and SOLID principles, instead we added a file name cd (CommandDirector), which is up to standard.
+* **Create a file**
+   ```bash
+   curl -i -X POST http://localhost:3300/api/files -H "Username: USERNAME" -H "Password: PASSWORD" -H "Content-Type: application/json" -d '{"name": "file.txt", "parent": "4a0ec9ae-751a-46ab-a3d6-4295a8df5082", "content": "Hello, World!"}'
+   ```
+   ```
+   HTTP/1.1 201 Created
+   X-Powered-By: Express
+   Location: /api/files/31798e34-3b62-40b1-b3fe-cd46a494c85c
+   Date: Wed, 24 Dec 2025 20:54:41 GMT
+   Connection: keep-alive
+   Keep-Alive: timeout=5
+   Content-Length: 0
+   ```
+
+* **Get a file's content:**
+   ```bash
+   curl -i http://localhost:3300/api/files/31798e34-3b62-40b1-b3fe-cd46a494c85c -H "Username: USERNAME" -H "Password: PASSWORD"
+   ```
+   ```
+   HTTP/1.1 200 OK
+   X-Powered-By: Express
+   Content-Type: application/json; charset=utf-8
+   Content-Length: 153
+   ETag: W/"99-9fQUOcXvxdwX6m8OJpfxLMXe6JI"
+   Date: Wed, 24 Dec 2025 20:56:05 GMT
+   Connection: keep-alive
+   Keep-Alive: timeout=5
+
+   {"id":"31798e34-3b62-40b1-b3fe-cd46a494c85c","name":"file.txt","type":"file","parent":"4a0ec9ae-751a-46ab-a3d6-4295a8df5082","content":"Hello, World!"}
+   ```
+
+* **Add user's permissions** to a file/folder:
+   ```bash
+   curl -i -X POST http://localhost:3300/api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082/permissions -H "Username: USERNAME" -H "Password: PASSWORD" -H "Content-Type: application/json" -d '{"options": {"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b": {"read": true, "write": true, "permissions": {"read": true, "write": true}}}}'
+   ```
+   ```
+   HTTP/1.1 201 Created
+   X-Powered-By: Express
+   Location: /api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082/permissions/97621e35-eb84-4e73-9fe4-781a8607aa60
+   Date: Wed, 24 Dec 2025 21:04:04 GMT
+   Connection: keep-alive
+   Keep-Alive: timeout=5
+   Content-Length: 0
+   ```
+
+* **Search a query:**
+   ```bash
+   curl -i http://localhost:3300/api/search/Hello -H "Username: USERNAME" -H "Password: PASSWORD"
+   ```
+   ```
+   HTTP/1.1 200 OK
+   X-Powered-By: Express
+   Content-Type: application/json; charset=utf-8
+   Content-Length: 2
+   ETag: W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
+   Date: Wed, 24 Dec 2025 21:07:58 GMT
+   Connection: keep-alive
+   Keep-Alive: timeout=5
+
+   ["31798e34-3b62-40b1-b3fe-cd46a494c85c"]
+   ```
