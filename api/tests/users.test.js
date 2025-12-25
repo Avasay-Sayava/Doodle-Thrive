@@ -39,7 +39,7 @@ async function run() {
         assert.strictEqual(userData.info.description, TEST_USER.info.description, "Description mismatch");
         assert.strictEqual(userData.id, userId, "ID mismatch");
         
-        // Ensure password is NOT returned
+        // Ensure password is not returned
         assert.strictEqual(userData.password, undefined, "Security: Password should not be returned");
         console.log("   PASS: User info verified");
 
