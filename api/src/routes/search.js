@@ -1,4 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-// Empty implemntation
+const searchController = require("../controllers/search");
+
+router.route("/:query")
+    .get(searchController.search);
+
+module.exports = router;
