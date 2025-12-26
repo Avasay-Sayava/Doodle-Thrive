@@ -1,4 +1,31 @@
 const Regex = require("../models/regex");
 const Users = require("../models/users");
 
-// Empty implemntation
+/**
+ * Finds a user by username and password.
+ * @param {import("express").Request} req 
+ * @param {import("express").Response} res 
+ * @returns {Promise<void>}
+ */
+exports.find = (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        if (!username || !password)
+            return res.status(400).json({ error: "Username and password are required" });
+
+        if (!Regex.username.test(username))
+            return res.status(400).json({ error: "Invalid username format" });
+
+        if (!Regex.password.test(password))
+            return res.status(400).json({ error: "Invalid password format" });
+
+        const id = Users.find(username, password);
+
+        if (!id)
+            return res.status(404).end();
+        return res.status(200).json({ id: id });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+}
