@@ -2,10 +2,11 @@ const Regex = require("../models/regex");
 const Users = require("../models/users");
 
 /**
- * Finds a user by username and password.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Authenticates a user and retrieves their User ID.
+ * effectively acts as a "login" mechanism by verifying credentials.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.find = (req, res) => {
     try {

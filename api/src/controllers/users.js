@@ -2,10 +2,11 @@ const Regex = require("../models/regex");
 const Users = require("../models/users");
 
 /**
- * Creates a new user.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Handles the creation of a new user account.
+ * Validates the username, password, and optional profile info before creating the user.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.create = (req, res) => {
     try {
@@ -29,10 +30,10 @@ exports.create = (req, res) => {
 }
 
 /**
- * Retrieves a user by ID.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Retrieves public user information by ID.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.get = (req, res) => {
     try {
@@ -51,9 +52,11 @@ exports.get = (req, res) => {
 }
 
 /**
- * Trims and validates user info.
- * @param {object} info 
- * @returns {object|null}
+ * Trims and validates the user profile information.
+ * @param {object} info The raw profile info object.
+ * @param {string} [info.image] Base64 encoded image string.
+ * @param {string} [info.description] User description/bio.
+ * @return {{image: string|null, description: string}|null} Sanitized info object or null if invalid.
  */
 function trimInfo(info) {
     if (info.image &&
@@ -74,9 +77,12 @@ function trimInfo(info) {
 }
 
 /**
- * Trims and validates user data.
- * @param {object} data 
- * @returns {object|null}
+ * Trims and validates the full user creation data.
+ * @param {object} data The raw request body.
+ * @param {string} [data.username] The desired username.
+ * @param {string} [data.password] The desired password.
+ * @param {object} [data.info] The profile info object.
+ * @return {{username?: string, password?: string, info: object}|null} Sanitized user data or null if invalid.
  */
 function trimData(data) {
     if (data.info && !trimInfo(data.info))

@@ -1,59 +1,63 @@
-#ifndef STORAGE_H
-#define STORAGE_H
+#ifndef DOODLE_DRIVE_STORAGE_H
+#define DOODLE_DRIVE_STORAGE_H
 
-#include <string>
-#include <optional>
-#include <vector>
 #include <mutex>
+#include <optional>
+#include <string>
+#include <vector>
 
-namespace ddrive {
-
-/**
- * @brief Thread-safe storage layer that wraps Ex1 file operations.
- *
- * This class provides the POST/GET/SEARCH/DELETE operations.
- * Internally it protects file operations using a mutex to ensure thread safety
- * when multiple client threads access the filesystem.
- */
-class Storage {
-public:
-    /**
-     * @brief Add a new file with the given content.
-     *
-     * @param filename The file name.
-     * @param content file contents.
-     * @return true if file was created false if file already exists.
-     */
-    bool add(const std::string& filename, const std::string& content);
+namespace ddrive
+{
 
     /**
-     * @brief Retrieve the contents of a file.
+     * @brief Thread-safe storage layer acting as the high-level Model.
      *
-     * @param filename The file name.
-     * @return File content if exists otherwise nullpt.
+     * Wraps the low-level file operations (POST/GET/SEARCH/DELETE).
+     * Uses a mutex to ensure that concurrent access from multiple client
+     * threads does not cause race conditions on the filesystem or internal
+     * state.
      */
-    std::optional<std::string> get(const std::string& filename) const;
+    class storage
+    {
+    public:
+        /**
+         * @brief Attempts to create a new file with the given content.
+         *
+         * @param filename The unique name of the file.
+         * @param content The text content to store.
+         * @return If the file was successfully created.
+         */
+        bool add(const std::string& filename, const std::string& content);
 
-    /**
-     * @brief Search for files by content or filename.
-     *
-     * @param term The search term.
-     * @return List of matching filenames.
-     */
-    std::string search(const std::string& term) const;
+        /**
+         * @brief Retrieves the contents of an existing file.
+         *
+         * @param filename The name of the file to read.
+         * @return Contains the file content if found, otherwise nullopt.
+         */
+        std::optional<std::string> get(const std::string& filename) const;
 
-    /**
-     * @brief Delete a file.
-     *
-     * @param filename The name of the file to delete.
-     * @return true if file existed and was deleted false otherwise.
-     */
-    bool remove(const std::string& filename);
+        /**
+         * @brief Searches for files containing the specified term.
+         *
+         * @param term The substring to search for within all stored files.
+         * @return A newline-separated or space-separated list of matching
+         * filenames.
+         */
+        std::string search(const std::string& term) const;
 
-private:
-    mutable std::mutex mtx; // Protects all file operations.
-};
+        /**
+         * @brief Deletes a file from storage.
+         *
+         * @param filename The name of the file to remove.
+         * @return If the file existed and was deleted.
+         */
+        bool remove(const std::string& filename);
+
+    private:
+        mutable std::mutex _mtx;
+    };
 
 } // namespace ddrive
 
-#endif // STORAGE_H
+#endif // DOODLE_DRIVE_STORAGE_H

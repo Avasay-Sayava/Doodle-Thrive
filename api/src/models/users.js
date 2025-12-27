@@ -2,9 +2,12 @@ const users = {};
 const { randomUUID: uuid } = require("node:crypto");
 
 /**
- * Creates a new user with given username and password.
- * @param {{username: string, password: string, info?: object}} param0 
- * @returns {string|null} user ID.
+ * Creates a new user in the in-memory database.
+ * @param {object} userData The user creation data.
+ * @param {string} userData.username The desired username.
+ * @param {string} userData.password The user's password.
+ * @param {object} [userData.info] Optional profile information.
+ * @return {string|null} The generated User ID, or null if the user already exists.
  */
 exports.create = ({ username, password, info = {} }) => {
     const id = uuid();
@@ -26,10 +29,10 @@ exports.create = ({ username, password, info = {} }) => {
 }
 
 /**
- * Finds a user by username and password.
- * @param {string} username 
- * @param {string} password 
- * @returns {string|null} user ID.
+ * Finds a user's ID matching the provided credentials.
+ * @param {string} username The username to search for.
+ * @param {string} password The password to verify against.
+ * @return {string|null} The User ID if credentials match, otherwise null.
  */
 exports.find = (username, password) => {
     for (const id in users) {
@@ -41,9 +44,9 @@ exports.find = (username, password) => {
 }
 
 /**
- * Gets a user by ID.
- * @param {string} id 
- * @returns {Object|null} user object.
+ * Retrieves a user object by ID, excluding sensitive data.
+ * @param {string} id The unique identifier of the user.
+ * @return {Object|null} The user object (without password), or null if not found.
  */
 exports.get = (id) => {
     if (!users[id])
@@ -55,8 +58,8 @@ exports.get = (id) => {
 }
 
 /**
- * Gets all users.
- * @returns {Array<Object>} All users without their passwords.
+ * Retrieves all registered users.
+ * @return {Array<Object>} An array of all user objects (excluding passwords).
  */
 exports.getAll = () => {
     const result = [];

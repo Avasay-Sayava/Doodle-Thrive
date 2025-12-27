@@ -1,7 +1,7 @@
-FROM python:3.11-slim
+FROM python:latest
 
-WORKDIR /usr/client/
+WORKDIR /usr/base/client/python/
 
-COPY src/client/pyClient.py ./pyClient.py
+COPY src/client/client.py ./client.py
 
-ENTRYPOINT ["python", "pyClient.py"]
+ENTRYPOINT ["python", "client.py"]

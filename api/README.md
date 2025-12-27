@@ -8,24 +8,24 @@ The project is containerized using Docker. For running parts of the project, the
 
 * **To enable the usage of the bash files**, you need to run this command in the root directory:
     ```bash
-    chmod +x ./api-server.sh ./api-console.sh ./api-tests.sh
+    chmod +x ./api-server.bash ./api-console.bash ./api-tests.bash
     ```
 
-* **To start the API server**, you need to run the `./api-server.sh` file:
+* **To start the API server**, you need to run the `./api-server.bash` file:
     ```bash
-    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> name=<host_name> port=<port> timeout=<requests_timeout_ms> ./api-server.sh
+    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> name=<host_name> port=<port> timeout=<requests_timeout_ms> ./api-server.bash
     ```
     You can run the file without defining the `build`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `api-server`, `3300`, `5` each. Note that you are required to define the `server_name` and `server_port` variables to connect the API server to the C++ backend server.
 
-* **To get to an API server's console**, you can reply 'Y' in the end of `./base-server.sh` execution, or run the `./api-console.sh` file:
+* **To get to an API server's console**, you can reply 'Y' in the end of `./base-server.bash` execution, or run the `./api-console.bash` file:
     ```bash
-    name=<api_host_name> port=<api_port> ./api-console.sh
+    name=<api_host_name> port=<api_port> ./api-console.bash
     ```
     You can run the file without defining the `name`, `port` variables, and it will sign them the default values `api-server`, `3300` each.
 
-* **To run the tests for the API server**, you need to run the `./api-tests.sh` file:
+* **To run the tests for the API server**, you need to run the `./api-tests.bash` file:
     ```bash
-    build=<true|false> ./api-tests.sh
+    build=<true|false> ./api-tests.bash
     ```
     You can run the file without defining the `build` variable, and it will sign it the default value `true`.
 

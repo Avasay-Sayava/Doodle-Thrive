@@ -5,15 +5,16 @@ const client = new Client();
 const host = process.argv[2];
 const port = parseInt(process.argv[3]);
 const timeout = parseInt(process.argv[5]);
+
 if (!host || !port || !timeout) throw new Error("Arguments must be: <server_host> <server_port> <api_port> <timeout>");
 
-
-client.connect = client.connect(host, port);
+// Initialize connection
+client.connect(host, port);
 
 /**
- * 
- * @param {string} name
- * @returns {Promise<{status:number,response:string|null}>}
+ * Retrieves raw data from the storage server.
+ * @param {string} name The unique identifier (UUID) of the file/object.
+ * @return {Promise<{status: number, response: string|null}>} An object containing the HTTP-like status code and the response body (if successful).
  */
 exports.get = async (name) => {
     const response = (await client.request(`GET ${name}`, timeout))
@@ -30,10 +31,10 @@ exports.get = async (name) => {
 }
 
 /**
- * 
- * @param {string} name 
- * @param {string} content 
- * @returns {Promise<{status:number,response:null}>}
+ * Stores raw data on the storage server.
+ * @param {string} name The unique identifier (UUID) for the new entry.
+ * @param {string} content The raw string content to be stored.
+ * @return {Promise<{status: number, response: null}>} An object containing the status code.
  */
 exports.post = async (name, content) => {
     const response = (await client.request(`POST ${name} ${content}`, timeout))
@@ -45,9 +46,9 @@ exports.post = async (name, content) => {
 }
 
 /**
- * 
- * @param {string} name
- * @returns {Promise<{status:number,response:null}>}
+ * Deletes data from the storage server.
+ * @param {string} name The unique identifier (UUID) of the file to delete.
+ * @return {Promise<{status: number, response: null}>} An object containing the status code.
  */
 exports.delete = async (name) => {
     const response = (await client.request(`DELETE ${name}`, timeout))
@@ -59,9 +60,9 @@ exports.delete = async (name) => {
 }
 
 /**
- * 
- * @param {string} query 
- * @returns {Promise<{status:number,response:string[]}>}
+ * Searches the storage server for a specific query string.
+ * @param {string} query The search term to look for within stored files.
+ * @return {Promise<{status: number, response: string[]}>} An object containing the status code and an array of matching file IDs.
  */
 exports.search = async (query) => {
     const response = (await client.request(`SEARCH ${query}`, timeout))

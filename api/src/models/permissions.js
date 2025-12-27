@@ -4,10 +4,15 @@ const permissions = {};
 const filePermissions = {};
 
 /**
- * Adds a new permission to a file.
- * @param {string} fileId 
- * @param {{read?: boolean, write?: boolean, permissions?: {read?: boolean, write?: boolean}}} options 
- * @returns {string} Permission ID.
+ * Adds a new permission entry to a specific file.
+ * @param {string} fileId The ID of the file to attach permissions to.
+ * @param {object} options The permission settings.
+ * @param {boolean} [options.read] Allow read access.
+ * @param {boolean} [options.write] Allow write access.
+ * @param {object} [options.permissions] Delegation permissions.
+ * @param {boolean} [options.permissions.read] Allow reading permissions.
+ * @param {boolean} [options.permissions.write] Allow writing permissions.
+ * @return {string} The generated Permission ID.
  */
 exports.add = (fileId, options) => {
     const pId = uuid();
@@ -26,10 +31,10 @@ exports.add = (fileId, options) => {
 }
 
 /**
- * Gets permissions for a file.
- * @param {string} fileId 
- * @param {string|null} pId 
- * @returns {Object|Object[]|null} Permission(s) object(s).
+ * Retrieves permissions for a specific file.
+ * @param {string} fileId The ID of the file.
+ * @param {string|null} [pId=null] Optional Permission ID to fetch a specific entry.
+ * @return {Object|Object[]|null} If pId is provided, returns that specific permission object; otherwise returns a map of all permissions for the file.
  */
 exports.get = (fileId, pId = null) => {
     if (!filePermissions[fileId])
@@ -49,11 +54,11 @@ exports.get = (fileId, pId = null) => {
 }
 
 /**
- * Updates a permission for a file.
- * @param {string} fileId 
- * @param {string} pId 
- * @param {{read?: boolean, write?: boolean, permissions?: {read?: boolean, write?: boolean}}} options 
- * @returns {boolean} Whether the permission was successfully updated.
+ * Updates an existing permission entry.
+ * @param {string} fileId The ID of the file.
+ * @param {string} pId The ID of the permission to update.
+ * @param {object} options The new permission settings.
+ * @return {boolean} True if the permission was found and updated, otherwise false.
  */
 exports.update = (fileId, pId, options) => {
     if (!filePermissions[fileId]?.includes(pId))
@@ -64,10 +69,10 @@ exports.update = (fileId, pId, options) => {
 }
 
 /**
- * Deletes a permission from a file.
- * @param {string} fileId 
- * @param {string} pId 
- * @returns {boolean} Whether the permission was successfully deleted.
+ * Deletes a permission entry from a file.
+ * @param {string} fileId The ID of the file.
+ * @param {string} pId The ID of the permission to delete.
+ * @return {boolean} True if the permission was found and deleted, otherwise false.
  */
 exports.delete = (fileId, pId) => {
     if (!filePermissions[fileId]?.includes(pId))

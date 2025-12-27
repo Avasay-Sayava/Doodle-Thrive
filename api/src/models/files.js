@@ -1,13 +1,16 @@
 const { randomUUID: uuid } = require("node:crypto");
-
 const Storage = require("./storage");
 
 const files = {};
 
 /**
- * Creates a new file with given name and content.
- * @param {{name: string, content: string, parent?: string}} param0 
- * @returns {Promise<string>} File ID.
+ * Creates a new file record and saves content to storage.
+ * @param {object} fileData The file creation data.
+ * @param {string} fileData.name The name of the file.
+ * @param {string} fileData.content The content of the file.
+ * @param {string} [fileData.parent] The ID of the parent folder (optional).
+ * @return {Promise<string>} The generated File ID.
+ * @throws {Error} If creation fails on the storage server.
  */
 exports.createFile = async ({ name, content, parent }) => {
     const UUID = uuid();
@@ -32,9 +35,11 @@ exports.createFile = async ({ name, content, parent }) => {
 }
 
 /**
- * Creates a new folder with given name.
- * @param {{name: string, parent?: string}} param0 
- * @returns {string} Folder ID.
+ * Creates a new virtual folder structure.
+ * @param {object} folderData The folder creation data.
+ * @param {string} folderData.name The name of the folder.
+ * @param {string} [folderData.parent] The ID of the parent folder (optional).
+ * @return {string} The generated Folder ID.
  */
 exports.createFolder = ({ name, parent }) => {
     const UUID = uuid();
@@ -56,8 +61,8 @@ exports.createFolder = ({ name, parent }) => {
 }
 
 /**
- * Gets all files and folders.
- * @returns {Promise<Object>} All files and folders with their content.
+ * Retrieves all files and folders, fetching content for files from storage.
+ * @return {Promise<Object>} A dictionary of all file objects, including their content.
  */
 exports.getAll = async () => {
     const copy = files;
@@ -79,9 +84,10 @@ exports.getAll = async () => {
 }
 
 /**
- * Gets a file or folder by ID.
- * @param {string} id 
- * @returns {Promise<Object>} file or folder with its content.
+ * Retrieves a specific file or folder by ID.
+ * If it is a file, the content is fetched from storage.
+ * @param {string} id The ID of the file or folder.
+ * @return {Promise<Object>} The file or folder object containing metadata and content.
  */
 exports.get = async (id) => {
     if (files[id].type === "file") {
@@ -100,10 +106,13 @@ exports.get = async (id) => {
 }
 
 /**
- * Updates a file or folder.
- * @param {string} id 
- * @param {{name?: string, content?: string, parent?: string}} param1 
- * @returns {Promise<boolean>} Whether the update was successful.
+ * Updates a file or folder's metadata or content.
+ * @param {string} id The ID of the file/folder to update.
+ * @param {object} changes The properties to update.
+ * @param {string} [changes.name] New name.
+ * @param {string} [changes.content] New content (files only).
+ * @param {string} [changes.parent] New parent folder ID.
+ * @return {Promise<boolean>} True if successful, False if storage update failed.
  */
 exports.update = async (id, { name, content, parent }) => {
     const file = files[id];
@@ -134,9 +143,9 @@ exports.update = async (id, { name, content, parent }) => {
 }
 
 /**
- * Deletes a file or folder.
- * @param {string} id 
- * @returns {Promise<boolean>} Whether the deletion was successful.
+ * Deletes a file or folder and all its descendants.
+ * @param {string} id The ID of the file/folder to delete.
+ * @return {Promise<boolean>} True if successful.
  */
 exports.delete = async (id) => {
     const file = files[id];
@@ -167,9 +176,9 @@ exports.delete = async (id) => {
 }
 
 /**
- * Searches for files and folders matching the query.
- * @param {string} query 
- * @returns {Promise<Object[]>} Matching files and folders.
+ * Searches the storage layer for files matching the query and resolves them to file objects.
+ * @param {string} query The search term.
+ * @return {Promise<Object[]>} An array of matching file objects.
  */
 exports.search = async (query) => {
     const response = await Storage.search(query);
@@ -184,9 +193,9 @@ exports.search = async (query) => {
 }
 
 /**
- * Gets info about a file or folder.
- * @param {string} id 
- * @returns {Object|null} file or folder info.
+ * Retrieves metadata for a file or folder synchronously (no content fetch).
+ * @param {string} id The ID of the item.
+ * @return {Object|null} The metadata object or null if not found.
  */
 exports.info = (id) => {
     return files[id] || null;

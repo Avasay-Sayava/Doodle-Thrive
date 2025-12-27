@@ -1,16 +1,11 @@
-// @ts-check
+const Client = require("./tcp/client");
 
 /**
- * @file lib/tcp.js
- */
-
-/**
- * Namespace for TCP networking utilities.
- * @namespace TCP
- * @description This namespace contains classes and utilities for handling TCP connections.
+ * TCP networking utilities.
+ * Provides access to the TCP Client class.
  */
 const TCP = {
-    Client: require("./tcp/client")
+    Client: Client
 };
 
 module.exports = TCP;

@@ -1,8 +1,12 @@
-/build/
-/.vscode/
-/.idea/
+.vscode/
+.devcontainer/
+.idea/
+
+build/
+cmake-build-debug/
+
+node_modules/
+package-lock.json
+*jsdoc.json
 
 *.env
-/src/cmake-build-debug/
-/tests/cmake-build-debug/
-/build/
