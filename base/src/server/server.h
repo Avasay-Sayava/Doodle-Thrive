@@ -11,6 +11,8 @@
 #include <sys/socket.h>
 #include <thread>
 #include <unistd.h>
+#include <vector>
+#include <mutex>
 
 namespace ddrive
 {
@@ -45,7 +47,7 @@ namespace ddrive
         /**
          * @brief Runs the server, accepting and handling client connections.
          * 
-         * Blocks indefinitely, accepting new connections and dispatching them
+         * Runs indefinitely, accepting new connections and dispatching them
          * to the executor.
          *
          * @return Returns if the server ran successfully.
@@ -59,14 +61,14 @@ namespace ddrive
         sockaddr_in _sin;
         int _sock;
 
+        // For mutlithreading client handling
+        std::vector<int> _clients;
+        std::mutex _clients_mtx;
+
         /**
-         * @brief Handles a single client connection.
+         * @brief Responses to a client request.
          * 
-         * Reads data from the socket, processes the request, and sends the
-         * response.
-         *
-         * @param client_sock The file descriptor for the connected client
-         * socket.
+         * @param client_sock The socket of the client.
          */
         void handle(int client_sock);
     };
