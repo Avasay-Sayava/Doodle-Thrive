@@ -34,5 +34,5 @@ echo -e "${YELLOW}Cleaning up old containers...${NC}"
 docker rm -f base-server api-server >/dev/null 2>&1
 
 docker-compose run $build_arg -d -e THREADS=10 --name base-server base-server 3000
-docker-compose run $build_arg -d --service-ports --name api-server api-server base-server 3000 3300 50
+docker-compose run $build_arg -d --service-ports --name api-server api-server base-server 3000 3300 100
 docker-compose run $build_arg --remove-orphans api-tests

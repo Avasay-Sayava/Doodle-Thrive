@@ -7,7 +7,7 @@
 #define BUFFER_SIZE 4096
 #define LISTEN_BACKLOG 5
 #define SCAN_TIMEOUT_SEC 0
-#define SCAN_TIMEOUT_USEC 100000
+#define SCAN_TIMEOUT_USEC 100
 
 ddrive::server::server(command_director cd, executor& ex, unsigned int port)
     : _command_director(cd), _executor(ex), _port(port)
