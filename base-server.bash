@@ -67,7 +67,7 @@ if [ "$(docker ps -aq -f name="^${name}$")" ]; then
 
     if [[ "${response}" == "y" || "${response}" == "Y" ]]; then
         echo -e "${RED}Deleting existing container...${NC}"
-        docker rm -f ${name} > /dev/null 2>&1
+        docker rm -f ${name} > /dev/null
         echo -e "${CYAN}Existing container deleted.${NC}"
     else
         echo -e "${CYAN}Skipping deletion. Note: Starting the new one might fail if names collide.${NC}"
