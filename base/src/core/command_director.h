@@ -12,16 +12,22 @@
 namespace ddrive
 {
 
+    /**
+     * @brief Routes parsed commands to their appropriate handlers.
+     *
+     * Takes raw input strings, splits them into arguments, and invokes the
+     * registered handler function.
+     */
     class command_director
     {
     public:
         /**
-         * @brief Construct a command_director with a handler map.
+         * @brief Constructs a command_director.
          *
-         * @param _storage Shared storage object used by all handlers.
-         * @param _handler_map A map from command names to handler functions,
-         * command names need to be uppercase.
-         *
+         * @param _storage Shared storage object to be passed to handlers.
+         * @param _handler_map Map linking UPPERCASE command strings to handler
+         * functions.
+         * @param _splitter Utility for tokenizing raw input strings.
          */
         command_director(
             storage& _storage,
@@ -32,28 +38,18 @@ namespace ddrive
             splitter _splitter);
 
         /**
-         * @brief Process one line of client input.
+         * @brief Processes a raw input line from a client.
          *
-         * @param line Raw input string.
-         * @return Full response string returned by the matched handler.
-         * If no handler matches, returns a "400 Bad Request" formatted string.
+         * @param line The raw command string received from the network.
+         * @return The final response string to be sent back to the
+         * client. Returns "400 Bad Request" if the command is unknown or
+         * malformed.
          */
         std::string process(const std::string& line) const;
 
     private:
-        /**
-         * @brief Shared storage object for file operations.
-         */
         storage& _storage;
-
-        /**
-         * @brief Splits raw input lines into arguments.
-         */
         splitter _splitter;
-
-        /**
-         * @brief Map from command names to their handler functions.
-         */
         std::unordered_map<std::string,
                            std::function<std::string(
                                const std::vector<std::string>&, storage&)>>

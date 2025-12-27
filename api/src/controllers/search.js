@@ -2,10 +2,10 @@ const Regex = require("../models/regex");
 const Files = require("../models/files");
 
 /**
- * Searches files by content.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Searches for files containing the specified query string.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.search = async (req, res) => {
     try {

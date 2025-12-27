@@ -3,10 +3,10 @@ const Files = require("../models/files");
 const Regex = require("../models/regex");
 
 /**
- * Adds new permissions to a file.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Adds new permission settings to a specific file.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.add = async (req, res) => {
     try {
@@ -37,10 +37,10 @@ exports.add = async (req, res) => {
 }
 
 /**
- * Retrieves permissions for a file.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Retrieves all permissions associated with a file.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.get = async (req, res) => {
     try {
@@ -60,10 +60,10 @@ exports.get = async (req, res) => {
 }
 
 /**
- * Updates a permission for a file.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Updates a specific permission entry for a file.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.update = async (req, res) => {
     try {
@@ -100,10 +100,10 @@ exports.update = async (req, res) => {
 }
 
 /**
- * Deletes a permission from a file.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Deletes a specific permission from a file.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.delete = async (req, res) => {
     try {
@@ -129,9 +129,10 @@ exports.delete = async (req, res) => {
 }
 
 /**
- * Trims and validates permission options.
- * @param {object} options 
- * @returns {object|null}
+ * Trims and validates the structure of permission options.
+ * The options object is a map where keys are User IDs and values are permission settings.
+ * @param {object} options Raw permission options.
+ * @return {object|null} Sanitized options map or null if validation fails.
  */
 function trimOptions(options) {
     const trimmed = {};
@@ -144,9 +145,11 @@ function trimOptions(options) {
         if (options[key].read && typeof options[key].read !== 'boolean')
             return null;
         if (options[key].permissions) {
-            if (options[key].permissions.read && typeof options[key].permissions.read !== 'boolean')
+            if (options[key].permissions.read &&
+                typeof options[key].permissions.read !== 'boolean')
                 return null;
-            if (options[key].permissions.write && typeof options[key].permissions.write !== 'boolean')
+            if (options[key].permissions.write &&
+                typeof options[key].permissions.write !== 'boolean')
                 return null;
         }
 

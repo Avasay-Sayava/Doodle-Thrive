@@ -5,26 +5,26 @@
 
 namespace storage_methods
 {
+
     /**
-     * @brief Encrypts a string using RLE.
+     * @brief Compresses a string using Run-Length Encoding (RLE).
      *
-     * The function compresses sequences of identical characters into a
-     * Count-Character pair. The count is stored as an unsigned char, limiting
-     * runs to UCHAR_MAX characters.
+     * Compresses sequences of identical characters into a Count-Character pair.
+     * The count is stored as a raw byte (unsigned char), limiting single runs
+     * to 255 characters.
      *
-     * @param text The input string to be compressed.
-     * @return The compressed string.
+     * @param text The input string to compress.
+     * @return The compressed binary string.
      */
     std::string rle_encrypt(const std::string& text);
 
     /**
-     * @brief Decrypts a string using RLE.
+     * @brief Decompresses an RLE-encoded string.
      *
-     * The function decompresses the string by repeating each character based on
-     * the preceding count value.
+     * Reads Count-Character pairs and expands them back to the original string.
      *
-     * @param text The compressed string.
-     * @return The decompressed string.
+     * @param text The compressed binary string.
+     * @return The original plain text string.
      */
     std::string rle_decrypt(const std::string& text);
 

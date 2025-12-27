@@ -13,7 +13,7 @@ ddrive::server::server(command_director cd, executor& ex, unsigned int port)
     }
 }
 
-int ddrive::server::init()
+bool ddrive::server::init()
 {
     memset(&_sin, 0, sizeof(_sin));
 
@@ -24,27 +24,27 @@ int ddrive::server::init()
     _sock = socket(AF_INET, SOCK_STREAM, 0);
     if (_sock < 0)
     {
-        return -1;
+        return false;
     }
 
-    return 0;
+    return true;
 }
 
-int ddrive::server::run()
+bool ddrive::server::run()
 {
 
     // Bind to the socket
     if (bind(_sock, (struct sockaddr*)&_sin, sizeof(_sin)) < 0)
     {
         close(_sock);
-        return -1;
+        return false;
     }
 
     // Listen for incoming connections from clients
     if (listen(_sock, 5) < 0)
     {
         close(_sock);
-        return -1;
+        return false;
     }
 
     while (true)
@@ -65,7 +65,8 @@ int ddrive::server::run()
                 close(client_sock);
             });
     }
-    return 0;
+
+    return true;
 }
 
 void ddrive::server::handle(int client_sock)

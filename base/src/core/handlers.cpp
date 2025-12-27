@@ -40,7 +40,7 @@ namespace ddrive
         // Common validation helpers
 
         bool ensure_exact_args(const std::vector<std::string>& args,
-                             std::size_t expected, std::string& out)
+                               std::size_t expected, std::string& out)
         {
             if (args.size() != expected)
             {
@@ -85,7 +85,7 @@ namespace ddrive
      *     because Splitter passes the full tail as args[2].
      */
     std::string handle_post(const std::vector<std::string>& args,
-                           storage& storage)
+                            storage& storage)
     {
         std::string result;
 
@@ -108,7 +108,7 @@ namespace ddrive
             const bool created = storage.add(filename, content);
             if (!created)
             {
-                // e.g., file already exists or low-level error, map to 400
+                // e.g. file already exists or low-level error, map to 400
                 return make_bad_request();
             }
 
@@ -130,7 +130,7 @@ namespace ddrive
      *   - Storage exceptions → 400 BadRequest.
      */
     std::string handle_get(const std::vector<std::string>& args,
-                          storage& storage)
+                           storage& storage)
     {
         std::string result;
 
@@ -180,7 +180,7 @@ namespace ddrive
      * substring matching on that term.
      */
     std::string handle_search(const std::vector<std::string>& args,
-                             storage& storage)
+                              storage& storage)
     {
         std::string result;
 
@@ -217,7 +217,7 @@ namespace ddrive
      *   - On success → 204 NoContent with empty body.
      */
     std::string handle_delete(const std::vector<std::string>& args,
-                             storage& storage)
+                              storage& storage)
     {
         std::string result;
 

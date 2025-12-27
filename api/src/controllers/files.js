@@ -2,10 +2,11 @@ const Regex = require("../models/regex");
 const Files = require("../models/files");
 
 /**
- * Creates a new file or folder.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Handles the creation request for a new file or folder.
+ * Validates input, checks parent existence, and delegates to the model.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.create = async (req, res) => {
     try {
@@ -41,10 +42,10 @@ exports.create = async (req, res) => {
 }
 
 /**
- * Retrieves all files and folders.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Retrieves the complete list of files and folders.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.getAll = async (req, res) => {
     try {
@@ -56,10 +57,10 @@ exports.getAll = async (req, res) => {
 }
 
 /**
- * Retrieves a file or folder by ID.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Retrieves details and content for a specific file or folder by ID.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.get = async (req, res) => {
     try {
@@ -79,10 +80,10 @@ exports.get = async (req, res) => {
 }
 
 /**
- * Updates a file or folder by ID.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * Updates a file or folder's metadata or content based on the provided body.
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.update = async (req, res) => {
     try {
@@ -113,7 +114,7 @@ exports.update = async (req, res) => {
 
         const updated = await Files.update(id, trimmedInfo);
         if (!updated)
-            return res.status(404).json({ error: "File/folder not found HOHOHO" });
+            return res.status(404).json({ error: "File/folder not found" });
         return res.status(200).end();
     } catch (err) {
         return res.status(500).json({ error: err.message });
@@ -122,9 +123,9 @@ exports.update = async (req, res) => {
 
 /**
  * Deletes a file or folder by ID.
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns {Promise<void>}
+ * @param {import("express").Request} req The Express Request object.
+ * @param {import("express").Response} res The Express Response object.
+ * @return {Promise<void>}
  */
 exports.delete = async (req, res) => {
     try {
@@ -147,9 +148,12 @@ exports.delete = async (req, res) => {
 }
 
 /**
- * Trims and validates file/folder info.
- * @param {{name?: string, parent?: string, content?: string}} info 
- * @returns {{name?: string, parent?: string, content?: string}|null}
+ * Helper function to trim and validate file/folder input data.
+ * @param {object} info Raw body data.
+ * @param {string} [info.name] File/Folder name.
+ * @param {string} [info.parent] Parent ID.
+ * @param {string} [info.content] File content.
+ * @return {{name?: string, parent?: string, content?: string}|null} Sanitized data object or null if validation fails.
  */
 function trimInfo(info) {
     if (info.name &&

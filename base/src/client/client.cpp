@@ -40,7 +40,7 @@ client::client(const std::string& host, int port)
     freeaddrinfo(res);
 }
 
-void client::run_client()
+void client::run()
 {
     // User interaction loop
     while (true)
@@ -51,17 +51,17 @@ void client::run_client()
         {
             continue;
         }
-        std::string response = send_command(user_request);
+        std::string response = send(user_request);
         std::cout << response;
     }
 
     close(_client_socket);
 }
 
-std::string client::send_command(const std::string& command)
+std::string client::send(const std::string& command)
 {
     // Send command to the server
-    send(_client_socket, command.c_str(), command.size(), 0);
+    ::send(_client_socket, command.c_str(), command.size(), 0);
     int expected_data_len = sizeof(_buffer);
     // Receive data from the server
     int read_bytes = recv(_client_socket, _buffer, expected_data_len, 0);

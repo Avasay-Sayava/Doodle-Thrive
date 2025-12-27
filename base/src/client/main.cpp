@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 
     // Create and run the client
     client client(host, port);
-    client.run_client();
+    client.run();
 
     return 0;
 }

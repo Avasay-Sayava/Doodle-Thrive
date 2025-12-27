@@ -10,7 +10,7 @@ This project implements a distributed file system inspired by Google Drive, cons
 ## Disabling Changes to Branches of Parts
 To disable changes to branches of finished parts of the project, you create a ruleset in GitHub repository settings:
 1. Go to "Settings" -> "Rules" -> "Rulesets" -> "New ruleset"
-2. Name the ruleset (e.g., "No touching to completed assignments")
+2. Name the ruleset (e.g. "No touching to completed assignments")
 3. Under "Target branches", add the regex of "Part-*" (all of the completed parts branches start with "Part-")
 4. Under "Rules", add the rules:
    * Restrict creations
