@@ -49,7 +49,7 @@ The project is containerized using Docker. For running parts of the project, the
     ```bash
     build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> name=<host_name> port=<port> timeout=<requests_timeout_ms> ./api-server.bash
     ```
-    You can run the file without defining the `build`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `api-server`, `3300`, `5` each. Note that you are required to define the `server_name` and `server_port` variables to connect the API server to the C++ backend server.
+    You can run the file without defining the `build`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `api-server`, `3300`, `100` each. Note that you are required to define the `server_name` and `server_port` variables to connect the API server to the C++ backend server.
 
 * **To get to an API server's console**, you can reply 'Y' in the end of `./base-server.bash` execution, or run the `./api-console.bash` file:
    ```bash
@@ -59,9 +59,9 @@ The project is containerized using Docker. For running parts of the project, the
 
 * **To run the tests for the API server**, you need to run the `./api-tests.bash` file:
     ```bash
-    build=<true|false> ./api-tests.bash
+    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> name=<api_server_host_name> port=<api_server_port> timeout=<requests_timeout_ms> ./api-tests.bash
     ```
-    You can run the file without defining the `build` variable, and it will sign it the default value `true`.
+    You can run the file without defining the `build`, `server_name`, `server_port`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `base-server`, `3000`, `api-server`, `3300`, `100` each.
 
 ## C++ Server Usage Examples
 
