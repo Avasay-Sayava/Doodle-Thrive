@@ -1,4 +1,4 @@
-#include "cppClient.h"
+#include "client.h"
 
 Client::Client(const std::string& host, int port) {
     struct addrinfo hints{}, *res = nullptr;

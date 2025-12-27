@@ -1,6 +1,6 @@
 #include <string>
 #include <iostream>
-#include "cppClient.h"
+#include "client.h"
 
 int main(int argc, char* argv[]) {
     // Get the arguments given by the user (host, port)
