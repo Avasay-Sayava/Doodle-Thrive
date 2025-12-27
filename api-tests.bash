@@ -107,4 +107,4 @@ fi
 
 docker-compose run $build_arg -d -e THREADS=$threads --name $server_name base-server $server_port
 docker-compose run $build_arg -d --service-ports --name $name api-server $server_name $server_port $port $timeout
-docker-compose run $build_arg --remove-orphans api-tests
+docker-compose run $build_arg -e API_SERVER_HOST=$name -e API_SERVER_PORT=$port --remove-orphans api-tests

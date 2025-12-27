@@ -1,6 +1,11 @@
 const assert = require('node:assert');
 
-const BASE_URL = "http://api-server:3300/api";
+if (!process.env.API_SERVER_HOST || !process.env.API_SERVER_PORT) {
+    console.error("ERROR: Please define API_SERVER_HOST and API_SERVER_PORT environment variables.");
+    process.exit(1);
+}
+
+const BASE_URL = `http://${process.env.API_SERVER_HOST}:${process.env.API_SERVER_PORT}/api`;
 const USER_A = { username: `owner_${Date.now()}`, password: "password" };
 const USER_B = { username: `guest_${Date.now()}`, password: "password" };
 

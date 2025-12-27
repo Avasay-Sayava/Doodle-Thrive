@@ -5,6 +5,23 @@ The server exposes a RESTful API that returns JSON responses. While the Base Ser
 
 ## Installation & Running
 The project is containerized using Docker. For running parts of the project, there are predefined bash files.
+* **To enable the usage of the bash files**, you need to run this command in the root directory:
+    ```bash
+    chmod +x ./api-server.bash ./api-console.bash ./api-tests.bash ./base-server.bash ./base-client.bash ./base-tests.bash
+    ```
+
+    For the objectively fake programmers who don't have bash (or even don't have git bash while using GitHub), each section that uses a bash file is accompanied by the commands to run it.
+
+* **To start the backend base C++ server**, you need to run the `./base-server.bash` file:
+    ```bash
+    build=<true|false> name=<host_name> port=<port> threads=<thread_count> ./base-server.bash
+    ```
+    You can run the file without defining the `build`, `name`, `port`, `threads` variables, and it will sign them the default values `true`, `base-server`, `3000`, `10` each.
+
+    If you don't have bash, you can run the following command:
+    ```cmd
+    docker-compose run <--build|> -d -e THREADS=<thread_count> --name <host_name> base-server <port>
+    ```
 
 * **To start the API server**, you need to run the `./api-server.bash` file:
     ```bash
@@ -12,17 +29,33 @@ The project is containerized using Docker. For running parts of the project, the
     ```
     You can run the file without defining the `build`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `api-server`, `3300`, `100` each. Note that you are required to define the `server_name` and `server_port` variables to connect the API server to the C++ backend server.
 
-* **To get to an API server's console**, you can reply 'Y' in the end of `./base-server.bash` execution, or run the `./api-console.bash` file:
-   ```bash
-   name=<api_host_name> port=<api_port> ./api-console.bash
-   ```
-   You can run the file without defining the `name`, `port` variables, and it will sign them the default values `api-server`, `3300` each.
+    If you don't have bash, you can start the server as shown above and run the following command:
+    ```cmd
+    docker-compose run <--build|> -d --service-ports --name <host_name> api-server <base_server_host_name> <base_server_port> <port> <timeout>
+    ```
+
+* **To get to an API server's console**, you can reply 'Y' in the end of `./api-server.bash` execution, or run the `./api-console.bash` file:
+    ```bash
+    name=<api_host_name> port=<api_port> ./api-console.bash
+    ```
+    You can run the file without defining the `name`, `port` variables, and it will sign them the default values `api-server`, `3300` each.
+
+    If you don't have bash, you need first to run the base, API servers and then you can run the following command:
+    ```cmd
+    docker exec -it <api_server_name> sh
+    ```
+    TIP: Using the `bash` file you have a predefined sh console that is much more easy to use.
 
 * **To run the tests for the API server**, you need to run the `./api-tests.bash` file:
     ```bash
     build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> threads=<cpp_server_thread_count> name=<api_server_host_name> port=<api_server_port> timeout=<requests_timeout_ms> ./api-tests.bash
     ```
     You can run the file without defining the `build`, `server_name`, `server_port`, `threads`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `base-server`, `3000`, `10`, `api-server`, `3300`, `100` each.
+
+    If you don't have bash, after running the base and API servers, you can run the following command:
+    ```cmd
+    docker-compose run $build_arg -e API_SERVER_HOST=<api_server_host_name> -e API_SERVER_PORT=<api_server_port> --remove-orphans api-tests
+    ```
 
 ## API Endpoints & Usage
 
