@@ -46,6 +46,14 @@ else
     echo -e "${CYAN}Using provided base server port: ${ORANGE}${server_port}${NC}"
 fi
 
+default_threads=10
+if [ -z "${threads}" ]; then
+    echo -e "${CYAN}No base server thread count provided, defaulting to thread count: ${ORANGE}${default_threads}${NC}"
+    threads=$default_threads
+else
+    echo -e "${CYAN}Using provided base server thread count: ${ORANGE}${threads}${NC}"
+fi
+
 default_name="api-server"
 if [ -z "${name}" ]; then
     echo -e "${CYAN}No API server name provided, defaulting to name: ${GREEN}${default_name}${NC}"
@@ -97,6 +105,6 @@ if [ $(docker ps -a -q -f name=$name) ]; then
     fi
 fi
 
-docker-compose run $build_arg -d -e THREADS=10 --name $server_name base-server $server_port
+docker-compose run $build_arg -d -e THREADS=$threads --name $server_name base-server $server_port
 docker-compose run $build_arg -d --service-ports --name $name api-server $server_name $server_port $port $timeout
 docker-compose run $build_arg --remove-orphans api-tests

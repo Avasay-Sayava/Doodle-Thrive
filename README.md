@@ -59,9 +59,9 @@ The project is containerized using Docker. For running parts of the project, the
 
 * **To run the tests for the API server**, you need to run the `./api-tests.bash` file:
     ```bash
-    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> name=<api_server_host_name> port=<api_server_port> timeout=<requests_timeout_ms> ./api-tests.bash
+    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> threads=<cpp_server_thread_count> name=<api_server_host_name> port=<api_server_port> timeout=<requests_timeout_ms> ./api-tests.bash
     ```
-    You can run the file without defining the `build`, `server_name`, `server_port`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `base-server`, `3000`, `api-server`, `3300`, `100` each.
+    You can run the file without defining the `build`, `server_name`, `server_port`, `threads`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `base-server`, `3000`, `10`, `api-server`, `3300`, `100` each.
 
 ## C++ Server Usage Examples
 
