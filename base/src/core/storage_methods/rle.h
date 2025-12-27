@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace storageMethods
+namespace storage_methods
 {
     /**
      * @brief Encrypts a string using RLE.
@@ -28,6 +28,6 @@ namespace storageMethods
      */
     std::string rle_decrypt(const std::string& text);
 
-} // namespace storageMethods
+} // namespace storage_methods
 
 #endif // DOODLE_DRIVE_RLE_H

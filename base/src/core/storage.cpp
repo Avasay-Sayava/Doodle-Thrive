@@ -1,43 +1,43 @@
 #include "storage.h"
 
-#include "./storageMethods/add.h"
-#include "./storageMethods/fdelete.h"
-#include "./storageMethods/get.h"
-#include "./storageMethods/search.h"
+#include "./storage_methods/add.h"
+#include "./storage_methods/fdelete.h"
+#include "./storage_methods/get.h"
+#include "./storage_methods/search.h"
 
 #include <filesystem>
 
 namespace ddrive
 {
 
-    bool Storage::add(const std::string& filename, const std::string& content)
+    bool storage::add(const std::string& filename, const std::string& content)
     {
         // Lock for thread safety
-        std::scoped_lock lock(mtx);
+        std::scoped_lock lock(_mtx);
 
         // Ex1 function — returns false if file already exists
-        return storageMethods::add(filename, content);
+        return storage_methods::add(filename, content);
     }
 
-    std::optional<std::string> Storage::get(const std::string& filename) const
+    std::optional<std::string> storage::get(const std::string& filename) const
     {
-        std::scoped_lock lock(mtx);
+        std::scoped_lock lock(_mtx);
 
         // Ex1 function — returns optional<string>
-        return storageMethods::get(filename);
+        return storage_methods::get(filename);
     }
 
-    std::string Storage::search(const std::string& term) const
+    std::string storage::search(const std::string& term) const
     {
-        std::scoped_lock lock(mtx);
+        std::scoped_lock lock(_mtx);
 
-        return storageMethods::search(term);
+        return storage_methods::search(term);
     }
 
-    bool Storage::remove(const std::string& filename)
+    bool storage::remove(const std::string& filename)
     {
-        std::scoped_lock lock(mtx);
-        return storageMethods::fdelete(filename);
+        std::scoped_lock lock(_mtx);
+        return storage_methods::fdelete(filename);
     }
 
 } // namespace ddrive

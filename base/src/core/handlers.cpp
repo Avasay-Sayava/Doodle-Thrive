@@ -8,63 +8,63 @@ namespace ddrive
     namespace
     {
 
-        std::string makeBadRequest()
+        std::string make_bad_request()
         {
-            return ddrive::codeToString(StatusCode::BadRequest);
+            return ddrive::code_to_string(status_code::BAD_REQUEST);
         }
 
-        std::string makeNotFound()
+        std::string make_not_found()
         {
-            return ddrive::codeToString(StatusCode::NotFound);
+            return ddrive::code_to_string(status_code::NOT_FOUND);
         }
 
-        std::string makeNoContent()
+        std::string make_no_content()
         {
-            return ddrive::codeToString(StatusCode::NoContent);
+            return ddrive::code_to_string(status_code::NO_CONTENT);
         }
 
-        std::string makeOk(const std::string& body)
+        std::string make_ok(const std::string& body)
         {
-            std::string output = ddrive::codeToString(StatusCode::Ok);
+            std::string output = ddrive::code_to_string(status_code::OK);
             output += "\n";
             output += body;
             output += "\n";
             return output;
         }
 
-        std::string makeCreated(const std::string& body = "")
+        std::string make_created(const std::string& body = "")
         {
-            return ddrive::codeToString(StatusCode::Created);
+            return ddrive::code_to_string(status_code::CREATED);
         }
 
         // Common validation helpers
 
-        bool ensureExactArgs(const std::vector<std::string>& args,
+        bool ensure_exact_args(const std::vector<std::string>& args,
                              std::size_t expected, std::string& out)
         {
             if (args.size() != expected)
             {
-                out = makeBadRequest();
+                out = make_bad_request();
                 return false;
             }
             return true;
         }
 
-        bool ensureNonEmpty(const std::string& s, std::string& out)
+        bool ensure_non_empty(const std::string& s, std::string& out)
         {
             if (s.empty())
             {
-                out = makeBadRequest();
+                out = make_bad_request();
                 return false;
             }
             return true;
         }
 
-        bool ensureNoSpaces(const std::string& s, std::string& out)
+        bool ensure_no_spaces(const std::string& s, std::string& out)
         {
             if (s.find(' ') != std::string::npos)
             {
-                out = makeBadRequest();
+                out = make_bad_request();
                 return false;
             }
             return true;
@@ -84,13 +84,13 @@ namespace ddrive
      *   - All internal spaces and trailing spaces in the content are preserved
      *     because Splitter passes the full tail as args[2].
      */
-    std::string handlePost(const std::vector<std::string>& args,
-                           Storage& storage)
+    std::string handle_post(const std::vector<std::string>& args,
+                           storage& storage)
     {
         std::string result;
 
         // Expect exactly ["POST", filename, content]
-        if (!ensureExactArgs(args, 3, result))
+        if (!ensure_exact_args(args, 3, result))
         {
             return result;
         }
@@ -98,7 +98,7 @@ namespace ddrive
         const std::string& filename = args[1];
         const std::string& content = args[2];
 
-        if (!ensureNonEmpty(filename, result))
+        if (!ensure_non_empty(filename, result))
         {
             return result;
         }
@@ -109,14 +109,14 @@ namespace ddrive
             if (!created)
             {
                 // e.g., file already exists or low-level error, map to 400
-                return makeBadRequest();
+                return make_bad_request();
             }
 
-            return makeCreated();
+            return make_created();
         }
         catch (...)
         {
-            return makeBadRequest();
+            return make_bad_request();
         }
     }
 
@@ -129,13 +129,13 @@ namespace ddrive
      *   - Non-existing file → 404 NotFound.
      *   - Storage exceptions → 400 BadRequest.
      */
-    std::string handleGet(const std::vector<std::string>& args,
-                          Storage& storage)
+    std::string handle_get(const std::vector<std::string>& args,
+                          storage& storage)
     {
         std::string result;
 
         // Expect exactly ["GET", rawFilenameTail]
-        if (!ensureExactArgs(args, 2, result))
+        if (!ensure_exact_args(args, 2, result))
         {
             return result;
         }
@@ -143,11 +143,11 @@ namespace ddrive
         // rawTail may contain trailing spaces – we reject any filename with
         // spaces.
         const std::string& rawTail = args[1];
-        if (!ensureNonEmpty(rawTail, result))
+        if (!ensure_non_empty(rawTail, result))
         {
             return result;
         }
-        if (!ensureNoSpaces(rawTail, result))
+        if (!ensure_no_spaces(rawTail, result))
         {
             return result;
         }
@@ -159,13 +159,13 @@ namespace ddrive
             std::optional<std::string> contentOpt = storage.get(filename);
             if (!contentOpt.has_value())
             {
-                return makeNotFound();
+                return make_not_found();
             }
-            return makeOk(contentOpt.value());
+            return make_ok(contentOpt.value());
         }
         catch (...)
         {
-            return makeBadRequest();
+            return make_bad_request();
         }
     }
 
@@ -179,13 +179,13 @@ namespace ddrive
      * normalization done by Splitter), so Storage::search can perform exact
      * substring matching on that term.
      */
-    std::string handleSearch(const std::vector<std::string>& args,
-                             Storage& storage)
+    std::string handle_search(const std::vector<std::string>& args,
+                             storage& storage)
     {
         std::string result;
 
         // Expect exactly ["SEARCH", term]
-        if (!ensureExactArgs(args, 2, result))
+        if (!ensure_exact_args(args, 2, result))
         {
             return result;
         }
@@ -197,11 +197,11 @@ namespace ddrive
             // Assumes Storage::search(term) returns the same matches string as
             // Ex1.
             std::string matches = storage.search(term);
-            return makeOk(matches);
+            return make_ok(matches);
         }
         catch (...)
         {
-            return makeBadRequest();
+            return make_bad_request();
         }
     }
 
@@ -216,23 +216,23 @@ namespace ddrive
      * Semantics:
      *   - On success → 204 NoContent with empty body.
      */
-    std::string handleDelete(const std::vector<std::string>& args,
-                             Storage& storage)
+    std::string handle_delete(const std::vector<std::string>& args,
+                             storage& storage)
     {
         std::string result;
 
         // Expect exactly ["DELETE", rawFilenameTail]
-        if (!ensureExactArgs(args, 2, result))
+        if (!ensure_exact_args(args, 2, result))
         {
             return result;
         }
 
         const std::string& rawTail = args[1];
-        if (!ensureNonEmpty(rawTail, result))
+        if (!ensure_non_empty(rawTail, result))
         {
             return result;
         }
-        if (!ensureNoSpaces(rawTail, result))
+        if (!ensure_no_spaces(rawTail, result))
         {
             return result;
         }
@@ -244,13 +244,13 @@ namespace ddrive
             const bool removed = storage.remove(filename);
             if (!removed)
             {
-                return makeNotFound();
+                return make_not_found();
             }
-            return makeNoContent();
+            return make_no_content();
         }
         catch (...)
         {
-            return makeBadRequest();
+            return make_bad_request();
         }
     }
 

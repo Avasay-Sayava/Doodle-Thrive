@@ -1,6 +1,6 @@
-#include "../src/core/storageMethods/add.h"
-#include "../src/core/storageMethods/get.h"
-#include "../src/core/storageMethods/rle.h"
+#include "../src/core/storage_methods/add.h"
+#include "../src/core/storage_methods/get.h"
+#include "../src/core/storage_methods/rle.h"
 
 #include <cstdlib>
 #include <filesystem>
@@ -9,7 +9,7 @@
 #include <optional>
 #include <string>
 
-using namespace storageMethods;
+using namespace storage_methods;
 
 /**
  * @brief Ensures get() returns the exact content previously stored by add().
@@ -19,7 +19,7 @@ TEST(GetFileTest, GetReturnsSameContentAsAddStored)
     // Write a file using add, then check get reads the same content.
     std::string content = "aaaaabbbbbbbbbbbbbbbb77788888888dddDDDDDDDDD";
 
-    storageMethods::add("TestFile", content);
+    storage_methods::add("TestFile", content);
 
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr);
@@ -28,7 +28,7 @@ TEST(GetFileTest, GetReturnsSameContentAsAddStored)
 
     ASSERT_TRUE(std::filesystem::exists(filePath));
 
-    std::string result = storageMethods::get("TestFile").value();
+    std::string result = storage_methods::get("TestFile").value();
 
     EXPECT_EQ(result, content); // Should match exactly
 }
@@ -41,7 +41,7 @@ TEST(GetFileTest, GetReturnsEmptyForEmptyFileCreatedByAdd)
     // Store an empty string and make sure get returns an empty string.
     std::string content = "";
 
-    storageMethods::add("MyFileForTesting_GetEmpty", content);
+    storage_methods::add("MyFileForTesting_GetEmpty", content);
 
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr);
@@ -52,7 +52,7 @@ TEST(GetFileTest, GetReturnsEmptyForEmptyFileCreatedByAdd)
     ASSERT_TRUE(std::filesystem::exists(filePath));
 
     std::string result =
-        storageMethods::get("MyFileForTesting_GetEmpty").value();
+        storage_methods::get("MyFileForTesting_GetEmpty").value();
 
     EXPECT_EQ(result, content); // Should be an empty string
 }
@@ -66,7 +66,7 @@ TEST(GetFileTest, GetHandlesComplexContent)
     // Check that special characters and newlines survive the RLE.
     std::string content = "Hello  World!! 777\nNewLineHere\nEND";
 
-    storageMethods::add("MyFileForTesting_GetComplex", content);
+    storage_methods::add("MyFileForTesting_GetComplex", content);
 
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr);
@@ -77,7 +77,7 @@ TEST(GetFileTest, GetHandlesComplexContent)
     ASSERT_TRUE(std::filesystem::exists(filePath));
 
     std::string result =
-        storageMethods::get("MyFileForTesting_GetComplex").value();
+        storage_methods::get("MyFileForTesting_GetComplex").value();
 
     EXPECT_EQ(result, content); // Must match exactly
 }
@@ -88,7 +88,7 @@ TEST(GetFileTest, GetHandlesComplexContent)
  */
 TEST(GetFileTest, GetReturnsNulloptForNonExistentFile)
 {
-    // Ensure the file doesnt exist, then call get().
+    // Ensure the file doesn't exist, then call get().
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr);
 
@@ -99,7 +99,7 @@ TEST(GetFileTest, GetReturnsNulloptForNonExistentFile)
         std::filesystem::remove(filePath);
     }
 
-    std::optional<std::string> result = storageMethods::get("TestFile");
+    std::optional<std::string> result = storage_methods::get("TestFile");
 
     EXPECT_EQ(result, std::nullopt); // Should return nullopt
 }
@@ -113,11 +113,11 @@ TEST(GetFileTest, MultipleFilesIndependence)
     std::string content1 = "First file content AAAA";
     std::string content2 = "Second file content BBBB";
 
-    storageMethods::add("MyFileForTesting_GetMulti1", content1);
-    storageMethods::add("MyFileForTesting_GetMulti2", content2);
+    storage_methods::add("MyFileForTesting_GetMulti1", content1);
+    storage_methods::add("MyFileForTesting_GetMulti2", content2);
 
-    EXPECT_EQ(storageMethods::get("MyFileForTesting_GetMulti1").value(),
+    EXPECT_EQ(storage_methods::get("MyFileForTesting_GetMulti1").value(),
               content1);
-    EXPECT_EQ(storageMethods::get("MyFileForTesting_GetMulti2").value(),
+    EXPECT_EQ(storage_methods::get("MyFileForTesting_GetMulti2").value(),
               content2);
 }

@@ -3,10 +3,10 @@
 #include <climits>
 #include <string>
 
-using namespace storageMethods;
+using namespace storage_methods;
 using namespace std;
 
-namespace storageMethods
+namespace storage_methods
 {
 
     string rle_encrypt(const string& text)
@@ -69,4 +69,4 @@ namespace storageMethods
         return decrypted;
     }
 
-} // namespace storageMethods
+} // namespace storage_methods

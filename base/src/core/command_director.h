@@ -12,24 +12,24 @@
 namespace ddrive
 {
 
-    class CommandDirector
+    class command_director
     {
     public:
         /**
-         * @brief Construct a CommandDirector with a handler map.
+         * @brief Construct a command_director with a handler map.
          *
-         * @param storage Shared storage object used by all handlers.
-         * @param handlerMap A map from command names to handler functions,
+         * @param _storage Shared storage object used by all handlers.
+         * @param _handler_map A map from command names to handler functions,
          * command names need to be uppercase.
          *
          */
-        CommandDirector(
-            Storage& storage,
+        command_director(
+            storage& _storage,
             const std::unordered_map<
                 std::string,
                 std::function<std::string(const std::vector<std::string>&,
-                                          Storage&)>>& handlerMap,
-            Splitter splitter);
+                                          storage&)>>& _handler_map,
+            splitter _splitter);
 
         /**
          * @brief Process one line of client input.
@@ -44,20 +44,20 @@ namespace ddrive
         /**
          * @brief Shared storage object for file operations.
          */
-        Storage& storage;
+        storage& _storage;
 
         /**
          * @brief Splits raw input lines into arguments.
          */
-        Splitter splitter;
+        splitter _splitter;
 
         /**
          * @brief Map from command names to their handler functions.
          */
         std::unordered_map<std::string,
                            std::function<std::string(
-                               const std::vector<std::string>&, Storage&)>>
-            handlers;
+                               const std::vector<std::string>&, storage&)>>
+            _handlers;
     };
 
 } // namespace ddrive

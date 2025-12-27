@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
     int port = std::stoi(argv[2]);
 
     // Create and run the client
-    Client client(host, port);
+    client client(host, port);
     client.run_client();
 
     return 0;

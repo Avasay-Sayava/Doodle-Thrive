@@ -3,10 +3,10 @@
 
 #include <cstdlib>
 
-using namespace storageMethods;
+using namespace storage_methods;
 using namespace std;
 
-namespace storageMethods
+namespace storage_methods
 {
 
     optional<string> get(const string& file_name)
@@ -20,4 +20,4 @@ namespace storageMethods
         return text;
     }
 
-} // namespace storageMethods
+} // namespace storage_methods

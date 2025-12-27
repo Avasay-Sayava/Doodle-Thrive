@@ -16,7 +16,7 @@ namespace ddrive
      * Internally it protects file operations using a mutex to ensure thread
      * safety when multiple client threads access the filesystem.
      */
-    class Storage
+    class storage
     {
     public:
         /**
@@ -53,7 +53,7 @@ namespace ddrive
         bool remove(const std::string& filename);
 
     private:
-        mutable std::mutex mtx; // Protects all file operations.
+        mutable std::mutex _mtx; // Protects all file operations.
     };
 
 } // namespace ddrive

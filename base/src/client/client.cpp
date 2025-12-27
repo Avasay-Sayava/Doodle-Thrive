@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-Client::Client(const std::string& host, int port)
+client::client(const std::string& host, int port)
 {
     // Set up the client socket
     struct addrinfo hints{}, *res = nullptr;
@@ -23,16 +23,16 @@ Client::Client(const std::string& host, int port)
     }
 
     // Create socket and connect to server
-    client_socket = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
-    if (client_socket < 0)
+    _client_socket = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    if (_client_socket < 0)
     {
         freeaddrinfo(res);
         return;
     }
 
-    if (connect(client_socket, res->ai_addr, res->ai_addrlen) < 0)
+    if (connect(_client_socket, res->ai_addr, res->ai_addrlen) < 0)
     {
-        close(client_socket);
+        close(_client_socket);
         freeaddrinfo(res);
         return;
     }
@@ -40,7 +40,7 @@ Client::Client(const std::string& host, int port)
     freeaddrinfo(res);
 }
 
-void Client::run_client()
+void client::run_client()
 {
     // User interaction loop
     while (true)
@@ -55,22 +55,22 @@ void Client::run_client()
         std::cout << response;
     }
 
-    close(client_socket);
+    close(_client_socket);
 }
 
-std::string Client::send_command(const std::string& command)
+std::string client::send_command(const std::string& command)
 {
     // Send command to the server
-    send(client_socket, command.c_str(), command.size(), 0);
-    int expected_data_len = sizeof(buffer);
+    send(_client_socket, command.c_str(), command.size(), 0);
+    int expected_data_len = sizeof(_buffer);
     // Receive data from the server
-    int read_bytes = recv(client_socket, buffer, expected_data_len, 0);
+    int read_bytes = recv(_client_socket, _buffer, expected_data_len, 0);
 
     if (read_bytes < 0)
     {
         return ""; // Connection closed
     }
 
-    std::string response(buffer, read_bytes);
+    std::string response(_buffer, read_bytes);
     return response;
 }

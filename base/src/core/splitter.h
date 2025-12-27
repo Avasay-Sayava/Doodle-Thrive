@@ -23,16 +23,16 @@ namespace ddrive
      *      * args[N-1] (the last argument) is the rest of the line
      *        after skipping spaces, it may contain spaces and may be empty.
      */
-    class Splitter
+    class splitter
     {
     public:
-        using CommandArityMap = std::unordered_map<std::string, size_t>;
+        using command_arity_map = std::unordered_map<std::string, size_t>;
 
         /**
          * @brief Construct a Splitter with a map from command name (UPPERCASE)
          *        to expected argument count.
          */
-        explicit Splitter(CommandArityMap commandArgCounts);
+        explicit splitter(command_arity_map command_arg_counts);
 
         /**
          * @brief Split a raw line into [COMMAND, arg1, arg2, ...].
@@ -43,7 +43,7 @@ namespace ddrive
         std::vector<std::string> split(const std::string& line) const;
 
     private:
-        CommandArityMap commandArgCounts;
+        command_arity_map _command_arg_counts;
     };
 
 } // namespace ddrive

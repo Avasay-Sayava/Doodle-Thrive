@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace storageMethods
+namespace storage_methods
 {
 
     /**
@@ -13,6 +13,6 @@ namespace storageMethods
      */
     bool fdelete(const std::string& file_name);
 
-} // namespace storageMethods
+} // namespace storage_methods
 
 #endif // DOODLE_DRIVE_FDELETE_H

@@ -1,6 +1,6 @@
-#include "../src/core/storageMethods/add.h"
-#include "../src/core/storageMethods/get.h"
-#include "../src/core/storageMethods/rle.h"
+#include "../src/core/storage_methods/add.h"
+#include "../src/core/storage_methods/get.h"
+#include "../src/core/storage_methods/rle.h"
 
 #include <cstdlib>
 #include <filesystem>
@@ -8,15 +8,15 @@
 #include <gtest/gtest.h>
 #include <string>
 
-using namespace storageMethods;
+using namespace storage_methods;
 
 /**
- * @brief Test existance of a file added through add command
+ * @brief Test existence of a file added through add command
  */
 TEST(AddFileTest, FileExists)
 {
     // Create file
-    storageMethods::add("MyFileForTesting_Exists", "content");
+    storage_methods::add("MyFileForTesting_Exists", "content");
 
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr); // Make sure env variable exists
@@ -24,12 +24,12 @@ TEST(AddFileTest, FileExists)
     std::filesystem::path filePath =
         std::filesystem::path(env) / "MyFileForTesting_Exists";
 
-    // Assert existance of the file
+    // Assert existence of the file
     EXPECT_TRUE(std::filesystem::exists(filePath));
 }
 
 /**
- * @brief Test correspondance to content added
+ * @brief Test correspondence to content added
  */
 TEST(AddFileTest, CorrespondenceToEncryption)
 {
@@ -37,16 +37,16 @@ TEST(AddFileTest, CorrespondenceToEncryption)
     std::string content = "aaaaabbbbbbbbbbbbbbbb77788888888dddDDDDDDDDD";
 
     // Create file
-    storageMethods::add("MyFileForTesting_Correspondence", content);
+    storage_methods::add("MyFileForTesting_Correspondence", content);
 
-    // Assert existance of the env variable
+    // Assert existence of the env variable
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr);
 
     std::filesystem::path filePath =
         std::filesystem::path(env) / "MyFileForTesting_Correspondence";
 
-    // Assert existance of file
+    // Assert existence of file
     ASSERT_TRUE(std::filesystem::exists(filePath));
 
     // Assert equality of the added content with the content of the file
@@ -70,7 +70,7 @@ TEST(AddFileTest, TestEmptyFile)
     std::string content = "";
 
     // Add the file using the add function
-    storageMethods::add("MyFileForTesting_Empty", content);
+    storage_methods::add("MyFileForTesting_Empty", content);
 
     // Get the env variable and make sure it exists
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
@@ -105,13 +105,13 @@ TEST(AddFileTest, TestDuplicateFileNames)
     std::string content2 = "Second content";
 
     // Add the first file
-    storageMethods::add("MyFileForTesting_Duplicate", content1);
+    storage_methods::add("MyFileForTesting_Duplicate", content1);
 
     // Add the second file with the same name
     try
     {
         // Should not throw an exception. Should instead ignore the second add.
-        storageMethods::add("MyFileForTesting_Duplicate", content2);
+        storage_methods::add("MyFileForTesting_Duplicate", content2);
     }
     catch (const std::exception& e)
     {
@@ -121,7 +121,7 @@ TEST(AddFileTest, TestDuplicateFileNames)
     }
     // Get the file using get()
     std::string content =
-        storageMethods::get("MyFileForTesting_Duplicate").value();
+        storage_methods::get("MyFileForTesting_Duplicate").value();
     EXPECT_EQ(content, content1);
 }
 
@@ -135,13 +135,13 @@ TEST(AddFileTest, TestDuplicateFileNames_EmptyFirst)
     std::string content2 = "Second content";
 
     // Add the first file
-    storageMethods::add("MyFileForTesting_Duplicate_EmptyFirst", content1);
+    storage_methods::add("MyFileForTesting_Duplicate_EmptyFirst", content1);
 
     // Add the second file with the same name
     try
     {
         // Should not throw an exception. Should instead ignore the second add.
-        storageMethods::add("MyFileForTesting_Duplicate_EmptyFirst", content2);
+        storage_methods::add("MyFileForTesting_Duplicate_EmptyFirst", content2);
     }
     catch (const std::exception& e)
     {
@@ -151,6 +151,6 @@ TEST(AddFileTest, TestDuplicateFileNames_EmptyFirst)
     }
     // Get the file using get()
     std::string content =
-        storageMethods::get("MyFileForTesting_Duplicate_EmptyFirst").value();
+        storage_methods::get("MyFileForTesting_Duplicate_EmptyFirst").value();
     EXPECT_EQ(content, content1);
 }

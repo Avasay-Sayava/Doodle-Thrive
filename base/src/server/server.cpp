@@ -4,25 +4,25 @@
 
 #define BUFFER_SIZE 4096
 
-ddrive::Server::Server(CommandDirector cd, Executor& ex, unsigned int port)
-    : commandDirector(cd), executor(ex), port(port)
+ddrive::server::server(command_director cd, executor& ex, unsigned int port)
+    : _command_director(cd), _executor(ex), _port(port)
 {
-    if (initServer() < 0)
+    if (init() < 0)
     {
         exit(EXIT_FAILURE);
     }
 }
 
-int ddrive::Server::initServer()
+int ddrive::server::init()
 {
-    memset(&sin, 0, sizeof(sin));
+    memset(&_sin, 0, sizeof(_sin));
 
-    sin.sin_family = AF_INET;
-    sin.sin_addr.s_addr = INADDR_ANY;
-    sin.sin_port = htons(port);
+    _sin.sin_family = AF_INET;
+    _sin.sin_addr.s_addr = INADDR_ANY;
+    _sin.sin_port = htons(_port);
 
-    sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock < 0)
+    _sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (_sock < 0)
     {
         return -1;
     }
@@ -30,20 +30,20 @@ int ddrive::Server::initServer()
     return 0;
 }
 
-int ddrive::Server::runServer()
+int ddrive::server::run()
 {
 
     // Bind to the socket
-    if (bind(sock, (struct sockaddr*)&sin, sizeof(sin)) < 0)
+    if (bind(_sock, (struct sockaddr*)&_sin, sizeof(_sin)) < 0)
     {
-        close(sock);
+        close(_sock);
         return -1;
     }
 
     // Listen for incoming connections from clients
-    if (listen(sock, 5) < 0)
+    if (listen(_sock, 5) < 0)
     {
-        close(sock);
+        close(_sock);
         return -1;
     }
 
@@ -51,24 +51,24 @@ int ddrive::Server::runServer()
     {
         struct sockaddr_in client_address;
         socklen_t client_address_len = sizeof(client_address);
-        int client_sock = accept(sock, (struct sockaddr*)&client_address,
+        int client_sock = accept(_sock, (struct sockaddr*)&client_address,
                                  &client_address_len);
         if (client_sock < 0)
         {
             continue;
         }
 
-        executor.execute(
+        _executor.execute(
             [this, client_sock]()
             {
-                handleClient(client_sock);
+                handle(client_sock);
                 close(client_sock);
             });
     }
     return 0;
 }
 
-void ddrive::Server::handleClient(int client_sock)
+void ddrive::server::handle(int client_sock)
 {
     char buffer[BUFFER_SIZE];
     while (true)
@@ -83,7 +83,7 @@ void ddrive::Server::handleClient(int client_sock)
         }
 
         std::string request_line(buffer);
-        auto result = commandDirector.process(request_line);
+        auto result = _command_director.process(request_line);
         std::string response = result;
         send(client_sock, response.c_str(), response.size(), 0);
     }

@@ -1,5 +1,5 @@
-#include "../src/core/storageMethods/add.h"
-#include "../src/core/storageMethods/search.h"
+#include "../src/core/storage_methods/add.h"
+#include "../src/core/storage_methods/search.h"
 
 #include <gtest/gtest.h>
 #include <cstdlib>
@@ -7,15 +7,15 @@
 #include <fstream>
 #include <filesystem>
 
-using namespace storageMethods;
+using namespace storage_methods;
 
 /**
  * @brief Test looking for an empty string (should return all files)
  */
 TEST(SearchTest, EmptyStringSearch) {
-    storageMethods::add("testfile1", "This is a test file.");
-    storageMethods::add("testfile2", "Another test file content.");
-    std::string results = storageMethods::search("");
+    storage_methods::add("testfile1", "This is a test file.");
+    storage_methods::add("testfile2", "Another test file content.");
+    std::string results = storage_methods::search("");
 
     // Check that both files are returned
     std::istringstream iss(results);
@@ -33,8 +33,8 @@ TEST(SearchTest, EmptyStringSearch) {
  * @brief Test searching for content that does not exist in any file
  */
 TEST(SearchTest, TestNonExistantContent) {
-    storageMethods::add("testfile3", "Unique content here.");
-    std::string results = storageMethods::search("Does Not Exist");
+    storage_methods::add("testfile3", "Unique content here.");
+    std::string results = storage_methods::search("Does Not Exist");
 
     // Check that no files are returned
     ASSERT_TRUE(results.empty());
@@ -43,8 +43,8 @@ TEST(SearchTest, TestNonExistantContent) {
  * @brief Test searching for content in an empty file
  */
 TEST(SearchTest, TestEmptyFile) {
-    storageMethods::add("emptyfile", "");
-    std::string results = storageMethods::search("Some content");
+    storage_methods::add("emptyfile", "");
+    std::string results = storage_methods::search("Some content");
 
     // Check that no files are returned
     ASSERT_TRUE(results.empty());
@@ -53,9 +53,9 @@ TEST(SearchTest, TestEmptyFile) {
  * @brief Test searching for content that exists in multiple files
  */
 TEST(SearchTest, TestMultipleFileMatches) {
-    storageMethods::add("file1", "Common content in file one.");
-    storageMethods::add("file2", "Common content in file two.");
-    std::string results = storageMethods::search("Common content");
+    storage_methods::add("file1", "Common content in file one.");
+    storage_methods::add("file2", "Common content in file two.");
+    std::string results = storage_methods::search("Common content");
     std::istringstream iss(results);
     std::string word;
     int count = 0;

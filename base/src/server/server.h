@@ -1,7 +1,7 @@
 #ifndef DOODLE_DRIVE_SERVER_H
 #define DOODLE_DRIVE_SERVER_H
 
-#include "../core/cd.h"
+#include "../core/command_director.h"
 #include "../core/executor.h"
 #include "../core/handlers.h"
 
@@ -14,22 +14,23 @@
 
 namespace ddrive
 {
-    class Server
+    class server
     {
     public:
-        Server(ddrive::CommandDirector cd, ddrive::Executor& ex,
+        server(ddrive::command_director cd, ddrive::executor& ex,
                unsigned int port);
-        int initServer();
-        int runServer();
+        int init();
+        int run();
 
     private:
-        unsigned int port;
-        ddrive::Executor& executor;
-        void handleClient(int client_sock);
-        ddrive::CommandDirector commandDirector;
-        sockaddr_in sin;
-        int sock;
+        unsigned int _port;
+        ddrive::executor& _executor;
+        void handle(int client_sock);
+        ddrive::command_director _command_director;
+        sockaddr_in _sin;
+        int _sock;
     };
+
 } // namespace ddrive
 
 #endif // DOODLE_DRIVE_SERVER_H

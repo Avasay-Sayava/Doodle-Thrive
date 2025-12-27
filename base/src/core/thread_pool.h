@@ -14,20 +14,20 @@
 namespace ddrive
 {
 
-    class ThreadPool : public Executor
+    class thread_pool : public executor
     {
     public:
         /**
          * @brief Construct a ThreadPool with a fixed number of workers.
-         * @param numThreads Number of threads to start (default: hardware
+         * @param num_threads Number of threads to start (default: hardware
          * concurrency).
          */
-        explicit ThreadPool(size_t numThreads);
+        explicit thread_pool(size_t num_threads);
 
         /**
          * @brief Destructor. Stops all threads and joins them.
          */
-        ~ThreadPool() override;
+        ~thread_pool() override;
 
         /**
          * @brief Enqueues a task to be executed by the thread pool.
@@ -36,12 +36,11 @@ namespace ddrive
         void execute(std::function<void(void)> runnable) override;
 
     private:
-        std::vector<std::thread> workers;
-        std::queue<std::function<void(void)>> tasks;
-
-        std::mutex queueMutex;
-        std::condition_variable condition;
-        std::atomic<bool> stop;
+        std::vector<std::thread> _workers;
+        std::queue<std::function<void(void)>> _tasks;
+        std::mutex _mutex;
+        std::condition_variable _condition;
+        std::atomic<bool> _stop;
     };
 
 } // namespace ddrive

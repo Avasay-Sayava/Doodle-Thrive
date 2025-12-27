@@ -4,7 +4,7 @@
 #include <optional>
 #include <string>
 
-namespace storageMethods
+namespace storage_methods
 {
 
     /**

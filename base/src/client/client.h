@@ -6,7 +6,7 @@
 
 #define BUFFER_SIZE 4096
 
-class Client
+class client
 {
 public:
     /**
@@ -14,7 +14,7 @@ public:
      * @param host Server hostname or IP address.
      * @param port Server port number.
      */
-    Client(const std::string& host, int port);
+    client(const std::string& host, int port);
 
     /**
      * @brief Runs the client to interact with the server.
@@ -32,23 +32,27 @@ private:
     /**
      * @brief Client socket descriptor.
      */
-    int client_socket;
+    int _client_socket;
+
     /**
      * @brief Server address structure.
      */
-    struct sockaddr_in server_addr;
+    struct sockaddr_in _server_addr;
+
     /**
      * @brief Server host.
      */
-    std::string host;
+    std::string _host;
+
     /**
      * @brief Server port number.
      */
-    int port;
+    int _port;
+
     /**
      * @brief Buffer for receiving data from the server.
      */
-    char buffer[BUFFER_SIZE];
+    char _buffer[BUFFER_SIZE];
 };
 
 #endif // DOODLE_DRIVE_CLIENT_H

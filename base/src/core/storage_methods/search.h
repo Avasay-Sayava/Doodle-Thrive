@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace storageMethods
+namespace storage_methods
 {
     /**
      * @brief Search for files containing specific content
@@ -12,6 +12,6 @@ namespace storageMethods
      */
     std::string search(const std::string& content);
 
-} // namespace storageMethods
+} // namespace storage_methods
 
 #endif // DOODLE_DRIVE_SEARCH_H

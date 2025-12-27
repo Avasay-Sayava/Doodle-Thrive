@@ -4,10 +4,10 @@
 
 #include <cstdlib>
 
-using namespace storageMethods;
+using namespace storage_methods;
 using namespace std;
 
-namespace storageMethods
+namespace storage_methods
 {
 
     bool add(const string& file_name, const string& text)
@@ -26,4 +26,4 @@ namespace storageMethods
         return false;
     }
 
-} // namespace storageMethods
+} // namespace storage_methods

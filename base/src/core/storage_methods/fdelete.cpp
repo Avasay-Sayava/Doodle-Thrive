@@ -2,9 +2,9 @@
 
 #include <filesystem>
 
-using namespace storageMethods;
+using namespace storage_methods;
 
-namespace storageMethods
+namespace storage_methods
 {
 
     bool fdelete(const std::string& file_name)
@@ -19,4 +19,4 @@ namespace storageMethods
         return false;
     }
 
-} // namespace storageMethods
+} // namespace storage_methods

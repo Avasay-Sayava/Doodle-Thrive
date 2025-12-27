@@ -7,7 +7,7 @@
 namespace ddrive
 {
 
-    class ThreadForEveryRunnable : public Executor
+    class thread_for_every_runnable : public executor
     {
     public:
         /**
@@ -20,7 +20,7 @@ namespace ddrive
         /**
          * @brief Virtual destructor for proper cleanup of derived classes.
          */
-        ~ThreadForEveryRunnable();
+        ~thread_for_every_runnable();
     };
 
 } // namespace ddrive

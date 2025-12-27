@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace storageMethods
+namespace storage_methods
 {
 
     /**
@@ -17,6 +17,6 @@ namespace storageMethods
      */
     bool add(const std::string& file_name, const std::string& text);
 
-} // namespace storageMethods
+} // namespace storage_methods
 
 #endif // DOODLE_DRIVE_ADD_H

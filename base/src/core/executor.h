@@ -6,7 +6,7 @@
 namespace ddrive
 {
 
-    class Executor
+    class executor
     {
     public:
         /**
@@ -19,7 +19,7 @@ namespace ddrive
         /**
          * @brief Virtual destructor for proper cleanup of derived classes.
          */
-        virtual ~Executor();
+        virtual ~executor();
     };
 
 } // namespace ddrive

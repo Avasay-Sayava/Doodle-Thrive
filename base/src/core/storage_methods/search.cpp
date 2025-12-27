@@ -7,11 +7,11 @@
 #include <fstream>
 #include <sstream>
 
-using namespace storageMethods;
+using namespace storage_methods;
 using namespace std;
 using namespace std::filesystem;
 
-namespace storageMethods
+namespace storage_methods
 {
 
     string search(const std::string& content)
@@ -51,4 +51,4 @@ namespace storageMethods
         return result;
     }
 
-} // namespace storageMethods
+} // namespace storage_methods

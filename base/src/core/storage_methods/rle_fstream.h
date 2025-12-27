@@ -5,7 +5,7 @@
 #include <optional>
 #include <string>
 
-namespace storageMethods
+namespace storage_methods
 {
     class rle_fstream
     {
@@ -39,10 +39,10 @@ namespace storageMethods
         rle_fstream& operator<<(const std::string& str);
 
     private:
-        std::fstream fstream;
-        std::string path;
+        std::fstream _fstream;
+        std::string _path;
     };
 
-} // namespace storageMethods
+} // namespace storage_methods
 
 #endif // DOODLE_DRIVE_RLE_FSTREAM_H

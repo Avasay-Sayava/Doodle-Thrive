@@ -1,3 +1,3 @@
 #include "executor.h"
 
-ddrive::Executor::~Executor() = default;
+ddrive::executor::~executor() = default;
