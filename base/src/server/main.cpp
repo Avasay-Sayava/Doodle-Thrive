@@ -1,9 +1,10 @@
-#include "../core/thread_pool.h"
 #include "../core/command_director.h"
+#include "../core/executor/thread_pool.h"
 #include "../core/handlers.h"
 #include "../core/splitter.h"
 #include "../core/storage.h"
 #include "server.h"
+
 #include <cstdlib>
 
 int main(int argc, char* argv[])
