@@ -9,24 +9,24 @@ Clients can interact with the server using a TCP protocol, hence you can write c
 The project is containerized using Docker. For running parts of the project, there are predefined bash files.
 * **To enable the usage of the bash files**, you need to run this command in the root directory:
     ```bash
-    chmod +x ./api-server.sh ./api-console.sh ./api-tests.sh ./base-server.sh ./base-client.sh ./base-tests.sh
+    chmod +x ./api-server.bash ./api-console.bash ./api-tests.bash ./base-server.bash ./base-client.bash ./base-tests.bash
     ```
 
-* **To start the backend base C++ server**, you need to run the `./base-server.sh` file:
+* **To start the backend base C++ server**, you need to run the `./base-server.bash` file:
     ```bash
-    build=<true|false> name=<host_name> port=<port> threads=<thread_count> ./base-server.sh
+    build=<true|false> name=<host_name> port=<port> threads=<thread_count> ./base-server.bash
     ```
     You can run the file without defining the `build`, `name`, `port`, `threads` variables, and it will sign them the default values `true`, `base-server`, `3000`, `10` each.
 
-* **To run a C++/Python client on a base server**, you need to run the `./base-client.sh` file:
+* **To run a C++/Python client on a base server**, you need to run the `./base-client.bash` file:
    ```bash
-   build=<true|false> type=<1=cpp|2=python> name=<cpp_server_host_name> port=<cpp_server_port> ./base-client.sh
+   build=<true|false> type=<1=cpp|2=python> name=<cpp_server_host_name> port=<cpp_server_port> ./base-client.bash
    ```
    You can run the file without defining the `build`, `type` variables, and it will sign them the default values `true`, and ask for the client type on runtime. Note that you are required to define the `name` and `port` variables to connect the client to the C++ backend server.
 
-* **To run the tests for the backend base C++ server**, you need to run the `./base-tests.sh` file:
+* **To run the tests for the backend base C++ server**, you need to run the `./base-tests.bash` file:
    ```bash
-   build=<true|false> ./base-tests.sh
+   build=<true|false> ./base-tests.bash
    ```
    You can run the file without defining the `build` variable, and it will sign it the default value `true`.
 

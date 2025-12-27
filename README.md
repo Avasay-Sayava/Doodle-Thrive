@@ -24,42 +24,42 @@ To disable changes to branches of finished parts of the project, you create a ru
 The project is containerized using Docker. For running parts of the project, there are predefined bash files.
 * **To enable the usage of the bash files**, you need to run this command in the root directory:
    ```bash
-   chmod +x ./api-server.sh ./api-console.sh ./api-tests.sh ./base-server.sh ./base-client.sh ./base-tests.sh
+   chmod +x ./api-server.bash ./api-console.bash ./api-tests.bash ./base-server.bash ./base-client.bash ./base-tests.bash
    ```
 
-* **To start the backend base C++ server**, you need to run the `./base-server.sh` file:
+* **To start the backend base C++ server**, you need to run the `./base-server.bash` file:
     ```bash
-    build=<true|false> name=<host_name> port=<port> threads=<thread_count> ./base-server.sh
+    build=<true|false> name=<host_name> port=<port> threads=<thread_count> ./base-server.bash
     ```
     You can run the file without defining the `build`, `name`, `port`, `threads` variables, and it will sign them the default values `true`, `base-server`, `3000`, `10` each.
 
-* **To run a C++/Python client on a base server**, you need to run the `./base-client.sh` file:
+* **To run a C++/Python client on a base server**, you need to run the `./base-client.bash` file:
     ```bash
-    build=<true|false> type=<1=cpp|2=python> name=<cpp_server_host_name> port=<cpp_server_port> ./base-client.sh
+    build=<true|false> type=<1=cpp|2=python> name=<cpp_server_host_name> port=<cpp_server_port> ./base-client.bash
     ```
     You can run the file without defining the `build`, `type` variables, and it will sign them the default values `true`, and ask for the client type on runtime. Note that you are required to define the `name` and `port` variables to connect the client to the C++ backend server.
 
-* **To run the tests for the backend base C++ server**, you need to run the `./base-tests.sh` file:
+* **To run the tests for the backend base C++ server**, you need to run the `./base-tests.bash` file:
     ```bash
-    build=<true|false> ./base-tests.sh
+    build=<true|false> ./base-tests.bash
     ```
     You can run the file without defining the `build` variable, and it will sign it the default value `true`.
 
-* **To start the API server**, you need to run the `./api-server.sh` file:
+* **To start the API server**, you need to run the `./api-server.bash` file:
     ```bash
-    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> name=<host_name> port=<port> timeout=<requests_timeout_ms> ./api-server.sh
+    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> name=<host_name> port=<port> timeout=<requests_timeout_ms> ./api-server.bash
     ```
     You can run the file without defining the `build`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `api-server`, `3300`, `5` each. Note that you are required to define the `server_name` and `server_port` variables to connect the API server to the C++ backend server.
 
-* **To get to an API server's console**, you can reply 'Y' in the end of `./base-server.sh` execution, or run the `./api-console.sh` file:
+* **To get to an API server's console**, you can reply 'Y' in the end of `./base-server.bash` execution, or run the `./api-console.bash` file:
    ```bash
-   name=<api_host_name> port=<api_port> ./api-console.sh
+   name=<api_host_name> port=<api_port> ./api-console.bash
    ```
    You can run the file without defining the `name`, `port` variables, and it will sign them the default values `api-server`, `3300` each.
 
-* **To run the tests for the API server**, you need to run the `./api-tests.sh` file:
+* **To run the tests for the API server**, you need to run the `./api-tests.bash` file:
     ```bash
-    build=<true|false> ./api-tests.sh
+    build=<true|false> ./api-tests.bash
     ```
     You can run the file without defining the `build` variable, and it will sign it the default value `true`.
 
@@ -70,18 +70,18 @@ For the full protocol, documentation can be found in [`base/README.md`](base/REA
 ### Startup Example
 **Start the server:** (with default variables)
 ```bash
-./base-server.sh
+./base-server.bash
 ```
 
 **Then you can run your client of choice**:
 * **Run a C++ client:** (connecting to server at `base-server:3000`)
    ```bash
-   type=1 name=base-server port=3000 ./base-client.sh
+   type=1 name=base-server port=3000 ./base-client.bash
    ```
 
 * **Run a Python client:** (connecting to server at `base-server:3000`)
    ```bash
-   type=2 name=base-server port=3000 ./base-client.sh
+   type=2 name=base-server port=3000 ./base-client.bash
    ```
 
 ### Commands Examples
@@ -128,12 +128,12 @@ For the full protocol, documentation can be found in [`base/README.md`](api/READ
 ### Startup Example
 **Start the API server:** (connecting to C++ server at `base-server:3000`, with default variables)
 ```bash
-server_name=base-server server_port=3000 ./api-server.sh
+server_name=base-server server_port=3000 ./api-server.bash
 ```
 
 **Connect to the API server's console:** (with default variables)
 ```bash
-./api-console.sh
+./api-console.bash
 ```
 
 ### Possible Requests

@@ -34,13 +34,13 @@ esac
 
 if [ -z "${name}" ]; then
     echo -e "${CYAN}No name provided.${NC}"
-    echo -e "${CYAN}Must provide the server's name to the variable ${GREEN}'${RED}name${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}name${NC}=${GREEN}base-server${NC} ./base-client.sh')"
+    echo -e "${CYAN}Must provide the server's name to the variable ${GREEN}'${RED}name${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}name${NC}=${GREEN}base-server${NC} ./base-client.bash')"
     exit 1
 fi
 
 if [ -z "${port}" ]; then
     echo -e "${CYAN}No port provided.${NC}"
-    echo -e "${CYAN}Must provide the server's port to the variable ${GREEN}'${RED}port${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}port${NC}=${ORANGE}3000${NC} ./base-client.sh')"
+    echo -e "${CYAN}Must provide the server's port to the variable ${GREEN}'${RED}port${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}port${NC}=${ORANGE}3000${NC} ./base-client.bash')"
     exit 1
 fi
 
@@ -104,19 +104,19 @@ if [ -z "$container_id" ]; then
     read -r response
 
     if [[ "$response" == "y" || "$response" == "Y" ]]; then
-        if [ ! -f "./base-server.sh" ]; then
-            echo -e "${RED}Error: Cannot find '${YELLOW}./base-server.sh${RED}' in the current directory.${NC}"
+        if [ ! -f "./base-server.bash" ]; then
+            echo -e "${RED}Error: Cannot find '${YELLOW}./base-server.bash${RED}' in the current directory.${NC}"
             exit 1
         fi
 
-        echo -e "${CYAN}Launching base-server.sh...${NC}"
+        echo -e "${CYAN}Launching base-server.bash...${NC}"
         echo
 
-        if name="$name" port="$port" ./base-server.sh; then
+        if name="$name" port="$port" ./base-server.bash; then
             echo
-            echo -e "${CYAN}base-server.sh executed. Verifying server status...${NC}"
+            echo -e "${CYAN}base-server.bash executed. Verifying server status...${NC}"
         else
-            echo -e "${RED}Error: base-server.sh failed to execute properly.${NC}"
+            echo -e "${RED}Error: base-server.bash failed to execute properly.${NC}"
             exit 1
         fi
         

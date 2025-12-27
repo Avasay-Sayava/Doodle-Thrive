@@ -58,13 +58,13 @@ fi
 
 if [ -z "${server_name}" ]; then
     echo -e "${CYAN}No server name provided.${NC}"
-    echo -e "${CYAN}Must provide the server's name to the variable ${GREEN}'${RED}server_name${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}server_name${NC}=${GREEN}base-server${NC} ./api-server.sh')"
+    echo -e "${CYAN}Must provide the server's name to the variable ${GREEN}'${RED}server_name${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}server_name${NC}=${GREEN}base-server${NC} ./api-server.bash')"
     exit 1
 fi
 
 if [ -z "${server_port}" ]; then
     echo -e "${CYAN}No server port provided.${NC}"
-    echo -e "${CYAN}Must provide the server's port to the variable ${GREEN}'${RED}server_port${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}server_port${NC}=${ORANGE}3000${NC} ./api-server.sh')"
+    echo -e "${CYAN}Must provide the server's port to the variable ${GREEN}'${RED}server_port${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}server_port${NC}=${ORANGE}3000${NC} ./api-server.bash')"
     exit 1
 fi
 
@@ -107,19 +107,19 @@ if [ -z "$container_id" ]; then
     read -r response
 
     if [[ "$response" == "y" || "$response" == "Y" ]]; then
-        if [ ! -f "./base-server.sh" ]; then
-            echo -e "${RED}Error: Cannot find '${YELLOW}./base-server.sh${RED}' in the current directory.${NC}"
+        if [ ! -f "./base-server.bash" ]; then
+            echo -e "${RED}Error: Cannot find '${YELLOW}./base-server.bash${RED}' in the current directory.${NC}"
             exit 1
         fi
 
-        echo -e "${CYAN}Launching base-server.sh...${NC}"
+        echo -e "${CYAN}Launching base-server.bash...${NC}"
         echo
 
-        if name="$server_name" port="$server_port" ./base-server.sh; then
+        if name="$server_name" port="$server_port" ./base-server.bash; then
             echo
-            echo -e "${CYAN}base-server.sh executed. Verifying server status...${NC}"
+            echo -e "${CYAN}base-server.bash executed. Verifying server status...${NC}"
         else
-            echo -e "${RED}Error: base-server.sh failed to execute properly.${NC}"
+            echo -e "${RED}Error: base-server.bash failed to execute properly.${NC}"
             exit 1
         fi
         
@@ -174,8 +174,8 @@ echo
 echo -n -e "${YELLOW}Would you like to open a curl terminal to interact with the API server? (y/n) ${NC}"
 read -r curl_response
 if [[ "$curl_response" == "y" || "$curl_response" == "Y" ]]; then
-    echo -e "${CYAN}Running ${NC}api-console.sh${CYAN}...${NC}"
-    name="$name" port="$port" ./api-console.sh
+    echo -e "${CYAN}Running ${NC}api-console.bash${CYAN}...${NC}"
+    name="$name" port="$port" ./api-console.bash
 else
     echo -e "${CYAN}Exiting.${NC}"
     exit 0
