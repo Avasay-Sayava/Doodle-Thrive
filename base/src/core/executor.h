@@ -1,16 +1,27 @@
-#ifndef EXECUTOR_H
-#define EXECUTOR_H
+#ifndef DOODLE_DRIVE_EXECUTOR_H
+#define DOODLE_DRIVE_EXECUTOR_H
 
-#include "../core/cd.h"
-#include <string>
 #include <functional>
 
-namespace ddrive {
-class Executor {
-public:
-    virtual void execute(std::function<void(void)> runnable) = 0;
-    virtual ~Executor();
-};
+namespace ddrive
+{
+
+    class Executor
+    {
+    public:
+        /**
+         * @brief Executes a runnable task.
+         *
+         * @param runnable A function representing the task to be executed.
+         */
+        virtual void execute(std::function<void(void)> runnable) = 0;
+
+        /**
+         * @brief Virtual destructor for proper cleanup of derived classes.
+         */
+        virtual ~Executor();
+    };
 
 } // namespace ddrive
-#endif // EXECUTOR_H
+
+#endif // DOODLE_DRIVE_EXECUTOR_H

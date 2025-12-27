@@ -1,14 +1,8 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef DOODLE_DRIVE_CLIENT_H
+#define DOODLE_DRIVE_CLIENT_H
 
-#include <arpa/inet.h>
-#include <cstring>
-#include <iostream>
-#include <netdb.h>
+#include <netinet/in.h>
 #include <string>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 #define BUFFER_SIZE 4096
 
@@ -21,10 +15,12 @@ public:
      * @param port Server port number.
      */
     Client(const std::string& host, int port);
+
     /**
      * @brief Runs the client to interact with the server.
      */
     void run_client();
+
     /**
      * @brief Sends a command to the server and returns the response.
      * @param command The command string to send.
@@ -34,7 +30,7 @@ public:
 
 private:
     /**
-     * @brief Client socket descriptor and server address information.
+     * @brief Client socket descriptor.
      */
     int client_socket;
     /**
@@ -42,7 +38,7 @@ private:
      */
     struct sockaddr_in server_addr;
     /**
-     * @brief Server host and port.
+     * @brief Server host.
      */
     std::string host;
     /**
@@ -55,4 +51,4 @@ private:
     char buffer[BUFFER_SIZE];
 };
 
-#endif // CLIENT_H
+#endif // DOODLE_DRIVE_CLIENT_H

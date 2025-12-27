@@ -1,5 +1,4 @@
 #include "ThreadPool.h"
-#include <stdexcept>
 
 namespace ddrive
 {

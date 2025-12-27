@@ -1,15 +1,17 @@
-#include <gtest/gtest.h>
 #include "../src/core/splitter.h"
+
+#include <gtest/gtest.h>
 
 using ddrive::Splitter;
 
 // Helper to build a “standard” arity map for tests.
-static Splitter makeDefaultSplitter() {
+static Splitter makeDefaultSplitter()
+{
     Splitter::CommandArityMap map = {
-        { "POST",   3 },  // POST <filename> <content>
-        { "SEARCH", 2 },  // SEARCH <term...>
-        { "GET",    2 },  // GET <something...>
-        { "DELETE", 2 }   // DELETE <something...>
+        {"POST", 3},   // POST <filename> <content>
+        {"SEARCH", 2}, // SEARCH <term...>
+        {"GET", 2},    // GET <something...>
+        {"DELETE", 2}  // DELETE <something...>
     };
     return Splitter(map);
 }
@@ -19,7 +21,8 @@ static Splitter makeDefaultSplitter() {
  */
 
 // Simple valid POST with single-word content.
-TEST(SplitterTest, Post_SimpleValid) {
+TEST(SplitterTest, Post_SimpleValid)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("POST MyFile Hello");
@@ -31,7 +34,8 @@ TEST(SplitterTest, Post_SimpleValid) {
 }
 
 // POST with content containing spaces – last arg is full remainder.
-TEST(SplitterTest, Post_ContentWithSpaces) {
+TEST(SplitterTest, Post_ContentWithSpaces)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("POST MyFile This is some content");
@@ -43,7 +47,8 @@ TEST(SplitterTest, Post_ContentWithSpaces) {
 }
 
 // POST with leading spaces in content – content is exact remainder.
-TEST(SplitterTest, Post_ContentLeadingSpacePreserved) {
+TEST(SplitterTest, Post_ContentLeadingSpacePreserved)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("POST MyFile  Hello");
@@ -51,11 +56,12 @@ TEST(SplitterTest, Post_ContentLeadingSpacePreserved) {
     ASSERT_EQ(tokens.size(), 3u);
     EXPECT_EQ(tokens[0], "POST");
     EXPECT_EQ(tokens[1], "MyFile");
-    EXPECT_EQ(tokens[2], " Hello");  // leading space is part of content
+    EXPECT_EQ(tokens[2], " Hello"); // leading space is part of content
 }
 
 // POST with trailing spaces in content – trailing spaces preserved.
-TEST(SplitterTest, Post_ContentTrailingSpacesPreserved) {
+TEST(SplitterTest, Post_ContentTrailingSpacesPreserved)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("POST MyFile Hello  ");
@@ -67,7 +73,8 @@ TEST(SplitterTest, Post_ContentTrailingSpacesPreserved) {
 }
 
 // POST with empty content: "POST MyFile " → last arg is empty string.
-TEST(SplitterTest, Post_EmptyContentAllowed) {
+TEST(SplitterTest, Post_EmptyContentAllowed)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("POST MyFile ");
@@ -75,11 +82,12 @@ TEST(SplitterTest, Post_EmptyContentAllowed) {
     ASSERT_EQ(tokens.size(), 3u);
     EXPECT_EQ(tokens[0], "POST");
     EXPECT_EQ(tokens[1], "MyFile");
-    EXPECT_EQ(tokens[2], "");  // empty content
+    EXPECT_EQ(tokens[2], ""); // empty content
 }
 
 // POST with double space in header area ("POST  MyFile ...") is invalid.
-TEST(SplitterTest, Post_DoubleSpaceBetweenCommandAndFilenameInvalid) {
+TEST(SplitterTest, Post_DoubleSpaceBetweenCommandAndFilenameInvalid)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("POST  MyFile Content");
@@ -88,7 +96,8 @@ TEST(SplitterTest, Post_DoubleSpaceBetweenCommandAndFilenameInvalid) {
 }
 
 // POST missing content is invalid (we expect 3 tokens total).
-TEST(SplitterTest, Post_MissingContentInvalid) {
+TEST(SplitterTest, Post_MissingContentInvalid)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens1 = splitter.split("POST MyFile"); // only one arg
@@ -103,7 +112,8 @@ TEST(SplitterTest, Post_MissingContentInvalid) {
  */
 
 // Command is uppercased, map keys are uppercase.
-TEST(SplitterTest, Command_IsUppercasedForLookupAndResult) {
+TEST(SplitterTest, Command_IsUppercasedForLookupAndResult)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("post MyFile Hello");
@@ -115,7 +125,8 @@ TEST(SplitterTest, Command_IsUppercasedForLookupAndResult) {
 }
 
 // Unknown command returns empty vector.
-TEST(SplitterTest, UnknownCommandRejected) {
+TEST(SplitterTest, UnknownCommandRejected)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("UNKNOWN something");
@@ -124,7 +135,8 @@ TEST(SplitterTest, UnknownCommandRejected) {
 }
 
 // Line starting with a space has empty command token → invalid.
-TEST(SplitterTest, LeadingSpaceBeforeCommandInvalid) {
+TEST(SplitterTest, LeadingSpaceBeforeCommandInvalid)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split(" POST MyFile Hello");
@@ -137,7 +149,8 @@ TEST(SplitterTest, LeadingSpaceBeforeCommandInvalid) {
  */
 
 // Simple SEARCH – single space after command, term has no leading space.
-TEST(SplitterTest, Search_SimpleValid) {
+TEST(SplitterTest, Search_SimpleValid)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("SEARCH hello");
@@ -148,7 +161,8 @@ TEST(SplitterTest, Search_SimpleValid) {
 }
 
 // SEARCH with double space after command – leading space is part of term.
-TEST(SplitterTest, Search_DoubleSpaceAfterCommandIsPartOfTerm) {
+TEST(SplitterTest, Search_DoubleSpaceAfterCommandIsPartOfTerm)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("SEARCH  hello");
@@ -159,7 +173,8 @@ TEST(SplitterTest, Search_DoubleSpaceAfterCommandIsPartOfTerm) {
 }
 
 // SEARCH with more spaces and trailing spaces – all preserved in last arg.
-TEST(SplitterTest, Search_TermWithLeadingAndTrailingSpacesPreserved) {
+TEST(SplitterTest, Search_TermWithLeadingAndTrailingSpacesPreserved)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("SEARCH   hello world  ");
@@ -174,7 +189,8 @@ TEST(SplitterTest, Search_TermWithLeadingAndTrailingSpacesPreserved) {
 }
 
 // SEARCH with no term – last arg is empty string (handler should treat as 400).
-TEST(SplitterTest, Search_NoTerm_GivesEmptyLastArg) {
+TEST(SplitterTest, Search_NoTerm_GivesEmptyLastArg)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("SEARCH");
@@ -186,7 +202,8 @@ TEST(SplitterTest, Search_NoTerm_GivesEmptyLastArg) {
  * GET tests (same arity pattern as SEARCH)
  */
 
-TEST(SplitterTest, Get_SimpleValid) {
+TEST(SplitterTest, Get_SimpleValid)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("GET MyFile");
@@ -197,7 +214,8 @@ TEST(SplitterTest, Get_SimpleValid) {
 }
 
 // GET with double space after command – leading space part of argument.
-TEST(SplitterTest, Get_DoubleSpaceAfterCommandIsPartOfArg) {
+TEST(SplitterTest, Get_DoubleSpaceAfterCommandIsPartOfArg)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("GET  MyFile");
@@ -208,7 +226,8 @@ TEST(SplitterTest, Get_DoubleSpaceAfterCommandIsPartOfArg) {
 }
 
 // GET with no arg – empty last arg (handler can decide if that's 400).
-TEST(SplitterTest, Get_NoArg_GivesEmptyLastArg) {
+TEST(SplitterTest, Get_NoArg_GivesEmptyLastArg)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("GET");
@@ -220,7 +239,8 @@ TEST(SplitterTest, Get_NoArg_GivesEmptyLastArg) {
  * DELETE tests (same arity pattern as GET)
  */
 
-TEST(SplitterTest, Delete_SimpleValid) {
+TEST(SplitterTest, Delete_SimpleValid)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("DELETE MyFile");
@@ -231,7 +251,8 @@ TEST(SplitterTest, Delete_SimpleValid) {
 }
 
 // DELETE with double space after command – leading space part of argument.
-TEST(SplitterTest, Delete_DoubleSpaceAfterCommandIsPartOfArg) {
+TEST(SplitterTest, Delete_DoubleSpaceAfterCommandIsPartOfArg)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("DELETE  MyFile");
@@ -242,7 +263,8 @@ TEST(SplitterTest, Delete_DoubleSpaceAfterCommandIsPartOfArg) {
 }
 
 // DELETE with no arg – empty last arg (handler can decide if that's 404 / 400).
-TEST(SplitterTest, Delete_NoArg_GivesEmptyLastArg) {
+TEST(SplitterTest, Delete_NoArg_GivesEmptyLastArg)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("DELETE");
@@ -255,7 +277,8 @@ TEST(SplitterTest, Delete_NoArg_GivesEmptyLastArg) {
  */
 
 // Empty line returns empty vector (invalid).
-TEST(SplitterTest, EmptyLineInvalid) {
+TEST(SplitterTest, EmptyLineInvalid)
+{
     auto splitter = makeDefaultSplitter();
 
     auto tokens = splitter.split("");

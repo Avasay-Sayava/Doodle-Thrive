@@ -1,12 +1,14 @@
+#include "../src/core/storageMethods/add.h"
+#include "../src/core/storageMethods/search.h"
+
 #include <gtest/gtest.h>
 #include <cstdlib>
 #include <string>
 #include <fstream>
 #include <filesystem>
-#include "../src/core/storageMethods/add.h"
-#include "../src/core/storageMethods/search.h"
 
 using namespace storageMethods;
+
 /**
  * @brief Test looking for an empty string (should return all files)
  */

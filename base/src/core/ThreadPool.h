@@ -1,7 +1,8 @@
-#ifndef THREAD_POOL_H
-#define THREAD_POOL_H
+#ifndef DOODLE_DRIVE_THREAD_POOL_H
+#define DOODLE_DRIVE_THREAD_POOL_H
 
 #include "executor.h"
+
 #include <atomic>
 #include <condition_variable>
 #include <functional>
@@ -12,6 +13,7 @@
 
 namespace ddrive
 {
+
     class ThreadPool : public Executor
     {
     public:
@@ -41,6 +43,7 @@ namespace ddrive
         std::condition_variable condition;
         std::atomic<bool> stop;
     };
+
 } // namespace ddrive
 
-#endif // THREAD_POOL_H
+#endif // DOODLE_DRIVE_THREAD_POOL_H

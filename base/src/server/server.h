@@ -1,30 +1,35 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef DOODLE_DRIVE_SERVER_H
+#define DOODLE_DRIVE_SERVER_H
+
 #include "../core/cd.h"
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <string.h>
-#include <thread>
-#include "../core/handlers.h"
 #include "../core/executor.h"
+#include "../core/handlers.h"
 
-#define BUFFER_SIZE 4096
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <thread>
+#include <unistd.h>
 
-namespace ddrive {
-class Server {
-public:
-    Server(ddrive::CommandDirector cd, ddrive::Executor& ex, unsigned int port);
-    int initServer();
-    int runServer();
-private:
-    unsigned int port;
-    ddrive::Executor& executor;
-    void handleClient(int client_sock);
-    ddrive::CommandDirector commandDirector;
-    sockaddr_in sin;
-    int sock;
-};
-}
-#endif // SERVER_H
+namespace ddrive
+{
+    class Server
+    {
+    public:
+        Server(ddrive::CommandDirector cd, ddrive::Executor& ex,
+               unsigned int port);
+        int initServer();
+        int runServer();
+
+    private:
+        unsigned int port;
+        ddrive::Executor& executor;
+        void handleClient(int client_sock);
+        ddrive::CommandDirector commandDirector;
+        sockaddr_in sin;
+        int sock;
+    };
+} // namespace ddrive
+
+#endif // DOODLE_DRIVE_SERVER_H

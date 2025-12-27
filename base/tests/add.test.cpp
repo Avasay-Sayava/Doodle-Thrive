@@ -1,24 +1,28 @@
-#include <gtest/gtest.h>
-#include <cstdlib>
-#include <string>
-#include <fstream>
-#include "../src/core/storageMethods/get.h"
-#include <filesystem>
-#include "../src/core/storageMethods/rle.h"
 #include "../src/core/storageMethods/add.h"
+#include "../src/core/storageMethods/get.h"
+#include "../src/core/storageMethods/rle.h"
+
+#include <cstdlib>
+#include <filesystem>
+#include <fstream>
+#include <gtest/gtest.h>
+#include <string>
 
 using namespace storageMethods;
+
 /**
  * @brief Test existance of a file added through add command
  */
-TEST(AddFileTest, FileExists) {
+TEST(AddFileTest, FileExists)
+{
     // Create file
     storageMethods::add("MyFileForTesting_Exists", "content");
 
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr); // Make sure env variable exists
 
-    std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting_Exists";
+    std::filesystem::path filePath =
+        std::filesystem::path(env) / "MyFileForTesting_Exists";
 
     // Assert existance of the file
     EXPECT_TRUE(std::filesystem::exists(filePath));
@@ -27,7 +31,8 @@ TEST(AddFileTest, FileExists) {
 /**
  * @brief Test correspondance to content added
  */
-TEST(AddFileTest, CorrespondenceToEncryption) {
+TEST(AddFileTest, CorrespondenceToEncryption)
+{
     // Create the content of the file
     std::string content = "aaaaabbbbbbbbbbbbbbbb77788888888dddDDDDDDDDD";
 
@@ -38,7 +43,8 @@ TEST(AddFileTest, CorrespondenceToEncryption) {
     const char* env = std::getenv("DOODLE_DRIVE_PATH");
     ASSERT_NE(env, nullptr);
 
-    std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting_Correspondence";
+    std::filesystem::path filePath =
+        std::filesystem::path(env) / "MyFileForTesting_Correspondence";
 
     // Assert existance of file
     ASSERT_TRUE(std::filesystem::exists(filePath));
@@ -47,10 +53,8 @@ TEST(AddFileTest, CorrespondenceToEncryption) {
     std::ifstream file(filePath, std::ios::binary);
     ASSERT_TRUE(file.is_open());
 
-    std::string encrypted(
-        (std::istreambuf_iterator<char>(file)),
-        std::istreambuf_iterator<char>()
-    );
+    std::string encrypted((std::istreambuf_iterator<char>(file)),
+                          std::istreambuf_iterator<char>());
 
     std::string decrypted = rle_decrypt(encrypted);
 
@@ -60,7 +64,8 @@ TEST(AddFileTest, CorrespondenceToEncryption) {
 /**
  * @brief Test adding an empty file
  */
-TEST(AddFileTest, TestEmptyFile) {
+TEST(AddFileTest, TestEmptyFile)
+{
     // Create an empty string to use as the content
     std::string content = "";
 
@@ -72,7 +77,8 @@ TEST(AddFileTest, TestEmptyFile) {
     ASSERT_NE(env, nullptr);
 
     // Create the path to the file
-    std::filesystem::path filePath = std::filesystem::path(env) / "MyFileForTesting_Empty";
+    std::filesystem::path filePath =
+        std::filesystem::path(env) / "MyFileForTesting_Empty";
 
     // Assert the file exists
     ASSERT_TRUE(std::filesystem::exists(filePath));
@@ -81,10 +87,8 @@ TEST(AddFileTest, TestEmptyFile) {
     std::ifstream file(filePath, std::ios::binary);
     ASSERT_TRUE(file.is_open());
 
-    std::string encrypted(
-        (std::istreambuf_iterator<char>(file)),
-        std::istreambuf_iterator<char>()
-    );
+    std::string encrypted((std::istreambuf_iterator<char>(file)),
+                          std::istreambuf_iterator<char>());
 
     std::string decrypted = rle_decrypt(encrypted);
 
@@ -94,7 +98,8 @@ TEST(AddFileTest, TestEmptyFile) {
 /**
  * @brief Test adding two files with the same name
  */
-TEST(AddFileTest, TestDuplicateFileNames) {
+TEST(AddFileTest, TestDuplicateFileNames)
+{
     // Create content for the files
     std::string content1 = "First content";
     std::string content2 = "Second content";
@@ -103,22 +108,28 @@ TEST(AddFileTest, TestDuplicateFileNames) {
     storageMethods::add("MyFileForTesting_Duplicate", content1);
 
     // Add the second file with the same name
-    try {
+    try
+    {
         // Should not throw an exception. Should instead ignore the second add.
         storageMethods::add("MyFileForTesting_Duplicate", content2);
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e)
+    {
         // If an exception is thrown, the test should fail
-        FAIL() << "Exception thrown when adding duplicate file names: " << e.what();
+        FAIL() << "Exception thrown when adding duplicate file names: "
+               << e.what();
     }
     // Get the file using get()
-    std::string content = storageMethods::get("MyFileForTesting_Duplicate").value();
+    std::string content =
+        storageMethods::get("MyFileForTesting_Duplicate").value();
     EXPECT_EQ(content, content1);
 }
 
 /**
  * @brief Test adding two files with the same name when the first file is empty
  */
-TEST(AddFileTest, TestDuplicateFileNames_EmptyFirst) {
+TEST(AddFileTest, TestDuplicateFileNames_EmptyFirst)
+{
     // Create content for the files
     std::string content1 = "";
     std::string content2 = "Second content";
@@ -127,14 +138,19 @@ TEST(AddFileTest, TestDuplicateFileNames_EmptyFirst) {
     storageMethods::add("MyFileForTesting_Duplicate_EmptyFirst", content1);
 
     // Add the second file with the same name
-    try {
+    try
+    {
         // Should not throw an exception. Should instead ignore the second add.
         storageMethods::add("MyFileForTesting_Duplicate_EmptyFirst", content2);
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e)
+    {
         // If an exception is thrown, the test should fail
-        FAIL() << "Exception thrown when adding duplicate file names: " << e.what();
+        FAIL() << "Exception thrown when adding duplicate file names: "
+               << e.what();
     }
     // Get the file using get()
-    std::string content = storageMethods::get("MyFileForTesting_Duplicate_EmptyFirst").value();
+    std::string content =
+        storageMethods::get("MyFileForTesting_Duplicate_EmptyFirst").value();
     EXPECT_EQ(content, content1);
 }

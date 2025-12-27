@@ -1,12 +1,14 @@
 #include "statusCodes.h"
 
-namespace ddrive {
-
-std::string codeToString(StatusCode code)
+namespace ddrive
 {
-    switch (code) {
+
+    std::string codeToString(StatusCode code)
+    {
+        switch (code)
+        {
         case StatusCode::Ok:
-            return "200 OK\n";
+            return "200 Ok\n";
         case StatusCode::Created:
             return "201 Created\n";
         case StatusCode::NoContent:
@@ -17,8 +19,7 @@ std::string codeToString(StatusCode code)
             return "404 Not Found\n";
         default:
             return "500 Internal Server Error\n"; // Fallback for unknown codes
+        }
     }
-}
-
 
 } // namespace ddrive

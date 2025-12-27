@@ -1,5 +1,3 @@
-# client_py/pyClient.py
-
 import sys
 from socket import socket
 
