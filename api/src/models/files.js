@@ -190,9 +190,20 @@ exports.search = async (query) => {
         return {};
 
     const results = Object.keys(files).filter(id => files[id].name.includes(query));
-    results.push(...response.response);
+    const searchResults = response.response.filter(id => !results.includes(id));
+    const outSearchResults = await exports.getAll(searchResults);
 
-    return await exports.getAll(results);
+    const outSearchResultsValues = Object.values(outSearchResults);
+    for (const value of outSearchResultsValues) {
+        if (!value.name.includes(query) &&
+            !value.content.includes(query)) {
+            delete outSearchResults[value.id];
+        }
+    }
+
+    const outResults = await exports.getAll(results);
+
+    return { ...outResults, ...outSearchResults };
 }
 
 /**

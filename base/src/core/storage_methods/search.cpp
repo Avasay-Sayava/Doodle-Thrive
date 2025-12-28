@@ -35,12 +35,12 @@ namespace storage_methods
             std::string file_name = entry.path().filename().string();
 
             std::string file_content = get(file_name).value();
-            if (file_content.find(content) == std::string::npos)
+            if (file_content.find(content) == std::string::npos && file_name.find(content) == std::string::npos)
             {
                 // The file does not contain "content"
                 continue;
             }
-            // The file contains "content"
+            // The file contains "content" in its content or name
             result += file_name + " ";
         }
         // Remove trailing space if result is not empty
