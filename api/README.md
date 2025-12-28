@@ -148,4 +148,4 @@ Most operations regarding files and folders require user authentication. For thi
     ```bash
     curl -i http://localhost:3300/api/search/<QUERY_STRING> -H "Username: USERNAME" -H "Password: PASSWORD"
     ```
-    **Response:** `200 OK` with a list of file IDs containing the query string in their name or content.
+    **Response:** `200 OK` with a dictionary of all matching files (by name or content).
