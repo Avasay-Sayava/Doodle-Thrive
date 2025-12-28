@@ -23,8 +23,3 @@ services:
     build:
       context: api/
       dockerfile: Dockerfile
-
-  api-tests:
-    build:
-      context: api/
-      dockerfile: tests/Dockerfile
