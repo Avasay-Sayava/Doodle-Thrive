@@ -296,5 +296,5 @@ server_name=base-server server_port=3000 ./api-server.bash
     Connection: keep-alive
     Keep-Alive: timeout=5
 
-    ["31798e34-3b62-40b1-b3fe-cd46a494c85c"]
+    {"31798e34-3b62-40b1-b3fe-cd46a494c85c": {"id": "31798e34-3b62-40b1-b3fe-cd46a494c85c", "name": "file.txt", "parent": "4a0ec9ae-751a-46ab-a3d6-4295a8df5082", "content": "Hello, World!"}}
     ```

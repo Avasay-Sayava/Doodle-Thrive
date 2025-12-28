@@ -20,6 +20,7 @@ async function run() {
         await fetch(`${BASE_URL}/users`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...CREDENTIALS, info: {} }) });
 
         const uniqueString = `needle_${Date.now()}`;
+        const uniqueName = `search_me_${Date.now()}.txt`;
         
         // 1. Create file with unique content
         console.log(`1. Creating file with content: ${uniqueString}`);
@@ -27,7 +28,7 @@ async function run() {
             method: "POST",
             headers: HEADERS,
             body: JSON.stringify({
-                name: "search_me.txt",
+                name: uniqueName,
                 content: `Here is the ${uniqueString} you are looking for.`
             })
         });
@@ -35,20 +36,23 @@ async function run() {
 
         // 2. Search for the unique string
         console.log("2. Searching for string");
-        const searchRes = await fetch(`${BASE_URL}/search/${uniqueString}`, { headers: HEADERS });
+        let searchRes = await fetch(`${BASE_URL}/search/${uniqueString}`, { headers: HEADERS });
         assert.strictEqual(searchRes.status, 200, "Search request failed");
         
-        const results = await searchRes.json();
-        assert.ok(Array.isArray(results), "Results should be an array");
-        
-        // Check if our file ID is in the results
-        const found = results.some(item => {
-            if (typeof item === 'string') return item === fileId;
-            return item.id === fileId;
-        });
-
+        let results = await searchRes.json();
+        let found = Object.keys(results).some(file => file === fileId);
         assert.ok(found, "Created file not found in search results");
         console.log("   PASS: File found via search");
+
+        // 3. Search for a string in file name
+        console.log("3. Searching for string in name");
+        searchRes = await fetch(`${BASE_URL}/search/${uniqueName}`, { headers: HEADERS });
+        assert.strictEqual(searchRes.status, 200, "Search request failed");
+
+        results = await searchRes.json();
+        found = Object.keys(results).some(file => file === fileId);
+        assert.ok(found, "Created file not found in search results by name");
+        console.log("   PASS: File found via name search");
 
     } catch (error) {
         console.error("FAILED:", error.message);

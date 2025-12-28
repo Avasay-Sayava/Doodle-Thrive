@@ -62,13 +62,17 @@ exports.createFolder = ({ name, parent }) => {
 
 /**
  * Retrieves all files and folders, fetching content for files from storage.
+ * @param {string[]} [ids=Object.keys(files)] Optional list of specific IDs to retrieve.
  * @return {Promise<Object>} A dictionary of all file objects, including their content.
  */
-exports.getAll = async () => {
-    const copy = files;
+exports.getAll = async (ids) => {
+    ids = ids || Object.keys(files);
 
-    const promises = Object.keys(copy).map(async (file) => {
-        if (copy[file].type === "file") {
+    const copy = {};
+
+    const promises = ids.map(async (file) => {
+        copy[file] = { ...files[file] };
+        if (files[file].type === "file") {
             try {
                 const buffer = await Storage.get(file);
                 copy[file].content = buffer.response;
@@ -178,18 +182,28 @@ exports.delete = async (id) => {
 /**
  * Searches the storage layer for files matching the query and resolves them to file objects.
  * @param {string} query The search term.
- * @return {Promise<Object[]>} An array of matching file objects.
+ * @return {Promise<Object>} A dictionary of matching file objects.
  */
 exports.search = async (query) => {
     const response = await Storage.search(query);
     if (response.status !== 200)
-        return [];
+        return {};
 
-    const results = response.response
-        .map(id => files[id])
-        .filter(file => file !== undefined);
+    const results = Object.keys(files).filter(id => files[id].name.includes(query));
+    const searchResults = response.response.filter(id => !results.includes(id));
+    const outSearchResults = await exports.getAll(searchResults);
 
-    return results;
+    const outSearchResultsValues = Object.values(outSearchResults);
+    for (const value of outSearchResultsValues) {
+        if (!value.name.includes(query) &&
+            !value.content.includes(query)) {
+            delete outSearchResults[value.id];
+        }
+    }
+
+    const outResults = await exports.getAll(results);
+
+    return { ...outResults, ...outSearchResults };
 }
 
 /**
