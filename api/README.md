@@ -7,7 +7,7 @@ The server exposes a RESTful API that returns JSON responses. While the Base Ser
 The project is containerized using Docker. For running parts of the project, there are predefined bash files.
 * **To enable the usage of the bash files**, you need to run this command in the root directory:
     ```bash
-    chmod +x ./api-server.bash ./api-console.bash ./api-tests.bash ./base-server.bash ./base-client.bash ./base-tests.bash
+    chmod +x ./api-server.bash ./api-console.bash ./base-server.bash
     ```
 
     For the objectively fake programmers who don't have bash (or even don't have git bash while using GitHub), each section that uses a bash file is accompanied by the commands to run it.
@@ -45,17 +45,6 @@ The project is containerized using Docker. For running parts of the project, the
     docker exec -it <api_server_name> sh
     ```
     TIP: Using the `bash` file you have a predefined sh console that is much more easy to use.
-
-* **To run the tests for the API server**, you need to run the `./api-tests.bash` file:
-    ```bash
-    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> threads=<cpp_server_thread_count> name=<api_server_host_name> port=<api_server_port> timeout=<requests_timeout_ms> ./api-tests.bash
-    ```
-    You can run the file without defining the `build`, `server_name`, `server_port`, `threads`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `base-server`, `3000`, `10`, `api-server`, `3300`, `100` each.
-
-    If you don't have bash, after running the base and API servers, you can run the following command:
-    ```cmd
-    docker-compose run $build_arg -e API_SERVER_HOST=<api_server_host_name> -e API_SERVER_PORT=<api_server_port> --remove-orphans api-tests
-    ```
 
 ## API Endpoints & Usage
 
