@@ -6,7 +6,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/path_here" element={babel_here} /> */}
+        <Route path="/" element={
+          <div>Hello, World!</div>
+        } />
       </Routes>
     </BrowserRouter>
   );

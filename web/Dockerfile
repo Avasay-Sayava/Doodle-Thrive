@@ -8,4 +8,7 @@ RUN npm i
 COPY src/ src/
 COPY public/ public/
 
-CMD ["npm", "start"]
+RUN npm run build
+
+RUN npm install -g serve
+ENTRYPOINT ["npx", "serve", "-s", "build", "-l"]
