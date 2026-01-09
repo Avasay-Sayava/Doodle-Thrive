@@ -12,7 +12,7 @@ const files = {};
  * @return {Promise<string>} The generated File ID.
  * @throws {Error} If creation fails on the storage server.
  */
-exports.createFile = async ({ name, owner, content, parent, description }) => {
+exports.createFile = async ({ name, owner, content, starred, parent, description }) => {
     const UUID = uuid();
 
     if (files[UUID])
@@ -27,6 +27,7 @@ exports.createFile = async ({ name, owner, content, parent, description }) => {
             type: "file",
             owner: owner,
             parent: parent || null,
+            starred: starred || false,
             created: Date.now(),
             modified: Date.now(),
             description: description
@@ -45,7 +46,7 @@ exports.createFile = async ({ name, owner, content, parent, description }) => {
  * @param {string} [folderData.parent] The ID of the parent folder (optional).
  * @return {string} The generated Folder ID.
  */
-exports.createFolder = ({ name, owner, parent, description }) => {
+exports.createFolder = ({ name, owner, starred, parent, description }) => {
     const UUID = uuid();
 
     if (files[UUID])
@@ -56,6 +57,7 @@ exports.createFolder = ({ name, owner, parent, description }) => {
         name: name,
         type: "folder",
         owner: owner,
+        starred: starred || false,
         created: Date.now(),
         modified: Date.now(),
         parent: parent || null,
@@ -121,12 +123,9 @@ exports.get = async (id) => {
  * Updates a file or folder's metadata or content.
  * @param {string} id The ID of the file/folder to update.
  * @param {object} changes The properties to update.
- * @param {string} [changes.name] New name.
- * @param {string} [changes.content] New content (files only).
- * @param {string} [changes.parent] New parent folder ID.
  * @return {Promise<boolean>} True if successful, False if storage update failed.
  */
-exports.update = async (id, { name, owner, content, parent, description }) => {
+exports.update = async (id, { name, owner, content, starred, parent, description }) => {
     const file = files[id];
 
     if (content) {
@@ -154,6 +153,9 @@ exports.update = async (id, { name, owner, content, parent, description }) => {
 
     if (description)
         file.description = description;
+
+    if (starred !== undefined)
+        file.starred = starred;
 
     file.modified = Date.now();
 
