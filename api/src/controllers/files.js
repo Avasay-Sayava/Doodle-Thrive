@@ -26,7 +26,7 @@ exports.create = async (req, res) => {
         if (!trimmedData)
             return res.status(400).json({ error: "Invalid file/folder data" });
 
-        const { name, content, parent, description } = trimmedData;
+        const { name, content, starred, parent, description } = trimmedData;
 
         if (!name)
             return res.status(400).json({ error: "Missing file/folder name" });
@@ -48,6 +48,9 @@ exports.create = async (req, res) => {
 
         if (!description)
             trimmedData.description = "";
+
+        if (starred === undefined)
+            trimmedData.starred = false;
 
         let id;
         if (content) {
@@ -168,9 +171,9 @@ exports.update = async (req, res) => {
         if (!trimmedData)
             return res.status(400).json({ error: "Invalid file/folder data" });
 
-        const { name, owner, content, parent, description } = trimmedData;
+        const { name, owner, content, starred, parent, description } = trimmedData;
 
-        if (!name && !content && !parent && !owner && !description)
+        if (!name && !content && !parent && !owner && !description && starred === undefined)
             return res.status(400).json({ error: "No changes provided" });
 
         if (owner && !Regex.id.test(owner))
@@ -275,6 +278,10 @@ function trimData(data) {
             Regex.id.test(data.parent))) {
         return null;
     }
+    if (data.starred !== undefined &&
+        typeof data.starred !== "boolean") {
+        return null;
+    }
     if (data.content !== undefined &&
         !(typeof data.content === "string" &&
             Regex.filecontent.test(data.content))) {
@@ -290,6 +297,7 @@ function trimData(data) {
         name: data.name,
         owner: data.owner,
         parent: data.parent,
+        starred: data.starred,
         content: data.content,
         description: data.description,
     };
