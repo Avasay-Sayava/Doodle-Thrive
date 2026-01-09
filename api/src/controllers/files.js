@@ -10,11 +10,11 @@ const Files = require("../models/files");
  */
 exports.create = async (req, res) => {
     try {
-        const trimmedInfo = trimInfo(req.body);
-        if (!trimmedInfo)
+        const trimmedData = trimData(req.body);
+        if (!trimmedData)
             return res.status(400).json({ error: "Invalid file/folder data" });
 
-        const { name, content, parent } = trimmedInfo;
+        const { name, content, parent, description } = trimmedData;
 
         if (!name)
             return res.status(400).json({ error: "Missing file/folder name" });
@@ -24,13 +24,18 @@ exports.create = async (req, res) => {
                 Files.info(parent).type === "folder"))
             return res.status(404).json({ error: "Parent file/folder not found" });
 
+        trimmedData.owner = req.user.id;
+
+        if (!description)
+            trimmedData.description = "";
+
         let id;
         if (content) {
-            id = await Files.createFile(trimmedInfo);
+            id = await Files.createFile(trimmedData);
             if (!id)
                 return res.status(400).json({ error: "Invalid file data" });
         } else {
-            id = Files.createFolder(trimmedInfo);
+            id = Files.createFolder(trimmedData);
             if (!id)
                 return res.status(400).json({ error: "Invalid folder data" });
         }
@@ -95,14 +100,17 @@ exports.update = async (req, res) => {
         if (!Files.info(id))
             return res.status(404).json({ error: "File/folder not found" });
 
-        const trimmedInfo = trimInfo(req.body);
-        if (!trimmedInfo)
+        const trimmedData = trimData(req.body);
+        if (!trimmedData)
             return res.status(400).json({ error: "Invalid file/folder data" });
 
-        const { name, content, parent } = trimmedInfo;
+        const { name, owner, content, parent, description } = trimmedData;
 
-        if (!name && !content && !parent)
+        if (!name && !content && !parent && !owner && !description)
             return res.status(400).json({ error: "No changes provided" });
+        
+        if (owner && !Regex.id.test(owner))
+            return res.status(400).json({ error: "Invalid owner id format" });
 
         if (content && Files.info(id).type !== "file")
             return res.status(400).json({ error: "Cannot add content to a folder" });
@@ -112,7 +120,7 @@ exports.update = async (req, res) => {
                 Files.info(parent).type === "folder"))
             return res.status(404).json({ error: "Parent file/folder not found" });
 
-        const updated = await Files.update(id, trimmedInfo);
+        const updated = await Files.update(id, trimmedData);
         if (!updated)
             return res.status(404).json({ error: "File/folder not found" });
         return res.status(200).end();
@@ -149,32 +157,46 @@ exports.delete = async (req, res) => {
 
 /**
  * Helper function to trim and validate file/folder input data.
- * @param {object} info Raw body data.
- * @param {string} [info.name] File/Folder name.
- * @param {string} [info.parent] Parent ID.
- * @param {string} [info.content] File content.
- * @return {{name?: string, parent?: string, content?: string}|null} Sanitized data object or null if validation fails.
+ * @param {object} data Raw body data.
+ * @param {string} [data.name] File/Folder name.
+ * @param {string} [data.owner] Owner ID.
+ * @param {string} [data.parent] Parent ID.
+ * @param {string} [data.content] File content.
+ * @param {string} [data.description] File/Folder description.
+ * @return {{name?: string, parent?: string, content?: string, owner?: string, description?: string}|null} Sanitized data object or null if validation fails.
  */
-function trimInfo(info) {
-    if (info.name &&
-        !(typeof info.name === "string" &&
-            Regex.filename.test(info.name))) {
+function trimData(data) {
+    if (data.name !== undefined &&
+        !(typeof data.name === "string" &&
+            Regex.filename.test(data.name))) {
         return null;
     }
-    if (info.parent &&
-        !(typeof info.parent === "string" &&
-            Regex.id.test(info.parent))) {
+    if (data.owner !== undefined &&
+        !(typeof data.owner === "string" &&
+            Regex.id.test(data.owner))) {
         return null;
     }
-    if (info.content &&
-        !(typeof info.content === "string" &&
-            Regex.filecontent.test(info.content))) {
+    if (data.parent !== undefined &&
+        !(typeof data.parent === "string" &&
+            Regex.id.test(data.parent))) {
+        return null;
+    }
+    if (data.content !== undefined &&
+        !(typeof data.content === "string" &&
+            Regex.filecontent.test(data.content))) {
+        return null;
+    }
+    if (data.description !== undefined &&
+        !(typeof data.description === "string" &&
+            Regex.description.test(data.description))) {
         return null;
     }
 
     return {
-        name: info.name ? info.name : undefined,
-        parent: info.parent ? info.parent : undefined,
-        content: info.content ? info.content : undefined
+        name: data.name,
+        owner: data.owner,
+        parent: data.parent,
+        content: data.content,
+        description: data.description,
     };
 }

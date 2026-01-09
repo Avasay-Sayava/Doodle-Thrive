@@ -140,25 +140,58 @@ function trimOptions(options) {
     for (const key in options) {
         if (!Regex.id.test(key))
             return null;
-        if (options[key].write && typeof options[key].write !== 'boolean')
-            return null;
-        if (options[key].read && typeof options[key].read !== 'boolean')
-            return null;
+
+        if (options[key].self) {
+            if (options[key].self.read !== undefined &&
+                typeof options[key].self.read !== 'boolean')
+                return null;
+            if (options[key].self.write !== undefined &&
+                typeof options[key].self.write !== 'boolean')
+                return null;
+        }
+
+        if (options[key].content) {
+            if (options[key].content.read !== undefined &&
+                typeof options[key].content.read !== 'boolean')
+                return null;
+            if (options[key].content.write !== undefined &&
+                typeof options[key].content.write !== 'boolean')
+                return null;
+        }
+
         if (options[key].permissions) {
-            if (options[key].permissions.read &&
+            if (options[key].permissions.read !== undefined &&
                 typeof options[key].permissions.read !== 'boolean')
                 return null;
-            if (options[key].permissions.write &&
+            if (options[key].permissions.write !== undefined &&
                 typeof options[key].permissions.write !== 'boolean')
                 return null;
         }
 
         trimmed[key] = {
-            write: options[key].write === true,
-            read: options[key].read === true,
+            /*
+             * read: see file/folder.
+             * write: edit metadata.
+             */
+            self: {
+                read: options[key].self?.read,
+                write: options[key].self?.write
+            },
+            /*
+             * read: view permissions.
+             * write: edit permissions.
+             */
             permissions: {
-                read: options[key].permissions?.read === true,
-                write: options[key].permissions?.write === true
+                read: options[key].permissions?.read,
+                write: options[key].permissions?.write
+            },
+            /*
+             * read: view content.
+             * write: edit content.
+             */
+            content: {
+                read: options[key].content?.read,
+                write: options[key].content?.write
             }
         }
     }
