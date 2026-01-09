@@ -12,7 +12,7 @@ const files = {};
  * @return {Promise<string>} The generated File ID.
  * @throws {Error} If creation fails on the storage server.
  */
-exports.createFile = async ({ name, content, parent }) => {
+exports.createFile = async ({ name, owner, content, parent, description }) => {
     const UUID = uuid();
 
     if (files[UUID])
@@ -25,7 +25,11 @@ exports.createFile = async ({ name, content, parent }) => {
             id: UUID,
             name: name,
             type: "file",
-            parent: parent || null
+            owner: owner,
+            parent: parent || null,
+            created: Date.now(),
+            modified: Date.now(),
+            description: description
         };
 
         parent && files[parent]?.children?.push(UUID);
@@ -41,7 +45,7 @@ exports.createFile = async ({ name, content, parent }) => {
  * @param {string} [folderData.parent] The ID of the parent folder (optional).
  * @return {string} The generated Folder ID.
  */
-exports.createFolder = ({ name, parent }) => {
+exports.createFolder = ({ name, owner, parent, description }) => {
     const UUID = uuid();
 
     if (files[UUID])
@@ -51,8 +55,12 @@ exports.createFolder = ({ name, parent }) => {
         id: UUID,
         name: name,
         type: "folder",
+        owner: owner,
+        created: Date.now(),
+        modified: Date.now(),
         parent: parent || null,
-        children: []
+        children: [],
+        description: description
     };
 
     parent && files[parent]?.children?.push(UUID);
@@ -118,7 +126,7 @@ exports.get = async (id) => {
  * @param {string} [changes.parent] New parent folder ID.
  * @return {Promise<boolean>} True if successful, False if storage update failed.
  */
-exports.update = async (id, { name, content, parent }) => {
+exports.update = async (id, { name, owner, content, parent, description }) => {
     const file = files[id];
 
     if (content) {
@@ -140,6 +148,14 @@ exports.update = async (id, { name, content, parent }) => {
         files[parent].children.push(id);
         file.parent = parent;
     }
+
+    if (owner)
+        file.owner = owner;
+
+    if (description)
+        file.description = description;
+
+    file.modified = Date.now();
 
     files[id] = file;
 

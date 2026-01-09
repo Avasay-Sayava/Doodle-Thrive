@@ -1,5 +1,9 @@
+const jwt = require("jsonwebtoken");
+
 const Regex = require("../models/regex");
 const Files = require("../models/files");
+const Users = require("../models/users");
+const Permissions = require("../models/permissions");
 
 /**
  * Handles the creation request for a new file or folder.
@@ -10,30 +14,59 @@ const Files = require("../models/files");
  */
 exports.create = async (req, res) => {
     try {
-        const trimmedInfo = trimInfo(req.body);
-        if (!trimmedInfo)
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token)
+            return res.status(403).json({ error: "Authorization token required" });
+
+        const userId = jwt.verify(token, process.env.JWT_SECRET);
+        if (!userId || !Regex.id.test(userId) || !Users.get(userId))
+            return res.status(401).json({ error: "Invalid authorization token" });
+
+        const trimmedData = trimData(req.body);
+        if (!trimmedData)
             return res.status(400).json({ error: "Invalid file/folder data" });
 
-        const { name, content, parent } = trimmedInfo;
+        const { name, content, parent, description } = trimmedData;
 
         if (!name)
             return res.status(400).json({ error: "Missing file/folder name" });
+
+        if (parent) {
+            if (!Permissions.check(userId, parent, "self", "read"))
+                return res.status(404).json({ error: "Parent file/folder not found" });
+
+            if (!Permissions.check(userId, parent, "content", "write"))
+                return res.status(403).json({ error: "Insufficient permissions" });
+        }
 
         if (parent &&
             !(Files.info(parent) &&
                 Files.info(parent).type === "folder"))
             return res.status(404).json({ error: "Parent file/folder not found" });
 
+        trimmedData.owner = userId;
+
+        if (!description)
+            trimmedData.description = "";
+
         let id;
         if (content) {
-            id = await Files.createFile(trimmedInfo);
+            id = await Files.createFile(trimmedData);
             if (!id)
                 return res.status(400).json({ error: "Invalid file data" });
         } else {
-            id = Files.createFolder(trimmedInfo);
+            id = Files.createFolder(trimmedData);
             if (!id)
                 return res.status(400).json({ error: "Invalid folder data" });
         }
+
+        Permissions.add(id, {
+            [userId]: {
+                self: { read: true, write: true },
+                permissions: { read: true, write: true },
+                content: { read: true, write: true },
+            }
+        });
 
         return res.status(201).location(`${req.originalUrl}/${id}`).end();
     } catch (err) {
@@ -49,8 +82,22 @@ exports.create = async (req, res) => {
  */
 exports.getAll = async (req, res) => {
     try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token)
+            return res.status(403).json({ error: "Authorization token required" });
+
+        const userId = jwt.verify(token, process.env.JWT_SECRET);
+        if (!userId || !Regex.id.test(userId) || !Users.get(userId))
+            return res.status(401).json({ error: "Invalid authorization token" });
+
         const files = await Files.getAll();
-        return res.status(200).json(files);
+        const out = {};
+
+        for (const file of files)
+            if (Permissions.check(userId, file.id, "self", "read"))
+                out[file.id] = file;
+
+        return res.status(200).json(out);
     } catch (err) {
         return res.status(500).json({ error: "Error retrieving files/folders" });
     }
@@ -64,6 +111,14 @@ exports.getAll = async (req, res) => {
  */
 exports.get = async (req, res) => {
     try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token)
+            return res.status(403).json({ error: "Authorization token required" });
+
+        const userId = jwt.verify(token, process.env.JWT_SECRET);
+        if (!userId || !Regex.id.test(userId) || !Users.get(userId))
+            return res.status(401).json({ error: "Invalid authorization token" });
+
         const { id } = req.params;
 
         if (!Regex.id.test(id))
@@ -71,6 +126,12 @@ exports.get = async (req, res) => {
 
         if (!Files.info(id))
             return res.status(404).json({ error: "File/folder not found" });
+
+        if (!Permissions.check(userId, id, "self", "read"))
+            return res.status(404).json({ error: "File/folder not found" });
+
+        if (!Permissions.check(userId, id, "content", "read"))
+            return res.status(403).json({ error: "Insufficient permissions" });
 
         const file = await Files.get(id);
         return res.status(200).json(file);
@@ -87,6 +148,14 @@ exports.get = async (req, res) => {
  */
 exports.update = async (req, res) => {
     try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token)
+            return res.status(403).json({ error: "Authorization token required" });
+
+        const userId = jwt.verify(token, process.env.JWT_SECRET);
+        if (!userId || !Regex.id.test(userId) || !Users.get(userId))
+            return res.status(401).json({ error: "Invalid authorization token" });
+
         const { id } = req.params;
 
         if (!Regex.id.test(id))
@@ -95,24 +164,43 @@ exports.update = async (req, res) => {
         if (!Files.info(id))
             return res.status(404).json({ error: "File/folder not found" });
 
-        const trimmedInfo = trimInfo(req.body);
-        if (!trimmedInfo)
+        const trimmedData = trimData(req.body);
+        if (!trimmedData)
             return res.status(400).json({ error: "Invalid file/folder data" });
 
-        const { name, content, parent } = trimmedInfo;
+        const { name, owner, content, parent, description } = trimmedData;
 
-        if (!name && !content && !parent)
+        if (!name && !content && !parent && !owner && !description)
             return res.status(400).json({ error: "No changes provided" });
+
+        if (owner && !Regex.id.test(owner))
+            return res.status(400).json({ error: "Invalid owner id format" });
+
+        if (!Permissions.check(userId, id, "self", "read"))
+            return res.status(404).json({ error: "File/folder not found" });
+
+        if ((description || name) && !Permissions.check(userId, id, "self", "write"))
+            return res.status(403).json({ error: "Insufficient permissions" });
+
+        if (content && !Permissions.check(userId, id, "content", "write"))
+            return res.status(403).json({ error: "Insufficient permissions" });
 
         if (content && Files.info(id).type !== "file")
             return res.status(400).json({ error: "Cannot add content to a folder" });
 
-        if (parent &&
-            !(Files.info(parent) &&
+        if (parent) {
+            if (!(Files.info(parent) &&
                 Files.info(parent).type === "folder"))
-            return res.status(404).json({ error: "Parent file/folder not found" });
+                return res.status(404).json({ error: "Parent file/folder not found" });
 
-        const updated = await Files.update(id, trimmedInfo);
+            if (!Permissions.check(userId, parent, "self", "read"))
+                return res.status(404).json({ error: "Parent file/folder not found" });
+
+            if (!Permissions.check(userId, parent, "content", "write"))
+                return res.status(403).json({ error: "Insufficient permissions" });
+        }
+
+        const updated = await Files.update(id, trimmedData);
         if (!updated)
             return res.status(404).json({ error: "File/folder not found" });
         return res.status(200).end();
@@ -129,6 +217,14 @@ exports.update = async (req, res) => {
  */
 exports.delete = async (req, res) => {
     try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token)
+            return res.status(403).json({ error: "Authorization token required" });
+
+        const userId = jwt.verify(token, process.env.JWT_SECRET);
+        if (!userId || !Regex.id.test(userId) || !Users.get(userId))
+            return res.status(401).json({ error: "Invalid authorization token" });
+
         const { id } = req.params;
 
         if (!Regex.id.test(id))
@@ -136,6 +232,12 @@ exports.delete = async (req, res) => {
 
         if (!Files.info(id))
             return res.status(404).json({ error: "File/folder not found" });
+
+        if (!Permissions.check(userId, id, "self", "read"))
+            return res.status(404).json({ error: "File/folder not found" });
+
+        if (!Permissions.check(userId, Files.info(id).parent, "content", "write"))
+            return res.status(403).json({ error: "Insufficient permissions" });
 
         const deleted = await Files.delete(id);
 
@@ -149,32 +251,46 @@ exports.delete = async (req, res) => {
 
 /**
  * Helper function to trim and validate file/folder input data.
- * @param {object} info Raw body data.
- * @param {string} [info.name] File/Folder name.
- * @param {string} [info.parent] Parent ID.
- * @param {string} [info.content] File content.
- * @return {{name?: string, parent?: string, content?: string}|null} Sanitized data object or null if validation fails.
+ * @param {object} data Raw body data.
+ * @param {string} [data.name] File/Folder name.
+ * @param {string} [data.owner] Owner ID.
+ * @param {string} [data.parent] Parent ID.
+ * @param {string} [data.content] File content.
+ * @param {string} [data.description] File/Folder description.
+ * @return {{name?: string, parent?: string, content?: string, owner?: string, description?: string}|null} Sanitized data object or null if validation fails.
  */
-function trimInfo(info) {
-    if (info.name &&
-        !(typeof info.name === "string" &&
-            Regex.filename.test(info.name))) {
+function trimData(data) {
+    if (data.name !== undefined &&
+        !(typeof data.name === "string" &&
+            Regex.filename.test(data.name))) {
         return null;
     }
-    if (info.parent &&
-        !(typeof info.parent === "string" &&
-            Regex.id.test(info.parent))) {
+    if (data.owner !== undefined &&
+        !(typeof data.owner === "string" &&
+            Regex.id.test(data.owner))) {
         return null;
     }
-    if (info.content &&
-        !(typeof info.content === "string" &&
-            Regex.filecontent.test(info.content))) {
+    if (data.parent !== undefined &&
+        !(typeof data.parent === "string" &&
+            Regex.id.test(data.parent))) {
+        return null;
+    }
+    if (data.content !== undefined &&
+        !(typeof data.content === "string" &&
+            Regex.filecontent.test(data.content))) {
+        return null;
+    }
+    if (data.description !== undefined &&
+        !(typeof data.description === "string" &&
+            Regex.description.test(data.description))) {
         return null;
     }
 
     return {
-        name: info.name ? info.name : undefined,
-        parent: info.parent ? info.parent : undefined,
-        content: info.content ? info.content : undefined
+        name: data.name,
+        owner: data.owner,
+        parent: data.parent,
+        content: data.content,
+        description: data.description,
     };
 }

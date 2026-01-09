@@ -7,11 +7,6 @@ const filePermissions = {};
  * Adds a new permission entry to a specific file.
  * @param {string} fileId The ID of the file to attach permissions to.
  * @param {object} options The permission settings.
- * @param {boolean} [options.read] Allow read access.
- * @param {boolean} [options.write] Allow write access.
- * @param {object} [options.permissions] Delegation permissions.
- * @param {boolean} [options.permissions.read] Allow reading permissions.
- * @param {boolean} [options.permissions.write] Allow writing permissions.
  * @return {string} The generated Permission ID.
  */
 exports.add = (fileId, options) => {
@@ -81,4 +76,17 @@ exports.delete = (fileId, pId) => {
     delete permissions[pId];
     filePermissions[fileId] = filePermissions[fileId].filter(id => id !== pId);
     return true;
+}
+
+exports.check = (userId, fileId, type, mode) => {
+    const perms = this.get(fileId);
+
+    for (const pId in perms) {
+        const options = perms[pId];
+        if (options[userId] && options[userId][type] && options[userId][type][mode]) {
+            return true;
+        }
+    }
+
+    return false;
 }
