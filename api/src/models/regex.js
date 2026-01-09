@@ -11,7 +11,7 @@ const Regex = {
     /** Pattern for file content (prevents newlines in specific raw contexts if needed). */
     filecontent: /^[^\r\n]*$/,
     /** Pattern for usernames (2-32 chars, alphanumeric/dots/dashes/underscores, no double dots). */
-    username: /^(?!.*\.\.)[A-Za-z\d_\.\-]{2,32}$/,
+    username: /^(?!.*\.\.)[A-Za-z\d_\.\- ]{2,32}$/,
     /** Pattern for passwords (8-64 characters). */
     password: /^.{8,64}$/,
     /** Pattern for Base64 image strings (png, jpeg, jpg, webp). */
