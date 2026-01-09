@@ -1,6 +1,4 @@
-/* ================================
-   File Row (Table Row)
-   ================================ */
+/* File Row */
 
 .file-row {
   height: 56px;
@@ -22,14 +20,10 @@
   white-space: nowrap;
 }
 
-/* ================================
-   Column-specific spacing
-   ================================ */
-
-/* Name — primary, widest */
+/* Name — primary */
 .col-name {
   padding-left: 24px;
-  width: 50%;
+  width: 42%;
   font-weight: 600;
   color: var(--color-text-primary);
   overflow: hidden;
@@ -38,20 +32,28 @@
 
 /* Owner */
 .col-owner {
-  width: 20%;
+  width: 18%;
   color: var(--color-text-secondary);
 }
 
 /* Last modified */
 .col-modified {
-  width: 20%;
+  width: 18%;
   color: var(--color-text-secondary);
 }
 
-/* Size — right aligned */
+/* Size */
 .col-size {
   width: 10%;
   text-align: right;
-  padding-right: 24px;
   color: var(--color-text-secondary);
 }
+
+/* Actions (icons column) */
+.col-actions {
+  width: 12%;
+  padding-right: 16px;
+  text-align: right;
+}
+
+

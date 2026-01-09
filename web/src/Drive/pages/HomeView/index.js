@@ -1,7 +1,6 @@
 import "../style.css";
 import FileRow from "../../components/storage/FileRow";
 import { useEffect, useState } from "react";
-import FileSelect from "./FileSelect";
 
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -9,41 +8,41 @@ function HomeView({user}) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
 
-  // useEffect(() => {
-  //   const fetchRootFiles = async () => {
-  //     try {
-  //       const token = localStorage.getItem("token");
-  //       // if (!token) {
-  //       //   throw new Error("Not authenticated");
-  //       // }
-  //       const res = await fetch(`${API_BASE}/api/files`, {
-  //         mode: "no-cors",
-  //         method: "GET",
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-  //       alert("GOT HERE!");
+  useEffect(() => {
+    const fetchRootFiles = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("Not authenticated");
+        }
+        const res = await fetch(`${API_BASE}/api/files`, {
+          mode: "no-cors",
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
 
-  //       // if (!res.ok) {
-  //       //   throw new Error(`HTTP ${res.status}`);
-  //       // }
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
 
-  //       const allFiles = await res.json();
+        const allFiles = await res.json();
 
-  //       // Filter root files (no parent)
-  //       const rootFiles = allFiles.filter(
-  //         (file) => file.parent == null
-  //       );
+        // Filter root files (no parent)
+        const rootFiles = allFiles.filter(
+          (file) => file.parent == null
+        );
 
-  //       setFiles(rootFiles);
-  //     } catch (err) {
-  //       setError(err.message || "Failed to load files");
-  //     }
-  //   };
+        setFiles(rootFiles);
+      } catch (err) {
+        setError(err.message || "Failed to load files");
+      }
+    };
 
-  //   fetchRootFiles();
-  // }, []);
+    fetchRootFiles();
+  }, []);
 
 
   return (
@@ -53,7 +52,7 @@ function HomeView({user}) {
         <h1>My Drive</h1>
       </div>
 
-      {/* <div className="file-view__table-wrapper">
+      <div className="file-view__table-wrapper">
         {error ? 
         <div className="file-view__error">
           {error}
@@ -71,7 +70,7 @@ function HomeView({user}) {
           <tbody>
             {files.map((file) => (<FileRow file={file}/>))}
           </tbody>
-        </table>)} */}
+        </table>)}
         <table className="files-table">
           <thead>
             <tr>
@@ -83,7 +82,7 @@ function HomeView({user}) {
           </thead>
 
           <tbody>
-            <FileRow file={{name: "Document1.txt", owner: "Alice", lastModified: "2024-06-01", size: "15 KB"}}/> <FileSelect/>
+            <FileRow file={{name: "Document1.txt", owner: "Alice", lastModified: "2024-06-01", size: "15 KB"}}/>
             <FileRow file={{name: "Photo.png", owner: "Bob", lastModified: "2024-05-28", size: "2 MB"}}/>
             <FileRow file={{name: "Presentation.pptx", owner: "Charlie", lastModified: "2024-05-30", size: "5 MB"}}/>
           </tbody>
