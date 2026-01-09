@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 const Regex = require("../models/regex");
 const Users = require("../models/users");
 
@@ -22,10 +24,11 @@ exports.find = (req, res) => {
             return res.status(400).json({ error: "Invalid password format" });
 
         const id = Users.find(username, password);
+        const token = jwt.sign(id, process.env.JWT_SECRET);
 
         if (!id)
             return res.status(404).end();
-        return res.status(200).json({ id: id });
+        return res.status(200).json({ token: token });
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }
