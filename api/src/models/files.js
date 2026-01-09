@@ -1,6 +1,5 @@
 const { randomUUID: uuid } = require("node:crypto");
 const Storage = require("./storage");
-const { description } = require("./regex");
 
 const files = {};
 
