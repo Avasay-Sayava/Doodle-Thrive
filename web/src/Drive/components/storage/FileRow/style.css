@@ -1,0 +1,57 @@
+/* ================================
+   File Row (Table Row)
+   ================================ */
+
+.file-row {
+  height: 56px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+.file-row:hover {
+  background-color: var(--color-bg-hover);
+}
+
+/* Base cell styling */
+.file-row td {
+  padding: 0 16px;
+  vertical-align: middle;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ================================
+   Column-specific spacing
+   ================================ */
+
+/* Name — primary, widest */
+.col-name {
+  padding-left: 24px;
+  width: 50%;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Owner */
+.col-owner {
+  width: 20%;
+  color: var(--color-text-secondary);
+}
+
+/* Last modified */
+.col-modified {
+  width: 20%;
+  color: var(--color-text-secondary);
+}
+
+/* Size — right aligned */
+.col-size {
+  width: 10%;
+  text-align: right;
+  padding-right: 24px;
+  color: var(--color-text-secondary);
+}
