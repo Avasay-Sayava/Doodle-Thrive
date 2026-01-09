@@ -31,7 +31,6 @@ exports.create = async (req, res) => {
         if (!name)
             return res.status(400).json({ error: "Missing file/folder name" });
 
-        // Permissions
         if (parent) {
             if (!Permissions.check(userId, parent, "self", "read"))
                 return res.status(404).json({ error: "Parent file/folder not found" });

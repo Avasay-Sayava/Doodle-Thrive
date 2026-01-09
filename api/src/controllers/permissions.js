@@ -10,6 +10,14 @@ const Regex = require("../models/regex");
  */
 exports.add = async (req, res) => {
     try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token)
+            return res.status(403).json({ error: "Authorization token required" });
+
+        const userId = jwt.verify(token, process.env.JWT_SECRET);
+        if (!userId || !Regex.id.test(userId) || !Users.get(userId))
+            return res.status(401).json({ error: "Invalid authorization token" });
+
         const { id } = req.params;
 
         if (!Regex.id.test(id))
@@ -17,6 +25,12 @@ exports.add = async (req, res) => {
 
         if (!Files.info(id))
             return res.status(404).json({ error: "File not found" });
+
+        if (!Permissions.check(req.userId, id, "self", "read"))
+            return res.status(404).json({ error: "File not found" });
+
+        if (!Permissions.check(req.userId, id, "permissions", "write"))
+            return res.status(403).json({ error: "Insufficient permissions" });
 
         const { options } = req.body;
         if (!options)
@@ -44,13 +58,27 @@ exports.add = async (req, res) => {
  */
 exports.get = async (req, res) => {
     try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token)
+            return res.status(403).json({ error: "Authorization token required" });
+
+        const userId = jwt.verify(token, process.env.JWT_SECRET);
+        if (!userId || !Regex.id.test(userId) || !Users.get(userId))
+            return res.status(401).json({ error: "Invalid authorization token" });
+
         const { id } = req.params;
 
         if (!Regex.id.test(id))
             return res.status(400).json({ error: "Invalid file id format" });
 
         if (!Files.info(id))
-            return res.status(404).json({ error: "File not found" });
+            return res.status(404).json({ error: "File/Folder not found" });
+
+        if (!Permissions.check(userId, id, "self", "read"))
+            return res.status(404).json({ error: "File/Folder not found" });
+
+        if (!Permissions.check(userId, id, "permissions", "read"))
+            return res.status(403).json({ error: "Insufficient permissions" });
 
         const permissions = Permissions.get(id);
         return res.status(200).json(permissions);
@@ -67,6 +95,14 @@ exports.get = async (req, res) => {
  */
 exports.update = async (req, res) => {
     try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token)
+            return res.status(403).json({ error: "Authorization token required" });
+
+        const userId = jwt.verify(token, process.env.JWT_SECRET);
+        if (!userId || !Regex.id.test(userId) || !Users.get(userId))
+            return res.status(401).json({ error: "Invalid authorization token" });
+
         const { id, pId } = req.params;
 
         if (!Regex.id.test(id))
@@ -74,6 +110,12 @@ exports.update = async (req, res) => {
 
         if (!Files.info(id))
             return res.status(404).json({ error: "File not found" });
+
+        if (!Permissions.check(userId, id, "self", "read"))
+            return res.status(404).json({ error: "File not found" });
+
+        if (!Permissions.check(userId, id, "permissions", "write"))
+            return res.status(403).json({ error: "Insufficient permissions" });
 
         if (!Regex.id.test(pId))
             return res.status(400).json({ error: "Invalid permissions id format" });
@@ -107,6 +149,14 @@ exports.update = async (req, res) => {
  */
 exports.delete = async (req, res) => {
     try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token)
+            return res.status(403).json({ error: "Authorization token required" });
+
+        const userId = jwt.verify(token, process.env.JWT_SECRET);
+        if (!userId || !Regex.id.test(userId) || !Users.get(userId))
+            return res.status(401).json({ error: "Invalid authorization token" });
+
         const { id, pId } = req.params;
 
         if (!Regex.id.test(id))
@@ -114,6 +164,12 @@ exports.delete = async (req, res) => {
 
         if (!Files.info(id))
             return res.status(404).json({ error: "File not found" });
+
+        if (!Permissions.check(userId, id, "self", "read"))
+            return res.status(404).json({ error: "File not found" });
+
+        if (!Permissions.check(userId, id, "permissions", "write"))
+            return res.status(403).json({ error: "Insufficient permissions" });
 
         if (!Regex.id.test(pId))
             return res.status(400).json({ error: "Invalid permissions id format" });
