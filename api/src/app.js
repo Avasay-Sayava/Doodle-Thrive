@@ -16,15 +16,7 @@ app.use("/api/files", FilesRouter);
 app.use("/api/tokens", TokensRouter);
 app.use("/api/search", SearchRouter);
 app.use("/api/users", UsersRouter);
-app.use(cors({
-  origin: "http://localhost:3000",
-  methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
 
-app.options("*", cors());
-
-app.use(express.json());
 
 app.use((err, req, res, next) => {
     console.error(err);

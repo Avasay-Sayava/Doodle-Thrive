@@ -17,7 +17,8 @@ exports.add = async (req, res) => {
         if (!token)
             return res.status(403).json({ error: "Authorization token required" });
 
-        const userId = jwt.verify(token, process.env.JWT_SECRET);
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = payload.userId;
         if (!userId || !Regex.id.test(userId) || !Users.get(userId))
             return res.status(401).json({ error: "Invalid authorization token" });
 
