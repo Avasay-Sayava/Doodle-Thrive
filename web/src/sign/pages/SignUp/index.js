@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Regex from "../../../lib/regex";
 
 import Sign from "../../index";
@@ -9,6 +9,13 @@ import TextArea from "../../components/TextArea";
 
 function SignUp() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/drive/home", { replace: true });
+        }
+    }, [navigate]);
 
     const [formData, setFormData] = useState({
         username: "",
@@ -107,7 +114,7 @@ function SignUp() {
             <Card>
                 <form onSubmit={handleSubmit}>
                     <h2>Sign Up</h2>
-                    
+
                     <Input
                         name="username"
                         placeholder="username"
