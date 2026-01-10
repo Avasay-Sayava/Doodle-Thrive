@@ -1,3 +1,7 @@
+/* ================================
+   Filter / Sort Dropdown (Drive-like, Pink theme)
+   Uses global tokens from :root
+   ================================ */
 
 .gd-sort {
   position: relative;
@@ -5,152 +9,145 @@
   align-items: center;
 }
 
+/* Icon button: small, subtle, fits table headers */
 .gd-sort__button {
-  border: 0;
-  background: transparent;
-  padding: 0;
-  margin: 0;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 999px;
 
-  font: inherit;
-  color: inherit;
-  letter-spacing: inherit;
-  font-weight: inherit;
-
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 
+  background: transparent;
+  color: var(--color-text-secondary);
+
+  border: 1px solid transparent;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
 }
 
-.gd-sort__button:hover,
+.gd-sort__button:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-primary);
+}
+
 .gd-sort__button.is-open {
-  color: var(--color-text-primary, #202124);
+  background: var(--color-bg-selected);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
+/* Optional: keep label small */
+.gd-sort__label {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* Icon aligns nicely with text */
 .gd-sort__icon {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: currentColor;
 }
 
-.gd-sort__label {
-  font: inherit;
-}
-
+/* Dropdown panel */
 .gd-sort__menu {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
 
-  width: 280px;
-  background: var(--color-bg-main, #fff);
-  border: 1px solid var(--color-border, #dadce0);
+  width: 260px;
+  background: var(--color-bg-main);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
 
-  z-index: 9999;
+  /* Drive-like depth */
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
   overflow: hidden;
-  padding: 8px 0;
+  z-index: 1000;
+
+  padding: 6px 0;
 }
 
+/* Section header */
 .gd-sort__section {
   padding: 4px 0;
 }
 
 .gd-sort__title {
-  padding: 8px 16px;
-  font-size: 12px;
+  padding: 8px 14px;
+  font-size: 11px;
   font-weight: 600;
-  color: var(--color-text-secondary, #5f6368);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
+/* Items */
 .gd-sort__item {
   width: 100%;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
+  padding: 10px 14px;
 
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 
-  padding: 10px 16px;
   text-align: left;
+  background: transparent;
+  color: var(--color-text-primary);
 
   border-radius: 0;
   user-select: none;
 
-  pointer-events: auto;
+  transition: background-color 120ms ease;
 }
 
 .gd-sort__item:hover {
-  background: rgba(60, 64, 67, 0.08);
+  background: var(--color-bg-hover);
 }
 
 .gd-sort__item:active {
-  background: rgba(60, 64, 67, 0.12);
+  background: var(--color-bg-selected);
 }
 
-
-.gd-sort__item:focus-visible,
-.gd-sort__button:focus-visible {
-  outline: 2px solid rgba(26, 115, 232, 0.6);
-  outline-offset: 2px;
-}
-
+/* Checkmark column */
 .gd-sort__check {
   width: 18px;
   height: 18px;
+  flex: 0 0 18px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 18px;
-  color: var(--color-text-primary, #202124);
+
+  /* When checked, drive-like accent */
+  color: var(--color-primary);
 }
 
+/* Text */
 .gd-sort__text {
-  font-size: 14px;
-  color: var(--color-text-primary, #202124);
+  font-size: 13px;
+  color: var(--color-text-primary);
 }
 
+/* Divider */
 .gd-sort__divider {
   height: 1px;
-  background: var(--color-border, #dadce0);
+  background: var(--color-border);
   margin: 6px 0;
 }
 
-.gd-sort__menu {
-  width: 240px;            
-  padding: 6px 0;          
-  border-radius: 10px;     
-}
-
-.gd-sort__section {
-  padding: 2px 0;         
-}
-
-.gd-sort__title {
-  padding: 6px 14px;      
-  font-size: 11px;      
-}
-
-.gd-sort__item {
-  padding: 8px 14px; 
-  gap: 10px;
-}
-
-.gd-sort__text {
-  font-size: 13px;
-}
-
-.gd-sort__check {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-}
-
-.gd-sort__divider {
-  margin: 4px 0;
+/* Accessibility focus */
+.gd-sort__button:focus-visible,
+.gd-sort__item:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }

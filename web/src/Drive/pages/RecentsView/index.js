@@ -16,7 +16,7 @@ function toTimestamp(v) {
   if (!v) return 0;
   const t = new Date(v).getTime();
   return Number.isFinite(t) ? t : 0;
-}
+}a
 
 function sortComparator(sortBy) {
   switch (sortBy) {

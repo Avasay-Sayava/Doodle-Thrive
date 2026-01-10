@@ -1,80 +1,43 @@
 import "./style.css";
-import { useMemo, useState } from "react";
+import { NavLink } from "react-router-dom";
 
-import HomeView from "../../pages/HomeView"; // adjust paths to your project
-import StarredView from "../../pages/Starred";
-import SharedWithMeView from "../../pages/Shared";
-import RecentView from "../../pages/Recents";
-import BinView from "../../pages/Bin";
-
-/**
- * Sidebar + main content layout.
- *
- * Props:
- *  - user: passed down to views (you already use it in FileRow)
- *  - defaultView: "home" | "starred" | "shared" | "recent" | "bin"
- */
-export default function SidebarLayout({ user, defaultView = "home" }) {
-  const [activeView, setActiveView] = useState(defaultView);
-
-  const items = useMemo(
-    () => [
-      { id: "home", label: "My Drive", icon: IconDrive },
-      { id: "starred", label: "Starred", icon: IconStar },
-      { id: "shared", label: "Shared with me", icon: IconShared },
-      { id: "recent", label: "Recent", icon: IconRecent },
-      { id: "bin", label: "Bin", icon: IconBin },
-    ],
-    []
-  );
-
-  const View = useMemo(() => {
-    switch (activeView) {
-      case "starred":
-        return <StarredView user={user} />;
-      case "shared":
-        return <SharedWithMeView user={user} />;
-      case "recent":
-        return <RecentView user={user} />;
-      case "bin":
-        return <BinView user={user} />;
-      case "home":
-      default:
-        return <HomeView user={user} />;
-    }
-  }, [activeView, user]);
+export default function SidePanel() {
+  const items = [
+    { to: "/drive", end: true, label: "My Drive", icon: IconDrive },
+    { to: "/drive/starred", label: "Starred", icon: IconStar },
+    { to: "/drive/shared", label: "Shared with me", icon: IconShared },
+    { to: "/drive/recent", label: "Recent", icon: IconRecent },
+    { to: "/drive/bin", label: "Bin", icon: IconBin },
+  ];
 
   return (
-    <div className="drive-layout">
-      <aside className="drive-sidebar" aria-label="Sidebar">
-        <div className="drive-sidebar__section">
-          {items.map((it) => {
-            const active = it.id === activeView;
-            const Icon = it.icon;
+    <div className="drive-sidebar" aria-label="Sidebar">
+      <div className="drive-sidebar__section">
+        {items.map((it) => {
+          const Icon = it.icon;
 
-            return (
-              <button
-                key={it.id}
-                type="button"
-                className={`drive-sidebar__item ${active ? "is-active" : ""}`}
-                onClick={() => setActiveView(it.id)}
-              >
-                <span className="drive-sidebar__icon" aria-hidden="true">
-                  <Icon />
-                </span>
-                <span className="drive-sidebar__label">{it.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </aside>
-
-      <main className="drive-content">{View}</main>
+          return (
+            <NavLink
+              key={it.to}
+              to={it.to}
+              end={it.end}
+              className={({ isActive }) =>
+                `drive-sidebar__item ${isActive ? "is-active" : ""}`
+              }
+            >
+              <span className="drive-sidebar__icon" aria-hidden="true">
+                <Icon />
+              </span>
+              <span className="drive-sidebar__label">{it.label}</span>
+            </NavLink>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-/* ---------------- Icons (inline SVG) ---------------- */
+/* icons */
 
 function IconDrive() {
   return (
