@@ -25,10 +25,11 @@ exports.createFile = async ({ name, owner, content, parent, description }) => {
             id: UUID,
             name: name,
             type: "file",
-            owner: owner,
-            parent: parent || null,
+            owner: this.info(parent)?.owner || owner,
+            trashed: false,
             created: Date.now(),
             modified: Date.now(),
+            parent: parent || null,
             description: description
         };
 
@@ -55,7 +56,8 @@ exports.createFolder = ({ name, owner, parent, description }) => {
         id: UUID,
         name: name,
         type: "folder",
-        owner: owner,
+        owner: this.info(parent)?.owner || owner,
+        trashed: false,
         created: Date.now(),
         modified: Date.now(),
         parent: parent || null,
@@ -121,12 +123,9 @@ exports.get = async (id) => {
  * Updates a file or folder's metadata or content.
  * @param {string} id The ID of the file/folder to update.
  * @param {object} changes The properties to update.
- * @param {string} [changes.name] New name.
- * @param {string} [changes.content] New content (files only).
- * @param {string} [changes.parent] New parent folder ID.
  * @return {Promise<boolean>} True if successful, False if storage update failed.
  */
-exports.update = async (id, { name, owner, content, parent, description }) => {
+exports.update = async (id, { name, owner, content, trashed, parent, description }) => {
     const file = files[id];
 
     if (content) {
@@ -137,6 +136,13 @@ exports.update = async (id, { name, owner, content, parent, description }) => {
         const responsePost = await Storage.post(id, content);
         if (responsePost.status !== 201)
             return false;
+    }
+
+    if (trashed !== undefined) {
+        file.trashed = trashed;
+        for (const childId of file.type === "folder" ? file.children : []) {
+            await exports.update(childId, { trashed: trashed });
+        }
     }
 
     if (name)
