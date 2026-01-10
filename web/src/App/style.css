@@ -1,13 +1,16 @@
 /* ================================
-   Global Theme – Google Drive inspired (Pink)
+   Global Theme – Drive-inspired
    ================================ */
 
 /* Import Rubik */
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
 
-/* CSS Variables (Theme Tokens) */
+/* ================================
+   Theme tokens
+   ================================ */
+
 :root[theme="pink"] {
-  /* Primary (Pink instead of Google Blue) */
+  /* Primary */
   --color-primary: #e91e63;
   --color-primary-alt: #f35489;
   --color-primary-light: #f8bbd0;
@@ -35,7 +38,6 @@
   --color-focus: #f48fb1;
 }
 
-/* CSS Variables (Theme Tokens) */
 :root[theme="soviet"] {
   /* Primary */
   --color-primary: #ffffff;
@@ -65,6 +67,30 @@
   --color-focus: #ffffff;
 }
 
+/* Optional: default theme if no [theme="..."] attribute is set yet */
+:root:not([theme]) {
+  --color-primary: #e91e63;
+  --color-primary-alt: #f35489;
+  --color-primary-light: #f8bbd0;
+  --color-primary-hover: #f06292;
+
+  --color-bg-main: #ffffff;
+  --color-bg-main-alt: #ebebeb;
+  --color-bg-main-secondary: #f1dfdf;
+  --color-bg-hover: #fce4ec;
+  --color-bg-selected: #f8bbd0;
+  --color-bg-disabled: #ffe7ee;
+  --color-bg-error: var(--color-bg-disabled);
+
+  --color-text-primary: #1f1f1f;
+  --color-text-secondary: #3c4043;
+  --color-text-muted: #5f6368;
+  --color-text-error: #d32f2f;
+
+  --color-border: #e0e0e0;
+  --color-focus: #f48fb1;
+}
+
 /* ================================
    Global Reset (minimal)
    ================================ */
@@ -75,6 +101,7 @@
 
 html,
 body {
+  height: 100%;
   margin: 0;
   padding: 0;
   background-color: var(--color-bg-main);
@@ -89,13 +116,105 @@ body {
    ================================ */
 
 #root {
-  height: 100vh;
+  height: 100%;
   width: 100%;
 }
 
-/* Tables (Drive-style defaults) */
+/* ================================
+   Tables (Drive-style defaults)
+   ================================ */
 
 table {
   width: 100%;
   border-collapse: collapse;
+}
+
+thead {
+  background-color: #fafafa; /* stays light even in soviet; change to var if you want */
+  border-bottom: 1px solid var(--color-border);
+}
+
+tbody tr {
+  transition: background-color 120ms ease;
+}
+
+tbody tr:hover {
+  background-color: var(--color-bg-hover);
+}
+
+/* ================================
+   Links & Buttons (base behavior)
+   ================================ */
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* ================================
+   Focus styles (accessibility)
+   ================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ================================
+   App shell layout
+   ================================ */
+
+.app-shell {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-main);
+}
+
+/* Top bar height similar to Drive */
+.app-topbar {
+  height: 64px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-main);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  flex-shrink: 0;
+}
+
+/* Sidebar + content */
+.app-body {
+  flex: 1;
+  min-height: 0; /* critical so content can scroll */
+  display: flex;
+}
+
+/* Sidebar width similar to Drive */
+.app-sidebar {
+  width: 280px;
+  flex: 0 0 280px;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg-main);
+  overflow: auto;
+}
+
+/* Main content area */
+.app-content {
+  flex: 1;
+  min-width: 0;   /* critical for ellipsis in tables */
+  min-height: 0;  /* critical for scrolling */
+  overflow: auto; /* scroll only the content area */
+  background: var(--color-bg-main);
 }

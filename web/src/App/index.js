@@ -5,12 +5,23 @@ import "./style.css";
 
 import HomeView from "../Drive/pages/HomeView";
 import SidePanel from "../Drive/panels/SidePanel";
-import SignIn from "../sign/pages/SignIn";
-import SignUp from "../sign/pages/SignUp";
+import SignIn from "../Sign/pages/SignIn";
+import SignUp from "../Sign/pages/SignUp";
 import StarredView from "../Drive/pages/StarredView";
 
 function App() {
   process.env.REACT_APP_API_BASE_URL = "http://localhost:5000";
+
+  const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme") || "pink");
+
+  useEffect(() => {
+    document.querySelector(":root").setAttribute("theme", currentTheme);
+    localStorage.setItem("theme", currentTheme);
+  }, [currentTheme]);
+
+  const toggleTheme = () => {
+    setCurrentTheme((prev) => (prev === "soviet" ? "pink" : "soviet"));
+  };
 
   return (
     <BrowserRouter>
@@ -57,7 +68,6 @@ function App() {
             />
           }
         />
-        <Route path="*" element={<Navigate to="/drive" replace />} />
       </Routes>
     </BrowserRouter>
   );
