@@ -17,6 +17,7 @@
   --color-light-accent-hover: #f57c00; /* darker orange */
 
   --color-light-error-text: #ff3f3f;
+  --color-light-error-secondary: #fae8e9;
 
   /* dark theme colors */
   /* main surface (button background) */
@@ -36,5 +37,5 @@
   --color-dark-accent-hover: #ffb74d; /* lighter orange */
 
   --color-dark-error-text: #ff3f3f;
-  --color-dark-error-secondary: #f8d7da;
+  --color-light-error-secondary: #fae8e9;
 }

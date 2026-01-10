@@ -114,6 +114,7 @@ input[type="submit"]:disabled {
     background-color: var(--color-light-error-secondary);
     border-left: 3px solid var(--color-light-error-text);
     padding: 8px 12px;
+    border-radius: 8px;
 }
 
 /* link */
