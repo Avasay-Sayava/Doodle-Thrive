@@ -93,7 +93,7 @@ exports.getAll = async (req, res) => {
         const files = await Files.getAll();
         const out = {};
 
-        for (const file of files)
+        for (const file of Object.values(files))
             if (Permissions.check(userId, file.id, "self", "read")
                 && (file.trashed === false || file.owner === userId))
                 out[file.id] = { ...file, starred: Users.getStarred(userId).includes(file.id) };
