@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Regex from "../../../lib/regex";
 
 import Sign from "../../index";
@@ -9,6 +9,13 @@ import Input from "../../components/Input";
 function SignIn() {
     const navigate = useNavigate();
     const location = useLocation();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/drive/home", { replace: true });
+        }
+    }, [navigate]);
 
     const [formData, setFormData] = useState({
         username: location.state?.username || "",
@@ -44,6 +51,7 @@ function SignIn() {
         if (!usernameValid || !passwordValid) return;
 
         setIsLoading(true);
+
         try {
             const response = await fetch("http://localhost:3300/api/tokens", {
                 method: "POST",
