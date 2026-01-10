@@ -1,11 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import "./style.css";
-
-
-import SignIn from "../Sign/pages/SignIn";
-import SignUp from "../Sign/pages/SignUp";
+import Sign from "../Sign";
 import Drive from "../Drive";
 
 function App() {
@@ -23,34 +20,31 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/drive/*" element={
-          <Drive />
-        } />
-        <Route
-          path="/signin"
-          element={
-            <SignIn />
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <SignUp />
-          }
-        />
-        <Route
-          path="/"
-          element={
-            <Navigate
-              to="/signin"
-              replace
-            />
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <button id="toggle-theme" hidden onClick={toggleTheme} />
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/signin"
+            element={
+              <Sign mode="signin" />
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <Sign mode="signup" />
+            }
+          />
+          <Route
+            path="/drive/*"
+            element={
+              <Drive />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

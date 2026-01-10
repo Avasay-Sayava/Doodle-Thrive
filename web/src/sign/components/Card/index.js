@@ -1,8 +1,8 @@
 import "./style.css";
 
-function Card({ children, className = "", ...props }) {
+function Card({ children, className = "", collapsed = false, ...props }) {
     return (
-        <div className={`card ${className}`} {...props}>
+        <div className={`card ${className} ${collapsed ? "collapsed" : ""}`} {...props}>
             {children}
         </div>
     );
