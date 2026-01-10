@@ -10,6 +10,11 @@ function SignIn() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const token = localStorage.getItem("token");
+    if (token) {
+        navigate("/drive/home", { replace: true });
+    }
+
     const [formData, setFormData] = useState({
         username: location.state?.username || "",
         password: location.state?.password || ""
@@ -44,6 +49,7 @@ function SignIn() {
         if (!usernameValid || !passwordValid) return;
 
         setIsLoading(true);
+
         try {
             const response = await fetch("http://localhost:3300/api/tokens", {
                 method: "POST",

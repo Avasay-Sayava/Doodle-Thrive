@@ -10,6 +10,11 @@ import TextArea from "../../components/TextArea";
 function SignUp() {
     const navigate = useNavigate();
 
+    const token = localStorage.getItem("token");
+    if (token) {
+        navigate("/drive/home", { replace: true });
+    }
+
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -107,7 +112,7 @@ function SignUp() {
             <Card>
                 <form onSubmit={handleSubmit}>
                     <h2>Sign Up</h2>
-                    
+
                     <Input
                         name="username"
                         placeholder="username"
