@@ -6,10 +6,11 @@ import SignUp from "../Sign/pages/SignUp";
 import SignIn from "../Sign/pages/SignIn";
 
 function App() {
-  const [currentTheme, setCurrentTheme] = useState("soviet");
+  const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme") || "pink");
 
   useEffect(() => {
     document.querySelector(":root").setAttribute("theme", currentTheme);
+    localStorage.setItem("theme", currentTheme);
   }, [currentTheme]);
 
   const toggleTheme = () => {
