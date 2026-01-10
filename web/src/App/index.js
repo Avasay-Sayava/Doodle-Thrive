@@ -1,9 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import "./style.css";
-import SignUp from "../Sign/pages/SignUp";
-import SignIn from "../Sign/pages/SignIn";
+import Sign from "../Sign";
 
 function App() {
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme") || "pink");
@@ -25,22 +24,19 @@ function App() {
           <Route
             path="/signin"
             element={
-              <SignIn />
+              <Sign mode="signin" />
             }
           />
           <Route
             path="/signup"
             element={
-              <SignUp />
+              <Sign mode="signup" />
             }
           />
           <Route
-            path="/"
+            path="/drive/home"
             element={
-              <Navigate
-                to="/signin"
-                replace
-              />
+              <></>
             }
           />
         </Routes>
