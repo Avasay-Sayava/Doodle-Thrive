@@ -5,11 +5,12 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HomeView from "./pages/HomeView";
 import SidePanel from "./panels/SidePanel";
 import StarredView from "./pages/StarredView";
+import Header from "../panels/Header";
 
 function Drive() {
   return (
     <div className="app-shell">
-            <header className="app-topbar">Topbar</header>
+            <header className="app-topbar"><Header /></header>
 
             <div className="app-body">
               <aside className="app-sidebar"><SidePanel /></aside>

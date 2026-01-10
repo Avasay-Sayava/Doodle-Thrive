@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import "./style.css";
-import Sign from "../Sign";
+import Sign from "../sign";
 import Drive from "../Drive";
 
 function App() {

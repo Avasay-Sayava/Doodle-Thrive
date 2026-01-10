@@ -1,10 +1,17 @@
 import React from 'react';
 
-import "./style.css";
 import Logo from "../../components/Logo";
 import SearchBar from './SearchBar';
+import NewFile from '../../Drive/utils/newFile';
+
+import './style.css';
+import newFile from '../../Drive/utils/newFile';
 
 function Header() {
+    newFile({
+        fileName: 'Test Document',
+        fileType: 'file',
+    })
     return (
     <header className="drive-header">
         <div className="header-left">
