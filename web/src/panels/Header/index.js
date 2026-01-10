@@ -2,6 +2,7 @@ import React from 'react';
 
 import "./style.css";
 import Logo from "../../components/Logo";
+import SearchBar from './SearchBar';
 
 function Header() {
     return (
@@ -12,9 +13,7 @@ function Header() {
         </div>
 
         <div className="header-middle">
-            <div className="search-placeholder">
-            <input type="text" placeholder="Search in Drive" className="search" />
-            </div>
+            <SearchBar/>
         </div>
 
         <div className="header-right">
