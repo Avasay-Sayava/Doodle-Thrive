@@ -4,8 +4,15 @@ import './style.css';
 
 import DropDown from './DropDown';
 
+// Assume auth is already handled (e.g., via proxy or global fetch wrapper)
+const API_BASE = process.env.REACT_APP_API_URL || '/api';
+
 function SearchBar() {
     const [open, setOpen] = useState(false);
+    const [query, setQuery] = useState('');
+    const [results, setResults] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -18,15 +25,64 @@ function SearchBar() {
         return () => document.removeEventListener('mousedown', onClickOutside);
     }, []);
 
+    useEffect(() => {
+        if (!query.trim()) {
+            setResults([]);
+            return undefined;
+        }
+
+        const controller = new AbortController();
+        const timer = setTimeout(async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const res = await fetch(`${API_BASE}/search/${encodeURIComponent(query)}`, {
+                    method: 'GET',
+                    signal: controller.signal,
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Search failed (${res.status})`);
+                }
+
+                const data = await res.json();
+                const list = Object.values(data || {});
+                setResults(list);
+            } catch (err) {
+                if (err.name === 'AbortError') return;
+                setError(err.message);
+                setResults([]);
+            } finally {
+                setLoading(false);
+            }
+        }, 250); // debounce a bit
+
+        return () => {
+            controller.abort();
+            clearTimeout(timer);
+        };
+    }, [query]);
+
     return (
         <div className={`search-bar ${open ? 'open' : ''}`} ref={containerRef}>
             <input
+                value={query}
+                onChange={(e) => {
+                    setQuery(e.target.value);
+                    setOpen(true);
+                }}
                 onFocus={() => setOpen(true)}
                 type="text"
                 placeholder="Search in Drive"
                 className="search"
             />
-            {open && <DropDown />}
+            {open && (
+                <DropDown
+                    results={results}
+                    loading={loading}
+                    error={error}
+                />
+            )}
         </div>
     );
 }
