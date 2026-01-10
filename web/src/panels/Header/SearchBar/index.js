@@ -5,7 +5,7 @@ import './style.css';
 import DropDown from './DropDown';
 
 // Assume auth is already handled (e.g., via proxy or global fetch wrapper)
-const API_BASE = process.env.REACT_APP_API_URL || '/api';
+const API_BASE = 'http://localhost:3300';
 
 function SearchBar() {
     const [open, setOpen] = useState(false);
@@ -34,9 +34,14 @@ function SearchBar() {
         const timer = setTimeout(async () => {
             setLoading(true);
             try {
-                const res = await fetch(`${API_BASE}/search/${encodeURIComponent(query)}`, {
+                const jwt = localStorage.getItem('token');
+                if (!jwt) throw new Error("Not authenticated");
+
+                const res = await fetch(`${API_BASE}/api/search/${query}`, {
                     method: 'GET',
-                    signal: controller.signal,
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,                       
+                    }
                 });
 
                 const data = await res.json();
