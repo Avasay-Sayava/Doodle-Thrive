@@ -1,14 +1,34 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import "./style.css";
+import SignUp from "../sign/SignUp";
+import SignIn from "../sign/SignIn";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={
-          <div>Hello, World!</div>
-        } />
+        <Route
+          path="/signin"
+          element={
+            <SignIn />
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <SignUp />
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <Navigate
+              to="/signin"
+              replace
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

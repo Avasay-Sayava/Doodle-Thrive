@@ -1,12 +1,17 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
+
+app.use(cors());
 
 const FilesRouter = require("./routes/files");
 const TokensRouter = require("./routes/tokens");
 const SearchRouter = require("./routes/search");
 const UsersRouter = require("./routes/users");
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
 app.use("/api/files", FilesRouter);
 app.use("/api/tokens", TokensRouter);
 app.use("/api/search", SearchRouter);
