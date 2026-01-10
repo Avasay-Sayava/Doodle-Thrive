@@ -2,10 +2,15 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import "./style.css";
-import SignUp from "../Sign/pages/SignUp";
+
+
 import SignIn from "../Sign/pages/SignIn";
+import SignUp from "../Sign/pages/SignUp";
+import Drive from "../Drive";
 
 function App() {
+  process.env.REACT_APP_API_BASE_URL = "http://localhost:5000";
+
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme") || "pink");
 
   useEffect(() => {
@@ -18,34 +23,34 @@ function App() {
   };
 
   return (
-    <>
-      <button id="toggle-theme" hidden onClick={toggleTheme} />
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/signin"
-            element={
-              <SignIn />
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <SignUp />
-            }
-          />
-          <Route
-            path="/"
-            element={
-              <Navigate
-                to="/signin"
-                replace
-              />
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/drive/*" element={
+          <Drive />
+        } />
+        <Route
+          path="/signin"
+          element={
+            <SignIn />
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <SignUp />
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <Navigate
+              to="/signin"
+              replace
+            />
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
