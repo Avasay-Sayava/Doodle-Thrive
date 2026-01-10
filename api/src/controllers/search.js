@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const Regex = require("../models/regex");
 const Files = require("../models/files");
+const Users = require("../models/users");
+const Permissions = require("../models/permissions");
 
 /**
  * Searches for files containing the specified query string.
@@ -29,7 +31,7 @@ exports.search = async (req, res) => {
         const results = await Files.search(query);
         const out = {};
 
-        for (const fileId of Object.values(results))
+        for (const fileId of Object.keys(results))
             if (Permissions.check(userId, fileId, "content", "read"))
                 out[fileId] = results[fileId];
 
