@@ -1,21 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Regex from "../../../lib/regex";
 
 import Sign from "../../index";
-import Card from "../../components/Card";
-import Input from "../../components/Input";
+import Card from "../../components/Card"
 
 function SignIn() {
     const navigate = useNavigate();
     const location = useLocation();
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            navigate("/drive/home", { replace: true });
-        }
-    }, [navigate]);
 
     const [formData, setFormData] = useState({
         username: location.state?.username || "",
@@ -32,8 +24,14 @@ function SignIn() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-        if (errors[name]) setErrors(prev => ({ ...prev, [name]: false }));
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+
+        if (errors[name]) {
+            setErrors(prev => ({ ...prev, [name]: false }));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -48,10 +46,11 @@ function SignIn() {
             general: false
         });
 
-        if (!usernameValid || !passwordValid) return;
+        if (!usernameValid || !passwordValid) {
+            return;
+        }
 
         setIsLoading(true);
-
         try {
             const response = await fetch("http://localhost:3300/api/tokens", {
                 method: "POST",
@@ -79,28 +78,39 @@ function SignIn() {
                 <form onSubmit={handleSubmit}>
                     <h2>Sign In</h2>
                     
-                    <Input
-                        name="username"
-                        placeholder="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                        error={errors.username}
-                        errorMessage={
-                            <><b>Invalid username.</b> Must be 2-32 characters long using only letters, numbers, spaces, underscores, hyphens, or periods, with no consecutive periods.</>
-                        }
-                    />
+                    <label>
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="username"
+                            value={formData.username}
+                            onChange={handleChange}
+                            style={{ borderColor: errors.username ? "red" : undefined }}
+                        />
+                        {errors.username && (
+                            <p className="error-message">
+                                <b>Invalid username.</b> Must be 2-32 characters...
+                            </p>
+                        )}
+                    </label>
+                    <br />
 
-                    <Input
-                        type="password"
-                        name="password"
-                        placeholder="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        error={errors.password}
-                        errorMessage={
-                            <><b>Invalid password.</b> Must be 8-64 characters long.</>
-                        }
-                    />
+                    <label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            style={{ borderColor: errors.password ? "red" : undefined }}
+                        />
+                        {errors.password && (
+                            <p className="error-message">
+                                <b>Invalid password.</b> Must be 8-64 characters...
+                            </p>
+                        )}
+                    </label>
+                    <br />
 
                     <input
                         type="submit"
@@ -114,8 +124,11 @@ function SignIn() {
                         </div>
                     )}
 
-                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a href="#" onClick={() => navigate("/signup")}>Don't have an account? Sign Up</a>
+                    <br />
+                    <label>
+                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                        <a href="#" onClick={() => navigate("/signup")}>Don't have an account? Sign Up</a>
+                    </label>
                 </form>
             </Card>
         </Sign>
