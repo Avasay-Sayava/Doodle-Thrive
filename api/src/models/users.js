@@ -22,7 +22,8 @@ exports.create = ({ username, password, info = {} }) => {
         id: id,
         username: username,
         password: password,
-        info: info
+        info: info,
+        starred: []
     };
 
     return id;
@@ -52,7 +53,7 @@ exports.get = (id) => {
     if (!users[id])
         return null;
 
-    const { password, ...user } = users[id];
+    const { password, starred, ...user } = users[id];
 
     return user;
 }
@@ -65,9 +66,48 @@ exports.getAll = () => {
     const result = [];
 
     for (const id in users) {
-        const { password, ...user } = users[id];
+        const { password, starred, ...user } = users[id];
         result.push(user);
     }
 
     return result;
+}
+
+exports.star = (id, fileId) => {
+    if (!users[id]) return false;
+
+    if (!users[id].starred.includes(fileId)) {
+        users[id].starred.push(fileId);
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * 
+ * @param {string} id The unique identifier of the user. 
+ * @param {string} fileId The unique identifier of the file to unstar.
+ * @returns {boolean} True if the file was unstarred, false otherwise.
+ */
+exports.unstar = (id, fileId) => {
+    if (!users[id]) return false;
+
+    if (users[id].starred.includes(fileId)) {
+        users[id].starred = users[id].starred.filter(fId => fId !== fileId);
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Retrieves the list of starred file IDs for a user.
+ * @param {string} id The unique identifier of the user.
+ * @return {Array<string>|null} An array of starred file IDs, or null if user not found.
+ */
+exports.getStarred = (id) => {
+    if (!users[id]) return null;
+
+    return users[id].starred;
 }
