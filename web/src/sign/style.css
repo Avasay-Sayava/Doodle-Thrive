@@ -9,29 +9,14 @@ body, html {
     box-sizing: border-box;
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: var(--color-light-text-primary);
-}
-
-.sign-container {
+.sign-layout {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     background-color: var(--color-light-surface-hover);
     font-family: "Segoe UI", sans-serif;
-    padding: 20px; /* prevent touching edges on mobile */
-}
-
-.sign-card {
-    background-color: var(--color-light-surface);
-    padding: 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px; /* slightly wider than sign in */
+    padding: 20px;
 }
 
 form {
@@ -57,36 +42,33 @@ textarea {
     border-radius: 4px;
     font-size: 1rem;
     transition: border-color 0.2s;
-    font-family: inherit; /* fix textarea font */
+    font-family: inherit;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
 textarea:focus {
     outline: none;
-    border-color: var(--color-light-accent-main); /* accent focus */
+    border-color: var(--color-light-accent-main);
     box-shadow: 0 0 0 3px rgba(251, 140, 0, 0.1);
 }
 
-/* file input styling */
 input[type="file"] {
     margin-top: 5px;
     padding: 5px;
-    border: 1px dashed var(--color-dark-text-secondary);
+    border: 1px dashed var(--color-light-text-secondary);
     border-radius: 4px;
     background-color: var(--color-light-surface);
 }
 
-/* textarea specific */
 textarea {
     resize: none;
     min-height: 80px;
 }
 
-/* submit button */
 input[type="submit"] {
     padding: 12px;
-    background-color: var(--color-light-accent-main); /* accent button */
+    background-color: var(--color-light-accent-main);
     color: white;
     border: none;
     border-radius: 4px;
@@ -103,10 +85,10 @@ input[type="submit"]:hover {
 
 input[type="submit"]:disabled {
     background-color: var(--color-light-accent-main);
+    opacity: 0.7;
     cursor: not-allowed;
 }
 
-/* error messages */
 .error-message {
     color: var(--color-light-error-text);
     font-size: 0.85rem;
@@ -114,10 +96,9 @@ input[type="submit"]:disabled {
     background-color: var(--color-light-error-secondary);
     border-left: 3px solid var(--color-light-error-text);
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
-/* link */
 a {
     color: var(--color-light-accent-main);
     text-decoration: none;

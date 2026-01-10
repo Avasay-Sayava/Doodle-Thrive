@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Regex from "../../lib/regex";
+import Regex from "../../../lib/regex";
 
-import "../sign.css";
+import Sign from "../../index";
+import Card from "../../components/Card"
 
 function SignUp() {
     const navigate = useNavigate();
@@ -116,8 +117,8 @@ function SignUp() {
     };
 
     return (
-        <div className="sign-container">
-            <div className="sign-card">
+        <Sign>
+            <Card>
                 <form onSubmit={handleSubmit}>
                     <h2>Sign Up</h2>
                     <label>
@@ -207,8 +208,8 @@ function SignUp() {
                         <a href="#" onClick={() => navigate("/signin")}>Already have an account? Sign In</a>
                     </label>
                 </form>
-            </div>
-        </div>
+            </Card>
+        </Sign>
     );
 }
 

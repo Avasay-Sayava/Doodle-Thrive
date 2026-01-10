@@ -1,13 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Regex from "../../lib/regex";
+import Regex from "../../../lib/regex";
 
-import "../sign.css";
+import Sign from "../../index";
+import Card from "../../components/Card"
 
 function SignIn() {
     const navigate = useNavigate();
-
-    // get the location object
     const location = useLocation();
 
     const [formData, setFormData] = useState({
@@ -30,7 +29,6 @@ function SignIn() {
             [name]: value
         }));
 
-        // clear error on input change
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: false }));
         }
@@ -56,19 +54,14 @@ function SignIn() {
         try {
             const response = await fetch("http://localhost:3300/api/tokens", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
 
-            if (!response.ok) {
-                throw new Error("Sign in failed");
-            }
+            if (!response.ok) throw new Error("Sign in failed");
 
             const data = await response.json();
-            const token = data.token;
-            localStorage.setItem("token", token);
+            localStorage.setItem("token", data.token);
 
             navigate("/drive/home", { replace: true });
         } catch (error) {
@@ -80,10 +73,11 @@ function SignIn() {
     };
 
     return (
-        <div className="sign-container">
-            <div className="sign-card">
+        <Sign>
+            <Card>
                 <form onSubmit={handleSubmit}>
                     <h2>Sign In</h2>
+                    
                     <label>
                         <input
                             type="text"
@@ -94,8 +88,8 @@ function SignIn() {
                             style={{ borderColor: errors.username ? "red" : undefined }}
                         />
                         {errors.username && (
-                            <p className="error-message" id="error-message-username">
-                                <b>Invalid username.</b> Must be 2-32 characters long using only letters, numbers, spaces, underscores, hyphens, or periods, with no consecutive periods.
+                            <p className="error-message">
+                                <b>Invalid username.</b> Must be 2-32 characters...
                             </p>
                         )}
                     </label>
@@ -111,8 +105,8 @@ function SignIn() {
                             style={{ borderColor: errors.password ? "red" : undefined }}
                         />
                         {errors.password && (
-                            <p className="error-message" id="error-message-password">
-                                <b>Invalid password.</b> Must be 8-64 characters long.
+                            <p className="error-message">
+                                <b>Invalid password.</b> Must be 8-64 characters...
                             </p>
                         )}
                     </label>
@@ -125,10 +119,8 @@ function SignIn() {
                     />
 
                     {errors.general && (
-                        <div className="error-message" id="error-message-general">
-                            <p>
-                                <b>Sign in failed.</b> Please check your username and password and try again.
-                            </p>
+                        <div className="error-message" style={{textAlign: 'center', marginTop: '1rem'}}>
+                            <p><b>Sign in failed.</b> Check credentials.</p>
                         </div>
                     )}
 
@@ -138,8 +130,8 @@ function SignIn() {
                         <a href="#" onClick={() => navigate("/signup")}>Don't have an account? Sign Up</a>
                     </label>
                 </form>
-            </div>
-        </div>
+            </Card>
+        </Sign>
     );
 }
 
