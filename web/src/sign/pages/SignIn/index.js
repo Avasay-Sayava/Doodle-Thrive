@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Regex from "../../../lib/regex";
 
 import Sign from "../../index";
@@ -10,10 +10,12 @@ function SignIn() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const token = localStorage.getItem("token");
-    if (token) {
-        navigate("/drive/home", { replace: true });
-    }
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/drive/home", { replace: true });
+        }
+    }, [navigate]);
 
     const [formData, setFormData] = useState({
         username: location.state?.username || "",
