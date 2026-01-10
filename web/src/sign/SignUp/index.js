@@ -54,8 +54,7 @@ function SignUp() {
         const passwordValid = Regex.password.test(formData.password);
         const imageValid = (Regex.image
             .test(formData.profile ? await base64(formData.profile) : "") ||
-            formData.profile === null) &&
-            formData.profile?.size <= 10 * 1024 * 1024;
+            formData.profile === null) && (formData.profile?.size ?? 0) <= 10 * 1024 * 1024;
 
         const descriptionValid = formData.description.length <= 512;
 
