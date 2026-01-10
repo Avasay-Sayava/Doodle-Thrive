@@ -12,7 +12,7 @@ const files = {};
  * @return {Promise<string>} The generated File ID.
  * @throws {Error} If creation fails on the storage server.
  */
-exports.createFile = async ({ name, owner, content, starred, parent, description }) => {
+exports.createFile = async ({ name, owner, content, parent, description }) => {
     const UUID = uuid();
 
     if (files[UUID])
@@ -25,11 +25,11 @@ exports.createFile = async ({ name, owner, content, starred, parent, description
             id: UUID,
             name: name,
             type: "file",
-            owner: owner,
-            parent: parent || null,
-            starred: starred || false,
+            owner: this.info(parent)?.owner || owner,
+            trashed: false,
             created: Date.now(),
             modified: Date.now(),
+            parent: parent || null,
             description: description
         };
 
@@ -46,7 +46,7 @@ exports.createFile = async ({ name, owner, content, starred, parent, description
  * @param {string} [folderData.parent] The ID of the parent folder (optional).
  * @return {string} The generated Folder ID.
  */
-exports.createFolder = ({ name, owner, starred, parent, description }) => {
+exports.createFolder = ({ name, owner, parent, description }) => {
     const UUID = uuid();
 
     if (files[UUID])
@@ -56,8 +56,8 @@ exports.createFolder = ({ name, owner, starred, parent, description }) => {
         id: UUID,
         name: name,
         type: "folder",
-        owner: owner,
-        starred: starred || false,
+        owner: this.info(parent)?.owner || owner,
+        trashed: false,
         created: Date.now(),
         modified: Date.now(),
         parent: parent || null,
@@ -125,7 +125,7 @@ exports.get = async (id) => {
  * @param {object} changes The properties to update.
  * @return {Promise<boolean>} True if successful, False if storage update failed.
  */
-exports.update = async (id, { name, owner, content, starred, parent, description }) => {
+exports.update = async (id, { name, owner, content, trashed, parent, description }) => {
     const file = files[id];
 
     if (content) {
@@ -136,6 +136,13 @@ exports.update = async (id, { name, owner, content, starred, parent, description
         const responsePost = await Storage.post(id, content);
         if (responsePost.status !== 201)
             return false;
+    }
+
+    if (trashed !== undefined) {
+        file.trashed = trashed;
+        for (const childId of file.type === "folder" ? file.children : []) {
+            await exports.update(childId, { trashed: trashed });
+        }
     }
 
     if (name)
@@ -153,9 +160,6 @@ exports.update = async (id, { name, owner, content, starred, parent, description
 
     if (description)
         file.description = description;
-
-    if (starred !== undefined)
-        file.starred = starred;
 
     file.modified = Date.now();
 

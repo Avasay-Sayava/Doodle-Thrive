@@ -26,10 +26,15 @@ exports.create = async (req, res) => {
         if (!trimmedData)
             return res.status(400).json({ error: "Invalid file/folder data" });
 
-        const { name, content, starred, parent, description } = trimmedData;
+        const { name, content, parent, description } = trimmedData;
 
         if (!name)
             return res.status(400).json({ error: "Missing file/folder name" });
+
+        if (parent &&
+            !(Files.info(parent) &&
+                Files.info(parent).type === "folder"))
+            return res.status(404).json({ error: "Parent file/folder not found" });
 
         if (parent) {
             if (!Permissions.check(userId, parent, "self", "read"))
@@ -39,18 +44,10 @@ exports.create = async (req, res) => {
                 return res.status(403).json({ error: "Insufficient permissions" });
         }
 
-        if (parent &&
-            !(Files.info(parent) &&
-                Files.info(parent).type === "folder"))
-            return res.status(404).json({ error: "Parent file/folder not found" });
-
         trimmedData.owner = userId;
 
         if (!description)
             trimmedData.description = "";
-
-        if (starred === undefined)
-            trimmedData.starred = false;
 
         let id;
         if (content) {
@@ -96,9 +93,10 @@ exports.getAll = async (req, res) => {
         const files = await Files.getAll();
         const out = {};
 
-        for (const file of files)
-            if (Permissions.check(userId, file.id, "self", "read"))
-                out[file.id] = file;
+        for (const file of Object.values(files))
+            if (Permissions.check(userId, file.id, "self", "read")
+                && (file.trashed === false || file.owner === userId))
+                out[file.id] = { ...file, starred: Users.getStarred(userId).includes(file.id) };
 
         return res.status(200).json(out);
     } catch (err) {
@@ -130,6 +128,10 @@ exports.get = async (req, res) => {
         if (!Files.info(id))
             return res.status(404).json({ error: "File/folder not found" });
 
+        if (Files.info(id).trashed === true &&
+            Files.info(id).owner !== userId)
+            return res.status(404).json({ error: "File/folder not found" });
+
         if (!Permissions.check(userId, id, "self", "read"))
             return res.status(404).json({ error: "File/folder not found" });
 
@@ -137,7 +139,7 @@ exports.get = async (req, res) => {
             return res.status(403).json({ error: "Insufficient permissions" });
 
         const file = await Files.get(id);
-        return res.status(200).json(file);
+        return res.status(200).json({ ...file, starred: Users.getStarred(userId).includes(file.id) });
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }
@@ -171,13 +173,26 @@ exports.update = async (req, res) => {
         if (!trimmedData)
             return res.status(400).json({ error: "Invalid file/folder data" });
 
-        const { name, owner, content, starred, parent, description } = trimmedData;
+        const { name, owner, content, trashed, parent, description } = trimmedData;
+        const { starred } = req.body;
 
-        if (!name && !content && !parent && !owner && !description && starred === undefined)
+        if (!name && !content && !parent && !owner && !description && trashed === undefined && starred === undefined)
             return res.status(400).json({ error: "No changes provided" });
 
-        if (owner && !Regex.id.test(owner))
-            return res.status(400).json({ error: "Invalid owner id format" });
+        if (Files.info(id).trashed === true &&
+            Files.info(id).owner !== userId)
+            return res.status(404).json({ error: "File/folder not found" });
+
+        if (trashed !== undefined) {
+            if (name || owner || content || parent || description || starred !== undefined)
+                return res.status(400).json({ error: "Cannot change other properties while trashing/untrashing" });
+            if (Files.info(id).trashed === false &&
+                !Permissions.check(userId, Files.info(id).parent, "content", "write"))
+                return res.status(403).json({ error: "Insufficient permissions" });
+        }
+
+        if (owner && Files.info(id)?.owner !== userId)
+            return res.status(403).json({ error: "Insufficient permissions" });
 
         if (!Permissions.check(userId, id, "self", "read"))
             return res.status(404).json({ error: "File/folder not found" });
@@ -206,6 +221,19 @@ exports.update = async (req, res) => {
         const updated = await Files.update(id, trimmedData);
         if (!updated)
             return res.status(404).json({ error: "File/folder not found" });
+
+        if (starred !== undefined) {
+            if (starred) {
+                Users.star(userId, id);
+            } else {
+                Users.unstar(userId, id);
+            }
+        }
+
+        if (trashed === true) {
+            Users.unstar(userId, id);
+        }
+
         return res.status(200).end();
     } catch (err) {
         return res.status(500).json({ error: err.message });
@@ -239,8 +267,11 @@ exports.delete = async (req, res) => {
         if (!Permissions.check(userId, id, "self", "read"))
             return res.status(404).json({ error: "File/folder not found" });
 
-        if (!Permissions.check(userId, Files.info(id).parent, "content", "write"))
-            return res.status(403).json({ error: "Insufficient permissions" });
+        if (Files.info(id).trashed === false)
+            return res.status(400).json({ error: "Cannot delete a file/folder that is not trashed" });
+
+        if (Files.info(id).owner !== userId)
+            return res.status(404).json({ error: "File/folder not found" });
 
         const deleted = await Files.delete(id);
 
@@ -255,11 +286,6 @@ exports.delete = async (req, res) => {
 /**
  * Helper function to trim and validate file/folder input data.
  * @param {object} data Raw body data.
- * @param {string} [data.name] File/Folder name.
- * @param {string} [data.owner] Owner ID.
- * @param {string} [data.parent] Parent ID.
- * @param {string} [data.content] File content.
- * @param {string} [data.description] File/Folder description.
  * @return {{name?: string, parent?: string, content?: string, owner?: string, description?: string}|null} Sanitized data object or null if validation fails.
  */
 function trimData(data) {
@@ -278,13 +304,13 @@ function trimData(data) {
             Regex.id.test(data.parent))) {
         return null;
     }
-    if (data.starred !== undefined &&
-        typeof data.starred !== "boolean") {
-        return null;
-    }
     if (data.content !== undefined &&
         !(typeof data.content === "string" &&
             Regex.filecontent.test(data.content))) {
+        return null;
+    }
+    if (data.trashed !== undefined &&
+        typeof data.trashed !== "boolean") {
         return null;
     }
     if (data.description !== undefined &&
@@ -297,8 +323,8 @@ function trimData(data) {
         name: data.name,
         owner: data.owner,
         parent: data.parent,
-        starred: data.starred,
         content: data.content,
+        trashed: data.trashed,
         description: data.description,
     };
 }

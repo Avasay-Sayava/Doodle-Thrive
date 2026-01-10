@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const Permissions = require("../models/permissions");
 const Files = require("../models/files");
 const Regex = require("../models/regex");
+const Users = require("../models/users");
 
 /**
  * Adds new permission settings to a specific file.
@@ -28,10 +29,10 @@ exports.add = async (req, res) => {
         if (!Files.info(id))
             return res.status(404).json({ error: "File not found" });
 
-        if (!Permissions.check(req.userId, id, "self", "read"))
+        if (!Permissions.check(userId, id, "self", "read"))
             return res.status(404).json({ error: "File not found" });
 
-        if (!Permissions.check(req.userId, id, "permissions", "write"))
+        if (!Permissions.check(userId, id, "permissions", "write"))
             return res.status(403).json({ error: "Insufficient permissions" });
 
         const { options } = req.body;
