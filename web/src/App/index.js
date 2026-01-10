@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import Header from '../panels/Header';
 import "./style.css";
 
 function App() {
@@ -7,7 +8,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={
-          <div>Hello, World!</div>
+          <Header></Header>
         } />
       </Routes>
     </BrowserRouter>
