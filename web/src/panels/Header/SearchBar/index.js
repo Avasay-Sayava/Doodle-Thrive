@@ -3,11 +3,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import './style.css';
 
 import DropDown from './DropDown';
+import { useNavigate } from 'react-router-dom';
 
 // Assume auth is already handled (e.g., via proxy or global fetch wrapper)
 const API_BASE = 'http://localhost:3300';
 
 function SearchBar() {
+    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
@@ -35,7 +37,12 @@ function SearchBar() {
             setLoading(true);
             try {
                 const jwt = localStorage.getItem('token');
-                if (!jwt) throw new Error("Not authenticated");
+                if (!jwt) {
+                    localStorage.removeItem('token');
+                    setResults([]);
+                    navigate('/signin');
+                    return;
+                }
 
                 const res = await fetch(`${API_BASE}/api/search/${query}`, {
                     method: 'GET',

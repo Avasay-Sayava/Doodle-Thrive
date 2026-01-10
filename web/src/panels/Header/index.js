@@ -8,10 +8,6 @@ import './style.css';
 import newFile from '../../Drive/utils/newFile';
 
 function Header() {
-    newFile({
-        fileName: 'Test Document',
-        fileType: 'file',
-    })
     return (
     <header className="drive-header">
         <div className="header-left">
