@@ -66,41 +66,7 @@ function isFolder(file) {
   return s === "" || s === "-" || s === "0 B" || s === "0B";
 }
 
-function toTimestamp(v) {
-  if (!v) return 0;
-  const t = new Date(v).getTime();
-  return Number.isFinite(t) ? t : 0;
-}
-
-function sortComparator(sortBy) {
-  switch (sortBy) {
-    case "name-asc":
-      return (a, b) => String(a.name ?? "").localeCompare(String(b.name ?? ""));
-    case "name-desc":
-      return (a, b) => String(b.name ?? "").localeCompare(String(a.name ?? ""));
-    case "date-newest":
-      return (a, b) => toTimestamp(b.lastModified) - toTimestamp(a.lastModified);
-    case "date-oldest":
-      return (a, b) => toTimestamp(a.lastModified) - toTimestamp(b.lastModified);
-    default:
-      return () => 0;
-  }
-}
-
-function applySort(files, sortBy, folderPosition) {
-  const cmp = sortComparator(sortBy);
-  const arr = [...files];
-
-  if (folderPosition === "folders-first") {
-    const folders = arr.filter(isFolder).sort(cmp);
-    const regular = arr.filter((f) => !isFolder(f)).sort(cmp);
-    return [...folders, ...regular];
-  }
-
-  return arr.sort(cmp);
-}
-
-function HomeView({ user }) {
+function FileView({ filesObj }) {
   const [files, setFiles] = useState(mockItems);
   const [error, setError] = useState("");
   const [sortBy, setSortBy] = useState("name-asc");
@@ -114,17 +80,7 @@ function HomeView({ user }) {
         const jwt = localStorage.getItem("token");
         if (!jwt) throw new Error("Not authenticated");
 
-        const res = await fetch(`${API_BASE}/api/files`, {
-          method: "GET",
-          headers: { Authorization: `Bearer ${jwt}` },
-        });
-
-        if (!res.ok) {
-          const txt = await res.text();
-          throw new Error(`Fetch files failed (HTTP ${res.status}): ${txt}`);
-        }
-
-        const filesObj = await res.json();
+        
         const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
         const rootFiles = allFiles.filter((f) => f.parent == null);
         setFiles([...mockItems, ...rootFiles]);
