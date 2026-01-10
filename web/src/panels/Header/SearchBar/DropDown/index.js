@@ -2,6 +2,8 @@ import React from 'react';
 
 import './style.css';
 
+import DropDownItem from './DropDownItem';
+
 function DropDown({ results = [], loading}) {
     if (loading) {
         return <div className="search-dropdown">Searching…</div>;
@@ -14,9 +16,7 @@ function DropDown({ results = [], loading}) {
     return (
         <div className="search-dropdown">
             {results.map((item) => (
-                <div key={item.id || item.name} className="search-dropdown-item">
-                    {item.name || item.id}
-                </div>
+                <DropDownItem key={item.id} item={item} type={item.type} />
             ))}
         </div>
     );

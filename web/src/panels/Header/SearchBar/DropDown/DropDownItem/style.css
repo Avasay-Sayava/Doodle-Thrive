@@ -1,0 +1,21 @@
+.search-dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  font-size: 14px;
+  transition: background-color 0.15s;
+}
+
+.search-dropdown-item:first-child {
+  padding-top: 16px;
+}
+
+.search-dropdown-item:last-child {
+  padding-bottom: 16px;
+}
+
+.search-dropdown-item:hover {
+  background-color: var(--color-bg-hover);
+}
