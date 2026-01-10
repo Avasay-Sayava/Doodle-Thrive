@@ -12,7 +12,6 @@ function SearchBar() {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -34,23 +33,17 @@ function SearchBar() {
         const controller = new AbortController();
         const timer = setTimeout(async () => {
             setLoading(true);
-            setError(null);
             try {
                 const res = await fetch(`${API_BASE}/search/${encodeURIComponent(query)}`, {
                     method: 'GET',
                     signal: controller.signal,
                 });
 
-                if (!res.ok) {
-                    throw new Error(`Search failed (${res.status})`);
-                }
-
                 const data = await res.json();
                 const list = Object.values(data || {});
                 setResults(list);
             } catch (err) {
                 if (err.name === 'AbortError') return;
-                setError(err.message);
                 setResults([]);
             } finally {
                 setLoading(false);
@@ -80,7 +73,6 @@ function SearchBar() {
                 <DropDown
                     results={results}
                     loading={loading}
-                    error={error}
                 />
             )}
         </div>

@@ -2,11 +2,7 @@ import React from 'react';
 
 import './style.css';
 
-function DropDown({ results = [], loading, error }) {
-    if (error) {     
-        return <div className="search-dropdown">{error}</div>;
-    }
-
+function DropDown({ results = [], loading}) {
     if (loading) {
         return <div className="search-dropdown">Searching…</div>;
     }
