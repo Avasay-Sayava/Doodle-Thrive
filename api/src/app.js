@@ -17,8 +17,6 @@ app.use("/api/tokens", TokensRouter);
 app.use("/api/search", SearchRouter);
 app.use("/api/users", UsersRouter);
 
-
-
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
