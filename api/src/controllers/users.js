@@ -23,6 +23,9 @@ exports.create = (req, res) => {
         .status(400)
         .json({ error: "Username and password are required" });
 
+    if (Object.keys(Users.find(username)).length > 0)
+      return res.status(409).json({ error: "Username already exists" });
+
     const id = Users.create(trimmedData);
 
     if (!exists(id))
