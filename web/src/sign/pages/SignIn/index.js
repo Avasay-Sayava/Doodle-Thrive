@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Regex from "../../../lib/regex";
+import Regex from "../../../Drive/utils/regex";
 
 import Sign from "../../index";
 import Card from "../../components/Card";
@@ -63,6 +63,7 @@ function SignIn() {
 
             const data = await response.json();
             localStorage.setItem("token", data.token);
+            localStorage.setItem("id", data.id);
 
             navigate("/drive/home", { replace: true });
         } catch (error) {

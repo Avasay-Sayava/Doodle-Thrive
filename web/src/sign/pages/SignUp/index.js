@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Regex from "../../../lib/regex";
+import Regex from "../../../Drive/utils/regex";
 
 import Sign from "../../index";
 import Card from "../../components/Card";

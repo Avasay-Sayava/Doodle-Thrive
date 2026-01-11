@@ -1,9 +1,11 @@
 import "./style.css";
 import { NavLink } from "react-router-dom";
+import New from "../../components/storage/New";
 
-export default function SidePanel() {
+export default function SidePanel({ onCreated }) {
   const items = [
-    { to: "/drive", end: true, label: "My Drive", icon: IconDrive },
+    { to: "/drive", end: true, label: "Home", icon: IconHome },
+    { to: "/drive/mydrive", end: true, label: "My Drive", icon: IconDrive },
     { to: "/drive/starred", label: "Starred", icon: IconStar },
     { to: "/drive/shared", label: "Shared with me", icon: IconShared },
     { to: "/drive/recent", label: "Recent", icon: IconRecent },
@@ -11,8 +13,11 @@ export default function SidePanel() {
   ];
 
   return (
+    
     <div className="drive-sidebar" aria-label="Sidebar">
       <div className="drive-sidebar__section">
+        <New onCreated={onCreated}/>
+
         {items.map((it) => {
           const Icon = it.icon;
 
@@ -38,6 +43,17 @@ export default function SidePanel() {
 }
 
 /* icons */
+
+function IconHome() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18">
+      <path
+        fill="currentColor"
+        d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"
+      />
+    </svg>
+  );
+}
 
 function IconDrive() {
   return (
