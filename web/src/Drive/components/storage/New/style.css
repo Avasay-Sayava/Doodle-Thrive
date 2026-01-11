@@ -63,6 +63,9 @@
   width: 100%;
   text-align: left;
   padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
   background: transparent;
   color: var(--color-text-primary);
@@ -71,6 +74,15 @@
 
 .new__menu-item:hover {
   background: var(--color-bg-hover);
+}
+
+.new__menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .new__modal-overlay {
@@ -187,4 +199,10 @@
 
 .get-text-modal__overlay:not([open]) {
   display: none;
+}
+
+.new__menu-sep {
+  height: 1px;
+  margin: 6px 0;
+  background: var(--color-border);
 }
