@@ -1,10 +1,8 @@
 import "../style.css";
 import FileView from "../FileView";
-import { useEffect, useMemo, useState } from "react";
-import Regex from "../../utils/regex";
+import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
-import New from "../../components/storage/New";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -44,7 +42,7 @@ function HomeView({ refreshKey, onRefresh}) {
         const rootFiles = allFiles.filter((f) => f.parent == null);
 
         for (let i = 0; i < rootFiles.length; i++) {
-          rootFiles[i].ownerUsername = await getUserrootFiles[i].owner);
+          rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
         }
 
         setFiles(rootFiles);
@@ -54,7 +52,7 @@ function HomeView({ refreshKey, onRefresh}) {
     };
 
     run();
-  }, [refreshKey]);
+  }, [navigate, refreshKey]);
 
   return (
     <div className="file-view">

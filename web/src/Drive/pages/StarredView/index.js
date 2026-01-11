@@ -1,6 +1,6 @@
 import "../style.css";
 import FileView from "../FileView";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 
@@ -11,8 +11,6 @@ function StarredView({ refreshKey, onRefresh}) {
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
-
-  const id = localStorage.getItem("id");
 
   useEffect(() => {
     const run = async () => {
@@ -45,7 +43,7 @@ function StarredView({ refreshKey, onRefresh}) {
         const allfiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
         const starred = allfiles.filter((f) => f.starred === true);
         for (let i = 0; i < starred.length; i++) {
-          starred[i].ownerUsername = await getUserstarred[i].owner);
+          starred[i].ownerUsername = await getUser(starred[i].owner);
         }
 
         setFiles(starred);
@@ -55,7 +53,7 @@ function StarredView({ refreshKey, onRefresh}) {
     };
 
     run();
-  }, [refreshKey]);
+  }, [navigate, refreshKey]);
   return (
 
     <div className="file-view">

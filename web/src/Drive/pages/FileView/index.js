@@ -1,13 +1,7 @@
 import "../style.css";
 import FileRow from "../../components/storage/FileRow";
 import Filter from "../../components/storage/Filter";
-import { Children, useEffect, useMemo, useState } from "react";
-
-const API_BASE = process.env.API_BASE_URL;
-
-function isFolder(file) {
-  return file.type === "folder";
-}
+import { useEffect, useState } from "react";
 
 /**
  * Returns a file view component.
@@ -18,7 +12,7 @@ function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }
   const [files, setFiles] = useState([...allFiles]);
 
   useEffect(() => {
-    setFiles([...mockFiles, ...allFiles]);
+    setFiles([...allFiles]);
   }, [allFiles]);
 
   return (
