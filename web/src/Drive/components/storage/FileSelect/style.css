@@ -42,11 +42,11 @@
 }
 
 .file-action-btn--starred {
-  color: #fbbc04;
+  color: var(--color--icon-starred);
 }
 
 .file-action-btn--starred:hover {
-  color: #fbbc04;
+  color: var(--color--icon-starred-hover);
 }
 
 .files-table th.col-actions {

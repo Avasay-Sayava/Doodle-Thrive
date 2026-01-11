@@ -4,8 +4,8 @@ import renameFile from "../../../utils/renameFile";
 import FileActions from "../FileActions";
 
 
-function getSize({ fileType, content }) {
-  if (fileType === "folder") return "-";
+function getSize({ type, content }) {
+  if (type === "folder") return "-";
   let bytes = content?.length || 0;
   if (bytes < 1024) return bytes + " B";
   let kb = bytes / 1024;
@@ -44,10 +44,32 @@ function getDate(timestamp) {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
 
+function IconFile() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18">
+      <path
+        fill="currentColor"
+        d="M6 2h8l4 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 2H6v16h10V9h-3V4Z"
+      />
+    </svg>
+  );
+}
+
+function IconFolder() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18">
+      <path
+        fill="currentColor"
+        d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
+      />
+    </svg>
+  );
+}
 
 
-function FileRow({ file: { name, modified, content, ownerUsername, fileType, id, starred }, onRefresh }) {
-  const file = { name, modified, content, ownerUsername, fileType, id, starred };
+
+function FileRow({ file: { name, modified, content, ownerUsername, type, id, starred }, onRefresh }) {
+  const file = { name, modified, content, ownerUsername, type, id, starred };
   return (
     <FileActions
       file={file}
@@ -55,10 +77,15 @@ function FileRow({ file: { name, modified, content, ownerUsername, fileType, id,
       onLeftClick={()=>{}}
     >
       <tr className="file-row">
-        <td className="col-name">{name}</td>
+        <td className="col-name">
+          <span className="file-icon" aria-hidden="true">
+            {type === "folder" ? <IconFolder /> : <IconFile />}
+          </span>
+          {name}
+        </td>
         <td className="col-owner">{ownerUsername}</td>
         <td className="col-modified">{getDate(modified)}</td>
-        <td className="col-size">{getSize({ fileType, content })}</td>
+        <td className="col-size">{getSize({ type, content })}</td>
         <td className="col-actions">
           <FileSelect file={{ id, starred }} onRefresh={onRefresh} />
         </td>

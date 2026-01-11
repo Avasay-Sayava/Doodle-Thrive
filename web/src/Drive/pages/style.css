@@ -1,3 +1,5 @@
+/* sorry for so many signutres was made in attempts to debug, no time to fix */
+
 .file-view {
   width: 100%;
   height: 100%;
@@ -22,12 +24,8 @@
   min-height: 0;
   background-color: var(--color-bg-main);
   border-radius: 12px;
-
   overflow-y: auto;
   overflow-x: hidden;
-}
-
-.file-view__table-wrapper {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -40,10 +38,6 @@
 .files-table {
   width: 100%;
   border-collapse: collapse;
-}
-
-.files-table thead {
-  background-color: #fafafa; 
 }
 
 .files-table thead th {
@@ -195,6 +189,3 @@ tbody tr:hover {
   top: -1px;
 }
 
-.view-title__text {
-  line-height: 1;
-}

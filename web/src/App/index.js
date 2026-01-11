@@ -23,6 +23,12 @@ function App() {
        <BrowserRouter>
         <Routes>
           <Route
+            path="/"
+            element={
+              <Sign mode="signin" />
+            }
+          />
+          <Route
             path="/signin"
             element={
               <Sign mode="signin" />
