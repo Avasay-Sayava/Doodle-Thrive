@@ -2,7 +2,7 @@ import "../style.css";
 import FileView from "../FileView";
 import { useEffect, useMemo, useState } from "react";
 import Regex from "../../utils/regex";
-import getOwner from "../../utils/getOwner";
+import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 import New from "../../components/storage/New";
 
@@ -44,7 +44,7 @@ function BinView({ refreshKey, onRefresh}) {
         const binFiles = allFiles.filter((f) => f.trashed === true);
 
         for (let i = 0; i < binFiles.length; i++) {
-          binFiles[i].ownerUsername = await getOwner(binFiles[i].owner);
+          binFiles[i].ownerUsername = await getUser(binFiles[i].owner);
         }
 
         setFiles(binFiles);

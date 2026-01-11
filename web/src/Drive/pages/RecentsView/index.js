@@ -2,7 +2,7 @@ import "../style.css";
 import FileView from "../FileView";
 import { useEffect, useMemo, useState } from "react";
 import Regex from "../../utils/regex";
-import getOwner from "../../utils/getOwner";
+import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 import New from "../../components/storage/New";
 
@@ -44,7 +44,7 @@ function RecentsView({ refreshKey, onRefresh}) {
         const rootFiles = allFiles.filter((f) => f.parent == null);
 
         for (let i = 0; i < rootFiles.length; i++) {
-          rootFiles[i].ownerUsername = await getOwner(rootFiles[i].owner);
+          rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
         }
 
         setFiles(rootFiles);
