@@ -24,10 +24,11 @@ exports.find = (req, res) => {
             return res.status(400).json({ error: "Invalid password format" });
 
         const id = Users.find(username, password);
+        if (!id)
+            return res.status(404).json({ error: "User not found" });
+
         const token = jwt.sign(id, process.env.JWT_SECRET);
 
-        if (!id)
-            return res.status(404).end();
         return res.status(200).json({ token: token });
     } catch (err) {
         return res.status(500).json({ error: err.message });

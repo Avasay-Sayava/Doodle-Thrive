@@ -1,0 +1,105 @@
+/* File View Design */
+
+.file-view {
+  width: 100%;
+  height: 100%;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Page title */
+.file-view__header {
+  margin-bottom: 12px;
+}
+
+.file-view__header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* Table Wrapper */
+.file-view__table-wrapper {
+  flex: 1;
+  min-height: 0;
+  background-color: var(--color-bg-main);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Table base */
+.files-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/*  Table Header */
+.files-table thead {
+  background-color: --color-text-primary;
+}
+
+.files-table th {
+  height: 48px;
+  padding: 0 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+/* First and last column headers spacing */
+.files-table th:first-child {
+  padding-left: 24px;
+}
+
+.files-table th:last-child {
+  padding-right: 24px;
+  text-align: right;
+}
+
+/* Sort header styling */
+.sort-header {
+  padding: 8px 16px !important;
+  width: auto;
+}
+
+.sort-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.sort-select {
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 12px;
+  background-color: var(--color-bg-main);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sort-select:hover {
+  border-color: var(--color-text-muted);
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: #1f8ce6;
+  box-shadow: 0 0 0 2px rgba(31, 140, 230, 0.1);
+}
+
+/* Error message styling */
+.file-view__error {
+  padding: 48px 24px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: #d93025; 
+}

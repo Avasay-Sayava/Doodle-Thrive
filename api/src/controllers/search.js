@@ -29,7 +29,7 @@ exports.search = async (req, res) => {
         const results = await Files.search(query);
         const out = {};
 
-        for (const fileId of results)
+        for (const fileId of Object.values(results))
             if (Permissions.check(userId, fileId, "content", "read"))
                 out[fileId] = results[fileId];
 
