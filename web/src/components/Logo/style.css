@@ -10,3 +10,8 @@
   height: 40px;
   margin-right: 10px;
 }
+
+.logo:hover {
+  transform: scale(1.02);
+  transition: transform 0.1s;
+}
