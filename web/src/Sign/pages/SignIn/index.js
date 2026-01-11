@@ -67,9 +67,9 @@ function SignIn({ changeMode, autofill = {} }) {
 
       if (!response.ok) throw new Error("Sign in failed");
 
-            const data = await response.json();
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("id", data.id);
+      const data = await response.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("id", data.id);
 
       navigate("/drive/home", { replace: true });
     } catch (error) {
