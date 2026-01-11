@@ -1,20 +1,19 @@
 import "../style.css";
 import FileView from "../FileView";
 import { useEffect, useMemo, useState } from "react";
+import Regex from "../../utils/regex";
 import getOwner from "../../utils/getOwner";
 import { useNavigate } from "react-router-dom";
+import New from "../../components/storage/New";
 
 const API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3300";
 
-
-function StarredView({ refreshKey, onRefresh}) {
-  const navigate = useNavigate();
+function MydriveView({ refreshKey, onRefresh}) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const id = localStorage.getItem("id");
-
-  useEffect(() => {
+  useEffect(() => { 
     const run = async () => {
       try {
         setError("");
@@ -41,14 +40,14 @@ function StarredView({ refreshKey, onRefresh}) {
         }
 
         const filesObj = await res.json();
-        
-        const allfiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
-        const starred = allfiles.filter((f) => f.starred === true);
-        for (let i = 0; i < starred.length; i++) {
-          starred[i].ownerUsername = await getOwner(starred[i].owner);
+        const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
+        const rootFiles = allFiles.filter((f) => f.parent == null && f.owner === localStorage.getItem("id"));
+
+        for (let i = 0; i < rootFiles.length; i++) {
+          rootFiles[i].ownerUsername = await getOwner(rootFiles[i].owner);
         }
 
-        setFiles(starred);
+        setFiles(rootFiles);
       } catch (err) {
         setError(err?.message || "Failed to load files");
       }
@@ -56,11 +55,17 @@ function StarredView({ refreshKey, onRefresh}) {
 
     run();
   }, [refreshKey]);
-  return (
 
+  return (
     <div className="file-view">
       <div className="file-view__header">
-        <h1>Starred</h1>
+        <New hidden={true}/>
+        <div className="file-view__header">
+          <h1>
+          <span className="mydrive-title__text">My Drive</span>
+          <span className="mydrive-title__chev" aria-hidden="true">▾</span>
+          </h1>
+        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
@@ -69,4 +74,4 @@ function StarredView({ refreshKey, onRefresh}) {
   );
 }
 
-export default StarredView;
+export default MydriveView;

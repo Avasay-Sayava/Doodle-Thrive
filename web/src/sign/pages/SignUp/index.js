@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Regex from "../../../lib/regex";
+import Regex from "../../../Drive/utils/regex";
 
 import Input from "../../components/Input";
 import TextArea from "../../components/TextArea";
