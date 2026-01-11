@@ -12,7 +12,7 @@ const exists = (x) => x !== undefined && x !== null;
  * @param {import("express").Response} res The Express Response object.
  * @return {Promise<void>}
  */
-exports.find = (req, res) => {
+exports.auth = (req, res) => {
   try {
     const { username, password } = req.body;
 

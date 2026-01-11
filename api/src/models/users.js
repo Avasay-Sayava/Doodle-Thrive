@@ -33,10 +33,21 @@ exports.create = ({ username, password, info = {} }) => {
  * @param {string} password The password to verify against.
  * @return {string|null} The User ID if credentials match, otherwise null.
  */
-exports.find = (username, password) => {
-  for (const id in users) {
-    if (users[id].username === username && users[id].password === password)
-      return id;
+exports.find = (username, password = undefined) => {
+  if (password === undefined) {
+    const out = {};
+    for (const id in users) {
+      if (users[id].username === username) {
+        out[id] = { ...users[id] };
+        delete out[id].password;
+      }
+    }
+    return out;
+  } else {
+    for (const id in users) {
+      if (users[id].username === username && users[id].password === password)
+        return id;
+    }
   }
   return null;
 };
