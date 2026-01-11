@@ -56,6 +56,14 @@ else
     echo -e "${CYAN}Using provided timeout: ${ORANGE}${timeout}${NC}"
 fi
 
+default_jwt_secret="abcd"
+if [ -z "${jwt_secret}" ]; then
+    echo -e "${CYAN}No jwt secret provided, using default jwt secret: ${ORANGE}${default_jwt_secret}${NC}"
+    jwt_secret=$default_jwt_secret
+else
+    echo -e "${CYAN}Using provided jwt secret: ${ORANGE}${jwt_secret}${NC}"
+fi
+
 if [ -z "${server_name}" ]; then
     echo -e "${CYAN}No server name provided.${NC}"
     echo -e "${CYAN}Must provide the server's name to the variable ${GREEN}'${RED}server_name${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}server_name${NC}=${GREEN}base-server${NC} ./api-server.bash')"
@@ -161,7 +169,7 @@ echo
 # START NEW CONTAINER
 echo -e "${CYAN}Starting the new API server...${NC}"
 
-if docker-compose run $build_arg -d --service-ports --name $name api-server $server_name $server_port $port $timeout; then
+if docker-compose run $build_arg -d -p $port:$port -e JWT_SECRET=$jwt_secret --name $name api-server $server_name $server_port $port $timeout; then
     echo -e "${GREEN}Success! ${CYAN}Container ${GREEN}'${name}'${CYAN} started on port ${ORANGE}${port}${CYAN}.${NC}"
 else
     echo -e "${RED}Error: Failed to start API server.${NC}"

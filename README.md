@@ -24,7 +24,7 @@ To disable changes to branches of finished parts of the project, you create a ru
 The project is containerized using Docker. For running parts of the project, there are predefined bash files.
 * **To enable the usage of the bash files**, you need to run this command in the root directory:
     ```bash
-    chmod +x ./api-server.bash ./api-console.bash ./base-server.bash ./base-client.bash ./base-tests.bash
+    chmod +x ./api-server.bash ./api-console.bash ./base-server.bash ./base-client.bash ./base-tests.bash ./website.bash
     ```
 
     For the objectively fake programmers who don't have bash (or even don't have git bash while using GitHub), each section that uses a bash file is accompanied by the commands to run it.
@@ -37,7 +37,7 @@ The project is containerized using Docker. For running parts of the project, the
 
     If you don't have bash, you can run the following command:
     ```cmd
-    docker-compose run <--build|> -d -e THREADS=<thread_count> --name <host_name> base-server <port>
+    docker-compose run <--build|> -d -p <port>:<port> -e THREADS=<thread_count> --name <host_name> base-server <port>
     ```
 
 * **To run a C++/Python client on a base server**, you need to run the `./base-client.bash` file:
@@ -69,13 +69,13 @@ The project is containerized using Docker. For running parts of the project, the
 
 * **To start the API server**, you need to run the `./api-server.bash` file:
     ```bash
-    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> name=<host_name> port=<port> timeout=<requests_timeout_ms> ./api-server.bash
+    build=<true|false> server_name=<cpp_server_host_name> server_port=<cpp_server_port> name=<host_name> port=<port> timeout=<requests_timeout_ms> jwt_secret=<jwt_secret> ./api-server.bash
     ```
-    You can run the file without defining the `build`, `name`, `port`, `timeout` variables, and it will sign them the default values `true`, `api-server`, `3300`, `100` each. Note that you are required to define the `server_name` and `server_port` variables to connect the API server to the C++ backend server.
+    You can run the file without defining the `build`, `name`, `port`, `timeout`, `jwt_secret` variables, and it will sign them the default values `true`, `api-server`, `3300`, `100`, `abcd` each. Note that you are required to define the `server_name` and `server_port` variables to connect the API server to the C++ backend server.
 
     If you don't have bash, you can start the server as shown above and run the following command:
     ```cmd
-    docker-compose run <--build|> -d --service-ports --name <host_name> api-server <base_server_host_name> <base_server_port> <port> <timeout>
+    docker-compose run <--build|> -d -p <port>:<port> -e JWT_SECRET="<jwt_secret>" --name <host_name> api-server <base_server_host_name> <base_server_port> <port> <timeout>
     ```
 
 * **To get to an API server's console**, you can reply 'Y' in the end of `./api-server.bash` execution, or run the `./api-console.bash` file:
@@ -89,6 +89,7 @@ The project is containerized using Docker. For running parts of the project, the
     docker exec -it <api_server_name> sh
     ```
     TIP: Using the `bash` file you have a predefined sh console that is much more easy to use.
+
 
 ## C++ Server Usage Examples
 
@@ -109,6 +110,17 @@ For the full protocol, documentation can be found in [`base/README.md`](base/REA
 * **Run a Python client:** (connecting to server at `base-server:3000`)
     ```bash
     type=2 name=base-server port=3000 ./base-client.bash
+    ```
+
+* **To start the website**, you need to run the `./website.bash` file:
+    ```bash
+    build=<true|false> name=<host_name> port=<port> ./website.bash
+    ```
+    You can run the file without defining the `build`, `name`, `port` variables, and it will sign them the default values `true`, `website`, `3000` each.
+
+    If you don't have bash, you can run the following command:
+    ```cmd
+    docker-compose run <--build|> -d -p <port>:<port> --name <host_name> web <port>
     ```
 
 ### Commands Examples
