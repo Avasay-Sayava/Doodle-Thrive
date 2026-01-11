@@ -1,10 +1,10 @@
 import "../style.css";
 import FileView from "../FileView";
 import { useEffect, useMemo, useState } from "react";
-import getOwner from "../../utils/getOwner";
+import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3300";
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 
 function StarredView({ refreshKey, onRefresh}) {
@@ -45,7 +45,7 @@ function StarredView({ refreshKey, onRefresh}) {
         const allfiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
         const starred = allfiles.filter((f) => f.starred === true);
         for (let i = 0; i < starred.length; i++) {
-          starred[i].ownerUsername = await getOwner(starred[i].owner);
+          starred[i].ownerUsername = await getUserstarred[i].owner);
         }
 
         setFiles(starred);

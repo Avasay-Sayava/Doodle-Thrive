@@ -2,11 +2,11 @@ import "../style.css";
 import FileView from "../FileView";
 import { useEffect, useMemo, useState } from "react";
 import Regex from "../../utils/regex";
-import getOwner from "../../utils/getOwner";
+import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 import New from "../../components/storage/New";
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3300";
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 function MydriveView({ refreshKey, onRefresh}) {
   const [files, setFiles] = useState([]);
@@ -44,7 +44,7 @@ function MydriveView({ refreshKey, onRefresh}) {
         const rootFiles = allFiles.filter((f) => f.parent == null && f.owner === localStorage.getItem("id"));
 
         for (let i = 0; i < rootFiles.length; i++) {
-          rootFiles[i].ownerUsername = await getOwner(rootFiles[i].owner);
+          rootFiles[i].ownerUsername = await getUserrootFiles[i].owner);
         }
 
         setFiles(rootFiles);
