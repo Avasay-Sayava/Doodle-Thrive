@@ -1,13 +1,9 @@
 import "../style.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FileView from "../FileView";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
-
-function isFolder(file) {
-  return file.type === "folder";
-}
 
 function SharedView({ refreshKey, onRefresh }) {
   const navigate = useNavigate();
@@ -50,7 +46,7 @@ function SharedView({ refreshKey, onRefresh }) {
     };
 
     run();
-  }, [refreshKey]);
+  }, [navigate, refreshKey]);
 
   return (
     <div className="file-view">

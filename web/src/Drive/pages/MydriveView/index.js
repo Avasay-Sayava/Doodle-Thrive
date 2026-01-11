@@ -1,7 +1,6 @@
 import "../style.css";
 import FileView from "../FileView";
-import { useEffect, useMemo, useState } from "react";
-import Regex from "../../utils/regex";
+import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 import New from "../../components/storage/New";
@@ -54,7 +53,7 @@ function MydriveView({ refreshKey, onRefresh}) {
     };
 
     run();
-  }, [refreshKey]);
+  }, [navigate, refreshKey]);
 
   return (
     <div className="file-view">

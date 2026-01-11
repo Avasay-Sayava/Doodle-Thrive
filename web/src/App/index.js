@@ -6,8 +6,6 @@ import Sign from "../Sign";
 import Drive from "../Drive";
 
 function App() {
-  process.env.API_BASE_URL = "http://localhost:3300";
-
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme") || "pink");
 
   useEffect(() => {
