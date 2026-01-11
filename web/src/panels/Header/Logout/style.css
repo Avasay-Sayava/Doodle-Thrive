@@ -1,0 +1,15 @@
+.logout-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: var(--color-text-main);
+}
+
+.logout-icon-circle:hover {
+    background-color: var(--color-bg-hover);
+}

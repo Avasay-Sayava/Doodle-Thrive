@@ -5,7 +5,7 @@ import IconDrive from './IconDrive';
 import IconFolder from './IconFolder';
 
 function DropDownItem({ item, type }) {
-    icon = type === 'folder' ? <IconFolder /> : <IconDrive />;
+    const icon = type === 'folder' ? <IconFolder /> : <IconDrive />;
     
     return (
         <div className="search-dropdown-item">

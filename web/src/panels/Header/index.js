@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Logo from "../../components/Logo";
 import SearchBar from './SearchBar';
@@ -6,8 +7,7 @@ import ProfilePicture from './ProfilePicture';
 
 import './style.css';
 import SettingsIcon from './SettingsIcon';
-
-
+import Logout from './Logout';
 
 function Header() {
     return (
@@ -25,6 +25,9 @@ function Header() {
                 <div className="icon-group">
                     <div style={{ padding: '20px' }}>
                         <SettingsIcon/>
+                    </div>
+                    <div style={{ padding: '20px' }}>
+                        <Logout />
                     </div>
                 </div>
                 <div className="profile-picture-container">

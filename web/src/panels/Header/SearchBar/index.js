@@ -50,6 +50,7 @@ function SearchBar() {
                 const jwt = localStorage.getItem('token');
                 if (!jwt) {
                     localStorage.removeItem('token');
+                    localStorage.removeItem('id');
                     setResults([]);
                     navigate('/signin', { replace: true });
                     return;
