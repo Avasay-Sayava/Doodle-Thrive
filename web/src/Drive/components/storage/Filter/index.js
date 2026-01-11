@@ -61,10 +61,10 @@ export default function Filter({ files, setFiles, sortBy: initialSortBy = "name"
     setFoldersMode(nextFoldersMode);
 
     setFiles((prev) => [...prev].sort((a, b) => {
-      // Use the new selections for this sort
+      //Use the new selections for this sort
       const af = isFolder(a), bf = isFolder(b);
 
-      // folders-first
+      //folders first
       if (nextFoldersMode === "folders-first" && af !== bf) return af ? -1 : 1;
 
       // by name
@@ -74,7 +74,7 @@ export default function Filter({ files, setFiles, sortBy: initialSortBy = "name"
           : (b.name ?? "").localeCompare(a.name ?? "");
       }
 
-      // by date
+      //by date
       const da = new Date(a.modified ?? 0).getTime();
       const db = new Date(b.modified ?? 0).getTime();
       return nextSortDir !== "asc" ? da - db : db - da;

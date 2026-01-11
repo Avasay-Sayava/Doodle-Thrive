@@ -6,9 +6,11 @@ import HomeView from "./pages/HomeView";
 import MydriveView from "./pages/MydriveView";
 import SidePanel from "./panels/SidePanel";
 import StarredView from "./pages/StarredView";
+import Header from "../panels/Header";
 import SharedView from "./pages/SharedView";
 import RecentsView from "./pages/RecentsView";
 import BinView from "./pages/BinView";
+import SearchView from "./pages/SearchView";
 
 function Drive() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -18,7 +20,7 @@ function Drive() {
 
   return (
     <div className="app-shell">
-      <header className="app-topbar">Topbar</header>
+            <header className="app-topbar"><Header /></header>
 
       <div className="app-body">
         <aside className="app-sidebar">
@@ -29,6 +31,7 @@ function Drive() {
           <Routes>
             <Route index element={<HomeView refreshKey={refreshKey} onRefresh={onRefresh} />} />
             <Route path="mydrive" element={<MydriveView refreshKey={refreshKey} onRefresh={onRefresh} />} />
+            <Route path="search" element={<SearchView refreshKey={refreshKey} onRefresh={onRefresh} />} />
             <Route path="starred" element={<StarredView refreshKey={refreshKey} onRefresh={onRefresh} />} />
             <Route path="shared" element={<SharedView refreshKey={refreshKey} onRefresh={onRefresh} />} />
             <Route path="recent" element={<RecentsView refreshKey={refreshKey} onRefresh={onRefresh} />} />

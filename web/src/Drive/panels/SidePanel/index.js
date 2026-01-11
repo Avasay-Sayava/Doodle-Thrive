@@ -93,11 +93,12 @@ function IconRecent() {
     <svg viewBox="0 0 24 24" width="18" height="18">
       <path
         fill="currentColor"
-        d="M13 3a9 9 0 1 0 8.95 10h-2.02A7 7 0 1 1 13 5V3Zm-1 5v6l5.25 3.15 1-1.73-4.25-2.52V8h-2Zm8-2V3h-2v5h5V6h-3Z"
+        d="M12 2 A10 10 0 1 1 11.999 2 Z M11 7 V13 L16.25 16.15 L17.25 14.42 L13 11.9 V7 H11"
       />
     </svg>
   );
 }
+
 
 function IconBin() {
   return (

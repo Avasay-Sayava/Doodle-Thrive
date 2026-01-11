@@ -1,0 +1,78 @@
+.drive-header {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  height: 50px;
+  background-color: var(--color-bg-header);
+  border-bottom: 1px solid var(--color-border-main);
+  font-family: 'Roboto', Arial, sans-serif;
+}
+
+/* Left Section */
+.header-left {
+  display: flex;
+  align-items: center;
+  min-width: 240px;
+}
+
+
+.app-name {
+  color: var(--color-text-secondary);
+  font-size: 22px;
+  font-weight: 400;
+}
+
+/* Middle Section - Search Area */
+.header-middle {
+  flex: 1;
+  max-width: 720px;
+  margin: 0 40px;
+}
+
+/* Right Section - Icons */
+.header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 200px;
+}
+
+.icon-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-button:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.logout-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: var(--color-text-secondary);
+}
+
+.logout-icon-circle:hover {
+    background-color: var(--color-bg-hover);
+}

@@ -39,7 +39,7 @@ function MydriveView({ refreshKey, onRefresh}) {
         }
 
         const filesObj = await res.json();
-        const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
+        const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
         const rootFiles = allFiles.filter((f) => f.parent == null && f.owner === localStorage.getItem("id"));
 
         for (let i = 0; i < rootFiles.length; i++) {
@@ -60,9 +60,18 @@ function MydriveView({ refreshKey, onRefresh}) {
       <div className="file-view__header">
         <New hidden={true}/>
         <div className="file-view__header">
-          <h1>
-          <span className="mydrive-title__text">My Drive</span>
-          <span className="mydrive-title__chev" aria-hidden="true">▾</span>
+          <h1 className="view-title">
+            <svg
+              className="view-title__icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill="currentColor"
+                d="M6 2h8l4 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 2H6v16h10V9h-3V4Z"
+              />
+            </svg>
+            <span className="view-title__text">My Drive</span>
           </h1>
         </div>
       </div>
