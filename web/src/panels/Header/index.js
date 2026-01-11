@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 
 import Logo from "../../components/Logo";
 import SearchBar from './SearchBar';
-import NewFile from '../../Drive/utils/newFile';
 import ProfilePicture from './ProfilePicture';
 
 import './style.css';
-import newFile from '../../Drive/utils/newFile';
 import SettingsIcon from './SettingsIcon';
 
 
