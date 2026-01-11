@@ -1,0 +1,56 @@
+.file-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.file-action-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.file-action-btn svg {
+  pointer-events: none;
+  display: block;
+}
+
+.file-action-btn:hover {
+  background-color: rgba(60, 64, 67, 0.12);
+  color: var(--color-text-primary);
+}
+
+.file-action-btn--hover {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.file-row:hover .file-action-btn--hover {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.file-action-btn--starred {
+  color: #fbbc04;
+}
+
+.file-action-btn--starred:hover {
+  color: #fbbc04;
+}
+
+.files-table th.col-actions {
+  width: 12%;
+  text-align: right;
+  padding-right: 16px;
+}

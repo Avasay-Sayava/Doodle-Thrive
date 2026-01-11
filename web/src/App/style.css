@@ -1,0 +1,101 @@
+/* ================================
+   Global Theme – Google Drive inspired (Pink)
+   ================================ */
+
+/* Import Rubik */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
+
+/* CSS Variables (Theme Tokens) */
+:root[theme="pink"] {
+  /* Primary (Pink instead of Google Blue) */
+  --color-primary: #e91e63;
+  --color-primary-alt: #f35489;
+  --color-primary-light: #f8bbd0;
+  --color-primary-hover: #f06292;
+
+  /* Backgrounds */
+  --color-bg-main: #ffffff;
+  --color-bg-main-alt: #ebebeb;
+  --color-bg-main-secondary: #f1dfdf;
+  --color-bg-hover: #fce4ec;
+  --color-bg-selected: #f8bbd0;
+  --color-bg-disabled: #ffe7ee;
+  --color-bg-error: var(--color-bg-disabled);
+
+  /* Text */
+  --color-text-primary: #1f1f1f;
+  --color-text-secondary: #3c4043;
+  --color-text-muted: #5f6368;
+  --color-text-error: #d32f2f;
+
+  /* Borders & dividers */
+  --color-border: #e0e0e0;
+
+  /* Focus */
+  --color-focus: #f48fb1;
+}
+
+/* CSS Variables (Theme Tokens) */
+:root[theme="soviet"] {
+  /* Primary */
+  --color-primary: #ffffff;
+  --color-primary-alt: #bdbdbd;
+  --color-primary-light: #424242;
+  --color-primary-hover: #e0e0e0;
+
+  /* Backgrounds */
+  --color-bg-main: #0a0a0a;
+  --color-bg-main-alt: #1a1a1a;
+  --color-bg-main-secondary: #212121;
+  --color-bg-hover: #333333;
+  --color-bg-selected: #424242;
+  --color-bg-disabled: #333333;
+  --color-bg-error: #212121;
+
+  /* Text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #9e9e9e;
+  --color-text-muted: #616161;
+  --color-text-error: #9e9e9e;
+
+  /* Borders & dividers */
+  --color-border: #424242;
+
+  /* Focus */
+  --color-focus: #ffffff;
+}
+
+/* ================================
+   Global Reset (minimal)
+   ================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg-main);
+  font-family: 'Rubik', system-ui, -apple-system, BlinkMacSystemFont,
+               'Segoe UI', Roboto, Arial, sans-serif;
+  color: var(--color-text-primary);
+  font-size: 14px;
+}
+
+/* ================================
+   App Root
+   ================================ */
+
+#root {
+  height: 100vh;
+  width: 100%;
+}
+
+/* Tables (Drive-style defaults) */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}

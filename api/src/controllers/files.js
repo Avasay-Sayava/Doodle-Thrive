@@ -50,7 +50,7 @@ exports.create = async (req, res) => {
             trimmedData.description = "";
 
         let id;
-        if (content) {
+        if (content !== undefined) {
             id = await Files.createFile(trimmedData);
             if (!id)
                 return res.status(400).json({ error: "Invalid file data" });

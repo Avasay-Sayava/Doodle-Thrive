@@ -1,0 +1,17 @@
+textarea {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    font-family: inherit;
+    resize: none;
+    min-height: 80px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--color-focus);
+    box-shadow: 0 0 0 3px var(--color-bg-hover);
+}
