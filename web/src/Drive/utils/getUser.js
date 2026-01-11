@@ -1,6 +1,6 @@
 import Regex from "./regex";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3300";
+const API_BASE = import.meta.env.API_BASE_URL || "http://localhost:3300";
 
 
 async function getUser(owner) {
