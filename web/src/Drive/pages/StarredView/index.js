@@ -40,8 +40,8 @@ function StarredView({ refreshKey, onRefresh}) {
 
         const filesObj = await res.json();
         
-        const allfiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
-        const starred = allfiles.filter((f) => f.starred === true);
+        const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
+        const starred = allFiles.filter((f) => f.starred === true);
         for (let i = 0; i < starred.length; i++) {
           starred[i].ownerUsername = await getUser(starred[i].owner);
         }
@@ -54,11 +54,26 @@ function StarredView({ refreshKey, onRefresh}) {
 
     run();
   }, [navigate, refreshKey]);
+
   return (
 
     <div className="file-view">
       <div className="file-view__header">
-        <h1>Starred</h1>
+        <div className="file-view__header">
+          <h1 className="view-title">
+            <svg
+              className="view-title__icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill="var(--color--icon-starred)"
+                d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27Z"
+              />
+            </svg>
+            <span className="view-title__text">Starred</span>
+          </h1>
+        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}

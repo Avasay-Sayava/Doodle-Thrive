@@ -1,7 +1,3 @@
-/* =========================
-   New button + dropdown
-   ========================= */
-
 .new {
   position: relative;
   display: flex;
@@ -173,4 +169,22 @@
   line-height: normal;
 
   pointer-events: auto;
+}
+
+.get-text-modal__overlay:not([open]) {
+  display: none;
+}
+
+.get-text-modal__overlay {
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.get-text-modal__overlay::backdrop {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.get-text-modal__overlay:not([open]) {
+  display: none;
 }

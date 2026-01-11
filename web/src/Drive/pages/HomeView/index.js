@@ -38,7 +38,7 @@ function HomeView({ refreshKey, onRefresh}) {
         }
 
         const filesObj = await res.json();
-        const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
+        const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
         const rootFiles = allFiles.filter((f) => f.parent == null);
 
         for (let i = 0; i < rootFiles.length; i++) {
@@ -58,16 +58,28 @@ function HomeView({ refreshKey, onRefresh}) {
     <div className="file-view">
       <div className="file-view__header">
         <div className="file-view__header">
-          <h1>
-          <span className="mydrive-title__text">Home</span>
-          </h1>
+        <h1 className="view-title">
+          <svg
+            className="view-title__icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"
+            />
+          </svg>
+
+          <span className="view-title__text">Home</span>
+        </h1>
         </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
       <FileView allFiles={files} onRefresh={onRefresh} />
     </div>
-  );
+  );        
+
 }
 
 export default HomeView;

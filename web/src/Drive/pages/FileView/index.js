@@ -52,5 +52,4 @@ function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }
   );
 }
 
-
 export default FileView;

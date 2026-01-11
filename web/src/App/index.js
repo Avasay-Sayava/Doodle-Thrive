@@ -11,7 +11,6 @@ import SearchView from "../Drive/pages/SearchView";
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 function App() {
-
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme") || "pink");
 
   useEffect(() => {

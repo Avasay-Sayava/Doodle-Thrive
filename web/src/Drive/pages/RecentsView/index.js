@@ -38,7 +38,7 @@ function RecentsView({ refreshKey, onRefresh}) {
         }
 
         const filesObj = await res.json();
-        const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
+        const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
         const rootFiles = allFiles.filter((f) => f.parent == null);
 
         for (let i = 0; i < rootFiles.length; i++) {
@@ -58,8 +58,18 @@ function RecentsView({ refreshKey, onRefresh}) {
     <div className="file-view">
       <div className="file-view__header">
         <div className="file-view__header">
-          <h1>
-          <span className="mydrive-title__text">Recents</span>
+          <h1 className="view-title">
+            <svg
+              className="view-title__icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill="currentColor"
+                d="M12 2 A10 10 0 1 1 11.999 2 Z M11 7 V13 L16.25 16.15 L17.25 14.42 L13 11.9 V7 H11"/>
+            </svg>
+
+            <span className="view-title__text">Recents</span>
           </h1>
         </div>
       </div>
