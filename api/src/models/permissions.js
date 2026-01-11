@@ -10,20 +10,18 @@ const filePermissions = {};
  * @return {string} The generated Permission ID.
  */
 exports.add = (fileId, options) => {
-    const pId = uuid();
+  const pId = uuid();
 
-    if (permissions[pId])
-        throw new Error("Unexpected ID collision, try again");
+  if (permissions[pId]) throw new Error("Unexpected ID collision, try again");
 
-    if (!filePermissions[fileId])
-        filePermissions[fileId] = [];
+  if (!filePermissions[fileId]) filePermissions[fileId] = [];
 
-    filePermissions[fileId].push(pId);
+  filePermissions[fileId].push(pId);
 
-    permissions[pId] = options;
+  permissions[pId] = options;
 
-    return pId;
-}
+  return pId;
+};
 
 /**
  * Retrieves permissions for a specific file.
@@ -32,21 +30,20 @@ exports.add = (fileId, options) => {
  * @return {Object|Object[]|null} If pId is provided, returns that specific permission object; otherwise returns a map of all permissions for the file.
  */
 exports.get = (fileId, pId = null) => {
-    if (!filePermissions[fileId])
-        return {};
+  if (!filePermissions[fileId]) return {};
 
-    if (pId) {
-        if (!permissions[pId] || !filePermissions[fileId].includes(pId))
-            return null;
-        return permissions[pId];
-    } else {
-        const result = {};
-        for (const pId of filePermissions[fileId]) {
-            result[pId] = permissions[pId];
-        }
-        return result;
+  if (pId) {
+    if (!permissions[pId] || !filePermissions[fileId].includes(pId))
+      return null;
+    return permissions[pId];
+  } else {
+    const result = {};
+    for (const pId of filePermissions[fileId]) {
+      result[pId] = permissions[pId];
     }
-}
+    return result;
+  }
+};
 
 /**
  * Updates an existing permission entry.
@@ -56,12 +53,11 @@ exports.get = (fileId, pId = null) => {
  * @return {boolean} True if the permission was found and updated, otherwise false.
  */
 exports.update = (fileId, pId, options) => {
-    if (!filePermissions[fileId]?.includes(pId))
-        return false;
+  if (!filePermissions[fileId]?.includes(pId)) return false;
 
-    permissions[pId] = options;
-    return true;
-}
+  permissions[pId] = options;
+  return true;
+};
 
 /**
  * Deletes a permission entry from a file.
@@ -70,23 +66,28 @@ exports.update = (fileId, pId, options) => {
  * @return {boolean} True if the permission was found and deleted, otherwise false.
  */
 exports.delete = (fileId, pId) => {
-    if (!filePermissions[fileId]?.includes(pId))
-        return false;
+  if (!filePermissions[fileId]?.includes(pId)) return false;
 
-    delete permissions[pId];
-    filePermissions[fileId] = filePermissions[fileId].filter(id => id !== pId);
-    return true;
-}
+  delete permissions[pId];
+  filePermissions[fileId] = filePermissions[fileId].filter((id) => id !== pId);
+  return true;
+};
 
 exports.check = (userId, fileId, type, mode) => {
-    const perms = this.get(fileId);
+  if (fileId === null) return true;
 
-    for (const pId in perms) {
-        const options = perms[pId];
-        if (options[userId] && options[userId][type] && options[userId][type][mode]) {
-            return true;
-        }
+  const perms = this.get(fileId);
+
+  for (const pId in perms) {
+    const options = perms[pId];
+    if (
+      options[userId] &&
+      options[userId][type] &&
+      options[userId][type][mode]
+    ) {
+      return true;
     }
+  }
 
-    return false;
-}
+  return false;
+};

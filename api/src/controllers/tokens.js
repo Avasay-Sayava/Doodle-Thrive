@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const Regex = require("../models/regex");
 const Users = require("../models/users");
 
+const exists = (x) => x !== undefined && x !== null;
+
 /**
  * Authenticates a user and retrieves their User ID.
  * effectively acts as a "login" mechanism by verifying credentials.
@@ -11,26 +13,27 @@ const Users = require("../models/users");
  * @return {Promise<void>}
  */
 exports.find = (req, res) => {
-    try {
-        const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-        if (!username || !password)
-            return res.status(400).json({ error: "Username and password are required" });
+    if (!exists(username) || !exists(password))
+      return res
+        .status(400)
+        .json({ error: "Username and password are required" });
 
-        if (!Regex.username.test(username))
-            return res.status(400).json({ error: "Invalid username format" });
+    if (!Regex.username.test(username))
+      return res.status(400).json({ error: "Invalid username format" });
 
-        if (!Regex.password.test(password))
-            return res.status(400).json({ error: "Invalid password format" });
+    if (!Regex.password.test(password))
+      return res.status(400).json({ error: "Invalid password format" });
 
-        const id = Users.find(username, password);
-        if (!id)
-            return res.status(404).json({ error: "User not found" });
+    const id = Users.find(username, password);
+    if (!exists(id)) return res.status(404).json({ error: "User not found" });
 
-        const token = jwt.sign(id, process.env.JWT_SECRET);
+    const token = jwt.sign(id, process.env.JWT_SECRET);
 
-        return res.status(200).json({ token: token, id: id });
-    } catch (err) {
-        return res.status(500).json({ error: err.message });
-    }
-}
+    return res.status(200).json({ token: token, id: id });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};

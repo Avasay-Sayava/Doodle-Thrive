@@ -5,7 +5,7 @@ const Client = require("./tcp/client");
  * Provides access to the TCP Client class.
  */
 const TCP = {
-    Client: Client
+  Client: Client,
 };
 
 module.exports = TCP;
