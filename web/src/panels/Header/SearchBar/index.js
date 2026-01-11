@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, use } from 'react';
 
 import './style.css';
 
 import DropDown from './DropDown';
 import { replace, useNavigate } from 'react-router-dom';
+import SearchView from '../../../Drive/pages/SearchView';
 
 // Assume auth is already handled (e.g., via proxy or global fetch wrapper)
 const API_BASE = 'http://localhost:3300';
@@ -15,6 +16,16 @@ function SearchBar() {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const containerRef = useRef(null);
+    const [enter, setEnter] = useState(false);
+
+    useEffect(() => {
+        if (enter) {
+            setOpen(false);
+            navigate(`/drive/search?query=${query}`, { replace: true });
+            setQuery('');
+            setEnter(false);
+        }
+    }, [enter]);
 
     useEffect(() => {
         const onClickOutside = (e) => {
@@ -75,6 +86,11 @@ function SearchBar() {
                 onChange={(e) => {
                     setQuery(e.target.value);
                     setOpen(true);
+                }}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        setEnter(true);
+                    }
                 }}
                 onFocus={() => setOpen(true)}
                 type="text"

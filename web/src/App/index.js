@@ -7,6 +7,7 @@ import "./style.css";
 import Sign from "../Sign";
 import Drive from "../Drive";
 import SettingsPage from "../panels/Header/pages/SettingsPage";
+import SearchView from "../Drive/pages/SearchView";
 
 function App() {
   process.env.REACT_APP_API_BASE_URL = "http://localhost:3300";
