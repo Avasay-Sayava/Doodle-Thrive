@@ -16,7 +16,7 @@ function DropDown({ results = [], loading}) {
     return (
         <div className="search-dropdown">
             {results.map((item) => (
-                <DropDownItem key={item.id} item={item} type={item.type} />
+                <DropDownItem item={item} type={item.type} />
             ))}
         </div>
     );

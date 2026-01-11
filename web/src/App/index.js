@@ -8,9 +8,9 @@ import Sign from "../Sign";
 import Drive from "../Drive";
 import SettingsPage from "../panels/Header/pages/SettingsPage";
 import SearchView from "../Drive/pages/SearchView";
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 function App() {
-  process.env.REACT_APP_API_BASE_URL = "http://localhost:3300";
 
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme") || "pink");
 

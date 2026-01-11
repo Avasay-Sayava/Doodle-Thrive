@@ -7,7 +7,7 @@ import { replace, useNavigate } from 'react-router-dom';
 import SearchView from '../../../Drive/pages/SearchView';
 
 // Assume auth is already handled (e.g., via proxy or global fetch wrapper)
-const API_BASE = 'http://localhost:3300';
+const API_BASE = process.env.API_BASE_URL || 'http://localhost:3300';
 
 function SearchBar() {
     const navigate = useNavigate();
