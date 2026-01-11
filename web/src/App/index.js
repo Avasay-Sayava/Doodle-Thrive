@@ -8,9 +8,7 @@ import Sign from "../Sign";
 import Drive from "../Drive";
 
 function App() {
-  const [currentTheme, setCurrentTheme] = useState(
-    localStorage.getItem("theme") || "pink"
-  );
+  const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme") || "pink");
 
   useEffect(() => {
     document.querySelector(":root").setAttribute("theme", currentTheme);

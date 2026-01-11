@@ -98,8 +98,6 @@ function FileSelect({ file, onRefresh }) {
         )}
       </GetText>
 
-
-
       {isStarred && (
         <button
           className="file-action-btn file-action-btn--starred"

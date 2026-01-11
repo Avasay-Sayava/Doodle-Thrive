@@ -5,7 +5,7 @@ import Regex from "../../../utils/regex";
 import Input from "../../components/Input";
 import TextArea from "../../components/TextArea";
 
-const BASE_URL = process.env.API_BASE_URL || "http://localhost:3300";
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 function SignUp({ changeMode, autofill = {} }) {
   const navigate = useNavigate();
@@ -100,7 +100,7 @@ function SignUp({ changeMode, autofill = {} }) {
         }
       };
 
-      const response = await fetch(`${BASE_URL}/api/users`, {
+      const response = await fetch(`${API_BASE}/api/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

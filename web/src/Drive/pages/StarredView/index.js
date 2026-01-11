@@ -54,6 +54,7 @@ function StarredView({ refreshKey, onRefresh}) {
 
     run();
   }, [navigate, refreshKey]);
+
   return (
 
     <div className="file-view">
