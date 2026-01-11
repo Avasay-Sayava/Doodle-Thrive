@@ -17,7 +17,7 @@ function Input({
 
     return (
         <label>
-            <input
+            <input className="Input"
                 style={{ borderColor: error ? "red" : undefined }}
                 {...inputProps}
             />

@@ -1,0 +1,30 @@
+.profile-initial {
+  width: 32px;
+  height: 32px;
+  background-color: #7b1fa2;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.profile-initial:hover {
+    outline: 7px solid var(--color-bg-hover);
+}
+
+.profile-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-left: 8px;
+  cursor: pointer;
+  object-fit: cover;
+}
+
+.profile-image:hover {
+    outline: 7px solid var(--color-bg-hover);
+}

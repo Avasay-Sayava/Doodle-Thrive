@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const Regex = require("../models/regex");
 const Files = require("../models/files");
+const Users = require("../models/users");
+const Permissions = require("../models/permissions");
 
 /**
  * Searches for files containing the specified query string.
