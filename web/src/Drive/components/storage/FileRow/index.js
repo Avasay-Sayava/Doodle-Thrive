@@ -1,9 +1,5 @@
 import "./style.css";
 import FileSelect from "../FileSelect";
-import getFile from "../../../utils/getFile";
-import Regex from "../../../utils/regex";
-import { data } from "react-router-dom";
-const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 function getSize({fileType, content}) {
   if (fileType === "folder") return "-";
@@ -43,8 +39,6 @@ function getDate(timestamp) {
 
   //otherwise, return the date in DD/MM/YYYY format
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-
-  return date.toLocaleDateString();
 }
 
 

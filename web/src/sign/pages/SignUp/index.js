@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Regex from "../../../Drive/utils/regex";
+import Regex from "../../../utils/regex";
 
 import Sign from "../../index";
 import Card from "../../components/Card";
 import Input from "../../components/Input";
 import TextArea from "../../components/TextArea";
+
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 function SignUp() {
     const navigate = useNavigate();
@@ -88,7 +90,7 @@ function SignUp() {
                 }
             };
 
-            const response = await fetch("http://localhost:3300/api/users", {
+            const response = await fetch(`${API_BASE}/api/users`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

@@ -1,10 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Regex from "../../../Drive/utils/regex";
+import Regex from "../../../utils/regex";
 
 import Sign from "../../index";
 import Card from "../../components/Card";
 import Input from "../../components/Input";
+
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 function SignIn() {
     const navigate = useNavigate();
@@ -53,7 +55,7 @@ function SignIn() {
         setIsLoading(true);
 
         try {
-            const response = await fetch("http://localhost:3300/api/tokens", {
+            const response = await fetch(`${API_BASE}/api/tokens`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),

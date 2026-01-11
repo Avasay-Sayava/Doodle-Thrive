@@ -29,7 +29,7 @@ export default function Filter({ files, setFiles, sortBy: initialSortBy = "name"
     };
   }, [open]);
 
-  const comparator = useMemo(() => {
+  useMemo(() => {
     const folderCmp = (a, b) => {
       if (foldersMode !== "folders-first") return 0;
       const af = isFolder(a), bf = isFolder(b);
