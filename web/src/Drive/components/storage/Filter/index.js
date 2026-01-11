@@ -5,12 +5,12 @@ function isFolder(x) {
   return x?.type === "folder";
 }
 
-export default function Filter({ files, setFiles }) {
+export default function Filter({ files, setFiles, sortBy: initialSortBy = "name", sortDir: initialSortDir = "asc" }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
 
-  const [sortBy, setSortBy] = useState("name");
-  const [sortDir, setSortDir] = useState("asc");
+  const [sortBy, setSortBy] = useState(initialSortBy);
+  const [sortDir, setSortDir] = useState(initialSortDir);
   const [foldersMode, setFoldersMode] = useState("mixed");
 
   useEffect(() => {
@@ -43,8 +43,8 @@ export default function Filter({ files, setFiles }) {
         : (b.name ?? "").localeCompare(a.name ?? "");
 
     const dateCmp = (a, b) => {
-      const da = new Date(a.lastModified ?? 0).getTime();
-      const db = new Date(b.lastModified ?? 0).getTime();
+      const da = new Date(a.modified ?? 0).getTime();
+      const db = new Date(b.modified ?? 0).getTime();
       return sortDir === "asc" ? da - db : db - da;
     };
 
@@ -75,9 +75,9 @@ export default function Filter({ files, setFiles }) {
       }
 
       // by date
-      const da = new Date(a.lastModified ?? 0).getTime();
-      const db = new Date(b.lastModified ?? 0).getTime();
-      return nextSortDir === "asc" ? da - db : db - da;
+      const da = new Date(a.modified ?? 0).getTime();
+      const db = new Date(b.modified ?? 0).getTime();
+      return nextSortDir !== "asc" ? da - db : db - da;
     }));
   };
 
