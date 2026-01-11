@@ -14,8 +14,6 @@ exports.create = ({ username, password, info = {} }) => {
 
   if (users[id]) throw new Error("Unexpected ID collision, try again");
 
-  if (exports.find(username, password)) return null;
-
   users[id] = {
     id: id,
     username: username,
@@ -31,7 +29,7 @@ exports.create = ({ username, password, info = {} }) => {
  * Finds a user's ID matching the provided credentials.
  * @param {string} username The username to search for.
  * @param {string} password The password to verify against.
- * @return {string|null} The User ID if credentials match, otherwise null.
+ * @return {string|Array<Object>|null} The User ID if credentials match, otherwise null.
  */
 exports.find = (username, password = undefined) => {
   if (password === undefined) {
