@@ -9,12 +9,25 @@ export default function GetText({
   onClose = () => {},
   children,
 }) {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const dialogRef = useRef(null);
   const inputRef = useRef(null);
+  const [value, setValue] = useState("");
+
+  const open = () => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (!dialog.open) dialog.showModal();
+
+    setTimeout(() => inputRef.current?.focus(), 0);
+  }; 
 
   const close = () => {
-    setOpen(false);
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (dialog.open) dialog.close();
+
     setValue("");
     onClose();
   };
@@ -27,63 +40,61 @@ export default function GetText({
   };
 
   useEffect(() => {
-    if (open) {
-      setTimeout(() => inputRef.current?.focus(), 0);
-    }
-  }, [open]);
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-  const onKeyDown = (e) => {
-    if (e.key === "Escape") close();
-    if (e.key === "Enter") submit();
-  };
+    const handleClose = () => {
+      setValue("");
+      onClose();
+    };
+
+    dialog.addEventListener("close", handleClose);
+    return () => dialog.removeEventListener("close", handleClose);
+  }, [onClose]);
 
   return (
     <>
-      {typeof children === "function" && children(() => setOpen(true))}
+      {typeof children === "function" && children(open)}
 
-      {open && (
-        <div
-          className="get-text-modal__overlay"
-          role="presentation"
-          onMouseDown={close}
-        >
-          <div
-            className="get-text-modal"
-            role="dialog"
-            aria-modal="true"
-            onMouseDown={(e) => e.stopPropagation()}
-            onKeyDown={onKeyDown}
-          >
-            <h2 className="get-text-modal__title">{title}</h2>
+      <dialog
+        ref={dialogRef}
+        className="get-text-modal__overlay"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) close();
+        }}
+      >
+        <div className="get-text-modal" role="dialog" aria-modal="true">
+          <h2 className="get-text-modal__title">{title}</h2>
+          <input
+            ref={inputRef}
+            className="get-text-modal__input"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder={placeholder}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submit();
+            }}
+          />
 
-            <input
-              ref={inputRef}
-              className="get-text-modal__input"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder={placeholder}
-            />
+          <div className="get-text-modal__actions">
+            <button
+              type="button"
+              className="get-text-modal__btn get-text-modal__btn--ghost"
+              onClick={close}
+            >
+              Cancel
+            </button>
 
-            <div className="get-text-modal__actions">
-              <button
-                type="button"
-                className="get-text-modal__btn get-text-modal__btn--ghost"
-                onClick={close}
-              >
-                Cancel
-              </button>
-
-              <button
-                type="button"
-                className="get-text-modal__btn get-text-modal__btn--primary"
-                onClick={submit}
-              >
-                {submitLabel}
-              </button>
-            </div>
+            <button
+              type="button"
+              className="get-text-modal__btn get-text-modal__btn--primary"
+              onClick={submit}
+            >
+              {submitLabel}
+            </button>
           </div>
         </div>
-      )}
+      </dialog>
     </>
   );
 }

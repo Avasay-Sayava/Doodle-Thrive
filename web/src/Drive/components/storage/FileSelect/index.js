@@ -39,7 +39,7 @@ function FileSelect({ file, onRefresh }) {
       
       <GetText
         title="Share"
-        placeholder="The username to share the file to"
+        placeholder="The username to share the file with"
         submitLabel="Share"
         onSubmit={(newName) => shareFile(id, newName).then(() => onRefresh?.())}
       >

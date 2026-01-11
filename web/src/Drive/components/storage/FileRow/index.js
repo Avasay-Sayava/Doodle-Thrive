@@ -1,7 +1,8 @@
 import "./style.css";
 import FileSelect from "../FileSelect";
+import renameFile from "../../../utils/renameFile";
 
-function getSize({fileType, content}) {
+function getSize({ fileType, content }) {
   if (fileType === "folder") return "-";
   let bytes = content?.length || 0;
   if (bytes < 1024) return bytes + " B";
@@ -15,7 +16,7 @@ function getSize({fileType, content}) {
 
 function getDate(timestamp) {
   const date = new Date(timestamp);
-  if(isNaN(date.getTime())) return "Unknown";
+  if (isNaN(date.getTime())) return "Unknown";
   //if the date is today, return (1 hour/24 minutes/5 seconds) ago
   const now = new Date();
   const diff = Math.abs(now - date);
@@ -32,8 +33,8 @@ function getDate(timestamp) {
   const yesterday = new Date();
   yesterday.setDate(now.getDate() - 1);
   if (date.getDate() === yesterday.getDate() &&
-      date.getMonth() === yesterday.getMonth() &&
-      date.getFullYear() === yesterday.getFullYear()) {
+    date.getMonth() === yesterday.getMonth() &&
+    date.getFullYear() === yesterday.getFullYear()) {
     return "Yesterday";
   }
 
@@ -41,15 +42,30 @@ function getDate(timestamp) {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
 
-function FileRow({file: {name, modified, content, ownerUsername, fileType, id, starred}, onRefresh}) {
+
+
+function FileRow({ file: { name, modified, content, ownerUsername, fileType, id, starred }, onRefresh }) {
+  const file = { name, modified, content, ownerUsername, fileType, id, starred };
   return (
-  <tr className="file-row">
-    <td className="col-name">{name}</td>
-    <td className="col-owner">{ownerUsername}</td>
-    <td className="col-modified">{getDate(modified)}</td>
-    <td className="col-size">{getSize({fileType: fileType, content})}</td>
-    <td className="col-actions"><FileSelect file={{id, starred}} onRefresh={onRefresh} /></td>
-  </tr>
+    <FileActions
+      file={file}
+      onRename={() => renameFile?.(file)}
+      onDownload={() => console.log("download", id)}
+      onShare={() => console.log("share", id)}
+      onOrganise={() => console.log("organise", id)}
+      onInfo={() => console.log("info", id)}
+      onMoveToBin={() => console.log("bin", id)}
+    >
+      <tr className="file-row">
+        <td className="col-name">{name}</td>
+        <td className="col-owner">{ownerUsername}</td>
+        <td className="col-modified">{getDate(modified)}</td>
+        <td className="col-size">{getSize({ fileType, content })}</td>
+        <td className="col-actions">
+          <FileSelect file={{ id, starred }} onRefresh={onRefresh} />
+        </td>
+      </tr>
+    </FileActions>
   );
 }
 
