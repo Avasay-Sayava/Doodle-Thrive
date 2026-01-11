@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './style.css';
 
 import DropDown from './DropDown';
-import { useNavigate } from 'react-router-dom';
+import { replace, useNavigate } from 'react-router-dom';
 
 // Assume auth is already handled (e.g., via proxy or global fetch wrapper)
 const API_BASE = 'http://localhost:3300';
@@ -40,7 +40,7 @@ function SearchBar() {
                 if (!jwt) {
                     localStorage.removeItem('token');
                     setResults([]);
-                    navigate('/signin');
+                    navigate('/signin', { replace: true });
                     return;
                 }
 
@@ -60,7 +60,7 @@ function SearchBar() {
             } finally {
                 setLoading(false);
             }
-        }, 250); // debounce a bit
+        }, 0); // debounce a bit
 
         return () => {
             controller.abort();

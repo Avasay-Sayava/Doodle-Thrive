@@ -67,6 +67,7 @@ function SignIn({ changeMode, autofill = {} }) {
 
       const data = await response.json();
       localStorage.setItem("token", data.token);
+      localStorage.setItem("id", data.id);
 
       navigate("/drive/home", { replace: true });
     } catch (error) {

@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import "./style.css";
 import Sign from "../Sign";
 import Drive from "../Drive";
+import SettingsPage from "../panels/Header/pages/SettingsPage";
 
 function App() {
-  process.env.REACT_APP_API_BASE_URL = "http://localhost:5000";
+  process.env.REACT_APP_API_BASE_URL = "http://localhost:3300";
 
   const [currentTheme, setCurrentTheme] = useState(localStorage.getItem("theme") || "pink");
 
@@ -15,14 +16,9 @@ function App() {
     localStorage.setItem("theme", currentTheme);
   }, [currentTheme]);
 
-  const toggleTheme = () => {
-    setCurrentTheme((prev) => (prev === "soviet" ? "pink" : "soviet"));
-  };
-
   return (
     <>
-      <button id="toggle-theme" hidden onClick={toggleTheme} />
-      <BrowserRouter>
+       <BrowserRouter>
         <Routes>
           <Route
             path="/signin"
@@ -40,6 +36,12 @@ function App() {
             path="/drive/*"
             element={
               <Drive />
+            }
+            />
+          <Route
+            path="/settings"
+            element={
+              <SettingsPage currentTheme={currentTheme} setCurrentTheme={setCurrentTheme} onBack={() => window.history.back()}/>
             }
           />
         </Routes>

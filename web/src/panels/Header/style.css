@@ -5,8 +5,8 @@
   justify-content: space-between;
   padding: 8px 16px;
   height: 50px;
-  background-color: #fff;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: var(--color-bg-header);
+  border-bottom: 1px solid var(--color-border-main);
   font-family: 'Roboto', Arial, sans-serif;
 }
 
@@ -19,7 +19,7 @@
 
 
 .app-name {
-  color: #5f6368;
+  color: var(--color-text-secondary);
   font-size: 22px;
   font-weight: 400;
 }
@@ -51,26 +51,13 @@
   border-radius: 50%;
   padding: 10px;
   cursor: pointer;
-  color: #5f6368;
+  color: var(--color-text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .icon-button:hover {
-  background-color: rgba(95, 99, 104, 0.1);
+  background-color: var(--color-bg-hover);
 }
 
-.profile-circle {
-  width: 32px;
-  height: 32px;
-  background-color: #7b1fa2; /* Random profile color */
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  margin-left: 8px;
-  cursor: pointer;
-}
