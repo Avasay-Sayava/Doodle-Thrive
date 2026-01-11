@@ -6,7 +6,7 @@ import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 import New from "../../components/storage/New";
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3300";
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 function HomeView({ refreshKey, onRefresh}) {
   const [files, setFiles] = useState([]);

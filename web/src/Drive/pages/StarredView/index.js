@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3300";
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 
 function StarredView({ refreshKey, onRefresh}) {

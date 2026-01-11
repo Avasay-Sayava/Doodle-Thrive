@@ -3,7 +3,7 @@ import FileSelect from "../FileSelect";
 import getFile from "../../../utils/getFile";
 import Regex from "../../../utils/regex";
 import { data } from "react-router-dom";
-const API_BASE = process.env.REACT_APP_API_BASE_URL || "http://localhost:3300";
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 function getSize({fileType, content}) {
   if (fileType === "folder") return "-";
