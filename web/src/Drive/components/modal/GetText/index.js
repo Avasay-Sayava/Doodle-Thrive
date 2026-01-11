@@ -1,5 +1,6 @@
 import "./style.css";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 export default function GetText({
   title = "Enter text",
@@ -52,49 +53,54 @@ export default function GetText({
     return () => dialog.removeEventListener("close", handleClose);
   }, [onClose]);
 
+
   return (
     <>
       {typeof children === "function" && children(open)}
 
-      <dialog
-        ref={dialogRef}
-        className="get-text-modal__overlay"
-        onClick={(e) => {
-          if (e.target === e.currentTarget) close();
-        }}
-      >
-        <div className="get-text-modal" role="dialog" aria-modal="true">
-          <h2 className="get-text-modal__title">{title}</h2>
-          <input
-            ref={inputRef}
-            className="get-text-modal__input"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder={placeholder}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") submit();
-            }}
-          />
+      {createPortal(
+        <dialog
+          ref={dialogRef}
+          className="get-text-modal__overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) close();
+          }}
+        >
+          <div className="get-text-modal" role="dialog" aria-modal="true">
+            <h2 className="get-text-modal__title">{title}</h2>
 
-          <div className="get-text-modal__actions">
-            <button
-              type="button"
-              className="get-text-modal__btn get-text-modal__btn--ghost"
-              onClick={close}
-            >
-              Cancel
-            </button>
+            <input
+              ref={inputRef}
+              className="get-text-modal__input"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              placeholder={placeholder}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") submit();
+              }}
+            />
 
-            <button
-              type="button"
-              className="get-text-modal__btn get-text-modal__btn--primary"
-              onClick={submit}
-            >
-              {submitLabel}
-            </button>
+            <div className="get-text-modal__actions">
+              <button
+                type="button"
+                className="get-text-modal__btn get-text-modal__btn--ghost"
+                onClick={close}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="get-text-modal__btn get-text-modal__btn--primary"
+                onClick={submit}
+              >
+                {submitLabel}
+              </button>
+            </div>
           </div>
-        </div>
-      </dialog>
+        </dialog>,
+        document.body
+      )}
     </>
   );
 }

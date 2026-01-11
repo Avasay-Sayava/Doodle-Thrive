@@ -1,6 +1,8 @@
 import "./style.css";
 import FileSelect from "../FileSelect";
 import renameFile from "../../../utils/renameFile";
+import FileActions from "../FileActions";
+
 
 function getSize({ fileType, content }) {
   if (fileType === "folder") return "-";
@@ -49,12 +51,8 @@ function FileRow({ file: { name, modified, content, ownerUsername, fileType, id,
   return (
     <FileActions
       file={file}
-      onRename={() => renameFile?.(file)}
-      onDownload={() => console.log("download", id)}
-      onShare={() => console.log("share", id)}
-      onOrganise={() => console.log("organise", id)}
-      onInfo={() => console.log("info", id)}
-      onMoveToBin={() => console.log("bin", id)}
+      onRefresh={onRefresh}
+      onLeftClick={()=>{}}
     >
       <tr className="file-row">
         <td className="col-name">{name}</td>

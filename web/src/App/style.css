@@ -28,6 +28,11 @@
 
   /* Focus */
   --color-focus: #f48fb1;
+
+  /* Icons */
+  --color-icon-primary: #1f1f1f;
+  --color-icon-secondary: #5f6368;
+  --color--icon-starred: #fbc02d;
 }
 
 /* CSS Variables (dark theme) */
@@ -58,6 +63,11 @@
 
   /* Focus */
   --color-focus: #ffffff;
+
+  /* Icons */
+  --color-icon-primary: #1f1f1f;
+  --color-icon-secondary: #5f6368;
+  --color--icon-starred: #c8c8c8;
 }
 
 * {

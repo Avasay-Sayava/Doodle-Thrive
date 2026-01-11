@@ -176,4 +176,25 @@ tbody tr:hover {
   background: transparent;
 }
 
+.view-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.view-title__icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  position: relative;
+  top: -1px;
+}
+
+.view-title__text {
+  line-height: 1;
+}

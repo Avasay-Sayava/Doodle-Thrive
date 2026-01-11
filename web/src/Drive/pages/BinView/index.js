@@ -58,8 +58,18 @@ function BinView({ refreshKey, onRefresh}) {
     <div className="file-view">
       <div className="file-view__header">
         <div className="file-view__header">
-          <h1>
-          <span className="mydrive-title__text">Bin</span>
+          <h1 className="view-title">
+            <svg
+              className="view-title__icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill="currentColor"
+                d="M6 7h12l-1 14H7L6 7Zm3-4h6l1 2h4v2H4V5h4l1-2Z"
+              />
+            </svg>
+            <span className="view-title__text">Bin</span>
           </h1>
         </div>
       </div>
