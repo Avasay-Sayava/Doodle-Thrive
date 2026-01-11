@@ -3,9 +3,9 @@ import Regex from "../utils/regex";
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3300";
 
 
-async function getOwner(owner) {
-  if(!Regex.id.test(owner)) return owner;
-  const res = await fetch(`${API_BASE}/api/users/${owner}`, {
+async function getUser(user) {
+  if(!Regex.id.test(user)) return user;
+  const res = await fetch(`${API_BASE}/api/users/${user}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -15,8 +15,8 @@ async function getOwner(owner) {
     const txt = await res.text();
     throw new Error(`Get user failed (HTTP ${res.status}): ${txt}`);
   }
-  const user = await res.json();
+  user = await res.json();
   return user.username || "Unknown";
 }
 
-export default getOwner;
+export default getUser;
