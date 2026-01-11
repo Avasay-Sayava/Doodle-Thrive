@@ -29,7 +29,7 @@ exports.find = (req, res) => {
 
         const token = jwt.sign(id, process.env.JWT_SECRET);
 
-        return res.status(200).json({ token: token });
+        return res.status(200).json({ token: token, id: id });
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }

@@ -14,11 +14,11 @@ function isFolder(file) {
  * @param {{ allFiles: Array }} param0 
  * @returns {JSX.Element} The FileView component.
  */
-function FileView({ allFiles = [] }) {
-  const [files, setFiles] = useState([...mockItems, ...allFiles]);
+function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }) {
+  const [files, setFiles] = useState([...allFiles]);
 
   useEffect(() => {
-    setFiles([...mockItems, ...allFiles]);
+    setFiles([...mockFiles, ...allFiles]);
   }, [allFiles]);
 
   return (
@@ -31,84 +31,32 @@ function FileView({ allFiles = [] }) {
               <th>Last modified</th>
               <th>File size</th>
               <th className="col-actions">
-                <Filter files={files} setFiles={setFiles} />
+                <Filter files={files} setFiles={setFiles} sortBy={sortBy} sortDir={sortDir} />
               </th>
             </tr>
           </thead>
 
           <tbody>
-            {files.map((file) => (
-              <FileRow key={file.id ?? file.name} file={file} />
-            ))}
+            {files.length === 0 ? (
+              <tr className="no-files-row">
+                <td className="no-files" colSpan="5">
+                  No files to display
+                </td>
+              </tr>
+            ) : (
+              files.map((file) => (
+                <FileRow
+                  key={file.id}
+                  file={file}
+                  onRefresh={onRefresh}
+                />
+              ))
+            )}
           </tbody>
         </table>
       </div>
   );
 }
-
-const mockItems = [
-  {
-    id: "__folder__1",
-    name: "Docs",
-    owner: "me",
-    lastModified: "2025-06-14",
-    created: "2025-05-10",
-    size: "-",
-    parent: null,
-    children: [],
-    type: "folder",
-    trashed: false,
-  },
-  {
-    id: "__folder__2",
-    name: "School",
-    owner: "me",
-    lastModified: "2025-05-23",
-    created: "2025-05-01",
-    size: "-",
-    parent: null,
-    children: [],
-    type: "folder",
-    trashed: false,
-  },
-  {
-    id: "__folder__3",
-    name: "STARTERIM",
-    owner: "me",
-    lastModified: "2025-09-01",
-    created: "2025-08-15",
-    size: "-",
-    parent: null,
-    children: [],
-    type: "folder",
-    trashed: false,
-  },
-
-  {
-    id: "__file__1",
-    name: "Document1.txt",
-    owner: "me",
-    lastModified: "2025-06-10",
-    created: "2025-05-20",
-    size: "15 KB",
-    parent: null,
-    children: [],
-    type: "file",
-    trashed: false,
-  },
-  {
-    id: "__file__2",
-    name: "Photo.png",
-    owner: "me",
-    lastModified: "2025-06-12",
-    created: "2025-06-01",
-    size: "2 MB",
-    parent: null,
-    children: [],
-    type: "file",
-    trashed: false,
-  },
-];
 
 
 export default FileView;
