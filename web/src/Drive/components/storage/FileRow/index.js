@@ -41,8 +41,6 @@ function getDate(timestamp) {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
 
-
-
 function FileRow({file: {name, modified, content, ownerUsername, fileType, id, starred}, onRefresh}) {
   return (
   <tr className="file-row">
