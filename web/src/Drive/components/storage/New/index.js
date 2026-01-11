@@ -6,31 +6,59 @@ import GetText from "../../modal/GetText";
 
 export default function New({ onCreated, hidden = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [kind, setKind] = useState(null);
   const rootRef = useRef(null);
+
+  const openFolderRef = useRef(null);
+  const openFileRef = useRef(null);
 
   useEffect(() => {
     const onDocMouseDown = (e) => {
       if (!rootRef.current) return;
-      if (!rootRef.current.contains(e.target)) setMenuOpen(false);
+
+      // If click is inside the New button/menu, keep it open
+      if (rootRef.current.contains(e.target)) return;
+
+      // Otherwise close
+      setMenuOpen(false);
     };
+
     document.addEventListener("mousedown", onDocMouseDown);
     return () => document.removeEventListener("mousedown", onDocMouseDown);
   }, []);
 
-  const create = async (name) => {
-    await newFile({
-      fileName: name,
-      fileType: kind,
-    });
-
-    setKind(null);
+  const create = async (name, fileType) => {
+    await newFile({ fileName: name, fileType });
     setMenuOpen(false);
     onCreated?.();
   };
 
   return (
     <div className="new" ref={rootRef}>
+      {/* Keep GetText mounted so open() always works */}
+      <GetText
+        title="New folder"
+        placeholder="Untitled folder"
+        submitLabel="Create"
+        onSubmit={(name) => create(name, "folder")}
+      >
+        {(open) => {
+          openFolderRef.current = open;
+          return null;
+        }}
+      </GetText>
+
+      <GetText
+        title="New file"
+        placeholder="Untitled file"
+        submitLabel="Create"
+        onSubmit={(name) => create(name, "file")}
+      >
+        {(open) => {
+          openFileRef.current = open;
+          return null;
+        }}
+      </GetText>
+
       <div className={hidden ? "new--hidden-trigger" : ""}>
         <button
           type="button"
@@ -46,51 +74,32 @@ export default function New({ onCreated, hidden = false }) {
 
       {menuOpen && (
         <div className="new__menu" role="menu" aria-label="New menu">
-          <GetText
-            title="New folder"
-            placeholder="Untitled folder"
-            submitLabel="Create"
-            onSubmit={create}
-            onClose={() => setKind(null)}
+          <button
+            type="button"
+            className="new__menu-item"
+            role="menuitem"
+            onClick={() => {
+              setMenuOpen(false);
+              openFolderRef.current?.();
+            }}
           >
-            {(open) => (
-              <button
-                type="button"
-                className="new__menu-item"
-                role="menuitem"
-                onClick={() => {
-                  setKind("folder");
-                  open();
-                }}
-              >
-                New folder
-              </button>
-            )}
-          </GetText>
+            New folder
+          </button>
 
-          <GetText
-            title="New file"
-            placeholder="Untitled file"
-            submitLabel="Create"
-            onSubmit={create}
-            onClose={() => setKind(null)}
+          <button
+            type="button"
+            className="new__menu-item"
+            role="menuitem"
+            onClick={() => {
+              setMenuOpen(false);
+              openFileRef.current?.();
+            }}
           >
-            {(open) => (
-              <button
-                type="button"
-                className="new__menu-item"
-                role="menuitem"
-                onClick={() => {
-                  setKind("file");
-                  open();
-                }}
-              >
-                New file
-              </button>
-            )}
-          </GetText>
+            New file
+          </button>
         </div>
       )}
     </div>
   );
 }
+  

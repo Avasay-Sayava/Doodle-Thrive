@@ -5,6 +5,7 @@ import downloadFile from "../../../utils/downloadFile";
 import renameFile from "../../../utils/renameFile";
 import GetText from "../../modal/GetText";
 import shareFile from "../../../utils/shareFile";
+import FileActions from "../FileActions";
 
 function FileSelect({ file, onRefresh }) {
   const { id, starred } = file;
@@ -39,7 +40,7 @@ function FileSelect({ file, onRefresh }) {
       
       <GetText
         title="Share"
-        placeholder="The username to share the file to"
+        placeholder="The username to share the file with"
         submitLabel="Share"
         onSubmit={(newName) => shareFile(id, newName).then(() => onRefresh?.())}
       >
@@ -127,14 +128,19 @@ function FileSelect({ file, onRefresh }) {
         </button>)}
 
       {/* More options */}
-      <button className="file-action-btn" title="More" onClick={onMore}>
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            fill="currentColor"
-            d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"
-          />
-        </svg>
-      </button>
+      <FileActions file={file} onRefresh={onRefresh} openOnLeftClick>
+        <button
+          className="file-action-btn"
+          title="More"
+          onClick={(e) => e.stopPropagation()}>
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"
+            />
+          </svg>
+        </button>
+      </FileActions>
     </div>
   );
 }

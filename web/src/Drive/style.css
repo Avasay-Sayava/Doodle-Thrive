@@ -5,7 +5,7 @@ table {
 }
 
 thead {
-  background-color: #fafafa; /* stays light even in soviet; change to var if you want */
+  background-color: var(--color-bg-secondary);
   border-bottom: 1px solid var(--color-border);
 }
 
