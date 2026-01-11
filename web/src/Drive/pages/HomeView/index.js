@@ -1,20 +1,26 @@
 import "../style.css";
 import FileView from "../FileView";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import getUser from "../../utils/getUser";
+import { useNavigate } from "react-router-dom";
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL;
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-function HomeView() {
+function HomeView({ refreshKey, onRefresh}) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(() => { 
     const run = async () => {
       try {
         setError("");
 
         const jwt = localStorage.getItem("token");
-        if (!jwt) throw new Error("Not authenticated");
+        if (!jwt){
+          navigate("/signin", { replace: true });
+          return;
+        }
 
         const res = await fetch(`${API_BASE}/api/files`, {
           method: "GET",
@@ -22,13 +28,23 @@ function HomeView() {
         });
 
         if (!res.ok) {
+          if(res.status === 401){
+            localStorage.removeItem("token");
+            navigate("/signin", { replace: true });
+            return;
+          }
           const txt = await res.text();
-          throw new Error(`Fetch files failed (HTTP ${res.status}): ${txt}`);
+          throw new Error(`Get files failed (HTTP ${res.status}): ${txt}`);
         }
 
         const filesObj = await res.json();
         const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
         const rootFiles = allFiles.filter((f) => f.parent == null);
+
+        for (let i = 0; i < rootFiles.length; i++) {
+          rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
+        }
+
         setFiles(rootFiles);
       } catch (err) {
         setError(err?.message || "Failed to load files");
@@ -36,16 +52,20 @@ function HomeView() {
     };
 
     run();
-  }, []);
+  }, [navigate, refreshKey]);
 
   return (
     <div className="file-view">
       <div className="file-view__header">
-        <h1>My Drive</h1>
+        <div className="file-view__header">
+          <h1>
+          <span className="mydrive-title__text">Home</span>
+          </h1>
+        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView allFiles={files} />
+      <FileView allFiles={files} onRefresh={onRefresh} />
     </div>
   );
 }

@@ -3,10 +3,11 @@ import FileView from "../FileView";
 import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
+import New from "../../components/storage/New";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-function RecentsView({ refreshKey, onRefresh}) {
+function MydriveView({ refreshKey, onRefresh}) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ function RecentsView({ refreshKey, onRefresh}) {
 
         const filesObj = await res.json();
         const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
-        const rootFiles = allFiles.filter((f) => f.parent == null);
+        const rootFiles = allFiles.filter((f) => f.parent == null && f.owner === localStorage.getItem("id"));
 
         for (let i = 0; i < rootFiles.length; i++) {
           rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
@@ -57,17 +58,19 @@ function RecentsView({ refreshKey, onRefresh}) {
   return (
     <div className="file-view">
       <div className="file-view__header">
+        <New hidden={true}/>
         <div className="file-view__header">
           <h1>
-          <span className="mydrive-title__text">Recents</span>
+          <span className="mydrive-title__text">My Drive</span>
+          <span className="mydrive-title__chev" aria-hidden="true">▾</span>
           </h1>
         </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView allFiles={files} onRefresh={onRefresh} sortBy="modified" />
+      <FileView allFiles={files} onRefresh={onRefresh} />
     </div>
   );
 }
 
-export default RecentsView;
+export default MydriveView;

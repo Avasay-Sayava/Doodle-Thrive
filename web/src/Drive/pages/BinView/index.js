@@ -1,68 +1,26 @@
 import "../style.css";
-import FileRow from "../../components/storage/FileRow";
-import Filter from "../../components/storage/Filter";
-import { useEffect, useMemo, useState } from "react";
+import FileView from "../FileView";
+import { useEffect, useState } from "react";
+import getUser from "../../utils/getUser";
+import { useNavigate } from "react-router-dom";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-function isFolder(file) {
-  if (typeof file?.isFolder === "boolean") return file.isFolder;
-  if (typeof file?.type === "string") return file.type.toLowerCase() === "folder";
-  const s = String(file?.size ?? "").trim();
-  return s === "" || s === "-" || s === "0 B" || s === "0B";
-}
-
-function toTimestamp(v) {
-  if (!v) return 0;
-  const t = new Date(v).getTime();
-  return Number.isFinite(t) ? t : 0;
-}
-
-function sortComparator(sortBy) {
-  switch (sortBy) {
-    case "name-asc":
-      return (a, b) => String(a.name ?? "").localeCompare(String(b.name ?? ""));
-    case "name-desc":
-      return (a, b) => String(b.name ?? "").localeCompare(String(a.name ?? ""));
-    case "date-newest":
-      return (a, b) => toTimestamp(b.lastModified) - toTimestamp(a.lastModified);
-    case "date-oldest":
-      return (a, b) => toTimestamp(a.lastModified) - toTimestamp(b.lastModified);
-    default:
-      return () => 0;
-  }
-}
-
-function applySort(files, sortBy, folderPosition) {
-  const cmp = sortComparator(sortBy);
-  const arr = [...files];
-
-  if (folderPosition === "folders-first") {
-    const folders = arr.filter(isFolder).sort(cmp);
-    const regular = arr.filter((f) => !isFolder(f)).sort(cmp);
-    return [...folders, ...regular];
-  }
-
-  return arr.sort(cmp);
-}
-
-function isInBin(file) {
-  return file?.trashed === true || file?.deleted === true || file?.inBin === true;
-}
-
-export default function BinView({ user }) {
+function BinView({ refreshKey, onRefresh}) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
-  const [sortBy, setSortBy] = useState("date-newest");
-  const [folderPosition, setFolderPosition] = useState("folders-first");
+  const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(() => { 
     const run = async () => {
       try {
         setError("");
 
         const jwt = localStorage.getItem("token");
-        if (!jwt) throw new Error("Not authenticated");
+        if (!jwt){
+          navigate("/signin", { replace: true });
+          return;
+        }
 
         const res = await fetch(`${API_BASE}/api/files`, {
           method: "GET",
@@ -70,61 +28,46 @@ export default function BinView({ user }) {
         });
 
         if (!res.ok) {
+          if(res.status === 401){
+            localStorage.removeItem("token");
+            navigate("/signin", { replace: true });
+            return;
+          }
           const txt = await res.text();
-          throw new Error(`Fetch files failed (HTTP ${res.status}): ${txt}`);
+          throw new Error(`Get files failed (HTTP ${res.status}): ${txt}`);
         }
 
         const filesObj = await res.json();
         const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
-        setFiles(allFiles);
+        const binFiles = allFiles.filter((f) => f.trashed === true);
+
+        for (let i = 0; i < binFiles.length; i++) {
+          binFiles[i].ownerUsername = await getUser(binFiles[i].owner);
+        }
+
+        setFiles(binFiles);
       } catch (err) {
         setError(err?.message || "Failed to load files");
       }
     };
 
     run();
-  }, []);
-
-  const visibleFiles = useMemo(() => {
-    const binItems = files.filter(isInBin);
-    return applySort(binItems, sortBy, folderPosition);
-  }, [files, sortBy, folderPosition]);
+  }, [navigate, refreshKey]);
 
   return (
     <div className="file-view">
       <div className="file-view__header">
-        <h1>Bin</h1>
+        <div className="file-view__header">
+          <h1>
+          <span className="mydrive-title__text">Bin</span>
+          </h1>
+        </div>
       </div>
 
-      <div className="file-view__table-wrapper">
-        {error ? (
-          <div className="file-view__error">{error}</div>
-        ) : (
-          <table className="files-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Owner</th>
-                <th>Last modified</th>
-                <th>File size</th>
-                <th className="sort-header">
-                  <Filter
-                    sortBy={sortBy}
-                    setSortBy={setSortBy}
-                    folderPosition={folderPosition}
-                    setFolderPosition={setFolderPosition}
-                  />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {visibleFiles.map((file) => (
-                <FileRow key={file.id ?? file.name} file={file} user={user} />
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      {error && <div className="error-message">{error}</div>}
+      <FileView allFiles={files} onRefresh={onRefresh} />
     </div>
   );
 }
+
+export default BinView;

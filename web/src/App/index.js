@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
 import "./style.css";
+
 import Sign from "../Sign";
 import Drive from "../Drive";
 import SettingsPage from "../panels/Header/pages/SettingsPage";
