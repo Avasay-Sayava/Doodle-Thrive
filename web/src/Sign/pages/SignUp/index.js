@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Regex from "../../../lib/regex";
+import Regex from "../../../utils/regex";
 
 import Input from "../../components/Input";
 import TextArea from "../../components/TextArea";
+
+const BASE_URL = process.env.API_BASE_URL || "http://localhost:3300";
 
 function SignUp({ changeMode, autofill = {} }) {
   const navigate = useNavigate();
@@ -98,7 +100,7 @@ function SignUp({ changeMode, autofill = {} }) {
         }
       };
 
-      const response = await fetch("http://localhost:3300/api/users", {
+      const response = await fetch(`${BASE_URL}/api/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

@@ -1,5 +1,3 @@
-/* File View Design */
-
 .file-view {
   width: 100%;
   height: 100%;
@@ -8,7 +6,6 @@
   flex-direction: column;
 }
 
-/* Page title */
 .file-view__header {
   margin-bottom: 12px;
 }
@@ -20,24 +17,45 @@
   color: var(--color-text-primary);
 }
 
-/* Table Wrapper */
 .file-view__table-wrapper {
   flex: 1;
   min-height: 0;
   background-color: var(--color-bg-main);
   border-radius: 12px;
-  overflow: hidden;
+
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/* Table base */
+.file-view__table-wrapper {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.file-view__table-wrapper::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 .files-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-/*  Table Header */
 .files-table thead {
-  background-color: --color-text-primary;
+  background-color: #fafafa; 
+}
+
+.files-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
 }
 
 .files-table th {
@@ -45,13 +63,10 @@
   padding: 0 16px;
   text-align: left;
   font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
   white-space: nowrap;
 }
 
-/* First and last column headers spacing */
 .files-table th:first-child {
   padding-left: 24px;
 }
@@ -61,7 +76,14 @@
   text-align: right;
 }
 
-/* Sort header styling */
+tbody tr {
+  transition: background-color 120ms ease;
+}
+
+tbody tr:hover {
+  background-color: var(--color-bg-hover);
+}
+
 .sort-header {
   padding: 8px 16px !important;
   width: auto;
@@ -95,11 +117,63 @@
   box-shadow: 0 0 0 2px rgba(31, 140, 230, 0.1);
 }
 
-/* Error message styling */
 .file-view__error {
   padding: 48px 24px;
   text-align: center;
   font-size: 18px;
   font-weight: 500;
-  color: #d93025; 
+  color: #d93025;
 }
+
+.mydrive-title {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 9999px;
+
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+
+  cursor: pointer;
+}
+
+.mydrive-title:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.mydrive-title:active {
+  background-color: var(--color-bg-selected);
+}
+
+.mydrive-title__chev {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.no-files-row td {
+  height: calc(100vh - 180px);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.no-files {
+  font-size: 34px;
+  font-weight: 450;
+  font-style: italic;
+  color: var(--color-text-muted);
+  letter-spacing: 0.3px;
+  position: relative;
+  top: -200px;
+}
+
+.no-files-row,
+.no-files-row:hover {
+  background: transparent;
+}
+
+

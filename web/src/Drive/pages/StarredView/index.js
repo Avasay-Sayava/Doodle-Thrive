@@ -1,11 +1,14 @@
 import "../style.css";
 import FileView from "../FileView";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import getUser from "../../utils/getUser";
+import { useNavigate } from "react-router-dom";
 
-const API_BASE = process.env.REACT_APP_API_BASE_URL;
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-function StarredView({ user }) {
-  
+
+function StarredView({ refreshKey, onRefresh}) {
+  const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
 
@@ -15,9 +18,34 @@ function StarredView({ user }) {
         setError("");
 
         const jwt = localStorage.getItem("token");
-        if (!jwt) throw new Error("Not authenticated");
+        if (!jwt){
+          navigate("/signin", { replace: true });
+          return;
+        }
 
-        const starred = user.starred || [];
+        const res = await fetch(`${API_BASE}/api/files`, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${jwt}` },
+        });
+
+        if (!res.ok) {
+          if(res.status === 401){
+            localStorage.removeItem("token");
+            navigate("/signin", { replace: true });
+            return;
+          }
+          const txt = await res.text();
+          throw new Error(`Get files failed (HTTP ${res.status}): ${txt}`);
+        }
+
+        const filesObj = await res.json();
+        
+        const allfiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
+        const starred = allfiles.filter((f) => f.starred === true);
+        for (let i = 0; i < starred.length; i++) {
+          starred[i].ownerUsername = await getUser(starred[i].owner);
+        }
+
         setFiles(starred);
       } catch (err) {
         setError(err?.message || "Failed to load files");
@@ -25,16 +53,16 @@ function StarredView({ user }) {
     };
 
     run();
-  }, []);
+  }, [navigate, refreshKey]);
   return (
-    
+
     <div className="file-view">
       <div className="file-view__header">
         <h1>Starred</h1>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView allFiles={files} />
+      <FileView allFiles={files} onRefresh={onRefresh} />
     </div>
   );
 }

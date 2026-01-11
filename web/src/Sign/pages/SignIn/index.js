@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Regex from "../../../lib/regex";
+import Regex from "../../../utils/regex";
 
 import Input from "../../components/Input";
+
+const BASE_URL = process.env.API_BASE_URL || "http://localhost:3300";
 
 function SignIn({ changeMode, autofill = {} }) {
   const navigate = useNavigate();
@@ -57,7 +59,7 @@ function SignIn({ changeMode, autofill = {} }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3300/api/tokens", {
+      const response = await fetch(`${BASE_URL}/api/tokens`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
