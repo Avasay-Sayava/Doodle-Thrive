@@ -1,4 +1,8 @@
-/* CSS Variables (light theme) */
+/* CSS Variables (light theme)
+   Pretty like hello kitty😉
+   why css..
+   I think im going to kms.
+*/
 :root[theme="pink"] {
   /* Primary */
   --color-primary: #e91e63;
@@ -34,6 +38,8 @@
   --color-icon-secondary: #5f6368;
   --color--icon-starred: #fbc02d;
 }
+
+/* the most ugly dark theme ive ever seen, pressing random colors goes hard */
 
 /* CSS Variables (dark theme) */
 :root[theme="soviet"] {
@@ -81,6 +87,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--color-bg-main);
+  /* this took way to long */
   font-family: 'Rubik', system-ui, -apple-system, BlinkMacSystemFont,
                'Segoe UI', Roboto, Arial, sans-serif;
   color: var(--color-text-primary);
