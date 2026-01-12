@@ -2,6 +2,8 @@ import "./style.css";
 import FileSelect from "../FileSelect";
 import FileActions from "../FileActions";
 import RelativeDate from "../../Date";
+import IconFolder from "../../icons/IconFolder";
+import IconFile from "../../icons/IconFile";
 
 
 function getSize({ type, content }) {
@@ -15,8 +17,6 @@ function getSize({ type, content }) {
   let gb = mb / 1024;
   return gb.toFixed(2) + " GB";
 }
-
-
 
 function FileRow({ file: { name, modified, content, ownerUsername, type, id, starred }, onRefresh }) {
   const file = { name, modified, content, ownerUsername, type, id, starred };
@@ -35,7 +35,7 @@ function FileRow({ file: { name, modified, content, ownerUsername, type, id, sta
         </td>
         <td className="col-owner">{ownerUsername}</td>
         <td className="col-modified"><RelativeDate timestamp={modified} /></td>
-        <td className="col-size">{getSize({ fileType, content })}</td>
+        <td className="col-size">{getSize({ type, content })}</td>
         <td className="col-actions">
           <FileSelect file={{ id, starred }} onRefresh={onRefresh} />
         </td>

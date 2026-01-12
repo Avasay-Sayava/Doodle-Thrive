@@ -83,7 +83,7 @@ export default function New({ onCreated, hidden = false }) {
         submitLabel="Create"
         onSubmit={(name) => create(name, "file")}
       >
-        {(open) => (openFileRef.current = open, null)}
+        {(open) => { openFileRef.current = open; return null; }}
       </GetText>
 
       <GetText
@@ -92,7 +92,7 @@ export default function New({ onCreated, hidden = false }) {
         submitLabel="Create"
         onSubmit={(name) => create(name, "folder")}
       >
-        {(open) => (openFolderRef.current = open, null)}
+        {(open) => { openFolderRef.current = open; return null; }}
       </GetText>
 
       <input ref={fileInputRef} type="file" multiple accept=".txt" style={{ display: "none" }} onChange={pickFiles} />
@@ -112,14 +112,14 @@ export default function New({ onCreated, hidden = false }) {
 
       {menuOpen && (
         <div className="new__menu" role="menu" aria-label="New menu">
-          <button type="button" className="new__menu-item" onClick={() => (setMenuOpen(false), openFileRef.current?.())}>
+          <button type="button" className="new__menu-item" onClick={() => { setMenuOpen(false); openFileRef.current?.(); }}>
             <span className="new__menu-icon" aria-hidden="true">
               <IconFile />
             </span>
             New file
           </button>
 
-          <button type="button" className="new__menu-item" onClick={() => (setMenuOpen(false), openFolderRef.current?.())}>
+          <button type="button" className="new__menu-item" onClick={() => { setMenuOpen(false); openFolderRef.current?.(); }}>
             <span className="new__menu-icon" aria-hidden="true">
               <IconFolder />
             </span>
@@ -128,7 +128,7 @@ export default function New({ onCreated, hidden = false }) {
 
           <div className="new__menu-sep" />
 
-          <button type="button" className="new__menu-item" onClick={() => (setMenuOpen(false), fileInputRef.current?.click())}>
+          <button type="button" className="new__menu-item" onClick={() => { setMenuOpen(false); fileInputRef.current?.click(); }}>
             <span className="new__menu-icon" aria-hidden="true">
               <IconUpload />
             </span>
