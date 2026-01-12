@@ -12,7 +12,7 @@ import RecentsView from "./pages/RecentsView";
 import BinView from "./pages/BinView";
 import SearchView from "./pages/SearchView";
 
-function Drive() {
+function Drive({ openSettings }) {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const onCreated = () => setRefreshKey((k) => k + 1);
@@ -20,7 +20,7 @@ function Drive() {
 
   return (
     <div className="app-shell">
-            <header className="app-topbar"><Header /></header>
+            <header className="app-topbar"><Header openSettings={openSettings} /></header>
 
       <div className="app-body">
         <aside className="app-sidebar">

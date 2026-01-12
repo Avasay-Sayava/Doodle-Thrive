@@ -22,7 +22,6 @@ function ProfilePicture() {
     useEffect(() => {
         if (!jwt) {
             localStorage.removeItem('token');
-            localStorage.removeItem('id');
             navigate('/signin', { replace: true });
             return;
         }

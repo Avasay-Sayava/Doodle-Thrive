@@ -1,8 +1,7 @@
 import "./style.css";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { createPortal } from "react-dom";
-import Card from "../../../components/Card";
 import IconUser from "../../components/icons/IconUser";
+import Modal from "../Modal";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -35,12 +34,8 @@ export default function GetText({
   buttonAfterInput = false,
   excludeUsernames = [],
 }) {
-  const dialogRef = useRef(null);
   const inputRef = useRef(null);
-  const onCloseRef = useRef(onClose);
   const excludeUsernamesRef = useRef(excludeUsernames);
-  const [isOpen, setIsOpen] = useState(false);
-  const [shouldRender, setShouldRender] = useState(false);
   const [value, setValue] = useState("");
   const [selectValue, setSelectValue] = useState(defaultSelectValue);
   const [userResults, setUserResults] = useState([]);
@@ -49,77 +44,34 @@ export default function GetText({
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
-
-  useEffect(() => {
     excludeUsernamesRef.current = excludeUsernames;
   }, [excludeUsernames]);
 
-  const open = () => {
-    onOpen();
-    setShouldRender(true);
-    setTimeout(() => {
-      const dialog = dialogRef.current;
-      if (dialog && !dialog.open) {
-        dialog.showModal();
-      }
-      setIsOpen(true);
-    }, 0);
-    setTimeout(() => inputRef.current?.focus(), 50);
-  }; 
+  const submit = useCallback(
+    (close) => {
+      const trimmed = value.trim();
+      if (!trimmed) return;
 
-  const close = useCallback(() => {
-    setIsOpen(false);
-    setTimeout(() => {
-      const dialog = dialogRef.current;
-      if (dialog && dialog.open) {
-        dialog.close();
+      if (selectOptions) {
+        onSubmit(trimmed, selectValue);
+      } else {
+        onSubmit(trimmed);
       }
-      setShouldRender(false);
+
+      // Keep dialog open; just reset inputs for next action
       setValue("");
       setSelectValue(defaultSelectValue);
       setUserResults([]);
       setShowDropdown(false);
-      onCloseRef.current();
-    }, 200);
-  }, [defaultSelectValue]);
-
-  const submit = () => {
-    const trimmed = value.trim();
-    if (!trimmed) return;
-    
-    if (selectOptions) {
-      onSubmit(trimmed, selectValue);
-    } else {
-      onSubmit(trimmed);
-    }
-
-    // Keep dialog open; just reset inputs for next action
-    setValue("");
-    setSelectValue(defaultSelectValue);
-    setUserResults([]);
-    setShowDropdown(false);
-  };
+    },
+    [value, selectValue, onSubmit, defaultSelectValue, selectOptions]
+  );
 
   const selectUser = (username) => {
     setValue(username);
     setShowDropdown(false);
     setUserResults([]);
   };
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') {
-        close();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [close, isOpen]);
 
   // User search effect
   useEffect(() => {
@@ -156,8 +108,10 @@ export default function GetText({
 
         const data = await res.json();
         const users = Object.entries(data || {})
-          .map(([id, {username}]) => ({ id, username }))
-          .filter(({username}) => !excludeUsernamesRef.current.includes(username))
+          .map(([id, { username }]) => ({ id, username }))
+          .filter(
+            ({ username }) => !excludeUsernamesRef.current.includes(username)
+          )
           .slice(0, 5);
         setUserResults(users);
         setShowDropdown(users.length > 0);
@@ -176,135 +130,148 @@ export default function GetText({
     };
   }, [value, showUserSearch]);
 
-  return (
-    <>
-      {typeof children === "function" && children(open)}
+  const handleClose = useCallback(() => {
+    setValue("");
+    setSelectValue(defaultSelectValue);
+    setUserResults([]);
+    setShowDropdown(false);
+    onClose();
+  }, [defaultSelectValue, onClose]);
 
-      {shouldRender && createPortal(
-        <dialog
-          ref={dialogRef}
-          className="get-text-modal__overlay"
-          onClick={(e) => {
-            if (e.target === dialogRef.current) {
-              close();
-            }
-          }}
-          onCancel={(e) => {
-            e.preventDefault();
-            close();
-          }}
-        >
-          <Card isOpen={isOpen} className="get-text-modal">
-            <div className="get-text-modal__content" role="dialog" aria-modal="true">
-              <div className="get-text-modal__header">
-                <h2 className="get-text-modal__title">{title}</h2>
-                <button
-                  type="button"
-                  className="get-text-modal__close"
-                  aria-label="Close dialog"
-                  onClick={close}
-                >
-                  ×
-                </button>
-              </div>
+  const renderBody = useCallback(
+    (isOpen, shouldRender, close) => {
+      if (!shouldRender) return null;
 
-              <div className="get-text-modal__input-wrapper">
-                <input
-                  ref={inputRef}
-                  className="get-text-modal__input"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                  placeholder={placeholder}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !showDropdown) submit();
-                  }}
-                  onFocus={() => {
-                    if (showUserSearch && userResults.length > 0) {
-                      setShowDropdown(true);
-                    }
-                  }}
-                />
-                
-                {showUserSearch && showDropdown && (
-                  <div ref={dropdownRef} className="get-text-modal__dropdown">
-                    {loadingUsers ? (
-                      <div className="get-text-modal__dropdown-message">Searching users...</div>
-                    ) : userResults.length > 0 ? (
-                      userResults.map((user) => (
-                        <button
-                          key={user.id}
-                          type="button"
-                          className="get-text-modal__dropdown-item"
-                          onClick={() => selectUser(user.username)}
-                        >
-                          <IconUser />
-                          <span>{user.username}</span>
-                        </button>
-                      ))
-                    ) : null}
+      return (
+        <>
+          <div className="get-text-modal__input-wrapper">
+            <input
+              ref={inputRef}
+              className="get-text-modal__input"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              placeholder={placeholder}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !showDropdown) submit(close);
+              }}
+              onFocus={() => {
+                if (showUserSearch && userResults.length > 0) {
+                  setShowDropdown(true);
+                }
+              }}
+              autoFocus
+            />
+
+            {showUserSearch && showDropdown && (
+              <div ref={dropdownRef} className="get-text-modal__dropdown">
+                {loadingUsers ? (
+                  <div className="get-text-modal__dropdown-message">
+                    Searching users...
                   </div>
-                )}
+                ) : userResults.length > 0 ? (
+                  userResults.map((user) => (
+                    <button
+                      key={user.id}
+                      type="button"
+                      className="get-text-modal__dropdown-item"
+                      onClick={() => selectUser(user.username)}
+                    >
+                      <IconUser />
+                      <span>{user.username}</span>
+                    </button>
+                  ))
+                ) : null}
               </div>
+            )}
+          </div>
 
-              {buttonAfterInput && (
-                <div className="get-text-modal__actions">
-                  <button
-                    type="button"
-                    className="get-text-modal__btn get-text-modal__btn--primary"
-                    onClick={submit}
-                  >
-                    {submitLabel}
-                  </button>
-                </div>
-              )}
-
-              {selectOptions && (
-                <div className="get-text-modal__select-group">
-                  <label className="get-text-modal__select-label">{selectLabel}</label>
-                  <select
-                    className="get-text-modal__select"
-                    value={selectValue}
-                    onChange={(e) => setSelectValue(e.target.value)}
-                  >
-                    {selectOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {buttonAfterSelect && (
-                <div className="get-text-modal__actions">
-                  <button
-                    type="button"
-                    className="get-text-modal__btn get-text-modal__btn--primary"
-                    onClick={submit}
-                  >
-                    {submitLabel}
-                  </button>
-                </div>
-              )}
-
-              {extraContent ? <div className="get-text-modal__extra">{extraContent}</div> : null}
-
-              {!buttonAfterSelect && !buttonAfterInput && (
-                <div className="get-text-modal__actions">
-                  <button
-                    type="button"
-                    className="get-text-modal__btn get-text-modal__btn--primary"
-                    onClick={submit}
-                  >
-                    {submitLabel}
-                  </button>
-                </div>
-              )}
+          {buttonAfterInput && (
+            <div className="get-text-modal__actions">
+              <button
+                type="button"
+                className="get-text-modal__btn get-text-modal__btn--primary"
+                onClick={() => submit(close)}
+              >
+                {submitLabel}
+              </button>
             </div>
-          </Card>
-        </dialog>,
-        document.body
-      )}
-    </>
+          )}
+
+          {selectOptions && (
+            <div className="get-text-modal__select-group">
+              <label className="get-text-modal__select-label">
+                {selectLabel}
+              </label>
+              <select
+                className="get-text-modal__select"
+                value={selectValue}
+                onChange={(e) => setSelectValue(e.target.value)}
+              >
+                {selectOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {buttonAfterSelect && (
+            <div className="get-text-modal__actions">
+              <button
+                type="button"
+                className="get-text-modal__btn get-text-modal__btn--primary"
+                onClick={() => submit(close)}
+              >
+                {submitLabel}
+              </button>
+            </div>
+          )}
+
+          {extraContent ? (
+            <div className="get-text-modal__extra">{extraContent}</div>
+          ) : null}
+
+          {!buttonAfterSelect && !buttonAfterInput && (
+            <div className="get-text-modal__actions">
+              <button
+                type="button"
+                className="get-text-modal__btn get-text-modal__btn--primary"
+                onClick={() => submit(close)}
+              >
+                {submitLabel}
+              </button>
+            </div>
+          )}
+        </>
+      );
+    },
+    [
+      value,
+      placeholder,
+      showUserSearch,
+      showDropdown,
+      loadingUsers,
+      userResults,
+      buttonAfterInput,
+      submitLabel,
+      selectOptions,
+      selectLabel,
+      selectValue,
+      buttonAfterSelect,
+      extraContent,
+      submit,
+    ]
+  );
+
+  return (
+    <Modal
+      title={title}
+      onClose={handleClose}
+      renderBody={renderBody}
+      className="get-text-modal"
+    >
+      {(open) => typeof children === "function" && children(open)}
+    </Modal>
   );
 }

@@ -23,7 +23,6 @@
 .shared-user-list__refresh-btn {
   width: 32px;
   height: 32px;
-  border: 2px solid var(--color-focus);
   border-radius: 10px;
   background: var(--color-bg-main);
   color: var(--color-text-primary);
