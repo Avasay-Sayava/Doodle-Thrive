@@ -28,7 +28,7 @@ exports.get = async (name) => {
     };
   return {
     status: 200,
-    response: response.substring("200 Ok\n\n".length, response.length - 1),
+    response: decodeURIComponent(response.substring("200 Ok\n\n".length, response.length - 1)),
   };
 };
 
@@ -40,7 +40,7 @@ exports.get = async (name) => {
  */
 exports.post = async (name, content) => {
   const response = (
-    await client.request(`POST ${name} ${content}`, timeout)
+    await client.request(`POST ${name} ${encodeURIComponent(content)}`, timeout)
   ).toString();
   return {
     status: parseInt(response.split(" ")[0]) || 500,
@@ -68,7 +68,7 @@ exports.delete = async (name) => {
  */
 exports.search = async (query) => {
   const response = (
-    await client.request(`SEARCH ${query}`, timeout)
+    await client.request(`SEARCH ${encodeURIComponent(query)}`, timeout)
   ).toString();
   if (!response.startsWith("200 Ok"))
     return {
