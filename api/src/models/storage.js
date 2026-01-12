@@ -26,10 +26,19 @@ exports.get = async (name) => {
       status: parseInt(response.split(" ")[0]) || 500,
       response: null,
     };
-  return {
-    status: 200,
-    response: response.substring("200 Ok\n\n".length, response.length - 1),
-  };
+  const base64Content = response.substring("200 Ok\n\n".length, response.length - 1);
+  try {
+    const decoded = Buffer.from(base64Content, "base64").toString("utf8");
+    return {
+      status: 200,
+      response: decoded,
+    };
+  } catch (err) {
+    return {
+      status: 200,
+      response: base64Content,
+    };
+  }
 };
 
 /**
@@ -39,8 +48,9 @@ exports.get = async (name) => {
  * @return {Promise<{status: number, response: null}>} An object containing the status code.
  */
 exports.post = async (name, content) => {
+  const base64Content = Buffer.from(content, "utf8").toString("base64");
   const response = (
-    await client.request(`POST ${name} ${content}`, timeout)
+    await client.request(`POST ${name} ${base64Content}`, timeout)
   ).toString();
   return {
     status: parseInt(response.split(" ")[0]) || 500,
@@ -67,8 +77,9 @@ exports.delete = async (name) => {
  * @return {Promise<{status: number, response: string[]}>} An object containing the status code and an array of matching file IDs.
  */
 exports.search = async (query) => {
+  const base64Query = Buffer.from(query, "utf8").toString("base64");
   const response = (
-    await client.request(`SEARCH ${query}`, timeout)
+    await client.request(`SEARCH ${base64Query}`, timeout)
   ).toString();
   if (!response.startsWith("200 Ok"))
     return {

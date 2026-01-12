@@ -129,7 +129,7 @@ exports.update = async (
 ) => {
   const file = files[id];
 
-  if (content) {
+  if (content !== undefined && file.type === "file") {
     const response = await Storage.delete(id);
     if (response.status !== 204) return false;
 

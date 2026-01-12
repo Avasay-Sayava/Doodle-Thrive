@@ -65,7 +65,7 @@ export default function New({ onCreated, hidden = false }) {
         {(open) => { openFolderRef.current = open; return null; }}
       </GetText>
 
-      <input ref={fileInputRef} type="file" multiple accept=".txt" style={{ display: "none" }} onChange={pickFiles} />
+      <input ref={fileInputRef} type="file" multiple style={{ display: "none" }} onChange={pickFiles} />
 
       <div className={hidden ? "new--hidden-trigger" : ""}>
         <button

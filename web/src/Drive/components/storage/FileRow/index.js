@@ -1,10 +1,11 @@
 import "./style.css";
+import { useState, useEffect } from "react";
 import FileSelect from "../FileSelect";
 import FileActions from "../FileActions";
 import RelativeDate from "../../Date";
 import IconFolder from "../../icons/IconFolder";
 import IconFile from "../../icons/IconFile";
-
+import EditFile from "../../../modals/EditFile";
 
 function getSize({ type, content }) {
   if (type === "folder") return "-";
@@ -19,28 +20,60 @@ function getSize({ type, content }) {
 }
 
 function FileRow({ file, onRefresh }) {
-  const { name, modified, content, ownerUsername, type } = file;
+  const [localFile, setLocalFile] = useState(file);
+
+  // Update local file when prop changes
+  useEffect(() => {
+    setLocalFile(file);
+  }, [file]);
+
+  const { name, modified, content, ownerUsername, type } = localFile;
+
+  const handleFileClick = (e, openEditModal) => {
+    if (type === "file") {
+      openEditModal();
+    }
+  };
+
+  const handleSave = (updatedData) => {
+    // Update local file immediately with new content, size, and modified date
+    setLocalFile(prev => ({
+      ...prev,
+      content: updatedData.content,
+      modified: updatedData.modified
+    }));
+    
+    // Still call parent refresh if needed
+    onRefresh?.();
+  };
+
   return (
-    <FileActions
-      file={file}
-      onRefresh={onRefresh}
-      onLeftClick={()=>{}}
-    >
-      <tr className="file-row">
-        <td className="col-name">
-          <span className="file-icon" aria-hidden="true">
-            {type === "folder" ? <IconFolder /> : <IconFile />}
-          </span>
-          {name}
-        </td>
-        <td className="col-owner">{ownerUsername}</td>
-        <td className="col-modified"><RelativeDate timestamp={modified} /></td>
-        <td className="col-size">{getSize({ type, content })}</td>
-        <td className="col-actions">
-          <FileSelect file={file} onRefresh={onRefresh} />
-        </td>
-      </tr>
-    </FileActions>
+    <EditFile file={localFile} onSave={handleSave}>
+      {(openEditModal) => (
+        <FileActions
+          file={localFile}
+          onRefresh={onRefresh}
+          onLeftClick={(e) => handleFileClick(e, openEditModal)}
+        >
+          <tr className="file-row">
+            <td className="col-name">
+              <span className="file-icon" aria-hidden="true">
+                {type === "folder" ? <IconFolder /> : <IconFile />}
+              </span>
+              {name}
+            </td>
+            <td className="col-owner">{ownerUsername}</td>
+            <td className="col-modified">
+              <RelativeDate timestamp={modified} />
+            </td>
+            <td className="col-size">{getSize({ type, content })}</td>
+            <td className="col-actions">
+              <FileSelect file={localFile} onRefresh={onRefresh} />
+            </td>
+          </tr>
+        </FileActions>
+      )}
+    </EditFile>
   );
 }
 

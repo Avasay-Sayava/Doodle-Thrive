@@ -3,11 +3,15 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Card from "../../../components/Card";
 
+// Global state to track if any modal is currently open
+let globalModalOpen = false;
+
 /**
  * Modal - Base modal component handling dialog/portal/animation logic
  * @param {string} title - Modal title
  * @param {Function} children - Render prop: (open, close) => JSX for trigger
  * @param {Function} renderBody - Content to render in modal body
+ * @param {Function} onOpen - Callback when modal opens
  * @param {Function} onClose - Callback when modal closes
  * @param {string} className - CSS class for Card element
  */
@@ -15,20 +19,33 @@ export default function Modal({
   title,
   children,
   renderBody,
+  onOpen = () => {},
   onClose = () => {},
   className = "modal",
 }) {
   const dialogRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+  const onOpenRef = useRef(onOpen);
   const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onOpenRef.current = onOpen;
+  }, [onOpen]);
 
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
 
   const open = () => {
+    // Prevent opening if another modal is already open
+    if (globalModalOpen) {
+      return;
+    }
+    
+    globalModalOpen = true;
     setShouldRender(true);
+    onOpenRef.current();
     setTimeout(() => {
       const dialog = dialogRef.current;
       if (dialog && !dialog.open) {
@@ -46,6 +63,7 @@ export default function Modal({
         dialog.close();
       }
       setShouldRender(false);
+      globalModalOpen = false;
       onCloseRef.current();
     }, 200);
   }, []);
