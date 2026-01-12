@@ -15,6 +15,7 @@ import patchFile from "../../../utils/patchFile";
 import { roleFromPermissions } from "../../../utils/useFilePermissions";
 import GetText from "../../../modals/GetText";
 import ShareDialog from "../../../modals/ShareDialog";
+import MoveFile from "../../../modals/MoveFile";
 
 export default function FileActions({
   children,
@@ -28,6 +29,7 @@ export default function FileActions({
 
   const openRenameModalRef = useRef(null);
   const openShareModalRef = useRef(null);
+  const openMoveModalRef = useRef(null);
 
   const [hoverKey, setHoverKey] = useState(null);
   const [descPos, setDescPos] = useState({ x: 0, y: 0 });
@@ -167,6 +169,15 @@ export default function FileActions({
         disabled: !canEdit,
       },
       { key: "sep-2", type: "separator" },
+      {
+        key: "move",
+        label: "Move to folder",
+        disabled: !canEdit,
+        onClick: (e) => {
+          e.stopPropagation();
+          openMoveModalRef.current?.();
+        },
+      },
       {
         key: "bin",
         label: "Move to bin",
@@ -319,6 +330,19 @@ export default function FileActions({
           return null;
         }}
       </ShareDialog>
+
+      <MoveFile
+        file={file}
+        onSubmit={async (destinationFolderId) => {
+          await patchFile(file?.id, { parent: destinationFolderId });
+          onRefresh?.();
+        }}
+      >
+        {(openMove) => {
+          openMoveModalRef.current = openMove;
+          return null;
+        }}
+      </MoveFile>
 
       {enhancedRow}
       {menuPortal}

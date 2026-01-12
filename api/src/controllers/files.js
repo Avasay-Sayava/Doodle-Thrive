@@ -185,7 +185,7 @@ exports.update = async (req, res) => {
     if (
       !exists(name) &&
       !exists(content) &&
-      !exists(parent) &&
+      !('parent' in trimmedData) &&
       !exists(owner) &&
       !exists(description) &&
       !exists(trashed) &&
