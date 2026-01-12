@@ -1,5 +1,3 @@
-import react from 'react';
-
 import './style.css';
 import logoImage from './logo.png';
 import { useNavigate } from 'react-router-dom';

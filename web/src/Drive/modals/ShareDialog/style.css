@@ -1,0 +1,116 @@
+.share-modal__section {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.share-modal__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.share-modal__header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.share-modal__icon-btn {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-focus);
+  border-radius: 10px;
+  background: var(--color-bg-main);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  transition: background 0.15s ease;
+}
+
+.share-modal__icon-btn:hover {
+  background: var(--color-bg-hover);
+}
+
+.share-modal__pill {
+  background: var(--color-bg-hover);
+  color: var(--color-text-secondary);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.share-modal__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.share-modal__empty {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.share-modal__item {
+  display: grid;
+  grid-template-columns: 38px 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.share-modal__info {
+  min-width: 0;
+}
+
+.share-modal__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.share-modal__meta {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.share-modal__role-select {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 2px solid var(--color-focus);
+  background: var(--color-bg-main);
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.share-modal__role-label {
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.share-modal__badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--color-bg-hover);
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.share-modal__badge--owner {
+  background: var(--color-primary-faint, rgba(99, 102, 241, 0.15));
+  color: var(--color-primary);
+  font-weight: 700;
+}

@@ -3,6 +3,8 @@ import FileView from "../FileView";
 import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
+import { sortFiles } from "../../utils/sortFiles";
+import IconHome from "../../components/icons/IconHome";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -11,13 +13,24 @@ function HomeView({ refreshKey, onRefresh}) {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const [sortBy, setSortBy] = useState("modified");
+  const [sortDir, setSortDir] = useState("asc");
+  const [foldersMode, setFoldersMode] = useState("folders-first");
+
+  const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+    setSortBy(newSortBy);
+    setSortDir(newSortDir);
+    setFoldersMode(newFoldersMode);
+  };
+
   useEffect(() => { 
-    const run = async () => {
+    (async () => {
       try {
         setError("");
 
         const jwt = localStorage.getItem("token");
         if (!jwt){
+          localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }
@@ -45,38 +58,34 @@ function HomeView({ refreshKey, onRefresh}) {
           rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
         }
 
-        setFiles(rootFiles);
+        setFiles(sortFiles(rootFiles, sortBy, sortDir, foldersMode));
+        handleSortChange({ sortBy, sortDir, foldersMode });
       } catch (err) {
         setError(err?.message || "Failed to load files");
       }
-    };
-
-    run();
-  }, [navigate, refreshKey]);
+    })();
+  }, [foldersMode, navigate, refreshKey, sortBy, sortDir]);
 
   return (
     <div className="file-view">
       <div className="file-view__header">
         <div className="file-view__header">
         <h1 className="view-title">
-          <svg
-            className="view-title__icon"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              fill="currentColor"
-              d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"
-            />
-          </svg>
-
+          <IconHome className="view-title__icon" width={24} height={24} aria-hidden="true" />
           <span className="view-title__text">Home</span>
         </h1>
         </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView allFiles={files} onRefresh={onRefresh} />
+      <FileView 
+        allFiles={files} 
+        onRefresh={onRefresh}
+        sortBy={sortBy}
+        sortDir={sortDir}
+        foldersMode={foldersMode}
+        onSortChange={handleSortChange}
+      />
     </div>
   );        
 

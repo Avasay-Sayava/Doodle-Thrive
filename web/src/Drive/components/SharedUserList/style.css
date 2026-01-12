@@ -1,0 +1,92 @@
+.shared-user-list {
+  margin-top: 12px;
+  display: flex;
+  max-height: 130px;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.shared-user-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.shared-user-list__header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shared-user-list__refresh-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--color-bg-main);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  transition: background 0.15s ease;
+}
+
+.shared-user-list__refresh-btn:hover {
+  background: var(--color-bg-hover);
+}
+
+.shared-user-list__status {
+  background: var(--color-bg-hover);
+  color: var(--color-text-secondary);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.shared-user-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.shared-user-list__items--limited {
+  max-height: 210px;
+}
+
+.shared-user-list__items::-webkit-scrollbar {
+  width: 6px;
+}
+
+.shared-user-list__items::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.shared-user-list__items::-webkit-scrollbar-thumb {
+  background: var(--color-bg-hover);
+  border-radius: 3px;
+}
+
+.shared-user-list__items::-webkit-scrollbar-thumb:hover {
+  background: var(--color-focus);
+}
+
+.shared-user-list__empty {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.shared-user-list__error {
+  color: var(--color-text-error);
+  background: var(--color-bg-error);
+  border-left: 3px solid var(--color-text-error);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 12px;
+}

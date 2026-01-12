@@ -2,13 +2,14 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 4px;
+  overflow: hidden;
 }
 
 .logo {
   width: 40px;
   height: 40px;
-  margin-right: 10px;
+  filter: drop-shadow(200vw 0 0 var(--color-primary));
+  transform: translateX(-200vw);
 }
 
 .logo:hover {

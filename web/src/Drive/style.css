@@ -1,13 +1,4 @@
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead {
-  background-color: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border);
-}
+/* so many changesssssssss */
 
 tbody tr {
   transition: background-color 120ms ease;
@@ -46,7 +37,6 @@ button {
   background: var(--color-bg-main);
 }
 
-/* Top bar height similar to Drive */
 .app-topbar {
   height: 64px;
   border-bottom: 1px solid var(--color-border);
@@ -57,14 +47,12 @@ button {
   flex-shrink: 0;
 }
 
-/* Sidebar + content */
 .app-body {
   flex: 1;
   min-height: 0;
   display: flex;
 }
 
-/* Sidebar width similar to Drive */
 .app-sidebar {
   width: 280px;
   flex: 0 0 280px;
@@ -73,11 +61,19 @@ button {
   overflow: auto;
 }
 
-/* Main content area */
 .app-content {
   flex: 1;
   min-width: 0;
   min-height: 0;
   overflow: auto;
   background: var(--color-bg-main);
+}
+
+.file-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+  flex-shrink: 0;
 }

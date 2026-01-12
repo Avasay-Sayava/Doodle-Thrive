@@ -3,21 +3,34 @@ import FileView from "../FileView";
 import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
+import { sortFiles } from "../../utils/sortFiles";
+import IconRecent from "../../components/icons/IconRecent";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-function RecentsView({ refreshKey, onRefresh}) {
+function RecentsView({ refreshKey, onRefresh }) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => { 
-    const run = async () => {
+  const [sortBy, setSortBy] = useState("modified");
+  const [sortDir, setSortDir] = useState("asc");
+  const [foldersMode, setFoldersMode] = useState("mixed");
+
+  const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+    setSortBy(newSortBy);
+    setSortDir(newSortDir);
+    setFoldersMode(newFoldersMode);
+  };
+
+  useEffect(() => {
+    (async () => {
       try {
         setError("");
 
         const jwt = localStorage.getItem("token");
-        if (!jwt){
+        if (!jwt) {
+          localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }
@@ -28,7 +41,7 @@ function RecentsView({ refreshKey, onRefresh}) {
         });
 
         if (!res.ok) {
-          if(res.status === 401){
+          if (res.status === 401) {
             localStorage.removeItem("token");
             navigate("/signin", { replace: true });
             return;
@@ -45,37 +58,34 @@ function RecentsView({ refreshKey, onRefresh}) {
           rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
         }
 
-        setFiles(rootFiles);
+        setFiles(sortFiles(rootFiles, sortBy, sortDir, foldersMode));
+        handleSortChange({ sortBy, sortDir, foldersMode });
       } catch (err) {
         setError(err?.message || "Failed to load files");
       }
-    };
-
-    run();
-  }, [navigate, refreshKey]);
+    })();
+  }, [foldersMode, navigate, refreshKey, sortBy, sortDir]);
 
   return (
     <div className="file-view">
       <div className="file-view__header">
         <div className="file-view__header">
           <h1 className="view-title">
-            <svg
-              className="view-title__icon"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fill="currentColor"
-                d="M12 2 A10 10 0 1 1 11.999 2 Z M11 7 V13 L16.25 16.15 L17.25 14.42 L13 11.9 V7 H11"/>
-            </svg>
-
+            <IconRecent className="view-title__icon" width={24} height={24} aria-hidden="true" />
             <span className="view-title__text">Recents</span>
           </h1>
         </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView allFiles={files} onRefresh={onRefresh} sortBy="modified" />
+      <FileView
+        allFiles={files}
+        onRefresh={onRefresh}
+        sortBy={sortBy}
+        sortDir={sortDir}
+        foldersMode={foldersMode}
+        onSortChange={handleSortChange}
+      />
     </div>
   );
 }

@@ -20,16 +20,29 @@ client.connect(host, port);
  * @return {Promise<{status: number, response: string|null}>} An object containing the HTTP-like status code and the response body (if successful).
  */
 exports.get = async (name) => {
-  const response = (await client.request(`GET ${name}`, timeout)).toString();
+  const response = (await client.request(`GET ${name}\n`, timeout)).toString();
   if (!response.startsWith("200 Ok"))
     return {
       status: parseInt(response.split(" ")[0]) || 500,
       response: null,
     };
-  return {
-    status: 200,
-    response: response.substring("200 Ok\n\n".length, response.length - 1),
-  };
+  const headerLength = "200 Ok\n\n".length;
+  let base64Content = response.substring(headerLength);
+  if (base64Content.endsWith("\n")) {
+    base64Content = base64Content.slice(0, -1);
+  }
+  try {
+    const decoded = Buffer.from(base64Content, "base64").toString("utf8");
+    return {
+      status: 200,
+      response: decoded,
+    };
+  } catch (err) {
+    return {
+      status: 200,
+      response: base64Content,
+    };
+  }
 };
 
 /**
@@ -39,8 +52,9 @@ exports.get = async (name) => {
  * @return {Promise<{status: number, response: null}>} An object containing the status code.
  */
 exports.post = async (name, content) => {
+  const base64Content = Buffer.from(content, "utf8").toString("base64");
   const response = (
-    await client.request(`POST ${name} ${content}`, timeout)
+    await client.request(`POST ${name} ${base64Content}\n`, timeout)
   ).toString();
   return {
     status: parseInt(response.split(" ")[0]) || 500,
@@ -54,7 +68,7 @@ exports.post = async (name, content) => {
  * @return {Promise<{status: number, response: null}>} An object containing the status code.
  */
 exports.delete = async (name) => {
-  const response = (await client.request(`DELETE ${name}`, timeout)).toString();
+  const response = (await client.request(`DELETE ${name}\n`, timeout)).toString();
   return {
     status: parseInt(response.split(" ")[0]) || 500,
     response: null,
@@ -67,8 +81,9 @@ exports.delete = async (name) => {
  * @return {Promise<{status: number, response: string[]}>} An object containing the status code and an array of matching file IDs.
  */
 exports.search = async (query) => {
+  const base64Query = Buffer.from(query, "utf8").toString("base64");
   const response = (
-    await client.request(`SEARCH ${query}`, timeout)
+    await client.request(`SEARCH ${base64Query}\n`, timeout)
   ).toString();
   if (!response.startsWith("200 Ok"))
     return {

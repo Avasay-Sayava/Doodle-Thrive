@@ -3,29 +3,26 @@
   display: flex;
 }
 
-
 .new__button {
   display: inline-flex;
   align-items: center;
   gap: 12px;
 
   padding: 14px 22px;
+  margin-bottom: 8px;
   font-size: 16px;
-  border-radius: 999px;
+  border-radius: 15px;
 
   border: 1px solid var(--color-border);
   background: var(--color-bg-main);
   color: var(--color-text-primary);
   font-weight: 500;
 
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-  transition: background-color 0.15s, box-shadow 0.15s;
+  transition: background-color 0.15s;
 }
-
 
 .new__button:hover {
   background: var(--color-bg-hover);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .new__plus {
@@ -43,10 +40,9 @@
   color: var(--color-primary);
 }
 
-
 .new__menu {
   position: absolute;
-  top: calc(100% + 8px);
+  top: 100%;
   left: 0;
   width: 220px;
 
@@ -55,16 +51,15 @@
   border-radius: 12px;
   overflow: hidden;
 
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
   z-index: 50;
 }
 
 .new__menu-item {
   width: 100%;
-  text-align: left;
   padding: 12px 14px;
-
-  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   color: var(--color-text-primary);
   font-size: 14px;
 }
@@ -73,10 +68,17 @@
   background: var(--color-bg-hover);
 }
 
+.new__menu-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
 .new__modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
   display: grid;
   place-items: center;
   z-index: 1000;
@@ -87,7 +89,6 @@
   background: var(--color-bg-main);
   border-radius: 18px;
   padding: 22px 22px 18px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 
 .new__modal-title {
@@ -157,7 +158,6 @@
   position: relative;
 }
 
-
 .new--hidden-trigger .new__button {
   opacity: 0; 
   position: absolute;
@@ -181,10 +181,8 @@
   background: transparent;
 }
 
-.get-text-modal__overlay::backdrop {
-  background: rgba(0, 0, 0, 0.35);
-}
-
-.get-text-modal__overlay:not([open]) {
-  display: none;
+.new__menu-sep {
+  height: 1px;
+  margin: 6px 0;
+  background: var(--color-border);
 }

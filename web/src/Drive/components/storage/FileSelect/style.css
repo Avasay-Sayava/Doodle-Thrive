@@ -41,12 +41,25 @@
   pointer-events: auto;
 }
 
+.file-row:hover .file-action-btn--hover:disabled {
+  opacity: 0.5;
+}
+
 .file-action-btn--starred {
-  color: #fbbc04;
+  color: var(--color--icon-starred);
 }
 
 .file-action-btn--starred:hover {
-  color: #fbbc04;
+  color: var(--color--icon-starred-hover);
+}
+
+.file-action-btn:disabled {
+  cursor: not-allowed;
+}
+
+.file-action-btn:disabled:hover {
+  background-color: transparent;
+  color: var(--color-text-secondary);
 }
 
 .files-table th.col-actions {

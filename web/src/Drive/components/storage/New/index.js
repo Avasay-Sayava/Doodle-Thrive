@@ -1,64 +1,21 @@
 import "./style.css";
 import { useEffect, useRef, useState } from "react";
+import ActionsMenu from "./ActionsMenu";
 
-import newFile from "../../../utils/newFile";
-import GetText from "../../modal/GetText";
-
-export default function New({ onCreated, hidden = false }) {
+export default function New({ onCreated, hidden = false, folderId = null }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const rootRef = useRef(null);
 
-  const openFolderRef = useRef(null);
-  const openFileRef = useRef(null);
-
   useEffect(() => {
-    const onDocMouseDown = (e) => {
-      if (!rootRef.current) return;
-
-      // If click is inside the New button/menu, keep it open
-      if (rootRef.current.contains(e.target)) return;
-
-      // Otherwise close
-      setMenuOpen(false);
+    const onDown = (e) => {
+      if (!rootRef.current?.contains(e.target)) setMenuOpen(false);
     };
-
-    document.addEventListener("mousedown", onDocMouseDown);
-    return () => document.removeEventListener("mousedown", onDocMouseDown);
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
   }, []);
-
-  const create = async (name, fileType) => {
-    await newFile({ fileName: name, fileType });
-    setMenuOpen(false);
-    onCreated?.();
-  };
 
   return (
     <div className="new" ref={rootRef}>
-      {/* Keep GetText mounted so open() always works */}
-      <GetText
-        title="New folder"
-        placeholder="Untitled folder"
-        submitLabel="Create"
-        onSubmit={(name) => create(name, "folder")}
-      >
-        {(open) => {
-          openFolderRef.current = open;
-          return null;
-        }}
-      </GetText>
-
-      <GetText
-        title="New file"
-        placeholder="Untitled file"
-        submitLabel="Create"
-        onSubmit={(name) => create(name, "file")}
-      >
-        {(open) => {
-          openFileRef.current = open;
-          return null;
-        }}
-      </GetText>
-
       <div className={hidden ? "new--hidden-trigger" : ""}>
         <button
           type="button"
@@ -72,34 +29,12 @@ export default function New({ onCreated, hidden = false }) {
         </button>
       </div>
 
-      {menuOpen && (
-        <div className="new__menu" role="menu" aria-label="New menu">
-          <button
-            type="button"
-            className="new__menu-item"
-            role="menuitem"
-            onClick={() => {
-              setMenuOpen(false);
-              openFolderRef.current?.();
-            }}
-          >
-            New folder
-          </button>
-
-          <button
-            type="button"
-            className="new__menu-item"
-            role="menuitem"
-            onClick={() => {
-              setMenuOpen(false);
-              openFileRef.current?.();
-            }}
-          >
-            New file
-          </button>
-        </div>
-      )}
+      <ActionsMenu
+        isOpen={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onCreated={onCreated}
+        folderId={folderId}
+      />
     </div>
   );
 }
-  
