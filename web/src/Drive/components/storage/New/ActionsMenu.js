@@ -5,7 +5,6 @@ import IconFolder from "../../icons/IconFolder";
 import IconUpload from "../../icons/IconUpload";
 import GetText from "../../../modals/GetText";
 import newFile from "../../../utils/newFile";
-import uploadFile from "../../../utils/uploadFile";
 
 export default function ActionsMenu({ onClose, isOpen, onCreated, folderId = null, anchorPoint = null }) {
   const openFolderRef = useRef(null);
@@ -31,7 +30,14 @@ export default function ActionsMenu({ onClose, isOpen, onCreated, folderId = nul
     e.target.value = "";
     if (!files.length) return;
 
-    for (const f of files) await uploadFile(f, folderId);
+    for (const f of files) {
+      await newFile({ 
+        fileName: f.name, 
+        fileType: "file", 
+        parentId: folderId, 
+        fileObject: f 
+      });
+    }
     refresh();
   };
 

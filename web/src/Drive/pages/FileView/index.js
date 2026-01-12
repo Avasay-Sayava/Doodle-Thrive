@@ -4,7 +4,6 @@ import Filter from "../../components/storage/Filter";
 import ActionsMenu from "../../components/storage/New/ActionsMenu";
 import GetText from "../../modals/GetText";
 import newFile from "../../utils/newFile";
-import uploadFile from "../../utils/uploadFile";
 import { useEffect, useRef, useState } from "react";
 
 /**
