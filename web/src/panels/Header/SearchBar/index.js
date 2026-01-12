@@ -103,6 +103,7 @@ function SearchBar() {
                 <DropDown
                     results={results}
                     loading={loading}
+                    setOpen={setOpen}
                 />
             )}
         </div>
