@@ -1,8 +1,16 @@
 import "./style.css";
+import { useState, useEffect } from "react";
 import FileSelect from "../FileSelect";
-import renameFile from "../../../utils/renameFile";
 import FileActions from "../FileActions";
-
+import RelativeDate from "../../Date";
+import IconFolder from "../../icons/IconFolder";
+import IconFile from "../../icons/IconFile";
+import EditFile from "../../../modals/EditFile";
+import ViewFile from "../../../modals/ViewFile";
+import ViewImage from "../../../modals/ViewImage";
+import useFilePermissions, { roleFromPermissions } from "../../../utils/useFilePermissions";
+import useUserId from "../../../utils/useUserId";
+import { useNavigate } from "react-router-dom";
 
 function getSize({ type, content }) {
   if (type === "folder") return "-";
@@ -16,81 +24,170 @@ function getSize({ type, content }) {
   return gb.toFixed(2) + " GB";
 }
 
-function getDate(timestamp) {
-  const date = new Date(timestamp);
-  if (isNaN(date.getTime())) return "Unknown";
-  //if the date is today, return (1 hour/24 minutes/5 seconds) ago
-  const now = new Date();
-  const diff = Math.abs(now - date);
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24 && date.getDate() === now.getDate()) {
-    if (hours > 0) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    if (minutes > 0) return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-    return `${seconds} second${seconds > 1 ? "s" : ""} ago`;
-  }
-
-  //if the date is yesterday, return "Yesterday"
-  const yesterday = new Date();
-  yesterday.setDate(now.getDate() - 1);
-  if (date.getDate() === yesterday.getDate() &&
-    date.getMonth() === yesterday.getMonth() &&
-    date.getFullYear() === yesterday.getFullYear()) {
-    return "Yesterday";
-  }
-
-  //otherwise, return the date in DD/MM/YYYY format
-  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+function isImageFile(filename) {
+  if (!filename) return false;
+  const ext = filename.toLowerCase().split(".").pop();
+  return ["jpg", "jpeg", "png", "webp"].includes(ext);
 }
 
-function IconFile() {
+function FileRow({ file, onRefresh }) {
+  const navigate = useNavigate();
+  const [localFile, setLocalFile] = useState(file);
+  const [hasLoadedPermissions, setHasLoadedPermissions] = useState(false);
+  const currentUserId = useUserId();
+  const { currentUserPerms, loadShared, loading } = useFilePermissions(file?.id, currentUserId, onRefresh);
+
+  // Update local file when prop changes
+  useEffect(() => {
+    setLocalFile(file);
+    setHasLoadedPermissions(false);
+  }, [file]);
+
+  // Load permissions when file or user changes
+  useEffect(() => {
+    if (file?.id && currentUserId && (file?.type === "file" || file?.type === "folder")) {
+      loadShared().finally(() => {
+        setHasLoadedPermissions(true);
+      });
+    } else {
+      setHasLoadedPermissions(true);
+    }
+  }, [file?.id, file?.type, currentUserId, loadShared]);
+
+  const { name, modified, content, ownerUsername, type } = localFile;
+
+  const isImage = isImageFile(name);
+  
+  // Get user's role based on permissions
+  const userRole = roleFromPermissions(currentUserPerms);
+  
+  // Check if current user can edit (editor or above)
+  const canEdit = ["editor", "admin", "owner"].includes(userRole);
+
+  const handleFileClick = (e, openModal) => {
+    // Check if any modal is open (dialog element with open attribute)
+    const isAnyModalOpen = document.querySelector('dialog[open]');
+    
+    if (type === "file") {
+      // Don't open file if it's in trash
+      if (!loading && !localFile.trashed) {
+        openModal();
+      }
+    }
+    else if (type === "folder") {
+      // Only navigate to folder if no modal is open
+      if (!isAnyModalOpen) {
+        navigate(`/drive/folders/${localFile.id}`, { replace: true });
+      }
+    }
+  };
+
+  const handleSave = (updatedData) => {
+    // Update local file immediately with new content, size, and modified date
+    setLocalFile(prev => ({
+      ...prev,
+      content: updatedData.content,
+      modified: updatedData.modified
+    }));
+    
+    // Still call parent refresh if needed
+    onRefresh?.();
+  };
+
   return (
-    <svg viewBox="0 0 24 24" width="18" height="18">
-      <path
-        fill="currentColor"
-        d="M6 2h8l4 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 2H6v16h10V9h-3V4Z"
-      />
-    </svg>
-  );
-}
-
-function IconFolder() {
-  return (
-    <svg viewBox="0 0 24 24" width="18" height="18">
-      <path
-        fill="currentColor"
-        d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"
-      />
-    </svg>
-  );
-}
-
-
-
-function FileRow({ file: { name, modified, content, ownerUsername, type, id, starred }, onRefresh }) {
-  const file = { name, modified, content, ownerUsername, type, id, starred };
-  return (
-    <FileActions
-      file={file}
-      onRefresh={onRefresh}
-      onLeftClick={()=>{}}
-    >
-      <tr className="file-row">
-        <td className="col-name">
-          <span className="file-icon" aria-hidden="true">
-            {type === "folder" ? <IconFolder /> : <IconFile />}
-          </span>
-          {name}
-        </td>
-        <td className="col-owner">{ownerUsername}</td>
-        <td className="col-modified">{getDate(modified)}</td>
-        <td className="col-size">{getSize({ type, content })}</td>
-        <td className="col-actions">
-          <FileSelect file={{ id, starred }} onRefresh={onRefresh} />
-        </td>
-      </tr>
-    </FileActions>
+    <>
+      {!hasLoadedPermissions && type === "file" ? (
+        <tr className="file-row">
+          <td className="col-name" colSpan="5">
+            <span style={{ color: "#999" }}>Loading...</span>
+          </td>
+        </tr>
+      ) : isImage ? (
+        <ViewImage file={localFile}>
+          {(openViewImage) => (
+            <FileActions
+              file={localFile}
+              onRefresh={onRefresh}
+              currentUserPerms={currentUserPerms}
+              onLeftClick={(e) => handleFileClick(e, openViewImage)}
+            >
+              <tr className="file-row">
+                <td className="col-name">
+                  <span className="file-icon" aria-hidden="true">
+                    {type === "folder" ? <IconFolder /> : <IconFile />}
+                  </span>
+                  {name}
+                </td>
+                <td className="col-owner">{ownerUsername}</td>
+                <td className="col-modified">
+                  <RelativeDate timestamp={modified} />
+                </td>
+                <td className="col-size">{getSize({ type, content })}</td>
+                <td className="col-actions">
+                  <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
+                </td>
+              </tr>
+            </FileActions>
+          )}
+        </ViewImage>
+      ) : canEdit ? (
+        <EditFile file={localFile} onSave={handleSave}>
+          {(openEditModal) => (
+            <FileActions
+              file={localFile}
+              onRefresh={onRefresh}
+              currentUserPerms={currentUserPerms}
+              onLeftClick={(e) => handleFileClick(e, openEditModal)}
+            >
+              <tr className="file-row">
+                <td className="col-name">
+                  <span className="file-icon" aria-hidden="true">
+                    {type === "folder" ? <IconFolder /> : <IconFile />}
+                  </span>
+                  {name}
+                </td>
+                <td className="col-owner">{ownerUsername}</td>
+                <td className="col-modified">
+                  <RelativeDate timestamp={modified} />
+                </td>
+                <td className="col-size">{getSize({ type, content })}</td>
+                <td className="col-actions">
+                  <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
+                </td>
+              </tr>
+            </FileActions>
+          )}
+        </EditFile>
+      ) : (
+        <ViewFile file={localFile}>
+          {(openViewModal) => (
+            <FileActions
+              file={localFile}
+              onRefresh={onRefresh}
+              currentUserPerms={currentUserPerms}
+              onLeftClick={(e) => handleFileClick(e, openViewModal)}
+            >
+              <tr className="file-row">
+                <td className="col-name">
+                  <span className="file-icon" aria-hidden="true">
+                    {type === "folder" ? <IconFolder /> : <IconFile />}
+                  </span>
+                  {name}
+                </td>
+                <td className="col-owner">{ownerUsername}</td>
+                <td className="col-modified">
+                  <RelativeDate timestamp={modified} />
+                </td>
+                <td className="col-size">{getSize({ type, content })}</td>
+                <td className="col-actions">
+                  <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
+                </td>
+              </tr>
+            </FileActions>
+          )}
+        </ViewFile>
+      )}
+    </>
   );
 }
 

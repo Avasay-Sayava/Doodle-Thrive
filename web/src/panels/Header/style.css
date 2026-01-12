@@ -42,7 +42,6 @@
 .icon-group {
   display: flex;
   align-items: center;
-  gap: 12px;
 }
 
 .icon-button {

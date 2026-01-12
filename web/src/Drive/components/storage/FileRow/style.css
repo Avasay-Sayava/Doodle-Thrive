@@ -13,7 +13,6 @@
   padding: 0 16px;
   vertical-align: middle;
   font-size: 14px;
-  color: var(--color-text-muted);
   white-space: nowrap;
 }
 
@@ -21,18 +20,9 @@
   padding-left: 24px;
   width: 42%;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.file-icon {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
-  vertical-align: middle;
-  flex-shrink: 0;
 }
 
 .col-owner {
@@ -47,7 +37,6 @@
 
 .col-size {
   width: 10%;
-  text-align: right;
   color: var(--color-text-secondary);
 }
 

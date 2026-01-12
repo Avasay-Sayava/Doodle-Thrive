@@ -1,0 +1,62 @@
+.shared-user-item {
+  display: grid;
+  grid-template-columns: 38px 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.shared-user-item__info {
+  min-width: 0;
+}
+
+.shared-user-item__name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.shared-user-item__badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--color-bg-hover);
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.shared-user-item__badge--owner {
+  background: var(--color-primary-faint, rgba(99, 102, 241, 0.15));
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.shared-user-item__meta {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.shared-user-item__role-label {
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.shared-user-item__add-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.shared-user-item__add-btn:hover {
+  background: var(--color-primary-hover, var(--color-primary));
+  opacity: 0.9;
+}

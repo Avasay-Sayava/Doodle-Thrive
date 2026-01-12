@@ -129,7 +129,7 @@ exports.update = async (
 ) => {
   const file = files[id];
 
-  if (content) {
+  if (content !== undefined && file.type === "file") {
     const response = await Storage.delete(id);
     if (response.status !== 204) return false;
 
@@ -146,11 +146,15 @@ exports.update = async (
 
   if (name) file.name = name;
 
-  if (parent) {
-    files[files[id].parent].children = files[files[id].parent].children.filter(
-      (childId) => childId !== id
-    );
-    files[parent].children.push(id);
+  if (parent !== undefined) {
+    if (file.parent && files[file.parent]) {
+      files[file.parent].children = files[file.parent].children.filter(
+        (childId) => childId !== id
+      );
+    }
+    if (parent && files[parent]?.children) {
+      files[parent].children.push(id);
+    }
     file.parent = parent;
   }
 

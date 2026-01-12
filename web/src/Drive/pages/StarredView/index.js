@@ -3,6 +3,8 @@ import FileView from "../FileView";
 import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
+import IconStar from "../../components/icons/IconStar";
+import { sortFiles } from "../../utils/sortFiles";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -12,16 +14,28 @@ function StarredView({ refreshKey, onRefresh}) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
 
+  const [sortBy, setSortBy] = useState("name");
+  const [sortDir, setSortDir] = useState("asc");
+  const [foldersMode, setFoldersMode] = useState("folders-first");
+
+  const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+    setSortBy(newSortBy);
+    setSortDir(newSortDir);
+    setFoldersMode(newFoldersMode);
+  };
+
   useEffect(() => {
-    const run = async () => {
+    (async () => {
       try {
         setError("");
 
         const jwt = localStorage.getItem("token");
         if (!jwt){
+          localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }
+
 
         const res = await fetch(`${API_BASE}/api/files`, {
           method: "GET",
@@ -46,14 +60,13 @@ function StarredView({ refreshKey, onRefresh}) {
           starred[i].ownerUsername = await getUser(starred[i].owner);
         }
 
-        setFiles(starred);
+        setFiles(sortFiles(starred, sortBy, sortDir, foldersMode));
+        handleSortChange({ sortBy, sortDir, foldersMode });
       } catch (err) {
         setError(err?.message || "Failed to load files");
       }
-    };
-
-    run();
-  }, [navigate, refreshKey]);
+    })();
+  }, [navigate, refreshKey, sortBy, sortDir, foldersMode]);
 
   return (
 
@@ -61,23 +74,27 @@ function StarredView({ refreshKey, onRefresh}) {
       <div className="file-view__header">
         <div className="file-view__header">
           <h1 className="view-title">
-            <svg
+            <IconStar
               className="view-title__icon"
-              viewBox="0 0 24 24"
+              width={24}
+              height={24}
               aria-hidden="true"
-            >
-              <path
-                fill="var(--color--icon-starred)"
-                d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27Z"
-              />
-            </svg>
+              style={{ color: "var(--color--icon-starred)" }}
+            />
             <span className="view-title__text">Starred</span>
           </h1>
         </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView allFiles={files} onRefresh={onRefresh} />
+      <FileView 
+        allFiles={files} 
+        onRefresh={onRefresh}
+        sortBy={sortBy}
+        sortDir={sortDir}
+        foldersMode={foldersMode}
+        onSortChange={handleSortChange}
+      />
     </div>
   );
 }

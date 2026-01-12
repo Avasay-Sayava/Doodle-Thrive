@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect, use } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import './style.css';
 
 import DropDown from './DropDown';
-import { replace, useNavigate } from 'react-router-dom';
-import SearchView from '../../../Drive/pages/SearchView';
+import { useNavigate } from 'react-router-dom';
+import { sortFiles } from '../../../Drive/utils/sortFiles';
 
 // Assume auth is already handled (e.g., via proxy or global fetch wrapper)
 const API_BASE = process.env.API_BASE_URL || 'http://localhost:3300';
@@ -25,7 +25,7 @@ function SearchBar() {
             setQuery('');
             setEnter(false);
         }
-    }, [enter]);
+    }, [enter, navigate, query]);
 
     useEffect(() => {
         const onClickOutside = (e) => {
@@ -50,7 +50,6 @@ function SearchBar() {
                 const jwt = localStorage.getItem('token');
                 if (!jwt) {
                     localStorage.removeItem('token');
-                    localStorage.removeItem('id');
                     setResults([]);
                     navigate('/signin', { replace: true });
                     return;
@@ -65,7 +64,9 @@ function SearchBar() {
 
                 const data = await res.json();
                 const list = Object.values(data || {});
-                setResults(list);
+                // Sort search results by name
+                const sortedList = sortFiles(list, "name", "asc", "mixed");
+                setResults(sortedList);
             } catch (err) {
                 if (err.name === 'AbortError') return;
                 setResults([]);
@@ -78,7 +79,7 @@ function SearchBar() {
             controller.abort();
             clearTimeout(timer);
         };
-    }, [query]);
+    }, [navigate, query]);
 
     return (
         <div className={`search-bar ${open ? 'open' : ''}`} ref={containerRef}>
@@ -102,6 +103,7 @@ function SearchBar() {
                 <DropDown
                     results={results}
                     loading={loading}
+                    setOpen={setOpen}
                 />
             )}
         </div>

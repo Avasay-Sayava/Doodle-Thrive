@@ -1,41 +1,55 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
 
 import Logo from "../../components/Logo";
-import SearchBar from './SearchBar';
-import ProfilePicture from './ProfilePicture';
+import SearchBar from "./SearchBar";
+import ProfilePicture from "./ProfilePicture";
+import HeaderButton from "./HeaderButton";
+import IconSettings from "../../Drive/components/icons/IconSettings";
+import IconLogout from "../../Drive/components/icons/IconLogout";
+import { useNavigate } from "react-router-dom";
 
-import './style.css';
-import SettingsIcon from './SettingsIcon';
-import Logout from './Logout';
+import "./style.css";
 
-function Header() {
-    return (
-        <header className="drive-header">
-            <div className="header-left">
-                <Logo />
-                <span className="app-name">Drive</span>
-            </div>
+function Header({ openSettings }) {
+  const navigate = useNavigate();
 
-            <div className="header-middle">
-                <SearchBar />
-            </div>
+  return (
+    <header className="drive-header">
+      <div className="header-left">
+        <Logo />
+        <span className="app-name">Drive</span>
+      </div>
 
-            <div className="header-right">
-                <div className="icon-group">
-                    <div style={{ padding: '20px' }}>
-                        <SettingsIcon/>
-                    </div>
-                    <div style={{ padding: '20px' }}>
-                        <Logout />
-                    </div>
-                </div>
-                <div className="profile-picture-container">
-                    <ProfilePicture />
-                </div>
-            </div>
-        </header>
-    )
+      <div className="header-middle">
+        <SearchBar />
+      </div>
+
+      <div className="header-right">
+        <div className="icon-group">
+          <div>
+            <HeaderButton
+              icon={<IconSettings />}
+              onClick={openSettings}
+              text="Settings"
+            />
+          </div>
+          <div>
+            <HeaderButton
+              icon={<IconLogout />}
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/signin");
+              }}
+              text="Sign Out"
+            />
+          </div>
+        </div>
+        <div className="profile-picture-container">
+          <ProfilePicture />
+        </div>
+      </div>
+    </header>
+  );
 }
 
 export default Header;

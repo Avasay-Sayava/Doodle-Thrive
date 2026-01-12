@@ -1,0 +1,82 @@
+import "./style.css";
+import { useCallback, useState } from "react";
+import Modal from "../Modal";
+import getFile from "../../utils/getFile";
+
+/**
+ * ViewFile modal - displays file content in read-only mode
+ * @param {Object} file - The file to view (must include id and name)
+ * @param {Function} children - Render prop function that receives (open) function
+ */
+export default function ViewFile({ file, children }) {
+  const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const loadFile = useCallback(async () => {
+    if (!file?.id) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const fileData = await getFile(file.id);
+      const fileContent = fileData?.content || "";
+      
+      if (fileContent === undefined) throw new Error("No file content");
+      
+      setContent(fileContent);
+    } catch (err) {
+      setError(err?.message || "Failed to load file");
+      setContent("");
+    } finally {
+      setLoading(false);
+    }
+  }, [file?.id]);
+
+  const handleClose = useCallback(() => {
+    setContent("");
+    setError("");
+  }, []);
+
+  const renderBody = useCallback(
+    (isOpen, shouldRender, close) => {
+      if (!shouldRender) return null;
+
+      return (
+        <div className="view-file-modal__content">
+          {error && <div className="view-file-modal__error">{error}</div>}
+
+          {loading ? (
+            <div className="view-file-modal__loading">Loading file...</div>
+          ) : content ? (
+            <div className="view-file-modal__text-wrapper">
+              <pre className="view-file-modal__text">{content}</pre>
+            </div>
+          ) : null}
+
+          <div className="view-file-modal__actions">
+            <button
+              className="view-file-modal__button view-file-modal__button--close"
+              onClick={close}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      );
+    },
+    [content, loading, error]
+  );
+
+  return (
+    <Modal
+      title={`View: ${file?.name || "File"}`}
+      renderBody={renderBody}
+      onOpen={loadFile}
+      onClose={handleClose}
+    >
+      {children}
+    </Modal>
+  );
+}

@@ -1,22 +1,62 @@
 import "../style.css";
 import FileRow from "../../components/storage/FileRow";
 import Filter from "../../components/storage/Filter";
-import { useEffect, useState } from "react";
+import ActionsMenu from "../../components/storage/New/ActionsMenu";
+import GetText from "../../modals/GetText";
+import newFile from "../../utils/newFile";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Returns a file view component.
  * @param {{ allFiles: Array }} param0 
  * @returns {JSX.Element} The FileView component.
- */
-function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }) {
+ */ 
+function FileView({ 
+  allFiles = [], 
+  onRefresh, 
+  sortBy = "name", 
+  sortDir = "asc", 
+  foldersMode = "mixed",
+  onSortChange,
+  parentId = null
+}) {
   const [files, setFiles] = useState([...allFiles]);
+  const [menuPosition, setMenuPosition] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    setFiles([...allFiles]);
-  }, [allFiles]);
+    // New files always on top
+    setFiles((prevFiles) => {
+      const existingIds = new Set(prevFiles.map((f) => f.id));
+      const newFiles = allFiles.filter((f) => !existingIds.has(f.id));
+      return [ ...newFiles, ...prevFiles];
+    });
+  }, [allFiles, sortBy, sortDir]);
+
+  useEffect(() => {
+    const onClick = () => setMenuOpen(false);
+    window.addEventListener("click", onClick);
+    return () => window.removeEventListener("click", onClick);
+  }, []);
+
+  const onRightClick = (e) => {
+    e.preventDefault();
+    if (menuOpen) setMenuOpen(false);
+    setTimeout(() => {
+      setMenuOpen(true);
+      setMenuPosition({ x: e.pageX, y: e.pageY });
+    }, 0);
+  }
 
   return (
-      <div className="file-view__table-wrapper">
+      <div onContextMenu={onRightClick} className="file-view__table-wrapper">
+        <ActionsMenu
+          isOpen={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          onCreated={onRefresh}
+          folderId={parentId}
+          anchorPoint={menuPosition}
+        />
         <table className="files-table">
           <thead className="files-thead">
             <tr>
@@ -25,7 +65,14 @@ function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }
               <th>Last modified</th>
               <th>File size</th>
               <th className="col-actions">
-                <Filter files={files} setFiles={setFiles} sortBy={sortBy} sortDir={sortDir} />
+                <Filter 
+                  files={files} 
+                  setFiles={setFiles} 
+                  sortBy={sortBy} 
+                  sortDir={sortDir} 
+                  foldersMode={foldersMode}
+                  onSortChange={onSortChange}
+                />
               </th>
             </tr>
           </thead>
@@ -48,8 +95,8 @@ function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }
             )}
           </tbody>
         </table>
-      </div>
-  );
+        </div>
+        );
 }
 
 export default FileView;

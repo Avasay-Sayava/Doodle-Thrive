@@ -3,6 +3,7 @@ import FileView from "../FileView";
 import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { sortFiles } from "../../utils/sortFiles";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -13,17 +14,28 @@ function SearchView({ refreshKey, onRefresh }) {
     const [searchParams] = useSearchParams();
     const query = searchParams.get("query");
 
+    const [sortBy, setSortBy] = useState("name");
+    const [sortDir, setSortDir] = useState("asc");
+    const [foldersMode, setFoldersMode] = useState("mixed");
+
+    const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+        setSortBy(newSortBy);
+        setSortDir(newSortDir);
+        setFoldersMode(newFoldersMode);
+    };
+
     if (!query) {
         navigate("/drive/home", { replace: true });
     }
 
     useEffect(() => {
-        const run = async () => {
+        (async () => {
             try {
                 setError("");
 
                 const jwt = localStorage.getItem("token");
-                if (!jwt) {
+                if (!jwt){
+                    localStorage.removeItem("token");
                     navigate("/signin", { replace: true });
                     return;
                 }
@@ -45,20 +57,18 @@ function SearchView({ refreshKey, onRefresh }) {
 
                 const filesObj = await res.json();
                 const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
-                const rootFiles = allFiles.filter((f) => f.parent == null);
 
-                for (let i = 0; i < rootFiles.length; i++) {
-                    rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
+                for (let i = 0; i < allFiles.length; i++) {
+                    allFiles[i].ownerUsername = await getUser(allFiles[i].owner);
                 }
 
-                setFiles(rootFiles);
+                const sortedFiles = sortFiles(allFiles, sortBy, sortDir, foldersMode);
+                setFiles(sortedFiles);
             } catch (err) {
                 setError(err?.message || "Failed to load files");
             }
-        };
-
-        run();
-    }, [query, navigate, refreshKey]);
+        })();
+    }, [query, navigate, refreshKey, sortBy, sortDir, foldersMode]);
     return (
         <div className="file-view">
             <div className="file-view__header">
@@ -70,7 +80,14 @@ function SearchView({ refreshKey, onRefresh }) {
             </div>
 
             {error && <div className="error-message">{error}</div>}
-            <FileView allFiles={files} onRefresh={onRefresh} />
+            <FileView 
+                allFiles={files} 
+                onRefresh={onRefresh}
+                sortBy={sortBy}
+                sortDir={sortDir}
+                foldersMode={foldersMode}
+                onSortChange={handleSortChange}
+            />
         </div>
     );
 }

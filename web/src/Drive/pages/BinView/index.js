@@ -3,6 +3,8 @@ import FileView from "../FileView";
 import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
+import { sortFiles } from "../../utils/sortFiles";
+import IconBin from "../../components/icons/IconBin";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -11,13 +13,24 @@ function BinView({ refreshKey, onRefresh}) {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const [sortBy, setSortBy] = useState("name");
+  const [sortDir, setSortDir] = useState("asc");
+  const [foldersMode, setFoldersMode] = useState("folders-first");
+
+  const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+    setSortBy(newSortBy);
+    setSortDir(newSortDir);
+    setFoldersMode(newFoldersMode);
+  };
+
   useEffect(() => { 
-    const run = async () => {
+    (async () => {
       try {
         setError("");
 
         const jwt = localStorage.getItem("token");
         if (!jwt){
+          localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }
@@ -28,7 +41,7 @@ function BinView({ refreshKey, onRefresh}) {
         });
 
         if (!res.ok) {
-          if(res.status === 401){
+          if(res.status === 401) {
             localStorage.removeItem("token");
             navigate("/signin", { replace: true });
             return;
@@ -39,43 +52,48 @@ function BinView({ refreshKey, onRefresh}) {
 
         const filesObj = await res.json();
         const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
-        const binFiles = allFiles.filter((f) => f.trashed === true);
+        // Only show files that are trashed but whose parent is NOT trashed
+        const binFiles = allFiles.filter((f) => {
+          if (f.trashed !== true) return false;
+          // If file has no parent (root level), show it
+          if (!f.parent) return true;
+          // Check if parent is also trashed
+          const parent = allFiles.find(p => p.id === f.parent);
+          return !parent || parent.trashed !== true;
+        });
 
         for (let i = 0; i < binFiles.length; i++) {
           binFiles[i].ownerUsername = await getUser(binFiles[i].owner);
         }
 
-        setFiles(binFiles);
+        setFiles(sortFiles(binFiles, sortBy, sortDir, foldersMode));
+        handleSortChange({ sortBy, sortDir, foldersMode });
       } catch (err) {
         setError(err?.message || "Failed to load files");
       }
-    };
-
-    run();
-  }, [navigate, refreshKey]);
+    })();
+  }, [foldersMode, navigate, refreshKey, sortBy, sortDir]);
 
   return (
     <div className="file-view">
       <div className="file-view__header">
         <div className="file-view__header">
           <h1 className="view-title">
-            <svg
-              className="view-title__icon"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fill="currentColor"
-                d="M6 7h12l-1 14H7L6 7Zm3-4h6l1 2h4v2H4V5h4l1-2Z"
-              />
-            </svg>
+            <IconBin className="view-title__icon" width={24} height={24} aria-hidden="true" />
             <span className="view-title__text">Bin</span>
           </h1>
         </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView allFiles={files} onRefresh={onRefresh} />
+      <FileView 
+        allFiles={files} 
+        onRefresh={onRefresh}
+        sortBy={sortBy}
+        sortDir={sortDir}
+        foldersMode={foldersMode}
+        onSortChange={handleSortChange}
+      />
     </div>
   );
 }

@@ -2,7 +2,10 @@ import React from "react";
 
 import { useState, useEffect } from "react";
 
-import { replace, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import Avatar from "../../../Drive/components/Avatar";
+import useUserId from "../../../Drive/utils/useUserId";
 
 import "./style.css";
 const API_BASE = 'http://localhost:3300';
@@ -10,18 +13,21 @@ const API_BASE = 'http://localhost:3300';
 
 function ProfilePicture() {
     const [picture, setPicture] = useState();
-    const [data, setData] = useState({});
+    const [username, setUsername] = useState("");
+    const [description, setDescription] = useState("");
     const navigate = useNavigate();
-    const id = localStorage.getItem("id");
+    const id = useUserId();
     const jwt = localStorage.getItem("token");
 
     useEffect(() => {
         if (!jwt) {
             localStorage.removeItem('token');
-            localStorage.removeItem('id');
             navigate('/signin', { replace: true });
             return;
         }
+
+        // Wait for user ID to be available before fetching user data
+        if (!id) return;
 
         (async () => {
             const res = await fetch(`${API_BASE}/api/users/${id}`, {
@@ -29,23 +35,15 @@ function ProfilePicture() {
                 headers: { Authorization: `Bearer ${jwt}` },
             });
             const userData = await res.json();
-            setData(userData);
+            setUsername(userData.username || "User");
+            setDescription(userData.info?.description || "No description");
             setPicture(userData.info?.image);
         })();
     }, [jwt, id, navigate]);
 
-    const putProfilePicture = () => {
-        if (picture) {
-            return <img src={picture} alt="Profile" className="profile-image" />;
-        } else {
-            const initial = data.username ? data.username.charAt(0).toUpperCase() : 'U';
-            return <div className="profile-initial">{initial}</div>;
-        }
-    };
-
     return (
-        <div title={data.info?.description || 'No description'} className="profile-picture-button">
-            {putProfilePicture()}
+        <div title={description} className="profile-picture-button">
+            <Avatar username={username} imageUrl={picture} size={38} />
         </div>
     )
 }

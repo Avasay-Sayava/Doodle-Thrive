@@ -50,6 +50,17 @@ exports.find = (username, password = undefined) => {
   return null;
 };
 
+exports.findByUsername = (username) => {
+  const out = {};
+  for (const id in users) {
+    if (users[id].username.includes(username)) {
+      out[id] = { ...users[id] };
+      delete out[id].password;
+    }
+  }
+  return out;
+}
+
 /**
  * Retrieves a user object by ID, excluding sensitive data.
  * @param {string} id The unique identifier of the user.

@@ -20,7 +20,7 @@ exports.create = async (req, res) => {
     if (!exists(token))
       return res.status(403).json({ error: "Authorization token required" });
 
-    const userId = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = (() => {try {return (() => {try {return jwt.verify(token, process.env.JWT_SECRET)} catch(err) {return undefined} })(); } catch(err) {return undefined} })();;
     if (!exists(userId) || !Regex.id.test(userId) || !Users.get(userId))
       return res.status(401).json({ error: "Invalid authorization token" });
 
@@ -86,7 +86,7 @@ exports.getAll = async (req, res) => {
     if (!exists(token))
       return res.status(403).json({ error: "Authorization token required" });
 
-    const userId = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = (() => {try {return jwt.verify(token, process.env.JWT_SECRET)} catch(err) {return undefined} })();
     if (!exists(userId) || !Regex.id.test(userId) || !Users.get(userId))
       return res.status(401).json({ error: "Invalid authorization token" });
 
@@ -121,7 +121,7 @@ exports.get = async (req, res) => {
     if (!exists(token))
       return res.status(403).json({ error: "Authorization token required" });
 
-    const userId = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = (() => {try {return jwt.verify(token, process.env.JWT_SECRET)} catch(err) {return undefined} })();
     if (!exists(userId) || !Regex.id.test(userId) || !Users.get(userId))
       return res.status(401).json({ error: "Invalid authorization token" });
 
@@ -163,7 +163,7 @@ exports.update = async (req, res) => {
     if (!exists(token))
       return res.status(403).json({ error: "Authorization token required" });
 
-    const userId = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = (() => {try {return jwt.verify(token, process.env.JWT_SECRET)} catch(err) {return undefined} })();
     if (!exists(userId) || !Regex.id.test(userId) || !Users.get(userId))
       return res.status(401).json({ error: "Invalid authorization token" });
 
@@ -185,7 +185,7 @@ exports.update = async (req, res) => {
     if (
       !exists(name) &&
       !exists(content) &&
-      !exists(parent) &&
+      !('parent' in trimmedData) &&
       !exists(owner) &&
       !exists(description) &&
       !exists(trashed) &&
@@ -210,7 +210,7 @@ exports.update = async (req, res) => {
         });
       if (
         Files.info(id).trashed === false &&
-        !Permissions.check(userId, Files.info(id).parent, "content", "write")
+        !Permissions.check(userId, Files.info(id).parent || Files.info(id).owner, "content", "write")
       )
         return res.status(403).json({ error: "Insufficient permissions" });
     }
@@ -278,7 +278,7 @@ exports.delete = async (req, res) => {
     if (!exists(token))
       return res.status(403).json({ error: "Authorization token required" });
 
-    const userId = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = (() => {try {return jwt.verify(token, process.env.JWT_SECRET)} catch(err) {return undefined} })();
     if (!exists(userId) || !Regex.id.test(userId) || !Users.get(userId))
       return res.status(401).json({ error: "Invalid authorization token" });
 

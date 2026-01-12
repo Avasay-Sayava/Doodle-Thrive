@@ -3,8 +3,9 @@
 #include <algorithm>
 #include <iostream>
 #include <sys/select.h>
+#include <vector>
 
-#define BUFFER_SIZE 4096
+#define BUFFER_SIZE 10485760 // 10 MB
 #define LISTEN_BACKLOG 5
 #define SCAN_TIMEOUT_SEC 0
 #define SCAN_TIMEOUT_USEC 100
@@ -145,21 +146,35 @@ bool ddrive::server::run()
 
 void ddrive::server::handle(int client_sock)
 {
-    char buffer[BUFFER_SIZE];
-    memset(buffer, 0, BUFFER_SIZE);
+    std::vector<char> buffer(BUFFER_SIZE);
+    std::string request_data;
 
-    // Receive request
-    ssize_t bytes_received = recv(client_sock, buffer, BUFFER_SIZE - 1, 0);
-
-    // Client disconnected or error
-    if (bytes_received <= 0)
+    // Loop until we find a newline delimiter
+    while (true)
     {
-        close(client_sock);
-        return;
+        // Read into the buffer
+        ssize_t bytes_received = recv(client_sock, buffer.data(), BUFFER_SIZE, 0);
+
+        // Check for errors or disconnection
+        if (bytes_received <= 0)
+        {
+            close(client_sock);
+            return;
+        }
+
+        // Append received chunk to the request string
+        request_data.append(buffer.data(), bytes_received);
+
+        // Check if we have received the newline delimiter
+        if (request_data.find('\n') != std::string::npos)
+        {
+            break; 
+        }
     }
 
+    std::string request_line = request_data.substr(0, request_data.find('\n'));
+
     // Process request
-    std::string request_line(buffer);
     std::string response = _command_director.process(request_line);
     send(client_sock, response.c_str(), response.size(), 0);
 
