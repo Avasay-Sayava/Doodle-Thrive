@@ -6,6 +6,7 @@ import RelativeDate from "../../Date";
 import IconFolder from "../../icons/IconFolder";
 import IconFile from "../../icons/IconFile";
 import EditFile from "../../../modals/EditFile";
+import ViewImage from "../../../modals/ViewImage";
 import { useNavigate } from "react-router-dom";
 
 function getSize({ type, content }) {
@@ -20,6 +21,12 @@ function getSize({ type, content }) {
   return gb.toFixed(2) + " GB";
 }
 
+function isImageFile(filename) {
+  if (!filename) return false;
+  const ext = filename.toLowerCase().split(".").pop();
+  return ["jpg", "jpeg", "png", "webp"].includes(ext);
+}
+
 function FileRow({ file, onRefresh }) {
   const navigate = useNavigate();
   const [localFile, setLocalFile] = useState(file);
@@ -31,9 +38,11 @@ function FileRow({ file, onRefresh }) {
 
   const { name, modified, content, ownerUsername, type } = localFile;
 
-  const handleFileClick = (e, openEditModal) => {
+  const isImage = isImageFile(name);
+
+  const handleFileClick = (e, openModal) => {
     if (type === "file") {
-      openEditModal();
+      openModal();
     }
     else if (type === "folder") {
       navigate(`/drive/folders/${localFile.id}`, { replace: true });
@@ -53,32 +62,63 @@ function FileRow({ file, onRefresh }) {
   };
 
   return (
-    <EditFile file={localFile} onSave={handleSave}>
-      {(openEditModal) => (
-        <FileActions
-          file={localFile}
-          onRefresh={onRefresh}
-          onLeftClick={(e) => handleFileClick(e, openEditModal)}
-        >
-          <tr className="file-row">
-            <td className="col-name">
-              <span className="file-icon" aria-hidden="true">
-                {type === "folder" ? <IconFolder /> : <IconFile />}
-              </span>
-              {name}
-            </td>
-            <td className="col-owner">{ownerUsername}</td>
-            <td className="col-modified">
-              <RelativeDate timestamp={modified} />
-            </td>
-            <td className="col-size">{getSize({ type, content })}</td>
-            <td className="col-actions">
-              <FileSelect file={localFile} onRefresh={onRefresh} />
-            </td>
-          </tr>
-        </FileActions>
+    <>
+      {isImage ? (
+        <ViewImage file={localFile}>
+          {(openViewImage) => (
+            <FileActions
+              file={localFile}
+              onRefresh={onRefresh}
+              onLeftClick={(e) => handleFileClick(e, openViewImage)}
+            >
+              <tr className="file-row">
+                <td className="col-name">
+                  <span className="file-icon" aria-hidden="true">
+                    {type === "folder" ? <IconFolder /> : <IconFile />}
+                  </span>
+                  {name}
+                </td>
+                <td className="col-owner">{ownerUsername}</td>
+                <td className="col-modified">
+                  <RelativeDate timestamp={modified} />
+                </td>
+                <td className="col-size">{getSize({ type, content })}</td>
+                <td className="col-actions">
+                  <FileSelect file={localFile} onRefresh={onRefresh} />
+                </td>
+              </tr>
+            </FileActions>
+          )}
+        </ViewImage>
+      ) : (
+        <EditFile file={localFile} onSave={handleSave}>
+          {(openEditModal) => (
+            <FileActions
+              file={localFile}
+              onRefresh={onRefresh}
+              onLeftClick={(e) => handleFileClick(e, openEditModal)}
+            >
+              <tr className="file-row">
+                <td className="col-name">
+                  <span className="file-icon" aria-hidden="true">
+                    {type === "folder" ? <IconFolder /> : <IconFile />}
+                  </span>
+                  {name}
+                </td>
+                <td className="col-owner">{ownerUsername}</td>
+                <td className="col-modified">
+                  <RelativeDate timestamp={modified} />
+                </td>
+                <td className="col-size">{getSize({ type, content })}</td>
+                <td className="col-actions">
+                  <FileSelect file={localFile} onRefresh={onRefresh} />
+                </td>
+              </tr>
+            </FileActions>
+          )}
+        </EditFile>
       )}
-    </EditFile>
+    </>
   );
 }
 

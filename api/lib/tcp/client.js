@@ -86,6 +86,7 @@ class Client extends EventEmitter {
     const performRequest = () =>
       new Promise((resolve, reject) => {
         let timer = null;
+        let accumulatedData = Buffer.alloc(0);
 
         const cleanup = () => {
           this.off("data", onData);
@@ -94,8 +95,21 @@ class Client extends EventEmitter {
         };
 
         const onData = (data) => {
-          cleanup();
-          resolve(data);
+          accumulatedData = Buffer.concat([accumulatedData, data]);
+          
+          // Check if response ends with newline
+          if (accumulatedData[accumulatedData.length - 1] === 0x0A) {
+            cleanup();
+            resolve(accumulatedData);
+          }
+          
+          if (timer && milliseconds) {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+              cleanup();
+              reject(new Error(`Request timed out after ${milliseconds}ms`));
+            }, milliseconds);
+          }
         };
 
         const onError = (err) => {
@@ -103,7 +117,7 @@ class Client extends EventEmitter {
           reject(err);
         };
 
-        this.once("data", onData);
+        this.on("data", onData);
         this.once("error", onError);
 
         if (milliseconds) {
