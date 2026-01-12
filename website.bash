@@ -32,7 +32,7 @@ case $build in
         ;;
 esac
 
-default_name="base-server"
+default_name="website"
 if [ -z "${name}" ]; then
     echo -e "${CYAN}No name provided, using default name: ${GREEN}'${default_name}'${NC}"
     name=$default_name
@@ -46,14 +46,6 @@ if [ -z "${port}" ]; then
     port=$default_port
 else
     echo -e "${CYAN}Using provided port: ${ORANGE}${port}${NC}"
-fi
-
-default_threads=10
-if [ -z "${threads}" ]; then
-    echo -e "${CYAN}No thread count provided, using default thread count: ${ORANGE}${default_threads}${NC}"
-    threads=$default_threads
-else
-    echo -e "${CYAN}Using provided thread count: ${ORANGE}${threads}${NC}"
 fi
 
 echo
@@ -79,12 +71,11 @@ fi
 echo
 
 # START NEW CONTAINER
-echo -e "${CYAN}Starting the new server...${NC}"
+echo -e "${CYAN}Starting the new website container...${NC}"
 
-if docker-compose run $build_arg -d -p $port:$port -e THREADS=$threads --name $name base-server $port; then
+if docker-compose run $build_arg -d -p $port:$port --name $name web $port; then
     echo -e "${GREEN}Success! ${CYAN}Container ${GREEN}'${name}'${CYAN} started on port ${ORANGE}${port}${CYAN}.${NC}"
 else
     echo -e "${RED}Error: Failed to start container.${NC}"
     exit 1
 fi
-i
