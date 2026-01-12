@@ -2,7 +2,7 @@ import './style.css';
 
 import DropDownItem from './DropDownItem';
 
-function DropDown({ results = [], loading}) {
+function DropDown({ results = [], loading, setOpen }) {
     if (loading) {
         return (
             <div className="search-dropdown">
@@ -26,7 +26,7 @@ function DropDown({ results = [], loading}) {
     return (
         <div className="search-dropdown">
             {results.map((item) => (
-                <DropDownItem item={item} type={item.type} />
+                <DropDownItem item={item} type={item.type} setOpen={setOpen}/>
             ))}
         </div>
     );

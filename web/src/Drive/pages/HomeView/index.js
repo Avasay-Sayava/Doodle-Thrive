@@ -30,6 +30,7 @@ function HomeView({ refreshKey, onRefresh}) {
 
         const jwt = localStorage.getItem("token");
         if (!jwt){
+          localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }

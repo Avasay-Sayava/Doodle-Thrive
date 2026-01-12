@@ -8,7 +8,7 @@ import IconRecent from "../../components/icons/IconRecent";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-function RecentsView({ refreshKey, onRefresh}) {
+function RecentsView({ refreshKey, onRefresh }) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -23,13 +23,14 @@ function RecentsView({ refreshKey, onRefresh}) {
     setFoldersMode(newFoldersMode);
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     (async () => {
       try {
         setError("");
 
         const jwt = localStorage.getItem("token");
-        if (!jwt){
+        if (!jwt) {
+          localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }
@@ -40,7 +41,7 @@ function RecentsView({ refreshKey, onRefresh}) {
         });
 
         if (!res.ok) {
-          if(res.status === 401){
+          if (res.status === 401) {
             localStorage.removeItem("token");
             navigate("/signin", { replace: true });
             return;
@@ -77,8 +78,8 @@ function RecentsView({ refreshKey, onRefresh}) {
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView 
-        allFiles={files} 
+      <FileView
+        allFiles={files}
         onRefresh={onRefresh}
         sortBy={sortBy}
         sortDir={sortDir}

@@ -7,6 +7,7 @@ import IconFolder from "../../icons/IconFolder";
 import IconFile from "../../icons/IconFile";
 import EditFile from "../../../modals/EditFile";
 import ViewImage from "../../../modals/ViewImage";
+import { useNavigate } from "react-router-dom";
 
 function getSize({ type, content }) {
   if (type === "folder") return "-";
@@ -27,6 +28,7 @@ function isImageFile(filename) {
 }
 
 function FileRow({ file, onRefresh }) {
+  const navigate = useNavigate();
   const [localFile, setLocalFile] = useState(file);
 
   // Update local file when prop changes
@@ -41,6 +43,9 @@ function FileRow({ file, onRefresh }) {
   const handleFileClick = (e, openModal) => {
     if (type === "file") {
       openModal();
+    }
+    else if (type === "folder") {
+      navigate(`/drive/folders/${localFile.id}`, { replace: true });
     }
   };
 
