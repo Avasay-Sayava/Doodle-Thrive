@@ -31,9 +31,11 @@ function StarredView({ refreshKey, onRefresh}) {
 
         const jwt = localStorage.getItem("token");
         if (!jwt){
+          localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }
+
 
         const res = await fetch(`${API_BASE}/api/files`, {
           method: "GET",

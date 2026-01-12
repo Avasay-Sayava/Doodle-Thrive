@@ -32,7 +32,8 @@ function MydriveView({ refreshKey, onRefresh}) {
         setError("");
 
         const jwt = localStorage.getItem("token");
-        if (!jwt){
+        if (!jwt) {
+          localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }

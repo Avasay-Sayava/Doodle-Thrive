@@ -2,21 +2,19 @@ import "../style.css";
 import FileView from "../FileView";
 import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { sortFiles } from "../../utils/sortFiles";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-function SearchView({ refreshKey, onRefresh }) {
+function FolderView({ refreshKey, onRefresh, folderId }) {
     const [files, setFiles] = useState([]);
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const query = searchParams.get("query");
 
-    const [sortBy, setSortBy] = useState("name");
+    const [sortBy, setSortBy] = useState("modified");
     const [sortDir, setSortDir] = useState("asc");
-    const [foldersMode, setFoldersMode] = useState("mixed");
+    const [foldersMode, setFoldersMode] = useState("folders-first");
 
     const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
         setSortBy(newSortBy);
@@ -24,23 +22,18 @@ function SearchView({ refreshKey, onRefresh }) {
         setFoldersMode(newFoldersMode);
     };
 
-    if (!query) {
-        navigate("/drive/home", { replace: true });
-    }
-
     useEffect(() => {
         (async () => {
             try {
                 setError("");
 
                 const jwt = localStorage.getItem("token");
-                if (!jwt){
-                    localStorage.removeItem("token");
+                if (!jwt) {
                     navigate("/signin", { replace: true });
                     return;
                 }
 
-                const res = await fetch(`${API_BASE}/api/search/${query}`, {
+                const res = await fetch(`${API_BASE}/api/files`, {
                     method: "GET",
                     headers: { Authorization: `Bearer ${jwt}` },
                 });
@@ -56,33 +49,34 @@ function SearchView({ refreshKey, onRefresh }) {
                 }
 
                 const filesObj = await res.json();
-                const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
-                const rootFiles = allFiles.filter((f) => f.parent == null);
+                const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
+                const childFiles = allFiles.filter((f) => f.parent === folderId);
 
-                for (let i = 0; i < rootFiles.length; i++) {
-                    rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
+                for (let i = 0; i < childFiles.length; i++) {
+                    childFiles[i].ownerUsername = await getUser(childFiles[i].owner);
                 }
 
-                const sortedFiles = sortFiles(rootFiles, sortBy, sortDir, foldersMode);
-                setFiles(sortedFiles);
+                setFiles(sortFiles(childFiles, sortBy, sortDir, foldersMode));
+                handleSortChange({ sortBy, sortDir, foldersMode });
             } catch (err) {
                 setError(err?.message || "Failed to load files");
             }
         })();
-    }, [query, navigate, refreshKey, sortBy, sortDir, foldersMode]);
+    }, [foldersMode, navigate, refreshKey, sortBy, sortDir]);
+
     return (
         <div className="file-view">
             <div className="file-view__header">
                 <div className="file-view__header">
-                    <h1>
-                        <span className="mydrive-title__text">Results for "{query}"</span>
+                    <h1 className="view-title">
+                        <span className="view-title__text">Files</span>
                     </h1>
                 </div>
             </div>
 
             {error && <div className="error-message">{error}</div>}
-            <FileView 
-                allFiles={files} 
+            <FileView
+                allFiles={files}
                 onRefresh={onRefresh}
                 sortBy={sortBy}
                 sortDir={sortDir}
@@ -91,6 +85,7 @@ function SearchView({ refreshKey, onRefresh }) {
             />
         </div>
     );
+
 }
 
-export default SearchView;
+export default FolderView;
