@@ -1,6 +1,6 @@
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-export default async function uploadFile(file) {
+export default async function uploadFile(file, parentId = null) {
   const jwt = localStorage.getItem("token");
   if (!jwt) throw new Error("Not authenticated");
 
@@ -20,6 +20,7 @@ export default async function uploadFile(file) {
       name: file.name,
       type: "file",
       content,
+      parentId,
     }),
   });
 

@@ -1,6 +1,6 @@
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-export default async function newFile({ fileName, fileType }) {
+export default async function newFile({ fileName, fileType, parentId = null }) {
   const jwt = localStorage.getItem("token");
   if (!jwt) throw new Error("Not authenticated");
 
@@ -13,6 +13,7 @@ export default async function newFile({ fileName, fileType }) {
     body: JSON.stringify({
       name: fileName,
       content: fileType === "folder" ? undefined : "",
+      parent: parentId,
     }),
   });
 

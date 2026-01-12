@@ -140,6 +140,7 @@ function FolderView({ refreshKey, onRefresh }) {
                 sortDir={sortDir}
                 foldersMode={foldersMode}
                 onSortChange={handleSortChange}
+                parentId={folderId}
             />
         </div>
     );

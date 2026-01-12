@@ -145,8 +145,9 @@ export default function FileActions({
         key: "bin",
         label: "Move to bin",
         danger: true,
-        onClick: (e) =>
-          patchFile(file.id, { trashed: true }).then(() => onRefresh?.()),
+        onClick: (e) => {
+          patchFile(file?.id, { trashed: true }).then(() => onRefresh());
+        }
       },
     ];
   }, [file, onRefresh]);
