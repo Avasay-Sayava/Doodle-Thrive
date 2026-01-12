@@ -1,7 +1,7 @@
 .card {
   background-color: var(--color-bg-main);
   padding: 2.5rem;
-  border-radius: 8px;
+  border-radius: 14px;
   transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
   opacity: 0;
   transform: scaleY(0);

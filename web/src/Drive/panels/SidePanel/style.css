@@ -29,11 +29,12 @@
 
   height: 40px;
   padding: 0 12px;
-  border-radius: 9999px;
+  border-radius: 20px;
 
   color: var(--color-text-primary);
   text-align: left;
   width: 100%;
+  margin: 0;
 
   transition: background 120ms ease;
 }
