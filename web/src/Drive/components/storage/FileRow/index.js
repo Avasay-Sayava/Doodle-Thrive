@@ -45,11 +45,11 @@ function FileRow({ file, onRefresh }) {
 
   // Load permissions when file or user changes
   useEffect(() => {
-    if (file?.id && currentUserId && file?.type === "file") {
+    if (file?.id && currentUserId && (file?.type === "file" || file?.type === "folder")) {
       loadShared().finally(() => {
         setHasLoadedPermissions(true);
       });
-    } else if (file?.type === "folder") {
+    } else {
       setHasLoadedPermissions(true);
     }
   }, [file?.id, file?.type, currentUserId, loadShared]);
@@ -60,7 +60,6 @@ function FileRow({ file, onRefresh }) {
   
   // Get user's role based on permissions
   const userRole = roleFromPermissions(currentUserPerms);
-  console.log(userRole);
   
   // Check if current user can edit (editor or above)
   const canEdit = ["editor", "admin", "owner"].includes(userRole);
@@ -70,7 +69,8 @@ function FileRow({ file, onRefresh }) {
     const isAnyModalOpen = document.querySelector('dialog[open]');
     
     if (type === "file") {
-      if (!loading) {
+      // Don't open file if it's in trash
+      if (!loading && !localFile.trashed) {
         openModal();
       }
     }
@@ -108,6 +108,7 @@ function FileRow({ file, onRefresh }) {
             <FileActions
               file={localFile}
               onRefresh={onRefresh}
+              currentUserPerms={currentUserPerms}
               onLeftClick={(e) => handleFileClick(e, openViewImage)}
             >
               <tr className="file-row">
@@ -123,7 +124,7 @@ function FileRow({ file, onRefresh }) {
                 </td>
                 <td className="col-size">{getSize({ type, content })}</td>
                 <td className="col-actions">
-                  <FileSelect file={localFile} onRefresh={onRefresh} />
+                  <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
                 </td>
               </tr>
             </FileActions>
@@ -135,6 +136,7 @@ function FileRow({ file, onRefresh }) {
             <FileActions
               file={localFile}
               onRefresh={onRefresh}
+              currentUserPerms={currentUserPerms}
               onLeftClick={(e) => handleFileClick(e, openEditModal)}
             >
               <tr className="file-row">
@@ -150,7 +152,7 @@ function FileRow({ file, onRefresh }) {
                 </td>
                 <td className="col-size">{getSize({ type, content })}</td>
                 <td className="col-actions">
-                  <FileSelect file={localFile} onRefresh={onRefresh} />
+                  <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
                 </td>
               </tr>
             </FileActions>
@@ -162,6 +164,7 @@ function FileRow({ file, onRefresh }) {
             <FileActions
               file={localFile}
               onRefresh={onRefresh}
+              currentUserPerms={currentUserPerms}
               onLeftClick={(e) => handleFileClick(e, openViewModal)}
             >
               <tr className="file-row">
@@ -177,7 +180,7 @@ function FileRow({ file, onRefresh }) {
                 </td>
                 <td className="col-size">{getSize({ type, content })}</td>
                 <td className="col-actions">
-                  <FileSelect file={localFile} onRefresh={onRefresh} />
+                  <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
                 </td>
               </tr>
             </FileActions>

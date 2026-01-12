@@ -47,14 +47,14 @@ export default function GetText({
   }, [excludeUsernames]);
 
   const submit = useCallback(
-    (close) => {
+    async (close) => {
       const trimmed = value.trim();
       if (!trimmed) return;
 
       if (selectOptions) {
-        onSubmit(trimmed, selectValue);
+        await onSubmit(trimmed, selectValue);
       } else {
-        onSubmit(trimmed);
+        await onSubmit(trimmed);
       }
 
       // Keep dialog open; just reset inputs for next action

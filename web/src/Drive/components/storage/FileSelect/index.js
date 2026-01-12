@@ -85,7 +85,7 @@ const fetchFilePermissions = async (fileId, currentUserId) => {
   }
 };
 
-function FileSelect({ file, onRefresh }) {
+function FileSelect({ file, onRefresh, isTrashed = false }) {
   const { id, starred } = file;
   const currentUserId = useUserId();
 
@@ -126,76 +126,80 @@ function FileSelect({ file, onRefresh }) {
 
   return (
     <div className="file-actions">
-      <ShareDialog file={file} onRefresh={onRefresh}>
-        {(open) => (
+      {!isTrashed && (
+        <>
+          <ShareDialog file={file} onRefresh={onRefresh}>
+            {(open) => (
+              <button
+                className="file-action-btn file-action-btn--hover"
+                title={canShare ? "Share" : "No permission to share"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (canShare) open();
+                }}
+                disabled={!canShare}
+              >
+                <IconShare />
+              </button>
+            )}
+          </ShareDialog>
+
           <button
             className="file-action-btn file-action-btn--hover"
-            title={canShare ? "Share" : "No permission to share"}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (canShare) open();
-            }}
-            disabled={!canShare}
+            title={canDownload ? "Download" : "No permission to download"}
+            onClick={() => canDownload && downloadFile(id)}
+            disabled={!canDownload}
           >
-            <IconShare />
+            <IconDownload />
           </button>
-        )}
-      </ShareDialog>
 
-      <button
-        className="file-action-btn file-action-btn--hover"
-        title={canDownload ? "Download" : "No permission to download"}
-        onClick={() => canDownload && downloadFile(id)}
-        disabled={!canDownload}
-      >
-        <IconDownload />
-      </button>
-
-      <GetText
-        title="Rename"
-        placeholder="New name"
-        submitLabel="Rename"
-        onSubmit={(newName) =>
-          renameFile(id, newName).then(() => onRefresh?.())
-        }
-      >
-        {(open) => (
-          <button
-            className="file-action-btn file-action-btn--hover"
-            title={canRename ? "Rename" : "No permission to rename"}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (canRename) open();
-            }}
-            disabled={!canRename}
+          <GetText
+            title="Rename"
+            placeholder="New name"
+            submitLabel="Rename"
+            onSubmit={(newName) =>
+              renameFile(id, newName).then(() => onRefresh?.())
+            }
           >
-            <IconEdit />
-          </button>
-        )}
-      </GetText>
+            {(open) => (
+              <button
+                className="file-action-btn file-action-btn--hover"
+                title={canRename ? "Rename" : "No permission to rename"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (canRename) open();
+                }}
+                disabled={!canRename}
+              >
+                <IconEdit />
+              </button>
+            )}
+          </GetText>
 
-      {isStarred && (
-        <button
-          className="file-action-btn file-action-btn--starred"
-          title={isStarred ? "Unstar" : "Star"}
-          onClick={onToggleStar}
-        >
-          <IconStar />
-        </button>
-      )}
-      {!isStarred && (
-        <button
-          className={`file-action-btn file-action-btn--hover ${
-            isStarred ? "file-action-btn--starred" : ""
-          }`}
-          title={isStarred ? "Unstar" : "Star"}
-          onClick={onToggleStar}
-        >
-          <IconStar />
-        </button>
+          {isStarred && (
+            <button
+              className="file-action-btn file-action-btn--starred"
+              title={isStarred ? "Unstar" : "Star"}
+              onClick={onToggleStar}
+            >
+              <IconStar />
+            </button>
+          )}
+          {!isStarred && (
+            <button
+              className={`file-action-btn file-action-btn--hover ${
+                isStarred ? "file-action-btn--starred" : ""
+              }`}
+              title={isStarred ? "Unstar" : "Star"}
+              onClick={onToggleStar}
+            >
+              <IconStar />
+            </button>
+          )}
+        </>
       )}
 
-      <FileActions file={file} onRefresh={onRefresh} openOnLeftClick>
+      <FileActions file={file} onRefresh={onRefresh} currentUserPerms={userPermissions} openOnLeftClick>
         <button
           className="file-action-btn"
           title="More"

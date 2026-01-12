@@ -12,6 +12,7 @@ import "./style.css";
 import renameFile from "../../../utils/renameFile";
 import downloadFile from "../../../utils/downloadFile";
 import patchFile from "../../../utils/patchFile";
+import { roleFromPermissions } from "../../../utils/useFilePermissions";
 import GetText from "../../../modals/GetText";
 import ShareDialog from "../../../modals/ShareDialog";
 
@@ -20,6 +21,7 @@ export default function FileActions({
   file,
   onLeftClick = null,
   onRefresh,
+  currentUserPerms = null,
   openOnLeftClick = false,
 }) {
   const menuRef = useRef(null);
@@ -115,6 +117,25 @@ export default function FileActions({
 
   const items = useMemo(() => {
     const isFolder = file?.fileType === "folder";
+    const userRole = roleFromPermissions(currentUserPerms);
+    const canEdit = ["editor", "admin", "owner"].includes(userRole);
+    const canShare = ["admin", "owner"].includes(userRole);
+    const isTrashed = file?.trashed === true;
+
+    // If file is in bin, only show restore button
+    if (isTrashed) {
+      return [
+        {
+          key: "restore",
+          label: "Restore",
+          onClick: (e) => {
+            patchFile(file?.id, { trashed: false }).then(() => {
+              onRefresh?.();
+            });
+          }
+        },
+      ];
+    }
 
     return [
       {
@@ -126,6 +147,7 @@ export default function FileActions({
       {
         key: "rename",
         label: "Rename",
+        disabled: !canEdit,
         onClick: (e) => {
           e.stopPropagation();
           openRenameModalRef.current?.();
@@ -134,6 +156,7 @@ export default function FileActions({
       {
         key: "share",
         label: "Share",
+        disabled: !canShare,
         onClick: (e) => openShareModalRef.current?.(),
       },
       { key: "sep-1", type: "separator" },
@@ -141,18 +164,22 @@ export default function FileActions({
         key: "description",
         label: "Description",
         rightArrow: true,
+        disabled: !canEdit,
       },
       { key: "sep-2", type: "separator" },
       {
         key: "bin",
         label: "Move to bin",
         danger: true,
+        disabled: !canEdit,
         onClick: (e) => {
-          patchFile(file?.id, { trashed: true }).then(() => onRefresh());
+          patchFile(file?.id, { trashed: true }).then(() => {
+            onRefresh?.();
+          });
         }
       },
     ];
-  }, [file, onRefresh]);
+  }, [file, onRefresh, currentUserPerms]);
 
   const handleItemClick = (item, e) => {
     if (item.disabled) return;
@@ -275,11 +302,10 @@ export default function FileActions({
         title="Rename"
         placeholder="New name"
         submitLabel="Rename"
-        onSubmit={(newName) =>
-          Promise.resolve(renameFile(file?.id, newName)).then(() =>
-            onRefresh?.()
-          )
-        }
+        onSubmit={async (newName) => {
+          await renameFile(file?.id, newName);
+          onRefresh?.();
+        }}
       >
         {(openRename) => {
           openRenameModalRef.current = openRename;

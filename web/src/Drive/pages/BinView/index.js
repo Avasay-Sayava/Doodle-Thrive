@@ -52,7 +52,15 @@ function BinView({ refreshKey, onRefresh}) {
 
         const filesObj = await res.json();
         const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
-        const binFiles = allFiles.filter((f) => f.trashed === true);
+        // Only show files that are trashed but whose parent is NOT trashed
+        const binFiles = allFiles.filter((f) => {
+          if (f.trashed !== true) return false;
+          // If file has no parent (root level), show it
+          if (!f.parent) return true;
+          // Check if parent is also trashed
+          const parent = allFiles.find(p => p.id === f.parent);
+          return !parent || parent.trashed !== true;
+        });
 
         for (let i = 0; i < binFiles.length; i++) {
           binFiles[i].ownerUsername = await getUser(binFiles[i].owner);
