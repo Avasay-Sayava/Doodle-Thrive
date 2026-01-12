@@ -1,9 +1,6 @@
 import "./style.css";
-import { useEffect, useMemo, useRef, useState } from "react";
-
-function isFolder(x) {
-  return x?.type === "folder";
-}
+import { useEffect, useRef, useState } from "react";
+import { sortFiles } from "../../../utils/sortFiles";
 
 export default function Filter({ files, setFiles, sortBy: initialSortBy = "name", sortDir: initialSortDir = "asc" }) {
   const [open, setOpen] = useState(false);
@@ -29,56 +26,12 @@ export default function Filter({ files, setFiles, sortBy: initialSortBy = "name"
     };
   }, [open]);
 
-  useMemo(() => {
-    const folderCmp = (a, b) => {
-      if (foldersMode !== "folders-first") return 0;
-      const af = isFolder(a), bf = isFolder(b);
-      if (af !== bf) return af ? -1 : 1;
-      return 0;
-    };
-
-    const nameCmp = (a, b) =>
-      sortDir === "asc"
-        ? (a.name ?? "").localeCompare(b.name ?? "")
-        : (b.name ?? "").localeCompare(a.name ?? "");
-
-    const dateCmp = (a, b) => {
-      const da = new Date(a.modified ?? 0).getTime();
-      const db = new Date(b.modified ?? 0).getTime();
-      return sortDir === "asc" ? da - db : db - da;
-    };
-
-    return (a, b) => {
-      const f = folderCmp(a, b);
-      if (f !== 0) return f;
-      return sortBy === "name" ? nameCmp(a, b) : dateCmp(a, b);
-    };
-  }, [sortBy, sortDir, foldersMode]);
-
   const applySort = (nextSortBy = sortBy, nextSortDir = sortDir, nextFoldersMode = foldersMode) => {
     setSortBy(nextSortBy);
     setSortDir(nextSortDir);
     setFoldersMode(nextFoldersMode);
 
-    setFiles((prev) => [...prev].sort((a, b) => {
-      //Use the new selections for this sort
-      const af = isFolder(a), bf = isFolder(b);
-
-      //folders first
-      if (nextFoldersMode === "folders-first" && af !== bf) return af ? -1 : 1;
-
-      // by name
-      if (nextSortBy === "name") {
-        return nextSortDir === "asc"
-          ? (a.name ?? "").localeCompare(b.name ?? "")
-          : (b.name ?? "").localeCompare(a.name ?? "");
-      }
-
-      //by date
-      const da = new Date(a.modified ?? 0).getTime();
-      const db = new Date(b.modified ?? 0).getTime();
-      return nextSortDir !== "asc" ? da - db : db - da;
-    }));
+    setFiles((prev) => sortFiles(prev, nextSortBy, nextSortDir, nextFoldersMode));
   };
 
   return (
@@ -106,15 +59,15 @@ export default function Filter({ files, setFiles, sortBy: initialSortBy = "name"
           <div className="gd-sort__section">
             <div className="gd-sort__title">Sort by</div>
             <MenuItem checked={sortBy === "name"} label="Name" onClick={() => applySort("name", sortDir, foldersMode)} />
-            <MenuItem checked={sortBy === "modified"} label="Date modified" onClick={() => applySort("modified", sortDir, foldersMode)} />
+            <MenuItem checked={sortBy === "modified"} label="Last modified" onClick={() => applySort("modified", sortDir, foldersMode)} />
           </div>
 
           <div className="gd-sort__divider" />
 
           <div className="gd-sort__section">
             <div className="gd-sort__title">Sort direction</div>
-            <MenuItem checked={sortDir === "asc"} label="A to Z" onClick={() => applySort(sortBy, "asc", foldersMode)} />
-            <MenuItem checked={sortDir === "desc"} label="Z to A" onClick={() => applySort(sortBy, "desc", foldersMode)} />
+            <MenuItem checked={sortDir === "asc"} label={sortBy === "name" ? "A to Z" : "New to Old"} onClick={() => applySort(sortBy, "asc", foldersMode)} />
+            <MenuItem checked={sortDir === "desc"} label={sortBy === "name" ? "Z to A" : "Old to New"} onClick={() => applySort(sortBy, "desc", foldersMode)} />
           </div>
 
           <div className="gd-sort__divider" />

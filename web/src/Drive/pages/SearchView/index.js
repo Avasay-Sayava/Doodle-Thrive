@@ -3,6 +3,7 @@ import FileView from "../FileView";
 import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { sortFiles } from "../../utils/sortFiles";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -51,7 +52,9 @@ function SearchView({ refreshKey, onRefresh }) {
                     rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
                 }
 
-                setFiles(rootFiles);
+                // Sort by name ascending by default
+                const sortedFiles = sortFiles(rootFiles, "name", "asc", "mixed");
+                setFiles(sortedFiles);
             } catch (err) {
                 setError(err?.message || "Failed to load files");
             }

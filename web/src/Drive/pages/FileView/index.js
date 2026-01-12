@@ -7,13 +7,18 @@ import { useEffect, useState } from "react";
  * Returns a file view component.
  * @param {{ allFiles: Array }} param0 
  * @returns {JSX.Element} The FileView component.
- */
+ */ 
 function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }) {
   const [files, setFiles] = useState([...allFiles]);
 
   useEffect(() => {
-    setFiles([...allFiles]);
-  }, [allFiles]);
+    // New files always on top
+    setFiles((prevFiles) => {
+      const existingIds = new Set(prevFiles.map((f) => f.id));
+      const newFiles = allFiles.filter((f) => !existingIds.has(f.id));
+      return [ ...newFiles, ...prevFiles];
+    });
+  }, [allFiles, sortBy, sortDir]);
 
   return (
       <div className="file-view__table-wrapper">
