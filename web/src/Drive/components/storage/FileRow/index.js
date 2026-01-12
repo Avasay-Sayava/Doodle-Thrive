@@ -6,6 +6,7 @@ import RelativeDate from "../../Date";
 import IconFolder from "../../icons/IconFolder";
 import IconFile from "../../icons/IconFile";
 import EditFile from "../../../modals/EditFile";
+import { useNavigate } from "react-router-dom";
 
 function getSize({ type, content }) {
   if (type === "folder") return "-";
@@ -20,6 +21,7 @@ function getSize({ type, content }) {
 }
 
 function FileRow({ file, onRefresh }) {
+  const navigate = useNavigate();
   const [localFile, setLocalFile] = useState(file);
 
   // Update local file when prop changes
@@ -32,6 +34,9 @@ function FileRow({ file, onRefresh }) {
   const handleFileClick = (e, openEditModal) => {
     if (type === "file") {
       openEditModal();
+    }
+    else if (type === "folder") {
+      navigate(`/drive/folders/${localFile.id}`, { replace: true });
     }
   };
 
