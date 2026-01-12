@@ -58,10 +58,10 @@ exports.get = (req, res) => {
 };
 
 /**
- * 
- * @param {import("express").Request} req 
- * @param {import("express").Response} res 
- * @returns 
+ *
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @returns
  */
 exports.find = (req, res) => {
   try {
@@ -75,6 +75,23 @@ exports.find = (req, res) => {
 
     const users = Users.find(username);
     return res.status(200).json(users);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+exports.findByUsername = (req, res) => {
+  try {
+    const { username } = req.body;
+
+    if (!exists(username))
+      return res.status(400).json({ error: "Username is required" });
+
+    if (!Regex.username.test(username))
+      return res.status(400).json({ error: "Invalid username format" });
+
+    const user = Users.findByUsername(username);
+    return res.status(200).json(user);
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }

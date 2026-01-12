@@ -2,7 +2,7 @@ import "./style.css";
 import { useEffect, useRef, useState } from "react";
 
 import newFile from "../../../utils/newFile";
-import GetText from "../../modal/GetText";
+import GetText from "../../../modals/GetText";
 
 export default function New({ onCreated, hidden = false }) {
   const [menuOpen, setMenuOpen] = useState(false);

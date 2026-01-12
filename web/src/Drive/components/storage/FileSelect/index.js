@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import setStarred from "../../../utils/setStarred";
 import downloadFile from "../../../utils/downloadFile";
 import renameFile from "../../../utils/renameFile";
-import GetText from "../../modal/GetText";
-import shareFile from "../../../utils/shareFile";
+import GetText from "../../../modals/GetText";
 import FileActions from "../FileActions";
+import ShareDialog from "../../../modals/ShareDialog";
 
 function FileSelect({ file, onRefresh }) {
   const { id, starred } = file;
@@ -30,20 +30,9 @@ function FileSelect({ file, onRefresh }) {
     }
   };
 
-  const onMore = (e) => {
-    e.stopPropagation();
-  };
-
   return (
     <div className="file-actions">
-      {/* Share */}
-      
-      <GetText
-        title="Share"
-        placeholder="The username to share the file with"
-        submitLabel="Share"
-        onSubmit={(newName) => shareFile(id, newName).then(() => onRefresh?.())}
-      >
+      <ShareDialog file={file} onRefresh={onRefresh}>
         {(open) => (
           <button
             className="file-action-btn file-action-btn--hover"
@@ -61,10 +50,13 @@ function FileSelect({ file, onRefresh }) {
             </svg>
           </button>
         )}
-      </GetText>
+      </ShareDialog>
 
-      {/* Download */}
-      <button className="file-action-btn file-action-btn--hover" title="Download" onClick={() => downloadFile(id)}>
+      <button
+        className="file-action-btn file-action-btn--hover"
+        title="Download"
+        onClick={() => downloadFile(id)}
+      >
         <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
           <path
             fill="currentColor"
@@ -73,12 +65,13 @@ function FileSelect({ file, onRefresh }) {
         </svg>
       </button>
 
-      {/* Rename */}
       <GetText
         title="Rename"
         placeholder="New name"
         submitLabel="Rename"
-        onSubmit={(newName) => renameFile(id, newName).then(() => onRefresh?.())}
+        onSubmit={(newName) =>
+          renameFile(id, newName).then(() => onRefresh?.())
+        }
       >
         {(open) => (
           <button
@@ -115,7 +108,9 @@ function FileSelect({ file, onRefresh }) {
       )}
       {!isStarred && (
         <button
-          className={`file-action-btn file-action-btn--hover ${isStarred ? "file-action-btn--starred" : ""}`}
+          className={`file-action-btn file-action-btn--hover ${
+            isStarred ? "file-action-btn--starred" : ""
+          }`}
           title={isStarred ? "Unstar" : "Star"}
           onClick={onToggleStar}
         >
@@ -125,14 +120,15 @@ function FileSelect({ file, onRefresh }) {
               d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27Z"
             />
           </svg>
-        </button>)}
+        </button>
+      )}
 
-      {/* More options */}
       <FileActions file={file} onRefresh={onRefresh} openOnLeftClick>
         <button
           className="file-action-btn"
           title="More"
-          onClick={(e) => e.stopPropagation()}>
+          onClick={(e) => e.stopPropagation()}
+        >
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
             <path
               fill="currentColor"

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import Card from "./components/Card";
+import Card from "../components/Card";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import "./style.css";
@@ -11,15 +11,15 @@ import "./style.css";
  */
 function Sign({ mode = "signin" }) {
   const [activeMode, setActiveMode] = useState(mode);
-  const [collapsed, setCollapsed] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleModeChange = (newMode) => {
-    setCollapsed(true);
+    setIsOpen(false);
 
     setTimeout(() => {
       window.history.pushState({}, "", `/${newMode}`);
       setActiveMode(newMode);
-      setCollapsed(false);
+      setIsOpen(true);
     }, 300);
   };
 
@@ -29,7 +29,7 @@ function Sign({ mode = "signin" }) {
 
   return (
     <div className="sign-layout">
-      <Card collapsed={collapsed}>
+      <Card isOpen={isOpen}>
         {activeMode === "signin" ? (
           <SignIn changeMode={() => handleModeChange("signup")} autofill={autofill} />
         ) : (

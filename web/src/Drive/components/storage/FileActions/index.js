@@ -4,9 +4,9 @@ import "./style.css";
 
 import renameFile from "../../../utils/renameFile";
 import downloadFile from "../../../utils/downloadFile";
-import shareFile from "../../../utils/shareFile";
 import patchFile from "../../../utils/patchFile";
-import GetText from "../../modal/GetText";
+import GetText from "../../../modals/GetText";
+import ShareDialog from "../../../modals/ShareDialog";
 
 export default function FileActions({
     children,
@@ -265,19 +265,12 @@ export default function FileActions({
                 }}
             </GetText>
 
-            <GetText
-                title="Share"
-                placeholder="The username to share the file with"
-                submitLabel="Share"
-                onSubmit={(target) =>
-                    Promise.resolve(shareFile(file?.id, target)).then(() => onRefresh?.())
-                }
-            >
+            <ShareDialog file={file} onRefresh={onRefresh}>
                 {(openShare) => {
                     openShareModalRef.current = openShare;
                     return null;
                 }}
-            </GetText>
+            </ShareDialog>
 
             {enhancedRow}
             {menuPortal}

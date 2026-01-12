@@ -1,7 +1,10 @@
 const { randomUUID: uuid } = require("node:crypto");
+const Files = require("./files");
 
 const permissions = {};
 const filePermissions = {};
+
+const exists = (x) => x !== undefined && x !== null;
 
 /**
  * Adds a new permission entry to a specific file.
@@ -74,7 +77,8 @@ exports.delete = (fileId, pId) => {
 };
 
 exports.check = (userId, fileId, type, mode) => {
-  if (fileId === null) return true;
+  if (fileId === userId) return true;
+  if (Files.info(fileId)?.owner === userId) return true;
 
   const perms = this.get(fileId);
 

@@ -19,7 +19,7 @@ exports.search = async (req, res) => {
     if (!exists(token))
       return res.status(403).json({ error: "Authorization token required" });
 
-    const userId = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = (() => {try {return jwt.verify(token, process.env.JWT_SECRET)} catch(err) {return undefined} })();
     if (!exists(userId) || !Regex.id.test(userId) || !Users.get(userId))
       return res.status(401).json({ error: "Invalid authorization token" });
 

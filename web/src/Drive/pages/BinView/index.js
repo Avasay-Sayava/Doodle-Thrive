@@ -28,7 +28,7 @@ function BinView({ refreshKey, onRefresh}) {
         });
 
         if (!res.ok) {
-          if(res.status === 401){
+          if(res.status === 401) {
             localStorage.removeItem("token");
             navigate("/signin", { replace: true });
             return;
