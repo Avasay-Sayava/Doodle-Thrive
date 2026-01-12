@@ -299,3 +299,41 @@ server_name=base-server server_port=3000 ./api-server.bash
 
     {"31798e34-3b62-40b1-b3fe-cd46a494c85c": {"id": "31798e34-3b62-40b1-b3fe-cd46a494c85c", "name": "file.txt", "parent": "4a0ec9ae-751a-46ab-a3d6-4295a8df5082", "content": "Hello, World!"}}
     ```
+
+## Website Usage & Structure
+
+The website acts as the frontend client for the Doodle Drive system, built with React.
+
+### Structure
+The application handles routing using `react-router-dom` and is split into three main sections:
+* **Authentication**: Sign In and Sign Up pages.
+* **Drive Interface**: The main interface for file management.
+* **Settings**: User customization.
+
+### Authentication
+Users can create an account or log in to access their drive.
+![Sign In Page](assets/signin_page.png)
+
+### Drive Interface
+The main layout consists of:
+* **Header**: Contains the logo, search bar, and user profile/settings.
+* **Sidebar**: Provides navigation to different drive views (Home, My Drive, Shared, etc.) and the "New" button.
+* **Content Area**: Displays files and folders for the selected view.
+
+![Drive Interface - Home View](assets/home_view.png)
+
+#### Views
+* **Home**: Overview of files.
+* **My Drive**: The user's personal storage root.
+* **Starred**: Files marked as important.
+* **Shared**: Files shared with the user.
+* **Recent**: Recently accessed files.
+* **Bin**: Deleted files.
+
+### Search
+Users can search for files using the search bar in the header.
+![Search View](assets/search_view.png)
+
+### Settings
+The settings page allows users to customize the application theme (e.g., Pink, Blue, Dark).
+![Settings Page](assets/settings_page.png)
