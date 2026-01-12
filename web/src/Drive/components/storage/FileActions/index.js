@@ -100,7 +100,7 @@ export default function FileActions({
         y = Math.max(pad, Math.min(y, window.innerHeight - rect.height - pad));
 
         if (x !== pos.x || y !== pos.y) setPos({ x, y });
-    }, [open]);
+    }, [open, pos.x, pos.y]);
 
     const items = useMemo(() => {
         const isFolder = file?.fileType === "folder";
@@ -125,7 +125,7 @@ export default function FileActions({
             { key: "sep-1", type: "separator" },
             {
                 key: "description",
-                label: "Folder description",
+                label: "Description",
                 rightArrow: true,
             },
             { key: "sep-2", type: "separator" },

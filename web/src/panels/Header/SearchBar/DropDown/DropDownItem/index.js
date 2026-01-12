@@ -1,15 +1,13 @@
-import react from 'react';
-
 import './style.css';
-import IconDrive from './IconDrive';
-import IconFolder from './IconFolder';
+import IconFile from '../../../../../Drive/components/icons/IconFile';
+import IconFolder from '../../../../../Drive/components/icons/IconFolder';
 
 function DropDownItem({ item, type }) {
-    const icon = type === 'folder' ? <IconFolder /> : <IconDrive />;
+    const icon = type === 'folder' ? <IconFolder /> : <IconFile />;
     
     return (
         <div className="search-dropdown-item">
-            {icon}
+            <span className="file-icon">{icon}</span>
             <span className="item-name">{item.name}</span>
         </div>
     );

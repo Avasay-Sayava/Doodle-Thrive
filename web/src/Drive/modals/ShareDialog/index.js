@@ -3,6 +3,7 @@ import GetText from "../GetText";
 import shareFile from "../../utils/shareFile";
 import useFilePermissions, { findUserIdByUsername } from "../../utils/useFilePermissions";
 import SharedUserList from "../../components/SharedUserList";
+import useUserId from "../../utils/useUserId";
 
 const PERMISSION_OPTIONS = [
   { value: "none", label: "Remove access" },
@@ -24,7 +25,7 @@ const wait = (ms = 350) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function ShareDialog({ file, onRefresh, children }) {
   const fileId = file?.id;
-  const currentUserId = useMemo(() => localStorage.getItem("id"), []);
+  const currentUserId = useUserId();
   const onRefreshRef = useRef(onRefresh);
 
   useEffect(() => {
@@ -39,6 +40,13 @@ export default function ShareDialog({ file, onRefresh, children }) {
     loadShared,
     updatePermission,
   } = useFilePermissions(fileId, currentUserId, onRefresh);
+
+  // Reload shared users when currentUserId becomes available
+  useEffect(() => {
+    if (currentUserId && fileId) {
+      loadShared();
+    }
+  }, [currentUserId, fileId, loadShared]);
 
   const handleRoleChange = useCallback(
     (entry, nextRole) => {

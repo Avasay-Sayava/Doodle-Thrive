@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
 import Avatar from "../../../Drive/components/Avatar";
+import useUserId from "../../../Drive/utils/useUserId";
 
 import "./style.css";
 const API_BASE = 'http://localhost:3300';
@@ -15,7 +16,7 @@ function ProfilePicture() {
     const [username, setUsername] = useState("");
     const [description, setDescription] = useState("");
     const navigate = useNavigate();
-    const id = localStorage.getItem("id");
+    const id = useUserId();
     const jwt = localStorage.getItem("token");
 
     useEffect(() => {

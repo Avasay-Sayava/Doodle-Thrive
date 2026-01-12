@@ -37,3 +37,28 @@ exports.auth = (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+
+exports.id = (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!exists(token))
+      return res.status(403).json({ error: "Authorization token required" });
+
+    const userId = (() => {
+      try {
+        return jwt.verify(token, process.env.JWT_SECRET);
+      } catch (err) {
+        return undefined;
+      }
+    })();
+
+    if (!exists(userId) || !Regex.id.test(userId) || !Users.get(userId))
+      return res.status(401).json({ error: "Invalid authorization token" });
+
+    return res.status(200).json({ id: userId });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+

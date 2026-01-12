@@ -2,6 +2,7 @@ import "./style.css";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Card from "../../../components/Card";
+import IconUser from "../../components/icons/IconUser";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -236,9 +237,7 @@ export default function GetText({
                           className="get-text-modal__dropdown-item"
                           onClick={() => selectUser(user.username)}
                         >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                          </svg>
+                          <IconUser />
                           <span>{user.username}</span>
                         </button>
                       ))

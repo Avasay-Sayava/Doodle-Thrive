@@ -2,11 +2,13 @@ import "../style.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FileView from "../FileView";
+import useUserId from "../../utils/useUserId";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 function SharedView({ refreshKey, onRefresh }) {
   const navigate = useNavigate();
+  const id = useUserId();
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
 
@@ -15,7 +17,6 @@ function SharedView({ refreshKey, onRefresh }) {
       try {
         setError("");
         
-        const id = localStorage.getItem("id");
         const jwt = localStorage.getItem("token");
         if (!jwt){
           navigate("/signin", { replace: true });
@@ -46,7 +47,7 @@ function SharedView({ refreshKey, onRefresh }) {
     };
 
     run();
-  }, [navigate, refreshKey]);
+  }, [navigate, refreshKey, id]);
 
   return (
     <div className="file-view">

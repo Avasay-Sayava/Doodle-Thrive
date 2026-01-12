@@ -68,3 +68,12 @@ button {
   overflow: auto;
   background: var(--color-bg-main);
 }
+
+.file-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
