@@ -3,9 +3,6 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Card from "../../../components/Card";
 
-// Global state to track if any modal is currently open
-let globalModalOpen = false;
-
 /**
  * Modal - Base modal component handling dialog/portal/animation logic
  * @param {string} title - Modal title
@@ -38,12 +35,6 @@ export default function Modal({
   }, [onClose]);
 
   const open = () => {
-    // Prevent opening if another modal is already open
-    if (globalModalOpen) {
-      return;
-    }
-    
-    globalModalOpen = true;
     setShouldRender(true);
     onOpenRef.current();
     setTimeout(() => {
@@ -63,7 +54,6 @@ export default function Modal({
         dialog.close();
       }
       setShouldRender(false);
-      globalModalOpen = false;
       onCloseRef.current();
     }, 200);
   }, []);
@@ -101,7 +91,12 @@ export default function Modal({
             }}
           >
             <Card isOpen={isOpen} className={className}>
-              <div className="modal__content" role="dialog" aria-modal="true">
+              <div 
+                className="modal__content" 
+                role="dialog" 
+                aria-modal="true"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <div className="modal__header">
                   <h2 className="modal__title">{title}</h2>
                   <button

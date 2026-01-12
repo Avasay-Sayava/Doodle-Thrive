@@ -32,6 +32,7 @@ export default function FileActions({
 
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [modalOpening, setModalOpening] = useState(false);
 
   const close = () => {
     setOpen(false);
@@ -50,7 +51,7 @@ export default function FileActions({
   };
 
   const onClick = (e) => {
-    if (open) return;
+    if (open || modalOpening) return;
 
     if (openOnLeftClick) {
       e.preventDefault();
@@ -126,6 +127,7 @@ export default function FileActions({
         key: "rename",
         label: "Rename",
         onClick: (e) => {
+          e.stopPropagation();
           openRenameModalRef.current?.();
         },
       },
@@ -154,8 +156,11 @@ export default function FileActions({
 
   const handleItemClick = (item, e) => {
     if (item.disabled) return;
-    item.onClick?.();
     e.preventDefault();
+    e.stopPropagation();
+    setModalOpening(true);
+    setTimeout(() => setModalOpening(false), 100);
+    item.onClick?.(e);
     close();
   };
 

@@ -66,13 +66,19 @@ function FileRow({ file, onRefresh }) {
   const canEdit = ["editor", "admin", "owner"].includes(userRole);
 
   const handleFileClick = (e, openModal) => {
+    // Check if any modal is open (dialog element with open attribute)
+    const isAnyModalOpen = document.querySelector('dialog[open]');
+    
     if (type === "file") {
       if (!loading) {
         openModal();
       }
     }
     else if (type === "folder") {
-      navigate(`/drive/folders/${localFile.id}`, { replace: true });
+      // Only navigate to folder if no modal is open
+      if (!isAnyModalOpen) {
+        navigate(`/drive/folders/${localFile.id}`, { replace: true });
+      }
     }
   };
 
