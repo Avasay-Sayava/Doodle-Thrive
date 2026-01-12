@@ -1,7 +1,9 @@
 import { useCallback, useMemo, useEffect, useRef } from "react";
 import GetText from "../GetText";
 import shareFile from "../../utils/shareFile";
-import useFilePermissions, { findUserIdByUsername } from "../../utils/useFilePermissions";
+import useFilePermissions, {
+  findUserIdByUsername,
+} from "../../utils/useFilePermissions";
 import SharedUserList from "../../components/SharedUserList";
 import useUserId from "../../utils/useUserId";
 
@@ -55,16 +57,58 @@ export default function ShareDialog({ file, onRefresh, children }) {
     [updatePermission]
   );
 
-  const excludeUsernames = useMemo(() => sharedWith.map((u) => u.username), [sharedWith]);
+  const handleAddUser = useCallback(
+    (username) => {
+      if (!fileId) {
+        console.error("Missing file id");
+        return;
+      }
 
-  return (
-    <GetText
-      title="Share"
-      placeholder="Add people by username"
-      submitLabel="Share"
-      showUserSearch
-      onOpen={loadShared}
-      extraContent={
+      const existingUser = sharedWith.find((u) => u.username === username);
+      if (existingUser) {
+        console.error(`${username} already has access`);
+        return;
+      }
+
+      findUserIdByUsername(username)
+        .then((targetId) => {
+          if (ownerId && targetId === ownerId) {
+            throw new Error("Owner already has full access.");
+          }
+          return shareFile(fileId, username, "viewer");
+        })
+        .then(() => wait())
+        .then(() => loadShared({ preserveUserId: undefined }))
+        .then(() => onRefreshRef.current?.())
+        .catch((err) => {
+          console.error("Failed to add user:", err);
+        });
+    },
+    [fileId, sharedWith, ownerId, loadShared]
+  );
+
+  const excludeUsernames = useMemo(
+    () => sharedWith.map((u) => u.username),
+    [sharedWith]
+  );
+
+  const renderExtra = useCallback(
+    ({ userResults, loadingUsers }) => (
+      <>
+        <SharedUserList
+          title="Search Results"
+          users={userResults}
+          currentUserId={currentUserId}
+          roleOptions={PERMISSION_OPTIONS}
+          onRoleChange={handleRoleChange}
+          labels={ROLE_LABELS}
+          loading={loadingUsers}
+          error={null}
+          onRefresh={() => {}}
+          showAddButton={true}
+          onAddUser={handleAddUser}
+          hideRefresh={true}
+          emptyMessage="No new users found."          maxVisibleUsers={3}        />
         <SharedUserList
           users={sharedWith}
           currentUserId={currentUserId}
@@ -75,7 +119,27 @@ export default function ShareDialog({ file, onRefresh, children }) {
           error={sharedError}
           onRefresh={loadShared}
         />
-      }
+      </>
+    ),
+    [
+      sharedWith,
+      currentUserId,
+      handleRoleChange,
+      sharedLoading,
+      sharedError,
+      loadShared,
+      handleAddUser,
+    ]
+  );
+
+  return (
+    <GetText
+      title="Share"
+      placeholder="Add people by username"
+      submitLabel="Share"
+      showUserSearch
+      onOpen={loadShared}
+      renderExtra={renderExtra}
       excludeUsernames={excludeUsernames}
       onSubmit={(username) => {
         if (!fileId) {

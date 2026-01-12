@@ -9,6 +9,8 @@ import "./style.css";
  * @param {Array} roleOptions - available permission options
  * @param {Function} onRoleChange - callback when role changes
  * @param {Object} labels - role label map
+ * @param {boolean} showAddButton - show add button instead of select
+ * @param {Function} onAddUser - callback when add button is clicked
  */
 export default function SharedUserItem({
   entry,
@@ -16,6 +18,8 @@ export default function SharedUserItem({
   roleOptions,
   onRoleChange,
   labels = {},
+  showAddButton = false,
+  onAddUser,
 }) {
   return (
     <div className="shared-user-item">
@@ -38,7 +42,15 @@ export default function SharedUserItem({
         </div>
       </div>
 
-      {entry.isOwner ? (
+      {showAddButton ? (
+        <button
+          type="button"
+          className="shared-user-item__add-btn"
+          onClick={() => onAddUser(entry.username)}
+        >
+          Add
+        </button>
+      ) : entry.isOwner ? (
         <span className="shared-user-item__role-label">Owner</span>
       ) : (
         <PermissionSelect

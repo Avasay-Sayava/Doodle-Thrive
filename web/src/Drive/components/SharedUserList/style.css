@@ -1,6 +1,7 @@
 .shared-user-list {
   margin-top: 12px;
   display: flex;
+  max-height: 130px;
   flex-direction: column;
   gap: 12px;
 }
@@ -52,6 +53,10 @@
   max-height: 250px;
   overflow-y: auto;
   padding-right: 4px;
+}
+
+.shared-user-list__items--limited {
+  max-height: 210px;
 }
 
 .shared-user-list__items::-webkit-scrollbar {

@@ -11,6 +11,12 @@ import "./style.css";
  * @param {boolean} loading - show loading state
  * @param {string} error - error message
  * @param {Function} onRefresh - refresh button callback
+ * @param {string} title - custom title for the list
+ * @param {boolean} showAddButton - show add button instead of select
+ * @param {Function} onAddUser - callback when add button is clicked
+ * @param {boolean} hideRefresh - hide the refresh button
+ * @param {string} emptyMessage - custom empty state message
+ * @param {number} maxVisibleUsers - maximum number of users visible before scrolling
  */
 export default function SharedUserList({
   users = [],
@@ -21,29 +27,37 @@ export default function SharedUserList({
   loading = false,
   error = "",
   onRefresh,
+  title = "Shared with",
+  showAddButton = false,
+  onAddUser,
+  hideRefresh = false,
+  emptyMessage = "No one else has access yet.",
+  maxVisibleUsers,
 }) {
   return (
     <div className="shared-user-list">
       <div className="shared-user-list__header">
-        <span>Shared with</span>
+        <span>{title}</span>
         <div className="shared-user-list__header-actions">
-          <button
-            type="button"
-            className="shared-user-list__refresh-btn"
-            onClick={onRefresh}
-            title="Refresh"
-          >
-            ↻
-          </button>
+          {!hideRefresh && (
+            <button
+              type="button"
+              className="shared-user-list__refresh-btn"
+              onClick={onRefresh}
+              title="Refresh"
+            >
+              ↻
+            </button>
+          )}
           {loading && <span className="shared-user-list__status">Loading</span>}
         </div>
       </div>
 
       {error && <div className="shared-user-list__error">{error}</div>}
 
-      <div className="shared-user-list__items">
+      <div className={`shared-user-list__items${maxVisibleUsers ? ' shared-user-list__items--limited' : ''}`}>
         {users.length === 0 && !loading && !error ? (
-          <div className="shared-user-list__empty">No one else has access yet.</div>
+          <div className="shared-user-list__empty">{emptyMessage}</div>
         ) : null}
 
         {[...users].sort((a, b) => {
@@ -75,6 +89,8 @@ export default function SharedUserList({
               roleOptions={filteredOptions}
               onRoleChange={onRoleChange}
               labels={labels}
+              showAddButton={showAddButton}
+              onAddUser={onAddUser}
             />
           );
         })}

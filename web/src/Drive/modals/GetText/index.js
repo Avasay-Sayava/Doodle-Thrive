@@ -1,6 +1,5 @@
 import "./style.css";
 import { useEffect, useRef, useState, useCallback } from "react";
-import IconUser from "../../components/icons/IconUser";
 import Modal from "../Modal";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
@@ -16,6 +15,7 @@ const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
  * @param {boolean} showUserSearch - enable user search
  * @param {boolean} buttonAfterSelect - show button after select dropdown
  * @param {Array} excludeUsernames - usernames to exclude from search
+ * @param {Function} renderExtra - render function for extra content with search state
  */
 export default function GetText({
   title = "Enter text",
@@ -29,6 +29,7 @@ export default function GetText({
   defaultSelectValue = "",
   showUserSearch = false,
   extraContent = null,
+  renderExtra = null,
   onOpen = () => {},
   buttonAfterSelect = false,
   buttonAfterInput = false,
@@ -40,8 +41,6 @@ export default function GetText({
   const [selectValue, setSelectValue] = useState(defaultSelectValue);
   const [userResults, setUserResults] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
 
   useEffect(() => {
     excludeUsernamesRef.current = excludeUsernames;
@@ -62,23 +61,15 @@ export default function GetText({
       setValue("");
       setSelectValue(defaultSelectValue);
       setUserResults([]);
-      setShowDropdown(false);
     },
     [value, selectValue, onSubmit, defaultSelectValue, selectOptions]
   );
 
-  const selectUser = (username) => {
-    setValue(username);
-    setShowDropdown(false);
-    setUserResults([]);
-  };
-
   // User search effect
   useEffect(() => {
     const trimmed = value.trim();
-    if (!showUserSearch || !trimmed) {
+    if (!showUserSearch || !trimmed || trimmed.length < 1) {
       setUserResults([]);
-      setShowDropdown(false);
       return undefined;
     }
 
@@ -88,7 +79,7 @@ export default function GetText({
       try {
         const jwt = localStorage.getItem("token");
         if (!jwt) {
-          setUserResults({});
+          setUserResults([]);
           return;
         }
 
@@ -102,7 +93,7 @@ export default function GetText({
         });
 
         if (!res.ok) {
-          setUserResults({});
+          setUserResults([]);
           return;
         }
 
@@ -111,13 +102,11 @@ export default function GetText({
           .map(([id, { username }]) => ({ id, username }))
           .filter(
             ({ username }) => !excludeUsernamesRef.current.includes(username)
-          )
-          .slice(0, 5);
+          );
         setUserResults(users);
-        setShowDropdown(users.length > 0);
       } catch (err) {
         if (err.name !== "AbortError") {
-          setUserResults({});
+          setUserResults([]);
         }
       } finally {
         setLoadingUsers(false);
@@ -134,7 +123,6 @@ export default function GetText({
     setValue("");
     setSelectValue(defaultSelectValue);
     setUserResults([]);
-    setShowDropdown(false);
     onClose();
   }, [defaultSelectValue, onClose]);
 
@@ -152,37 +140,10 @@ export default function GetText({
               onChange={(e) => setValue(e.target.value)}
               placeholder={placeholder}
               onKeyDown={(e) => {
-                if (e.key === "Enter" && !showDropdown) submit(close);
-              }}
-              onFocus={() => {
-                if (showUserSearch && userResults.length > 0) {
-                  setShowDropdown(true);
-                }
+                if (e.key === "Enter") submit(close);
               }}
               autoFocus
             />
-
-            {showUserSearch && showDropdown && (
-              <div ref={dropdownRef} className="get-text-modal__dropdown">
-                {loadingUsers ? (
-                  <div className="get-text-modal__dropdown-message">
-                    Searching users...
-                  </div>
-                ) : userResults.length > 0 ? (
-                  userResults.map((user) => (
-                    <button
-                      key={user.id}
-                      type="button"
-                      className="get-text-modal__dropdown-item"
-                      onClick={() => selectUser(user.username)}
-                    >
-                      <IconUser />
-                      <span>{user.username}</span>
-                    </button>
-                  ))
-                ) : null}
-              </div>
-            )}
           </div>
 
           {buttonAfterInput && (
@@ -228,7 +189,11 @@ export default function GetText({
             </div>
           )}
 
-          {extraContent ? (
+          {renderExtra ? (
+            <div className="get-text-modal__extra">
+              {renderExtra({ userResults, loadingUsers })}
+            </div>
+          ) : extraContent ? (
             <div className="get-text-modal__extra">{extraContent}</div>
           ) : null}
 
@@ -249,8 +214,6 @@ export default function GetText({
     [
       value,
       placeholder,
-      showUserSearch,
-      showDropdown,
       loadingUsers,
       userResults,
       buttonAfterInput,
@@ -260,6 +223,7 @@ export default function GetText({
       selectValue,
       buttonAfterSelect,
       extraContent,
+      renderExtra,
       submit,
     ]
   );
