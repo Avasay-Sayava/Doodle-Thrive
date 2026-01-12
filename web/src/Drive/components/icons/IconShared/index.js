@@ -1,10 +1,13 @@
-export default function IconShared({ width = 18, height = 18, ...props }) {
+export default function IconShared({ width = 16, height = 16, ...props }) {
   return (
-    <svg viewBox="0 0 24 24" width={width} height={height} {...props}>
-      <path
-        fill="currentColor"
-        d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3Zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3Zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13Zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5Z"
-      />
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
     </svg>
   );
 }

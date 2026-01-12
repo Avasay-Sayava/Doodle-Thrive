@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 import Logo from "../../components/Logo";
 import SearchBar from './SearchBar';
@@ -23,10 +22,10 @@ function Header() {
 
             <div className="header-right">
                 <div className="icon-group">
-                    <div style={{ padding: '20px' }}>
+                    <div>
                         <SettingsIcon/>
                     </div>
-                    <div style={{ padding: '20px' }}>
+                    <div>
                         <Logout />
                     </div>
                 </div>

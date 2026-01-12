@@ -1,9 +1,16 @@
-export default function IconEdit({ width = 18, height = 18, ...props }) {
+export default function IconEdit({ width = 16, height = 16, ...props }) {
   return (
-    <svg width={width} height={height} viewBox="0 0 24 24" aria-hidden="true" {...props}>
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
       <path
-        fill="currentColor"
-        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Zm18.71-11.04a1.003 1.003 0 0 0 0-1.42l-2.5-2.5a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 2-1.66Z"
+        fillRule="evenodd"
+        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
       />
     </svg>
   );

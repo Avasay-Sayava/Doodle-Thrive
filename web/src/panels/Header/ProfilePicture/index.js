@@ -27,6 +27,9 @@ function ProfilePicture() {
             return;
         }
 
+        // Wait for user ID to be available before fetching user data
+        if (!id) return;
+
         (async () => {
             const res = await fetch(`${API_BASE}/api/users/${id}`, {
                 method: "GET",

@@ -8,7 +8,14 @@ import { useEffect, useState } from "react";
  * @param {{ allFiles: Array }} param0 
  * @returns {JSX.Element} The FileView component.
  */ 
-function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }) {
+function FileView({ 
+  allFiles = [], 
+  onRefresh, 
+  sortBy = "name", 
+  sortDir = "asc", 
+  foldersMode = "mixed",
+  onSortChange 
+}) {
   const [files, setFiles] = useState([...allFiles]);
 
   useEffect(() => {
@@ -30,7 +37,14 @@ function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }
               <th>Last modified</th>
               <th>File size</th>
               <th className="col-actions">
-                <Filter files={files} setFiles={setFiles} sortBy={sortBy} sortDir={sortDir} />
+                <Filter 
+                  files={files} 
+                  setFiles={setFiles} 
+                  sortBy={sortBy} 
+                  sortDir={sortDir} 
+                  foldersMode={foldersMode}
+                  onSortChange={onSortChange}
+                />
               </th>
             </tr>
           </thead>

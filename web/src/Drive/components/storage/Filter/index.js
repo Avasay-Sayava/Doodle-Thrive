@@ -2,13 +2,16 @@ import "./style.css";
 import { useEffect, useRef, useState } from "react";
 import { sortFiles } from "../../../utils/sortFiles";
 
-export default function Filter({ files, setFiles, sortBy: initialSortBy = "name", sortDir: initialSortDir = "asc" }) {
+export default function Filter({ 
+  files, 
+  setFiles, 
+  sortBy = "name", 
+  sortDir = "asc", 
+  foldersMode = "mixed",
+  onSortChange 
+}) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
-
-  const [sortBy, setSortBy] = useState(initialSortBy);
-  const [sortDir, setSortDir] = useState(initialSortDir);
-  const [foldersMode, setFoldersMode] = useState("mixed");
 
   useEffect(() => {
     if (!open) return;
@@ -27,10 +30,9 @@ export default function Filter({ files, setFiles, sortBy: initialSortBy = "name"
   }, [open]);
 
   const applySort = (nextSortBy = sortBy, nextSortDir = sortDir, nextFoldersMode = foldersMode) => {
-    setSortBy(nextSortBy);
-    setSortDir(nextSortDir);
-    setFoldersMode(nextFoldersMode);
-
+    if (onSortChange) {
+      onSortChange({ sortBy: nextSortBy, sortDir: nextSortDir, foldersMode: nextFoldersMode });
+    }
     setFiles((prev) => sortFiles(prev, nextSortBy, nextSortDir, nextFoldersMode));
   };
 

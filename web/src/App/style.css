@@ -61,7 +61,7 @@
   --color-bg-toggle-thumb: #9e9e9e;
 
   /* Text */
-  --color-text-primary: #000000;
+  --color-text-primary: #ffffff;
   --color-text-secondary: #9e9e9e;
   --color-text-muted: #616161;
   --color-text-error: #9e9e9e;
@@ -92,14 +92,19 @@ body {
                'Segoe UI', Roboto, Arial, sans-serif;
   color: var(--color-text-primary);
   font-size: 14px;
+  user-select: none;
 }
 
 #root {
   height: 100vh;
-  width: 100%;
+  width: 100vw;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+}
+
+dialog {
+  user-select: none;
 }

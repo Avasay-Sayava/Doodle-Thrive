@@ -14,12 +14,22 @@ function SearchView({ refreshKey, onRefresh }) {
     const [searchParams] = useSearchParams();
     const query = searchParams.get("query");
 
+    const [sortBy, setSortBy] = useState("name");
+    const [sortDir, setSortDir] = useState("asc");
+    const [foldersMode, setFoldersMode] = useState("mixed");
+
+    const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+        setSortBy(newSortBy);
+        setSortDir(newSortDir);
+        setFoldersMode(newFoldersMode);
+    };
+
     if (!query) {
         navigate("/drive/home", { replace: true });
     }
 
     useEffect(() => {
-        const run = async () => {
+        (async () => {
             try {
                 setError("");
 
@@ -52,16 +62,13 @@ function SearchView({ refreshKey, onRefresh }) {
                     rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
                 }
 
-                // Sort by name ascending by default
-                const sortedFiles = sortFiles(rootFiles, "name", "asc", "mixed");
+                const sortedFiles = sortFiles(rootFiles, sortBy, sortDir, foldersMode);
                 setFiles(sortedFiles);
             } catch (err) {
                 setError(err?.message || "Failed to load files");
             }
-        };
-
-        run();
-    }, [query, navigate, refreshKey]);
+        })();
+    }, [query, navigate, refreshKey, sortBy, sortDir, foldersMode]);
     return (
         <div className="file-view">
             <div className="file-view__header">
@@ -73,7 +80,14 @@ function SearchView({ refreshKey, onRefresh }) {
             </div>
 
             {error && <div className="error-message">{error}</div>}
-            <FileView allFiles={files} onRefresh={onRefresh} />
+            <FileView 
+                allFiles={files} 
+                onRefresh={onRefresh}
+                sortBy={sortBy}
+                sortDir={sortDir}
+                foldersMode={foldersMode}
+                onSortChange={handleSortChange}
+            />
         </div>
     );
 }

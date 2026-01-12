@@ -68,7 +68,7 @@ function SettingsPage({ currentTheme, setCurrentTheme, onBack }) {
               </div>
               {showJoke && (
                 <div className="joke-popup">
-                  <span>Nah, sold your data to China</span>
+                  <span>Already sold to China.</span>
                 </div>
               )}
             </div>

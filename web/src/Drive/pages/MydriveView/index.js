@@ -5,6 +5,8 @@ import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 import New from "../../components/storage/New";
 import useUserId from "../../utils/useUserId";
+import { sortFiles } from "../../utils/sortFiles";
+import IconFile from "../../components/icons/IconFile";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -14,8 +16,18 @@ function MydriveView({ refreshKey, onRefresh}) {
   const navigate = useNavigate();
   const id = useUserId();
 
+  const [sortBy, setSortBy] = useState("name");
+  const [sortDir, setSortDir] = useState("asc");
+  const [foldersMode, setFoldersMode] = useState("folders-first");
+
+  const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+    setSortBy(newSortBy);
+    setSortDir(newSortDir);
+    setFoldersMode(newFoldersMode);
+  };
+
   useEffect(() => { 
-    const run = async () => {
+    (async () => {
       try {
         setError("");
 
@@ -48,14 +60,13 @@ function MydriveView({ refreshKey, onRefresh}) {
           rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
         }
 
-        setFiles(rootFiles);
+        setFiles(sortFiles(rootFiles, sortBy, sortDir, foldersMode));
+        handleSortChange({ sortBy, sortDir, foldersMode });
       } catch (err) {
         setError(err?.message || "Failed to load files");
       }
-    };
-
-    run();
-  }, [navigate, refreshKey, id]);
+    })();
+  }, [navigate, refreshKey, id, sortBy, sortDir, foldersMode]);
 
   return (
     <div className="file-view">
@@ -63,23 +74,21 @@ function MydriveView({ refreshKey, onRefresh}) {
         <New hidden={true}/>
         <div className="file-view__header">
           <h1 className="view-title">
-            <svg
-              className="view-title__icon"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fill="currentColor"
-                d="M6 2h8l4 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 2H6v16h10V9h-3V4Z"
-              />
-            </svg>
+            <IconFile className="view-title__icon" width={24} height={24} aria-hidden="true" />
             <span className="view-title__text">My Drive</span>
           </h1>
         </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView allFiles={files} onRefresh={onRefresh} />
+      <FileView 
+        allFiles={files} 
+        onRefresh={onRefresh}
+        sortBy={sortBy}
+        sortDir={sortDir}
+        foldersMode={foldersMode}
+        onSortChange={handleSortChange}
+      />
     </div>
   );
 }

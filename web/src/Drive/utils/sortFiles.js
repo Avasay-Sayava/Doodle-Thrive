@@ -39,10 +39,10 @@ export function createSortComparator(sortBy = "name", sortDir = "asc", foldersMo
 
 /**
  * Sort an array of files
- * @param {Array} files - Files to sort
- * @param {string} sortBy - "name" or "modified"
- * @param {string} sortDir - "asc" or "desc"
- * @param {string} foldersMode - "mixed" or "folders-first"
+ * @param {Array} [files=[]] - Files to sort
+ * @param {"name"|"modified"} [sortBy="name"] - "name" or "modified"
+ * @param {"asc"|"desc"} [sortDir="asc"] - "asc" or "desc"
+ * @param {"mixed"|"folders-first"} [foldersMode="mixed"] - "mixed" or "folders-first"
  * @returns {Array} - Sorted files
  */
 export function sortFiles(files = [], sortBy = "name", sortDir = "asc", foldersMode = "mixed") {
