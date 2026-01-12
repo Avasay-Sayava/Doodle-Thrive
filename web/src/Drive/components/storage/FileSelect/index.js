@@ -7,14 +7,102 @@ import GetText from "../../../modals/GetText";
 import FileActions from "../FileActions";
 import ShareDialog from "../../../modals/ShareDialog";
 
+const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
+
+// Helper to check if user has permission
+const hasPermission = (permissions, path) => {
+  return path.split('.').reduce((obj, key) => obj?.[key], permissions) === true;
+};
+
+// Helper to merge permissions from API response
+const mergePermissions = (data) => {
+  const merged = {};
+  Object.values(data || {}).forEach((entry) => {
+    Object.entries(entry || {}).forEach(([userId, perms]) => {
+      const current = merged[userId] || {
+        self: { read: false, write: false },
+        content: { read: false, write: false },
+        permissions: { read: false, write: false },
+      };
+      merged[userId] = {
+        self: {
+          read: current.self.read || Boolean(perms?.self?.read),
+          write: current.self.write || Boolean(perms?.self?.write),
+        },
+        content: {
+          read: current.content.read || Boolean(perms?.content?.read),
+          write: current.content.write || Boolean(perms?.content?.write),
+        },
+        permissions: {
+          read: current.permissions.read || Boolean(perms?.permissions?.read),
+          write: current.permissions.write || Boolean(perms?.permissions?.write),
+        },
+      };
+    });
+  });
+  return merged;
+};
+
+// Helper to fetch file permissions
+const fetchFilePermissions = async (fileId) => {
+  try {
+    const jwt = localStorage.getItem("token");
+    const currentUserId = localStorage.getItem("id");
+    
+    // Fetch file metadata to check ownership
+    const fileRes = await fetch(`${API_BASE}/api/files/${fileId}`, {
+      headers: { Authorization: `Bearer ${jwt}` },
+    });
+    const fileData = await fileRes.ok ? await fileRes.json() : {};
+    const isOwner = fileData.owner === currentUserId;
+    
+    // If user is owner, return full permissions
+    if (isOwner) {
+      return {
+        [currentUserId]: {
+          self: { read: true, write: true },
+          content: { read: true, write: true },
+          permissions: { read: true, write: true },
+        },
+      };
+    }
+    
+    // Otherwise fetch and merge permissions
+    const res = await fetch(`${API_BASE}/api/files/${fileId}/permissions`, {
+      headers: { Authorization: `Bearer ${jwt}` },
+    });
+    if (!res.ok) return {};
+    const data = await res.json();
+    return mergePermissions(data);
+  } catch (err) {
+    console.error("Failed to fetch permissions:", err);
+    return {};
+  }
+};
+
 function FileSelect({ file, onRefresh }) {
   const { id, starred } = file;
 
   const [isStarred, setIsStarred] = useState(Boolean(starred));
+  const [userPermissions, setUserPermissions] = useState({});
+
+  // Check permissions
+  const canShare = hasPermission(userPermissions, 'permissions.write');
+  const canDownload = hasPermission(userPermissions, 'content.read');
+  const canRename = hasPermission(userPermissions, 'self.write');
 
   useEffect(() => {
     setIsStarred(Boolean(starred));
   }, [starred]);
+
+  useEffect(() => {
+    // Fetch permissions when component mounts or file id changes
+    fetchFilePermissions(id).then((perms) => {
+      const currentUserId = localStorage.getItem("id");
+      // Get the current user's permissions from the response
+      setUserPermissions(perms[currentUserId] || {});
+    });
+  }, [id]);
 
   const onToggleStar = async (e) => {
     e.stopPropagation();
@@ -36,11 +124,12 @@ function FileSelect({ file, onRefresh }) {
         {(open) => (
           <button
             className="file-action-btn file-action-btn--hover"
-            title="Share"
+            title={canShare ? "Share" : "No permission to share"}
             onClick={(e) => {
               e.stopPropagation();
-              open();
+              if (canShare) open();
             }}
+            disabled={!canShare}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
               <path
@@ -54,8 +143,9 @@ function FileSelect({ file, onRefresh }) {
 
       <button
         className="file-action-btn file-action-btn--hover"
-        title="Download"
-        onClick={() => downloadFile(id)}
+        title={canDownload ? "Download" : "No permission to download"}
+        onClick={() => canDownload && downloadFile(id)}
+        disabled={!canDownload}
       >
         <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
           <path
@@ -76,11 +166,12 @@ function FileSelect({ file, onRefresh }) {
         {(open) => (
           <button
             className="file-action-btn file-action-btn--hover"
-            title="Rename"
+            title={canRename ? "Rename" : "No permission to rename"}
             onClick={(e) => {
               e.stopPropagation();
-              open();
+              if (canRename) open();
             }}
+            disabled={!canRename}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
               <path
@@ -95,7 +186,7 @@ function FileSelect({ file, onRefresh }) {
       {isStarred && (
         <button
           className="file-action-btn file-action-btn--starred"
-          title="Unstar"
+          title={isStarred ? "Unstar" : "Star"}
           onClick={onToggleStar}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">

@@ -269,6 +269,9 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
 
       try {
         if (nextRole === "owner") {
+          // First give admin permissions, then transfer ownership
+          await shareFile(fileId, entry.username, "admin");
+          await wait(200); // Small delay to ensure admin permissions are set
           await transferOwnership(fileId, entry.username);
         } else if (nextRole === "none") {
           await revokeAccess(fileId, entry.username);

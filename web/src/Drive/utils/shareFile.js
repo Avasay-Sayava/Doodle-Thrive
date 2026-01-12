@@ -61,13 +61,13 @@ export default async function shareFile(id, username, option) {
         mergedOptions[uuid] = {
             self: { read: true, write: false },
             content: { read: true, write: false },
-            permissions: { read: false, write: false },
+            permissions: { read: true, write: false },
         };
     } else if (option === "editor") {
         mergedOptions[uuid] = {
             self: { read: true, write: true },
             content: { read: true, write: true },
-            permissions: { read: false, write: false },
+            permissions: { read: true, write: false },
         };
     } else if (option === "admin") {
         mergedOptions[uuid] = {

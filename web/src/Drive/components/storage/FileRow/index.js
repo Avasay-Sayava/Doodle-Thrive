@@ -18,8 +18,8 @@ function getSize({ type, content }) {
   return gb.toFixed(2) + " GB";
 }
 
-function FileRow({ file: { name, modified, content, ownerUsername, type, id, starred }, onRefresh }) {
-  const file = { name, modified, content, ownerUsername, type, id, starred };
+function FileRow({ file, onRefresh }) {
+  const { name, modified, content, ownerUsername, type } = file;
   return (
     <FileActions
       file={file}
@@ -37,7 +37,7 @@ function FileRow({ file: { name, modified, content, ownerUsername, type, id, sta
         <td className="col-modified"><RelativeDate timestamp={modified} /></td>
         <td className="col-size">{getSize({ type, content })}</td>
         <td className="col-actions">
-          <FileSelect file={{ id, starred }} onRefresh={onRefresh} />
+          <FileSelect file={file} onRefresh={onRefresh} />
         </td>
       </tr>
     </FileActions>
