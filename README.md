@@ -305,35 +305,55 @@ server_name=base-server server_port=3000 ./api-server.bash
 The website acts as the frontend client for the Doodle Drive system, built with React.
 
 ### Structure
-The application handles routing using `react-router-dom` and is split into three main sections:
-* **Authentication**: Sign In and Sign Up pages.
-* **Drive Interface**: The main interface for file management.
-* **Settings**: User customization.
+The application handles routing using `react-router-dom` and represents a comprehensive file management system. Key areas include:
+* **Authentication**: Secure entry points.
+* **Drive Interface**: The core workspace for managing files.
+* **Settings**: User preference configuration.
 
 ### Authentication
-Users can create an account or log in to access their drive.
+Users must authenticate to access their drive.
 ![Sign In Page](assets/signin_page.png)
 
 ### Drive Interface
-The main layout consists of:
-* **Header**: Contains the logo, search bar, and user profile/settings.
-* **Sidebar**: Provides navigation to different drive views (Home, My Drive, Shared, etc.) and the "New" button.
-* **Content Area**: Displays files and folders for the selected view.
+The main layout provides a persistent navigation structure:
+* **Header**: Contains the application logo, the global search bar, and the user profile menu.
+* **Sidebar**: Offers navigation to views like Home, My Drive, Shared, and Bin, plus the "New" button.
+* **Content Area**: Renders the active folder or view.
 
+#### Main Pages
+The **Home View** aggregates important files.
 ![Drive Interface - Home View](assets/home_view.png)
 
-#### Views
-* **Home**: Overview of files.
-* **My Drive**: The user's personal storage root.
-* **Starred**: Files marked as important.
-* **Shared**: Files shared with the user.
-* **Recent**: Recently accessed files.
-* **Bin**: Deleted files.
+The **My Drive** page is the root of your personal storage.
+![My Drive View](assets/mydrive_view.png)
 
-### Search
-Users can search for files using the search bar in the header.
+### Searching
+Users can find files instantly using the search bar.
 ![Search View](assets/search_view.png)
 
+### Directory Navigation
+**Inside a Directory**, users can view specific contents of a folder.
+![Directory View](assets/directory_view.png)
+
+### File Operations
+#### Add Content
+The "New" button allows creating folders and files.
+![Add Content](assets/add_content.png)
+
+#### Share Content
+Files can be shared with other users by specifying their username and permissions.
+![Share Content](assets/share_content.png)
+
+#### Edit Content
+Text files can be opened and edited directly within the website's editor.
+![Edit Content](assets/edit_content.png)
+
+#### Delete Content
+Items can be removed and sent to the Bin.
+![Delete Content](assets/delete_content.png)
+
 ### Settings
-The settings page allows users to customize the application theme (e.g., Pink, Blue, Dark).
+The settings page includes personalization options such as themes (Pink (light), Soviet (dark)).
 ![Settings Page](assets/settings_page.png)
+
+### More Features
