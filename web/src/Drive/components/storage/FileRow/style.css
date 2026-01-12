@@ -26,6 +26,15 @@
   text-overflow: ellipsis;
 }
 
+.file-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 .col-owner {
   width: 18%;
   color: var(--color-text-secondary);

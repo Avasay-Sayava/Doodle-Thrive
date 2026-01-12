@@ -18,7 +18,7 @@ function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }
   return (
       <div className="file-view__table-wrapper">
         <table className="files-table">
-          <thead>
+          <thead className="files-thead">
             <tr>
               <th>Name</th>
               <th>Owner</th>
@@ -30,7 +30,7 @@ function FileView({ allFiles = [], onRefresh, sortBy = "name", sortDir = "asc" }
             </tr>
           </thead>
 
-          <tbody>
+          <tbody className="tbody">
             {files.length === 0 ? (
               <tr className="no-files-row">
                 <td className="no-files" colSpan="5">

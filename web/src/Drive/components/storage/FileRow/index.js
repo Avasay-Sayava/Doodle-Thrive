@@ -4,8 +4,8 @@ import FileActions from "../FileActions";
 import RelativeDate from "../../Date";
 
 
-function getSize({ fileType, content }) {
-  if (fileType === "folder") return "-";
+function getSize({ type, content }) {
+  if (type === "folder") return "-";
   let bytes = content?.length || 0;
   if (bytes < 1024) return bytes + " B";
   let kb = bytes / 1024;
@@ -17,8 +17,9 @@ function getSize({ fileType, content }) {
 }
 
 
-function FileRow({ file: { name, modified, content, ownerUsername, fileType, id, starred }, onRefresh }) {
-  const file = { name, modified, content, ownerUsername, fileType, id, starred };
+
+function FileRow({ file: { name, modified, content, ownerUsername, type, id, starred }, onRefresh }) {
+  const file = { name, modified, content, ownerUsername, type, id, starred };
   return (
     <FileActions
       file={file}
@@ -26,7 +27,12 @@ function FileRow({ file: { name, modified, content, ownerUsername, fileType, id,
       onLeftClick={()=>{}}
     >
       <tr className="file-row">
-        <td className="col-name">{name}</td>
+        <td className="col-name">
+          <span className="file-icon" aria-hidden="true">
+            {type === "folder" ? <IconFolder /> : <IconFile />}
+          </span>
+          {name}
+        </td>
         <td className="col-owner">{ownerUsername}</td>
         <td className="col-modified"><RelativeDate timestamp={modified} /></td>
         <td className="col-size">{getSize({ fileType, content })}</td>
