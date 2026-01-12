@@ -56,13 +56,12 @@
   cursor: pointer;
   display: grid;
   place-items: center;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .get-text-modal__close:hover {
   background: var(--color-focus);
   color: var(--color-bg-main);
-  transform: translateY(-1px);
 }
 
 .get-text-modal__input-wrapper {
