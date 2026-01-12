@@ -36,6 +36,10 @@ const mergePermissions = (data) => {
 };
 
 export const roleFromPermissions = (perms) => {
+  // If user has all permissions (owner), return "owner"
+  if (perms?.self?.write && perms?.content?.write && perms?.permissions?.write) {
+    return "owner";
+  }
   if (perms?.permissions?.write) return "admin";
   if (perms?.self?.write || perms?.content?.write) return "editor";
   if (perms?.self?.read || perms?.content?.read) return "viewer";
@@ -153,6 +157,7 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [ownerId, setOwnerId] = useState(null);
+  const [currentUserPerms, setCurrentUserPerms] = useState(emptyPerms());
 
   const isCurrentOwner = ownerId && ownerId === currentUserId;
 
@@ -181,6 +186,15 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         const fileData = await fileRes.json();
         setOwnerId(fileData.owner);
 
+        // If current user is the owner, set full permissions
+        if (fileData.owner === currentUserId) {
+          setCurrentUserPerms({
+            self: { read: true, write: true },
+            content: { read: true, write: true },
+            permissions: { read: true, write: true },
+          });
+        }
+
         const res = await fetch(`${API_BASE}/api/files/${fileId}/permissions`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
@@ -204,6 +218,11 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
 
         const entries = await Promise.all(
           Object.entries(merged).map(async ([userId, perms]) => {
+            // Store current user's permissions
+            if (userId === currentUserId) {
+              setCurrentUserPerms(perms);
+            }
+
             let username = userId;
             let imageUrl = null;
             try {
@@ -256,7 +275,7 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         setLoading(false);
       }
     },
-    [fileId]
+    [currentUserId, fileId]
   );
 
   const updatePermission = useCallback(
@@ -296,6 +315,7 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
     error,
     ownerId,
     isCurrentOwner,
+    currentUserPerms,
     loadShared,
     updatePermission,
   };

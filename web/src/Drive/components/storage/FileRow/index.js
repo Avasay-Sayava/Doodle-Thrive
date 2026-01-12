@@ -6,7 +6,10 @@ import RelativeDate from "../../Date";
 import IconFolder from "../../icons/IconFolder";
 import IconFile from "../../icons/IconFile";
 import EditFile from "../../../modals/EditFile";
+import ViewFile from "../../../modals/ViewFile";
 import ViewImage from "../../../modals/ViewImage";
+import useFilePermissions, { roleFromPermissions } from "../../../utils/useFilePermissions";
+import useUserId from "../../../utils/useUserId";
 import { useNavigate } from "react-router-dom";
 
 function getSize({ type, content }) {
@@ -30,19 +33,43 @@ function isImageFile(filename) {
 function FileRow({ file, onRefresh }) {
   const navigate = useNavigate();
   const [localFile, setLocalFile] = useState(file);
+  const [hasLoadedPermissions, setHasLoadedPermissions] = useState(false);
+  const currentUserId = useUserId();
+  const { currentUserPerms, loadShared, loading } = useFilePermissions(file?.id, currentUserId, onRefresh);
 
   // Update local file when prop changes
   useEffect(() => {
     setLocalFile(file);
+    setHasLoadedPermissions(false);
   }, [file]);
+
+  // Load permissions when file or user changes
+  useEffect(() => {
+    if (file?.id && currentUserId && file?.type === "file") {
+      loadShared().finally(() => {
+        setHasLoadedPermissions(true);
+      });
+    } else if (file?.type === "folder") {
+      setHasLoadedPermissions(true);
+    }
+  }, [file?.id, file?.type, currentUserId, loadShared]);
 
   const { name, modified, content, ownerUsername, type } = localFile;
 
   const isImage = isImageFile(name);
+  
+  // Get user's role based on permissions
+  const userRole = roleFromPermissions(currentUserPerms);
+  console.log(userRole);
+  
+  // Check if current user can edit (editor or above)
+  const canEdit = ["editor", "admin", "owner"].includes(userRole);
 
   const handleFileClick = (e, openModal) => {
     if (type === "file") {
-      openModal();
+      if (!loading) {
+        openModal();
+      }
     }
     else if (type === "folder") {
       navigate(`/drive/folders/${localFile.id}`, { replace: true });
@@ -63,7 +90,13 @@ function FileRow({ file, onRefresh }) {
 
   return (
     <>
-      {isImage ? (
+      {!hasLoadedPermissions && type === "file" ? (
+        <tr className="file-row">
+          <td className="col-name" colSpan="5">
+            <span style={{ color: "#999" }}>Loading...</span>
+          </td>
+        </tr>
+      ) : isImage ? (
         <ViewImage file={localFile}>
           {(openViewImage) => (
             <FileActions
@@ -90,7 +123,7 @@ function FileRow({ file, onRefresh }) {
             </FileActions>
           )}
         </ViewImage>
-      ) : (
+      ) : canEdit ? (
         <EditFile file={localFile} onSave={handleSave}>
           {(openEditModal) => (
             <FileActions
@@ -117,6 +150,33 @@ function FileRow({ file, onRefresh }) {
             </FileActions>
           )}
         </EditFile>
+      ) : (
+        <ViewFile file={localFile}>
+          {(openViewModal) => (
+            <FileActions
+              file={localFile}
+              onRefresh={onRefresh}
+              onLeftClick={(e) => handleFileClick(e, openViewModal)}
+            >
+              <tr className="file-row">
+                <td className="col-name">
+                  <span className="file-icon" aria-hidden="true">
+                    {type === "folder" ? <IconFolder /> : <IconFile />}
+                  </span>
+                  {name}
+                </td>
+                <td className="col-owner">{ownerUsername}</td>
+                <td className="col-modified">
+                  <RelativeDate timestamp={modified} />
+                </td>
+                <td className="col-size">{getSize({ type, content })}</td>
+                <td className="col-actions">
+                  <FileSelect file={localFile} onRefresh={onRefresh} />
+                </td>
+              </tr>
+            </FileActions>
+          )}
+        </ViewFile>
       )}
     </>
   );

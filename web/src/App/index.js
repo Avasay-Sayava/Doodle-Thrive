@@ -31,6 +31,7 @@ function App() {
               <Route path="/signin" element={<Sign mode="signin" />} />
               <Route path="/signup" element={<Sign mode="signup" />} />
               <Route path="/drive/*" element={<Drive openSettings={openSettings} />} />
+              <Route path="*" element={<Sign mode="signin" />} />
             </Routes>
           )}
         </Settings>
