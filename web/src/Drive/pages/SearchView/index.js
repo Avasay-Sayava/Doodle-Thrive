@@ -57,13 +57,12 @@ function SearchView({ refreshKey, onRefresh }) {
 
                 const filesObj = await res.json();
                 const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
-                const rootFiles = allFiles.filter((f) => f.parent == null);
 
-                for (let i = 0; i < rootFiles.length; i++) {
-                    rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
+                for (let i = 0; i < allFiles.length; i++) {
+                    allFiles[i].ownerUsername = await getUser(allFiles[i].owner);
                 }
 
-                const sortedFiles = sortFiles(rootFiles, sortBy, sortDir, foldersMode);
+                const sortedFiles = sortFiles(allFiles, sortBy, sortDir, foldersMode);
                 setFiles(sortedFiles);
             } catch (err) {
                 setError(err?.message || "Failed to load files");
