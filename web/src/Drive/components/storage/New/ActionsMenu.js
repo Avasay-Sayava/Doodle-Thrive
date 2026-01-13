@@ -1,5 +1,5 @@
 import "./style.css";
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import IconFile from "../../icons/IconFile";
 import IconFolder from "../../icons/IconFolder";
 import IconUpload from "../../icons/IconUpload";
@@ -17,9 +17,13 @@ export default function ActionsMenu({
   const openFileRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  const menuStyle = anchorPoint
-    ? { "--menu-left": `${anchorPoint.x}px`, "--menu-top": `${anchorPoint.y}px` }
-    : {};
+  const menuStyle = useMemo(
+    () => ({
+      left: anchorPoint ? `${anchorPoint.x}px` : "0px",
+      top: anchorPoint ? `${anchorPoint.y}px` : "0px",
+    }),
+    [anchorPoint]
+  );
 
   const refresh = () => {
     onClose?.();

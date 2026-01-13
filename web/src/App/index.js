@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
 import "./style.css";
 
@@ -9,11 +10,11 @@ import Settings from "../Drive/modals/Settings";
 
 function App() {
   const [currentTheme, setCurrentTheme] = useState(
-    localStorage.getItem("theme") === "soviet" ? "soviet" : "pink",
+    localStorage.getItem("theme") === "soviet" ? "soviet" : "pink"
   );
 
   const [defaultPage, setDefaultPage] = useState(
-    localStorage.getItem("default-page") === "mydrive" ? "mydrive" : "home",
+    localStorage.getItem("default-page") === "mydrive" ? "mydrive" : "home"
   );
 
   useEffect(() => {
@@ -43,7 +44,7 @@ function App() {
                 <Drive openSettings={openSettings} defaultPage={defaultPage} />
               }
             />
-            <Route path="*" element={<Sign mode="signin" />} />
+            <Route path="*" element={<Navigate to="/signin" replace />} />
           </Routes>
         )}
       </Settings>

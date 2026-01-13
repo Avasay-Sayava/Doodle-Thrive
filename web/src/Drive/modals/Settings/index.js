@@ -45,7 +45,6 @@ export default function Settings({
 
       return (
         <>
-          {/* Visuals Section */}
           <section className="settings-group">
             <h3 className="group-title">Visuals</h3>
             <div className="settings-row">
@@ -68,14 +67,13 @@ export default function Settings({
             </div>
           </section>
 
-          {/* General Section */}
           <section className="settings-group">
             <h3 className="group-title">General</h3>
             <div className="settings-row">
               <div className="settings-info">
                 <span className="label-text">Default Page</span>
                 <span className="sub-text">
-                  Switch between Home and MyDrive
+                  Switch between Home and My Drive
                 </span>
               </div>
               <div className="switch-container">
@@ -92,7 +90,6 @@ export default function Settings({
             </div>
           </section>
 
-          {/* Privacy Joke Section */}
           <section className="settings-group">
             <h3 className="group-title">Security</h3>
             <div
