@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 import { sortFiles } from "../../utils/sortFiles";
+import useUserId from "../../utils/useUserId";
 import IconHome from "../../components/icons/IconHome";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
@@ -12,6 +13,7 @@ function HomeView({ refreshKey, onRefresh}) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const currentUserId = useUserId();
 
   const [sortBy, setSortBy] = useState("modified");
   const [sortDir, setSortDir] = useState("asc");
@@ -52,7 +54,18 @@ function HomeView({ refreshKey, onRefresh}) {
 
         const filesObj = await res.json();
         const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
-        const rootFiles = allFiles.filter((f) => f.parent == null);
+        
+        // Include files with no parent OR files where parent exists but user doesn't have access to it
+        const rootFiles = allFiles.filter((f) => {
+          // If no parent, it's root
+          if (f.parent == null) return true;
+          
+          // If has parent, check if parent is accessible
+          const parent = allFiles.find(file => file.id === f.parent);
+          
+          // If parent not in allFiles (user doesn't have access), show this file in home
+          return !parent;
+        });
 
         for (let i = 0; i < rootFiles.length; i++) {
           rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);

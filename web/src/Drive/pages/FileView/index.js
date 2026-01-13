@@ -16,7 +16,8 @@ function FileView({
   sortDir = "asc", 
   foldersMode = "mixed",
   onSortChange,
-  parentId = null
+  parentId = null,
+  canWrite = true
 }) {
   const [files, setFiles] = useState([...allFiles]);
   const [menuPosition, setMenuPosition] = useState(null);
@@ -43,7 +44,7 @@ function FileView({
   }
 
   return (
-      <div onContextMenu={onRightClick} className="file-view__table-wrapper">
+      <div onContextMenu={canWrite ? onRightClick : undefined} className="file-view__table-wrapper">
         <ActionsMenu
           isOpen={menuOpen}
           onClose={() => setMenuOpen(false)}

@@ -5,7 +5,7 @@ import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 import useUserId from "../../utils/useUserId";
 import { sortFiles } from "../../utils/sortFiles";
-import IconFile from "../../components/icons/IconFile";
+import FolderPath from "../../components/storage/FolderPath";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -18,6 +18,7 @@ function MydriveView({ refreshKey, onRefresh }) {
   const [sortBy, setSortBy] = useState("name");
   const [sortDir, setSortDir] = useState("asc");
   const [foldersMode, setFoldersMode] = useState("folders-first");
+  const [canWrite, setCanWrite] = useState(true);
 
   const handleSortChange = ({
     sortBy: newSortBy,
@@ -80,13 +81,7 @@ function MydriveView({ refreshKey, onRefresh }) {
     <div className="file-view">
       <div className="file-view__header">
         <h1 className="view-title">
-          <IconFile
-            className="view-title__icon"
-            width={24}
-            height={24}
-            aria-hidden="true"
-          />
-          <span className="view-title__text">My Drive</span>
+          <FolderPath folderId={null} onRefresh={onRefresh} onPermissionsLoad={setCanWrite} />
         </h1>
       </div>
 
@@ -98,6 +93,7 @@ function MydriveView({ refreshKey, onRefresh }) {
         sortDir={sortDir}
         foldersMode={foldersMode}
         onSortChange={handleSortChange}
+        canWrite={canWrite}
       />
     </div>
   );
