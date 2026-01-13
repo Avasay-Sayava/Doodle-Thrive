@@ -30,7 +30,6 @@ export default function ShareDialog({ file, onRefresh, children }) {
   const currentUserId = useUserId();
   const onRefreshRef = useRef(onRefresh);
   const [error, setError] = useState(null);
-  const [searchUsername, setSearchUsername] = useState("");
   const [userFound, setUserFound] = useState(false);
 
   useEffect(() => {
@@ -164,7 +163,6 @@ export default function ShareDialog({ file, onRefresh, children }) {
       userFound={userFound}
       onSubmit={(username) => {
         setError(null);
-        setSearchUsername(username);
 
         if (!fileId) {
           setError("Unable to share: file not found");
