@@ -69,13 +69,12 @@ function MydriveView({ refreshKey, onRefresh }) {
           rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
         }
 
-        setFiles(sortFiles(rootFiles, sortBy, sortDir, foldersMode));
-        handleSortChange({ sortBy, sortDir, foldersMode });
+        setFiles(rootFiles);
       } catch (err) {
         setError(err?.message || "Failed to load files");
       }
     })();
-  }, [navigate, refreshKey, id, sortBy, sortDir, foldersMode]);
+  }, [navigate, refreshKey, id]);
 
   return (
     <div className="file-view">
@@ -87,7 +86,7 @@ function MydriveView({ refreshKey, onRefresh }) {
 
       {error && <div className="error-message">{error}</div>}
       <FileView
-        allFiles={files}
+        allFiles={sortFiles(files, sortBy, sortDir, foldersMode)}
         onRefresh={onRefresh}
         sortBy={sortBy}
         sortDir={sortDir}

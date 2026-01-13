@@ -59,13 +59,12 @@ function FolderView({ refreshKey, onRefresh }) {
                     childFiles[i].ownerUsername = await getUser(childFiles[i].owner);
                 }
 
-                setFiles(sortFiles(childFiles, sortBy, sortDir, foldersMode));
-                handleSortChange({ sortBy, sortDir, foldersMode });
+                setFiles(childFiles);
             } catch (err) {
                 setError(err?.message || "Failed to load files");
             }
         })();
-    }, [foldersMode, navigate, refreshKey, sortBy, sortDir, folderId]);
+    }, [navigate, refreshKey, folderId]);
 
     return (
         <div className="file-view">
@@ -77,7 +76,7 @@ function FolderView({ refreshKey, onRefresh }) {
 
             {error && <div className="error-message">{error}</div>}
             <FileView
-                allFiles={files}
+                allFiles={sortFiles(files, sortBy, sortDir, foldersMode)}
                 onRefresh={onRefresh}
                 sortBy={sortBy}
                 sortDir={sortDir}
