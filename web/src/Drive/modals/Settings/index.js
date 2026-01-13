@@ -75,7 +75,7 @@ export default function Settings({
               <div className="settings-info">
                 <span className="label-text">Default Page</span>
                 <span className="sub-text">
-                  Switch between Home and MyDrive
+                  Switch between Home and My Drive
                 </span>
               </div>
               <div className="switch-container">
