@@ -72,16 +72,16 @@ function SharedView({ refreshKey, onRefresh }) {
 
   return (
     <div className="file-view">
-      <div className="file-view__header">
+      <div className="file-view-header">
           <h1 className="view-title">
             <IconShared
-              className="view-title__icon"
+              className="view-title-icon"
               width={24}
               height={24}
               aria-hidden="true"
               style={{ color: "var(--color-text-primary)" }}
             />
-            <span className="view-title__text">Shared with me</span>
+            <span className="view-title-text">Shared with me</span>
           </h1>
       </div>
 

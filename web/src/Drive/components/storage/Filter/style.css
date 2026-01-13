@@ -4,7 +4,7 @@
   align-items: center;
 }
 
-.gd-sort__button {
+.gd-sort-button {
   height: 32px;
   padding: 0 10px;
   border-radius: 999px;
@@ -26,31 +26,31 @@
     color 120ms ease;
 }
 
-.gd-sort__button:hover {
+.gd-sort-button:hover {
   background: var(--color-bg-hover);
   color: var(--color-text-primary);
 }
 
-.gd-sort__button.is-open {
+.gd-sort-button.is-open {
   background: var(--color-bg-selected);
   border-color: var(--color-border);
   color: var(--color-text-primary);
 }
 
-.gd-sort__label {
+.gd-sort-label {
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0;
 }
 
-.gd-sort__icon {
+.gd-sort-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: currentColor;
 }
 
-.gd-sort__menu {
+.gd-sort-menu {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
@@ -67,11 +67,11 @@
   padding: 6px 0;
 }
 
-.gd-sort__section {
+.gd-sort-section {
   padding: 4px 0;
 }
 
-.gd-sort__title {
+.gd-sort-title {
   padding: 8px 14px;
   font-size: 11px;
   font-weight: 600;
@@ -80,7 +80,7 @@
   letter-spacing: 0.04em;
 }
 
-.gd-sort__item {
+.gd-sort-item {
   width: 100%;
   padding: 10px 14px;
 
@@ -98,15 +98,15 @@
   transition: background-color 120ms ease;
 }
 
-.gd-sort__item:hover {
+.gd-sort-item:hover {
   background: var(--color-bg-hover);
 }
 
-.gd-sort__item:active {
+.gd-sort-item:active {
   background: var(--color-bg-selected);
 }
 
-.gd-sort__check {
+.gd-sort-check {
   width: 18px;
   height: 18px;
   flex: 0 0 18px;
@@ -118,19 +118,19 @@
   color: var(--color-primary);
 }
 
-.gd-sort__text {
+.gd-sort-text {
   font-size: 13px;
   color: var(--color-text-primary);
 }
 
-.gd-sort__divider {
+.gd-sort-divider {
   height: 1px;
   background: var(--color-border);
   margin: 6px 0;
 }
 
-.gd-sort__button:focus-visible,
-.gd-sort__item:focus-visible {
+.gd-sort-button:focus-visible,
+.gd-sort-item:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }

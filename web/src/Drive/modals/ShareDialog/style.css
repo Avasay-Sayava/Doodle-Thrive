@@ -3,20 +3,20 @@
   padding: 0;
 }
 
-.share-dialog__content {
+.share-dialog-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 16px;
 }
 
-.share-dialog__input-wrapper {
+.share-dialog-input-wrapper {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.share-dialog__input {
+.share-dialog-input {
   padding: 12px;
   border: 2px solid var(--color-focus);
   border-radius: 10px;
@@ -27,16 +27,16 @@
   transition: border-color 0.15s ease;
 }
 
-.share-dialog__input:focus {
+.share-dialog-input:focus {
   outline: none;
   border-color: var(--color-primary);
 }
 
-.share-dialog__input::placeholder {
+.share-dialog-input::placeholder {
   color: var(--color-text-secondary);
 }
 
-.share-dialog__error {
+.share-dialog-error {
   padding: 10px 12px;
   background: var(--color-bg-disabled);
   color: var(--color-text-error);
@@ -45,14 +45,14 @@
   line-height: 1.4;
 }
 
-.share-dialog__actions {
+.share-dialog-actions {
   display: flex;
   gap: 8px;
   margin-top: 8px;
   padding-top: 8px;
 }
 
-.share-dialog__btn {
+.share-dialog-btn {
   flex: 1;
   padding: 10px 16px;
   border: none;
@@ -63,28 +63,28 @@
   transition: background 0.15s ease;
 }
 
-.share-dialog__btn--primary {
+.share-dialog-btn--primary {
   background: var(--color-primary);
   color: white;
 }
 
-.share-dialog__btn--primary:hover:not(:disabled) {
+.share-dialog-btn--primary:hover:not(:disabled) {
   background: var(--color-primary-hover);
 }
 
-.share-dialog__btn--primary:disabled {
+.share-dialog-btn--primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.share-modal__section {
+.share-modal-section {
   margin-top: 12px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.share-modal__section-header {
+.share-modal-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -93,13 +93,13 @@
   font-size: 15px;
 }
 
-.share-modal__header-actions {
+.share-modal-header-actions {
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
-.share-modal__icon-btn {
+.share-modal-icon-btn {
   width: 32px;
   height: 32px;
   border: 2px solid var(--color-focus);
@@ -113,11 +113,11 @@
   transition: background 0.15s ease;
 }
 
-.share-modal__icon-btn:hover {
+.share-modal-icon-btn:hover {
   background: var(--color-bg-hover);
 }
 
-.share-modal__pill {
+.share-modal-pill {
   background: var(--color-bg-hover);
   color: var(--color-text-secondary);
   border-radius: 999px;
@@ -125,7 +125,7 @@
   font-size: 12px;
 }
 
-.share-modal__list {
+.share-modal-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -134,23 +134,23 @@
   padding-right: 4px;
 }
 
-.share-modal__empty {
+.share-modal-empty {
   color: var(--color-text-secondary);
   font-size: 14px;
 }
 
-.share-modal__item {
+.share-modal-item {
   display: grid;
   grid-template-columns: 38px 1fr auto;
   align-items: center;
   gap: 10px;
 }
 
-.share-modal__info {
+.share-modal-info {
   min-width: 0;
 }
 
-.share-modal__name {
+.share-modal-name {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -159,13 +159,13 @@
   line-height: 1.2;
 }
 
-.share-modal__meta {
+.share-modal-meta {
   color: var(--color-text-secondary);
   font-size: 13px;
   margin-top: 2px;
 }
 
-.share-modal__role-select {
+.share-modal-role-select {
   padding: 8px 10px;
   border-radius: 10px;
   border: 2px solid var(--color-focus);
@@ -174,12 +174,12 @@
   font-weight: 500;
 }
 
-.share-modal__role-label {
+.share-modal-role-label {
   color: var(--color-text-secondary);
   font-weight: 600;
 }
 
-.share-modal__badge {
+.share-modal-badge {
   padding: 2px 8px;
   border-radius: 999px;
   background: var(--color-bg-hover);
@@ -188,7 +188,7 @@
   line-height: 1.4;
 }
 
-.share-modal__badge--owner {
+.share-modal-badge--owner {
   background: var(--color-primary-faint);
   color: var(--color-primary);
   font-weight: 700;

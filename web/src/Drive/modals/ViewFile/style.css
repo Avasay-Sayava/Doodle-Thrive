@@ -1,11 +1,11 @@
-.view-file-modal__content {
+.view-file-modal-content {
   display: flex;
   flex-direction: column;
   gap: 16px;
   min-height: 400px;
 }
 
-.view-file-modal__textarea {
+.view-file-modal-textarea {
   flex: 1;
   min-height: 300px;
   padding: 12px;
@@ -22,12 +22,12 @@
   resize: none;
 }
 
-.view-file-modal__textarea:focus {
+.view-file-modal-textarea:focus {
   outline: none;
   border-color: var(--color-primary);
 }
 
-.view-file-modal__loading {
+.view-file-modal-loading {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,7 +36,7 @@
   font-size: 14px;
 }
 
-.view-file-modal__error {
+.view-file-modal-error {
   padding: 12px;
   background: var(--color-bg-disabled);
   color: var(--color-text-error);
@@ -45,7 +45,7 @@
   border-left: 3px solid var(--color-text-error);
 }
 
-.view-file-modal__text-wrapper {
+.view-file-modal-text-wrapper {
   flex: 1;
   min-height: 300px;
   overflow: auto;
@@ -55,7 +55,7 @@
   width: min(80vw, 700px);
 }
 
-.view-file-modal__text {
+.view-file-modal-text {
   margin-top: 0;
   padding: 12px;
   font-family: monospace;
@@ -67,7 +67,7 @@
   user-select: text;
 }
 
-.view-file-modal__actions {
+.view-file-modal-actions {
   margin-top: auto;
   width: min(80vw, 700px);
   display: flex;
@@ -77,7 +77,7 @@
   border-top: 1px solid var(--color-border);
 }
 
-.view-file-modal__button {
+.view-file-modal-button {
   padding: 8px 16px;
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -88,15 +88,15 @@
   transition: background-color 0.2s;
 }
 
-.view-file-modal__button:hover {
+.view-file-modal-button:hover {
   background: var(--color-bg-hover);
 }
 
-.view-file-modal__button--close {
+.view-file-modal-button--close {
   border-color: var(--color-border);
   color: var(--color-text-primary);
 }
 
-.view-file-modal__button--close:hover {
+.view-file-modal-button--close:hover {
   background: var(--color-bg-hover);
 }

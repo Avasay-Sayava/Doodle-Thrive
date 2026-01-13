@@ -102,10 +102,10 @@ function BinView({ refreshKey, onRefresh}) {
 
   return (
     <div className="file-view">
-      <div className="file-view__header">
+      <div className="file-view-header">
         <h1 className="view-title">
-          <IconBin className="view-title__icon" width={24} height={24} aria-hidden="true" />
-          <span className="view-title__text">Bin</span>
+          <IconBin className="view-title-icon" width={24} height={24} aria-hidden="true" />
+          <span className="view-title-text">Bin</span>
         </h1>
         {files.length > 0 && (
           <button 

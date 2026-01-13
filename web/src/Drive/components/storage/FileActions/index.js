@@ -222,7 +222,7 @@ export default function FileActions({
   const enhancedRow = cloneElement(row, {
     onContextMenu,
     onClick,
-    className: [row.props.className, open ? "file-actions__row-open" : ""]
+    className: [row.props.className, open ? "file-actions-row-open" : ""]
       .filter(Boolean)
       .join(" "),
   });
@@ -253,14 +253,14 @@ export default function FileActions({
         <>
           <div
             ref={menuRef}
-            className="file-actions__menu"
+            className="file-actions-menu"
             style={{ left: pos.x, top: pos.y }}
             role="menu"
             aria-label="File actions"
           >
             {items.map((item) => {
               if (item.type === "separator") {
-                return <div key={item.key} className="file-actions__sep" />;
+                return <div key={item.key} className="file-actions-sep" />;
               }
 
               const isDesc = item.key === "description";
@@ -270,7 +270,7 @@ export default function FileActions({
                   key={item.key}
                   type="button"
                   className={[
-                    "file-actions__item",
+                    "file-actions-item",
                     item.danger ? "is-danger" : "",
                     item.disabled ? "is-disabled" : "",
                   ]
@@ -287,11 +287,11 @@ export default function FileActions({
                     if (!isDesc) return;
                   }}
                 >
-                  <span className="file-actions__label">{item.label}</span>
+                  <span className="file-actions-label">{item.label}</span>
 
-                  <span className="file-actions__right">
+                  <span className="file-actions-right">
                     {item.rightArrow ? (
-                      <span className="file-actions__arrow" aria-hidden="true">
+                      <span className="file-actions-arrow" aria-hidden="true">
                         ▸
                       </span>
                     ) : null}
@@ -303,14 +303,14 @@ export default function FileActions({
 
           {hoverKey === "description" && (
             <div
-              className="file-actions__desc"
+              className="file-actions-desc"
               style={{ left: descPos.x, top: descPos.y }}
               onMouseEnter={() => setHoverKey("description")}
               onMouseLeave={closeDescPanel}
               role="note"
             >
-              <div className="file-actions__desc-title">Description</div>
-              <div className="file-actions__desc-body">
+              <div className="file-actions-desc-title">Description</div>
+              <div className="file-actions-desc-body">
                 {file?.description?.trim()
                   ? file.description
                   : "No description"}

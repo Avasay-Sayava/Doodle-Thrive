@@ -57,13 +57,13 @@ export default function GetText({
 
       return (
         <>
-          <div className="get-text-modal__input-wrapper">
+          <div className="get-text-modal-input-wrapper">
             <input
               ref={(el) => {
                 inputRef.current = el;
                 if (el) el.focus();
               }}
-              className="get-text-modal__input"
+              className="get-text-modal-input"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder={placeholder}
@@ -75,12 +75,12 @@ export default function GetText({
           </div>
 
           {selectOptions && (
-            <div className="get-text-modal__select-group">
-              <label className="get-text-modal__select-label">
+            <div className="get-text-modal-select-group">
+              <label className="get-text-modal-select-label">
                 {selectLabel}
               </label>
               <select
-                className="get-text-modal__select"
+                className="get-text-modal-select"
                 value={selectValue}
                 onChange={(e) => setSelectValue(e.target.value)}
               >
@@ -93,10 +93,10 @@ export default function GetText({
             </div>
           )}
 
-          <div className="get-text-modal__actions">
+          <div className="get-text-modal-actions">
             <button
               type="button"
-              className="get-text-modal__btn get-text-modal__btn--primary"
+              className="get-text-modal-btn get-text-modal-btn--primary"
               onClick={() => submit(close)}
             >
               {submitLabel}

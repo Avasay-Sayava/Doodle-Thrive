@@ -40,12 +40,12 @@ export default function Filter({
     <div className="gd-sort" ref={rootRef}>
       <button
         type="button"
-        className={`gd-sort__button ${open ? "is-open" : ""}`}
+        className={`gd-sort-button ${open ? "is-open" : ""}`}
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
-        <span className="gd-sort__icon" aria-hidden="true">
+        <span className="gd-sort-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="16" height="16">
             <path
               fill="currentColor"
@@ -53,29 +53,29 @@ export default function Filter({
             />
           </svg>
         </span>
-        <span className="gd-sort__label">Sort</span>
+        <span className="gd-sort-label">Sort</span>
       </button>
 
       {open && (
-        <div className="gd-sort__menu" role="menu" aria-label="Sort options">
-          <div className="gd-sort__section">
-            <div className="gd-sort__title">Sort by</div>
+        <div className="gd-sort-menu" role="menu" aria-label="Sort options">
+          <div className="gd-sort-section">
+            <div className="gd-sort-title">Sort by</div>
             <MenuItem checked={sortBy === "name"} label="Name" onClick={() => applySort("name", sortDir, foldersMode)} />
             <MenuItem checked={sortBy === "modified"} label="Last modified" onClick={() => applySort("modified", sortDir, foldersMode)} />
           </div>
 
-          <div className="gd-sort__divider" />
+          <div className="gd-sort-divider" />
 
-          <div className="gd-sort__section">
-            <div className="gd-sort__title">Sort direction</div>
+          <div className="gd-sort-section">
+            <div className="gd-sort-title">Sort direction</div>
             <MenuItem checked={sortDir === "asc"} label={sortBy === "name" ? "A to Z" : "New to Old"} onClick={() => applySort(sortBy, "asc", foldersMode)} />
             <MenuItem checked={sortDir === "desc"} label={sortBy === "name" ? "Z to A" : "Old to New"} onClick={() => applySort(sortBy, "desc", foldersMode)} />
           </div>
 
-          <div className="gd-sort__divider" />
+          <div className="gd-sort-divider" />
 
-          <div className="gd-sort__section">
-            <div className="gd-sort__title">Folders</div>
+          <div className="gd-sort-section">
+            <div className="gd-sort-title">Folders</div>
             <MenuItem checked={foldersMode === "folders-first"} label="On top" onClick={() => applySort(sortBy, sortDir, "folders-first")} />
             <MenuItem checked={foldersMode === "mixed"} label="Mixed with files" onClick={() => applySort(sortBy, sortDir, "mixed")} />
           </div>
@@ -89,20 +89,20 @@ function MenuItem({ checked, label, onClick, disabled = false }) {
   return (
     <button
       type="button"
-      className={`gd-sort__item ${checked ? "is-selected" : ""} ${disabled ? "is-disabled" : ""}`}
+      className={`gd-sort-item ${checked ? "is-selected" : ""} ${disabled ? "is-disabled" : ""}`}
       role="menuitemradio"
       aria-checked={checked}
       disabled={disabled}
       onClick={disabled ? undefined : onClick}
     >
-      <span className="gd-sort__check" aria-hidden="true">
+      <span className="gd-sort-check" aria-hidden="true">
         {checked && (
           <svg viewBox="0 0 24 24" width="18" height="18">
             <path fill="currentColor" d="M9 16.17 4.83 12 3.41 13.41 9 19 21 7 19.59 5.59 9 16.17Z" />
           </svg>
         )}
       </span>
-      <span className="gd-sort__text">{label}</span>
+      <span className="gd-sort-text">{label}</span>
     </button>
   );
 }

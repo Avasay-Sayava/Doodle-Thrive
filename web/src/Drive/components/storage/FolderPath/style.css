@@ -6,14 +6,14 @@
   font-weight: inherit;
 }
 
-.folder-path__group {
+.folder-path-group {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   position: relative;
 }
 
-.folder-path__create-btn {
+.folder-path-create-btn {
   font-size: inherit;
   font-weight: inherit;
   color: inherit;
@@ -23,11 +23,11 @@
   padding: 0 4px;
 }
 
-.folder-path__separator {
+.folder-path-separator {
   display: contents;
 }
 
-.folder-path__sep-text {
+.folder-path-sep-text {
   font-size: inherit;
   color: var(--color-text-secondary);
   margin: 0 4px;

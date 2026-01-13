@@ -34,10 +34,10 @@ export default function ConfirmDialog({
         renderBody={(isOpen, shouldRender, close) => {
                     return (
             <div className="confirm-dialog">
-              <p className="confirm-dialog__message">{message}</p>
-              <div className="confirm-dialog__actions">
+              <p className="confirm-dialog-message">{message}</p>
+              <div className="confirm-dialog-actions">
                 <button
-                  className="confirm-dialog__button confirm-dialog__button--cancel"
+                  className="confirm-dialog-button confirm-dialog-button--cancel"
                   onClick={() => {
                                         close();
                     onCancel?.();
@@ -46,7 +46,7 @@ export default function ConfirmDialog({
                   {cancelLabel}
                 </button>
                 <button
-                  className={`confirm-dialog__button confirm-dialog__button--confirm ${
+                  className={`confirm-dialog-button confirm-dialog-button--confirm ${
                     isDangerous ? "is-dangerous" : ""
                   }`}
                   onClick={() => {

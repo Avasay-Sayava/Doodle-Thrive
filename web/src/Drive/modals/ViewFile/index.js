@@ -44,20 +44,20 @@ export default function ViewFile({ file, children }) {
       if (!shouldRender) return null;
 
       return (
-        <div className="view-file-modal__content">
-          {error && <div className="view-file-modal__error">{error}</div>}
+        <div className="view-file-modal-content">
+          {error && <div className="view-file-modal-error">{error}</div>}
 
           {loading ? (
-            <div className="view-file-modal__loading">Loading file...</div>
+            <div className="view-file-modal-loading">Loading file...</div>
           ) : (
-            <div className="view-file-modal__text-wrapper">
-              <pre className="view-file-modal__text">{content}</pre>
+            <div className="view-file-modal-text-wrapper">
+              <pre className="view-file-modal-text">{content}</pre>
             </div>
           )}
 
-          <div className="view-file-modal__actions">
+          <div className="view-file-modal-actions">
             <button
-              className="view-file-modal__button view-file-modal__button--close"
+              className="view-file-modal-button view-file-modal-button--close"
               onClick={close}
             >
               Close

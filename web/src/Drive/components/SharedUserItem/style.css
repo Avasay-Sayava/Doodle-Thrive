@@ -5,11 +5,11 @@
   gap: 10px;
 }
 
-.shared-user-item__info {
+.shared-user-item-info {
   min-width: 0;
 }
 
-.shared-user-item__name {
+.shared-user-item-name {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -18,7 +18,7 @@
   line-height: 1.2;
 }
 
-.shared-user-item__badge {
+.shared-user-item-badge {
   padding: 2px 8px;
   border-radius: 999px;
   background: var(--color-bg-hover);
@@ -27,24 +27,24 @@
   line-height: 1.4;
 }
 
-.shared-user-item__badge--owner {
+.shared-user-item-badge--owner {
   background: var(--color-primary-faint);
   color: var(--color-primary);
   font-weight: 700;
 }
 
-.shared-user-item__meta {
+.shared-user-item-meta {
   color: var(--color-text-secondary);
   font-size: 13px;
   margin-top: 2px;
 }
 
-.shared-user-item__role-label {
+.shared-user-item-role-label {
   color: var(--color-text-secondary);
   font-weight: 600;
 }
 
-.shared-user-item__add-btn {
+.shared-user-item-add-btn {
   background: var(--color-primary);
   color: white;
   border: none;
@@ -56,7 +56,7 @@
   transition: background 0.2s;
 }
 
-.shared-user-item__add-btn:hover {
+.shared-user-item-add-btn:hover {
   background: var(--color-primary-hover, var(--color-primary));
   opacity: 0.9;
 }

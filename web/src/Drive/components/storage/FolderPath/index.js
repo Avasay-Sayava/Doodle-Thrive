@@ -97,7 +97,7 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
 
     return (
         <span className="folder-path" ref={menuRef}>
-            <div className="folder-path__group">
+            <div className="folder-path-group">
                 {isShared ? (
                     <>
                         <IconShared width={24} height={24} aria-hidden="true" style={{ color: "var(--color-text-primary)" }} />
@@ -115,7 +115,7 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
                             setMenuOpen(!menuOpen);
                             setMenuPosition({ x: e.currentTarget.getBoundingClientRect().left, y: e.currentTarget.getBoundingClientRect().bottom });
                         }}
-                        className="folder-path__create-btn"
+                        className="folder-path-create-btn"
                         title="Create item in this folder"
                     >
                         +
@@ -130,18 +130,18 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
                 />
             </div>
             {showEllipsis && (
-                <span className="folder-path__separator">
-                    <span className="folder-path__sep-text">&gt;</span>
-                    <span className="folder-path__sep-text">...</span>
+                <span className="folder-path-separator">
+                    <span className="folder-path-sep-text">&gt;</span>
+                    <span className="folder-path-sep-text">...</span>
                 </span>
             )}
              {displayPath.map((folder, idx) => {
                 const isLast = idx === displayPath.length - 1;
                 return (
-                    <span key={folder.id} className="folder-path__separator">
-                        <span className="folder-path__sep-text">&gt;</span>
+                    <span key={folder.id} className="folder-path-separator">
+                        <span className="folder-path-sep-text">&gt;</span>
                         {isLast ? (
-                            <div className="folder-path__group">
+                            <div className="folder-path-group">
                                 <button onClick={() => navigate(`/drive/folders/${folder.id}`, { replace: true })} className="folder-button">
                                     {folder.name}
                                 </button>
@@ -151,7 +151,7 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
                                             setMenuOpen(!menuOpen);
                                             setMenuPosition({ x: e.currentTarget.getBoundingClientRect().left, y: e.currentTarget.getBoundingClientRect().bottom });
                                         }}
-                                        className="folder-path__create-btn"
+                                        className="folder-path-create-btn"
                                         title="Create item in this folder"
                                     >
                                         +

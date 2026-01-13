@@ -1,5 +1,5 @@
 /* Modal Overlay */
-.modal__overlay {
+.modal-overlay {
   position: fixed;
   inset: 0;
   background-color: transparent;
@@ -13,13 +13,13 @@
   z-index: 1000;
 }
 
-.modal__overlay::backdrop {
+.modal-overlay::backdrop {
   background-color: var(--color-text-primary);
   opacity: 0.5;
 }
 
 /* Modal Content */
-.modal__content {
+.modal-content {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -27,7 +27,7 @@
 }
 
 /* Modal Header */
-.modal__header {
+.modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -35,7 +35,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.modal__title {
+.modal-title {
   margin: 0;
   font-size: 24px;
   font-weight: 700;
@@ -43,7 +43,7 @@
   letter-spacing: -0.5px;
 }
 
-.modal__close {
+.modal-close {
   background: none;
   border: none;
   outline: none;
@@ -61,12 +61,12 @@
   padding: 0;
 }
 
-.modal__close:hover {
+.modal-close:hover {
   background: var(--color-bg-hover);
 }
 
 /* Modal Body */
-.modal__body {
+.modal-body {
   padding: 24px;
   overflow-y: auto;
   flex: 1;

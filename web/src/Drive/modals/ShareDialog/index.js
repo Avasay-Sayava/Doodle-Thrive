@@ -215,14 +215,14 @@ export default function ShareDialog({ file, onRefresh, children }) {
       if (!shouldRender) return null;
 
       return (
-        <div className="share-dialog__content">
-          <div className="share-dialog__input-wrapper">
+        <div className="share-dialog-content">
+          <div className="share-dialog-input-wrapper">
             <input
               ref={(el) => {
                 inputRef.current = el;
                 if (el && isOpen) el.focus();
               }}
-              className="share-dialog__input"
+              className="share-dialog-input"
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
@@ -237,7 +237,7 @@ export default function ShareDialog({ file, onRefresh, children }) {
             />
           </div>
 
-          {error && <div className="share-dialog__error">{error}</div>}
+          {error && <div className="share-dialog-error">{error}</div>}
 
           {userResults.length > 0 && (
             <SharedUserList
@@ -268,10 +268,10 @@ export default function ShareDialog({ file, onRefresh, children }) {
             onRefresh={loadShared}
           />
 
-          <div className="share-dialog__actions">
+          <div className="share-dialog-actions">
             <button
               type="button"
-              className="share-dialog__btn share-dialog__btn--primary"
+              className="share-dialog-btn share-dialog-btn--primary"
               onClick={handleSubmit}
               disabled={!userFound || !inputValue.trim()}
             >

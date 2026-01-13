@@ -8,7 +8,7 @@
   flex-direction: column;
 }
 
-.file-view__header {
+.file-view-header {
   margin-bottom: 12px;
   height: 32px;
   display: flex;
@@ -16,14 +16,14 @@
   justify-content: space-between;
 }
 
-.file-view__header h1 {
+.file-view-header h1 {
   margin: 0;
   font-size: 20px;
   font-weight: 500;
   color: var(--color-text-primary);
 }
 
-.file-view__table-wrapper {
+.file-view-table-wrapper {
   flex: 1;
   min-height: 0;
   background-color: var(--color-bg-main);
@@ -33,7 +33,7 @@
   -ms-overflow-style: none;
 }
 
-.file-view__table-wrapper::-webkit-scrollbar {
+.file-view-table-wrapper::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
@@ -93,7 +93,7 @@ tbody tr:hover {
   justify-content: flex-end;
 }
 
-.file-view__error {
+.file-view-error {
   padding: 48px 24px;
   text-align: center;
   font-size: 18px;
@@ -125,7 +125,7 @@ tbody tr:hover {
   background-color: var(--color-bg-selected);
 }
 
-.mydrive-title__chev {
+.mydrive-title-chev {
   font-size: 14px;
   color: var(--color-text-secondary);
 }

@@ -5,7 +5,7 @@ function HeaderButton({ onClick, icon, text, ...props }) {
   return (
     <div className="header-button" onClick={onClick} {...props}>
       {icon}
-      {text && <span className="header-button__text">{text}</span>}
+      {text && <span className="header-button-text">{text}</span>}
     </div>
   );
 }

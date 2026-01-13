@@ -61,19 +61,19 @@ export default function ActionsMenu({ onClose, isOpen, onCreated, folderId = nul
         {(open) => { openFolderRef.current = open; return null; }}
       </GetText>
 
-      <input ref={fileInputRef} type="file" multiple className="new__hidden-input" onChange={pickFiles} />
+      <input ref={fileInputRef} type="file" multiple className="new-hidden-input" onChange={pickFiles} />
 
       {isOpen && (
-        <div className="new__menu" role="menu" aria-label="New menu" style={menuStyle}>
+        <div className="new-menu" role="menu" aria-label="New menu" style={menuStyle}>
           <button
             type="button"
-            className="new__menu-item"
+            className="new-menu-item"
             onClick={() => {
               onClose?.();
               openFileRef.current?.();
             }}
           >
-            <span className="new__menu-icon" aria-hidden="true">
+            <span className="new-menu-icon" aria-hidden="true">
               <IconFile />
             </span>
             New file
@@ -81,29 +81,29 @@ export default function ActionsMenu({ onClose, isOpen, onCreated, folderId = nul
 
           <button
             type="button"
-            className="new__menu-item"
+            className="new-menu-item"
             onClick={() => {
               onClose?.();
               openFolderRef.current?.();
             }}
           >
-            <span className="new__menu-icon" aria-hidden="true">
+            <span className="new-menu-icon" aria-hidden="true">
               <IconFolder />
             </span>
             New folder
           </button>
 
-          <div className="new__menu-sep" />
+          <div className="new-menu-sep" />
 
           <button
             type="button"
-            className="new__menu-item"
+            className="new-menu-item"
             onClick={() => {
               onClose?.();
               fileInputRef.current?.click();
             }}
           >
-            <span className="new__menu-icon" aria-hidden="true">
+            <span className="new-menu-icon" aria-hidden="true">
               <IconUpload />
             </span>
             Upload file

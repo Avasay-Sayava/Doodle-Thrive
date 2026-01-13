@@ -21,7 +21,7 @@ export default function SidePanel({ onCreated }) {
   return (
     
     <div className="drive-sidebar" aria-label="Sidebar">
-      <div className="drive-sidebar__section">
+      <div className="drive-sidebar-section">
         <New onCreated={onCreated} data-tutorial="new-button" />
 
         {items.map((it) => {
@@ -33,13 +33,13 @@ export default function SidePanel({ onCreated }) {
               to={it.to}
               end={it.end}
               className={({ isActive }) =>
-                `drive-sidebar__item ${isActive ? "is-active" : ""}`
+                `drive-sidebar-item ${isActive ? "is-active" : ""}`
               }
             >
-              <span className="drive-sidebar__icon" aria-hidden="true">
+              <span className="drive-sidebar-icon" aria-hidden="true">
                 <Icon />
               </span>
-              <span className="drive-sidebar__label">{it.label}</span>
+              <span className="drive-sidebar-label">{it.label}</span>
             </NavLink>
           );
         })}

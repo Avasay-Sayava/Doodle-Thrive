@@ -107,9 +107,9 @@ function SearchView({ refreshKey, onRefresh }) {
 
     return (
         <div className="file-view">
-            <div className="file-view__header">
+            <div className="file-view-header">
                 <h1>
-                    <span className="mydrive-title__text">Results for "{query}"</span>
+                    <span className="mydrive-title-text">Results for "{query}"</span>
                 </h1>
             </div>
 

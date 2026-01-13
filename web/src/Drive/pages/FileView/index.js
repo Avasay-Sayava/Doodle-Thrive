@@ -44,7 +44,7 @@ function FileView({
   }
 
   return (
-      <div onContextMenu={canWrite ? onRightClick : undefined} className="file-view__table-wrapper">
+      <div onContextMenu={canWrite ? onRightClick : undefined} className="file-view-table-wrapper">
         <ActionsMenu
           isOpen={menuOpen}
           onClose={() => setMenuOpen(false)}

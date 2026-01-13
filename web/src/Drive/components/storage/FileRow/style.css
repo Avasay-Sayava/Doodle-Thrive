@@ -16,7 +16,7 @@
   white-space: nowrap;
 }
 
-.file-row__loading {
+.file-row-loading {
   color: var(--color-text-muted);
 }
 

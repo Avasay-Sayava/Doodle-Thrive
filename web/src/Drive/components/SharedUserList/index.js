@@ -34,28 +34,28 @@ export default function SharedUserList({
 }) {
   return (
     <div className="shared-user-list">
-      <div className="shared-user-list__header">
+      <div className="shared-user-list-header">
         <span>{title}</span>
-        <div className="shared-user-list__header-actions">
+        <div className="shared-user-list-header-actions">
           {!hideRefresh && (
             <button
               type="button"
-              className="shared-user-list__refresh-btn"
+              className="shared-user-list-refresh-btn"
               onClick={onRefresh}
               title="Refresh"
             >
               ↻
             </button>
           )}
-          {loading && <span className="shared-user-list__status">Loading</span>}
+          {loading && <span className="shared-user-list-status">Loading</span>}
         </div>
       </div>
 
-      {error && <div className="shared-user-list__error">{error}</div>}
+      {error && <div className="shared-user-list-error">{error}</div>}
 
-      <div className={`shared-user-list__items`}>
+      <div className={`shared-user-list-items`}>
         {users.length === 0 && !loading && !error ? (
-          <div className="shared-user-list__empty">{emptyMessage}</div>
+          <div className="shared-user-list-empty">{emptyMessage}</div>
         ) : null}
 
         {[...users].sort((a, b) => {

@@ -16,7 +16,7 @@
   min-height: 60px;
 }
 
-.search-dropdown__placeholder {
+.search-dropdown-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;

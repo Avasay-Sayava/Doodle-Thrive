@@ -10,7 +10,7 @@
   position: relative;
 }
 
-.avatar__image {
+.avatar-image {
   position: absolute;
   top: 0;
   left: 0;
@@ -20,7 +20,7 @@
   display: block;
 }
 
-.avatar__initial {
+.avatar-initial {
   font-weight: 700;
   color: var(--color-primary);
 }

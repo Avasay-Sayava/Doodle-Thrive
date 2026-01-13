@@ -75,15 +75,15 @@ function RecentsView({ refreshKey, onRefresh }) {
 
   return (
     <div className="file-view">
-      <div className="file-view__header">
+      <div className="file-view-header">
         <h1 className="view-title">
           <IconRecent
-            className="view-title__icon"
+            className="view-title-icon"
             width={24}
             height={24}
             aria-hidden="true"
           />
-          <span className="view-title__text">Recents</span>
+          <span className="view-title-text">Recents</span>
         </h1>
       </div>
 

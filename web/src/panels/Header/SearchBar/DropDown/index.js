@@ -6,7 +6,7 @@ function DropDown({ results = [], loading, setOpen }) {
     if (loading) {
         return (
             <div className="search-dropdown">
-                <div className="search-dropdown__placeholder">
+                <div className="search-dropdown-placeholder">
                     Searching…
                 </div>
             </div>
@@ -16,7 +16,7 @@ function DropDown({ results = [], loading, setOpen }) {
     if (!results.length) {
         return (
             <div className="search-dropdown">
-                <div className="search-dropdown__placeholder">
+                <div className="search-dropdown-placeholder">
                     No results found
                 </div>
             </div>

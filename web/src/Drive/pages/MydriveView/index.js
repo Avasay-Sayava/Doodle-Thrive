@@ -78,7 +78,7 @@ function MydriveView({ refreshKey, onRefresh }) {
 
   return (
     <div className="file-view">
-      <div className="file-view__header">
+      <div className="file-view-header">
         <h1 className="view-title">
           <FolderPath folderId={null} onRefresh={onRefresh} onPermissionsLoad={setCanWrite} />
         </h1>

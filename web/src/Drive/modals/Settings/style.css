@@ -1,5 +1,5 @@
 /* Modal Overlay */
-.settings-modal__overlay {
+.settings-modal-overlay {
   position: fixed;
   inset: 0;
   background-color: transparent;
@@ -13,7 +13,7 @@
   z-index: 1000;
 }
 
-.settings-modal__overlay::backdrop {
+.settings-modal-overlay::backdrop {
   background-color: var(--color-shadow-dark-overlay);
 }
 
@@ -28,7 +28,7 @@
   margin: 0;
 }
 
-.settings-modal__content {
+.settings-modal-content {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -36,7 +36,7 @@
 }
 
 /* Modal Header */
-.settings-modal__header {
+.settings-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -44,7 +44,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.settings-modal__title {
+.settings-modal-title {
   margin: 0;
   font-size: 24px;
   font-weight: 700;
@@ -53,7 +53,7 @@
 }
 
 /* Modal Body */
-.settings-modal__body {
+.settings-modal-body {
   padding: 24px;
   overflow-y: auto;
   flex: 1;

@@ -19,12 +19,12 @@ export default function New({ onCreated, hidden = false, folderId = null, ...res
       <div className={hidden ? "new--hidden-trigger" : ""}>
         <button
           type="button"
-          className="new__button"
+          className="new-button"
           onClick={() => setMenuOpen((v) => !v)}
           aria-haspopup="menu"
           aria-expanded={menuOpen}
         >
-          <span className="new__plus">+</span>
+          <span className="new-plus">+</span>
           <span>New</span>
         </button>
       </div>

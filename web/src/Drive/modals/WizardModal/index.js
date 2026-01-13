@@ -97,9 +97,9 @@ function WizardModal({ onComplete }) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const STEP_TARGETS = {
-        2: '.new__button',
+        2: '.new-button',
         3: '[data-tutorial="settings-button"] svg',
-        4: '.file-view__table-wrapper',
+        4: '.file-view-table-wrapper',
         5: '.search-bar',
     };
 

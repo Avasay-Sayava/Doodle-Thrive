@@ -16,9 +16,9 @@ export default function Avatar({ username, imageUrl, size = 38 }) {
       aria-hidden="true"
     >
       {imageUrl ? (
-        <img src={imageUrl} alt={username} className="avatar__image" />
+        <img src={imageUrl} alt={username} className="avatar-image" />
       ) : (
-        <span className="avatar__initial">{initial}</span>
+        <span className="avatar-initial">{initial}</span>
       )}
     </div>
   );
