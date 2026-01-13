@@ -1,11 +1,12 @@
 # Doodle Drive
 
 ## Overview
-This project implements a distributed file system inspired by Google Drive, consisting of a NodeJS API Gateway and a C++ Backend Server.
+This project implements a distributed file system inspired by Google Drive, consisting of a React web server, NodeJS API Gateway and a C++ Backend Server.
 
 ## Project Structure
+* **Web**: React website
 * **API**: NodeJS Express Server (MVC Architecture)
-* **base**: C++ TCP Server
+* **Base**: C++ TCP Server
 
 ## Disabling Changes to Branches of Parts
 To disable changes to branches of finished parts of the project, you create a ruleset in GitHub repository settings:
@@ -21,7 +22,7 @@ To disable changes to branches of finished parts of the project, you create a ru
 5. Save the ruleset
 
 ## Installation & Running
-The project is containerized using Docker. For running parts of the project, there are predefined bash files.
+The project is containerized using Docker. For running parts of the project (Base server, API and the Website), there are predefined bash files.
 * **To enable the usage of the bash files**, you need to run this command in the root directory:
     ```bash
     chmod +x ./api-server.bash ./api-console.bash ./base-server.bash ./base-client.bash ./base-tests.bash ./website.bash
@@ -91,74 +92,66 @@ The project is containerized using Docker. For running parts of the project, the
     TIP: Using the `bash` file you have a predefined sh console that is much more easy to use.
 
 
-## C++ Server Usage Examples
 
-For the full protocol, documentation can be found in [`base/README.md`](base/README.md).
+## Website Usage & Structure
 
-### Startup Example
-**Start the server:** (with default variables)
-```bash
-./base-server.bash
-```
+The website is the frontend client for the Doodle Drive system, built with React.
 
-**Then you can run your client of choice**:
-* **Run a C++ client:** (connecting to server at `base-server:3000`)
-    ```bash
-    type=1 name=base-server port=3000 ./base-client.bash
-    ```
+### Structure
+The application handles routing using `react-router-dom` and represents a file management system, like Google Drive, Key areas include:
+* **Authentication**: Only authenticated users who have signed up, can use the system.
+* **Drive Interface**: The core workspace for managing files, like Google Drive.
 
-* **Run a Python client:** (connecting to server at `base-server:3000`)
-    ```bash
-    type=2 name=base-server port=3000 ./base-client.bash
-    ```
+It includes, all CRUD operations for files, made simple with a UI and even a full file sharing system insipired by Google Drive.
 
-* **To start the website**, you need to run the `./website.bash` file:
-    ```bash
-    build=<true|false> name=<host_name> port=<port> ./website.bash
-    ```
-    You can run the file without defining the `build`, `name`, `port` variables, and it will sign them the default values `true`, `website`, `3000` each.
+### Authentication
+Users must authenticate to access their drive.
+![Sign In Page](assets/signin_page.png)
 
-    If you don't have bash, you can run the following command:
-    ```cmd
-    docker-compose run <--build|> -d -p <port>:<port> --name <host_name> web <port>
-    ```
+### Drive Interface
+The main layout structure:
+* **Header**: Contains the application logo, the global search bar, and the user profile menu.
+* **Sidebar**: Offers navigation to views like Home, My Drive, Starred, Shared, Recents and Bin, plus the "New" button that enables the adding of files and folder, and even the ability to upload files from your computer.
+* **Content Area**: The file viewing system, contains file actions by hovering over a file, or right clicking them, the ability to open images and edit text files, and the ability to open folders and directly add files to them using right click.
 
-### Commands Examples
-* **Create a file:**
-    ```
-    POST Hello, World!
-    ```
-    ```
-    201 Created
-    ```
+#### Main Pages
+The **Home View** aggregates important files.
+![Drive Interface - Home View](assets/home_view.png)
 
-* **Read a file:**
-    ```
-    GET Hello,
-    ```
-    ```
-    200 Ok
+The **My Drive** page is the root of your personal storage.
+![My Drive View](assets/mydrive_view.png)
 
-    World!
-    ```
+And all the other views Starred, Shared, Recents, Bin, Search and folder view (accessible by opening a folder), you can view for your own by runing the website as instructed above!
 
-* **Search a string:**
-    ```
-    SEARCH orl
-    ```
-    ```
-    200 Ok
+### Searching
+Users can find files and folders by using the search bar.
+![Search View](assets/search_view.png)
 
-    Hello,
-    ```
+### Directory Navigation
+**Inside a Directory**, users can view specific contents of a folder by left clicking it, and even directly adding files/folders to it using right click.
+![Directory View](assets/directory_view.png)
 
-* **Delete a file:**
-    ```
-    DELETE Hello,
-    ```
-    ```
-    204 No Content
-    ```
+### File Operations
+#### Add Content
+The "New" button allows creating filer, folder and uploading files.
+![Add Content](assets/add_content.png)
+
+#### Share Content
+Files can be shared with other users by specifying their username and permissions.
+![Share Content](assets/share_content.png)
+
+#### Edit Content
+Text files can be opened and edited directly within the website's editor (Images can also be opened (supported versions are: jpeg, jpg, png and webp))
+![Edit Content](assets/edit_content.png)
+
+#### Delete Content
+Items can be removed and sent to the Bin (and restored when right clicking them inside the Bin view).
+![Delete Content](assets/delete_content.png)
+
+### Settings
+The settings page includes themes (Pink (light), Soviet (dark)).
+![Settings Page](assets/settings_page.png)
+
 
 ## API Usage Examples
 
@@ -300,60 +293,72 @@ server_name=base-server server_port=3000 ./api-server.bash
     {"31798e34-3b62-40b1-b3fe-cd46a494c85c": {"id": "31798e34-3b62-40b1-b3fe-cd46a494c85c", "name": "file.txt", "parent": "4a0ec9ae-751a-46ab-a3d6-4295a8df5082", "content": "Hello, World!"}}
     ```
 
-## Website Usage & Structure
 
-The website acts as the frontend client for the Doodle Drive system, built with React.
+## C++ Server Usage Examples
 
-### Structure
-The application handles routing using `react-router-dom` and represents a comprehensive file management system. Key areas include:
-* **Authentication**: Secure entry points.
-* **Drive Interface**: The core workspace for managing files.
-* **Settings**: User preference configuration.
+For the full protocol, documentation can be found in [`base/README.md`](base/README.md).
 
-### Authentication
-Users must authenticate to access their drive.
-![Sign In Page](assets/signin_page.png)
+### Startup Example
+**Start the server:** (with default variables)
+```bash
+./base-server.bash
+```
 
-### Drive Interface
-The main layout provides a persistent navigation structure:
-* **Header**: Contains the application logo, the global search bar, and the user profile menu.
-* **Sidebar**: Offers navigation to views like Home, My Drive, Shared, and Bin, plus the "New" button.
-* **Content Area**: Renders the active folder or view.
+**Then you can run your client of choice**:
+* **Run a C++ client:** (connecting to server at `base-server:3000`)
+    ```bash
+    type=1 name=base-server port=3000 ./base-client.bash
+    ```
 
-#### Main Pages
-The **Home View** aggregates important files.
-![Drive Interface - Home View](assets/home_view.png)
+* **Run a Python client:** (connecting to server at `base-server:3000`)
+    ```bash
+    type=2 name=base-server port=3000 ./base-client.bash
+    ```
 
-The **My Drive** page is the root of your personal storage.
-![My Drive View](assets/mydrive_view.png)
+* **To start the website**, you need to run the `./website.bash` file:
+    ```bash
+    build=<true|false> name=<host_name> port=<port> ./website.bash
+    ```
+    You can run the file without defining the `build`, `name`, `port` variables, and it will sign them the default values `true`, `website`, `3000` each.
 
-### Searching
-Users can find files instantly using the search bar.
-![Search View](assets/search_view.png)
+    If you don't have bash, you can run the following command:
+    ```cmd
+    docker-compose run <--build|> -d -p <port>:<port> --name <host_name> web <port>
+    ```
 
-### Directory Navigation
-**Inside a Directory**, users can view specific contents of a folder.
-![Directory View](assets/directory_view.png)
+### Commands Examples
+* **Create a file:**
+    ```
+    POST Hello, World!
+    ```
+    ```
+    201 Created
+    ```
 
-### File Operations
-#### Add Content
-The "New" button allows creating folders and files.
-![Add Content](assets/add_content.png)
+* **Read a file:**
+    ```
+    GET Hello,
+    ```
+    ```
+    200 Ok
 
-#### Share Content
-Files can be shared with other users by specifying their username and permissions.
-![Share Content](assets/share_content.png)
+    World!
+    ```
 
-#### Edit Content
-Text files can be opened and edited directly within the website's editor.
-![Edit Content](assets/edit_content.png)
+* **Search a string:**
+    ```
+    SEARCH orl
+    ```
+    ```
+    200 Ok
 
-#### Delete Content
-Items can be removed and sent to the Bin.
-![Delete Content](assets/delete_content.png)
+    Hello,
+    ```
 
-### Settings
-The settings page includes personalization options such as themes (Pink (light), Soviet (dark)).
-![Settings Page](assets/settings_page.png)
-
-### More Features
+* **Delete a file:**
+    ```
+    DELETE Hello,
+    ```
+    ```
+    204 No Content
+    ```
