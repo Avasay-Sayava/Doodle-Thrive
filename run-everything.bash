@@ -22,6 +22,10 @@ WEB_NAME="website"
 WEB_PORT=8080
 WEB_API_PORT=${API_PORT}
 
+if [ -n "$(docker ps -aq)" ]; then
+    docker rm -f $(docker ps -aq) >/dev/null 2>&1
+fi
+
 echo -e "${CYAN}Starting base server with defaults...${NC}"
 build=true name="$BASE_NAME" port="$BASE_PORT" threads="$BASE_THREADS" ./base-server.bash
 

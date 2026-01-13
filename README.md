@@ -25,11 +25,11 @@ To disable changes to branches of finished parts of the project, you create a ru
 The project is containerized using Docker. For running parts of the project (Base server, API and the Website), there are predefined bash files.
 * **To enable the usage of the bash files**, you need to run this command in the root directory:
     ```bash
-    chmod +x ./api-server.bash ./api-console.bash ./base-server.bash ./base-client.bash ./base-tests.bash ./website.bash ./run_everything.bash ./website.bash 
+    chmod +x ./api-server.bash ./api-console.bash ./base-server.bash ./base-client.bash ./base-tests.bash ./website.bash ./run-everything.bash ./website.bash 
     ```
 
     For the objectively fake programmers who don't have bash (or even don't have git bash while using GitHub), each section that uses a bash file is accompanied by the commands to run it.
-* **To run the entire project at once**, including the website, API and base server, you need to run the  `./run_everything.bash` command, with no arguments.
+* **To run the entire project at once**, including the website, API and base server, you need to run the  `./run-everything.bash` command, with no arguments.
 
 * **To start the backend base C++ server**, you need to run the `./base-server.bash` file:
     ```bash
