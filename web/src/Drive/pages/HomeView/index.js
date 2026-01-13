@@ -5,6 +5,7 @@ import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 import { sortFiles } from "../../utils/sortFiles";
 import IconHome from "../../components/icons/IconHome";
+import WizardModal from "../../modals/WizardModal";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -68,6 +69,7 @@ function HomeView({ refreshKey, onRefresh}) {
 
   return (
     <div className="file-view">
+      <WizardModal />
       <div className="file-view__header">
         <h1 className="view-title">
           <IconHome className="view-title__icon" width={24} height={24} aria-hidden="true" />

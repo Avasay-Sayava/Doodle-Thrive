@@ -20,13 +20,13 @@ function Header({ openSettings }) {
         <span className="app-name">Drive</span>
       </div>
 
-      <div className="header-middle">
+      <div className="header-middle" data-tutorial="search-bar">
         <SearchBar />
       </div>
 
       <div className="header-right">
         <div className="icon-group">
-          <div>
+          <div data-tutorial="settings-button">
             <HeaderButton
               icon={<IconSettings />}
               onClick={openSettings}

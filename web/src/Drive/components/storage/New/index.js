@@ -2,7 +2,7 @@ import "./style.css";
 import { useEffect, useRef, useState } from "react";
 import ActionsMenu from "./ActionsMenu";
 
-export default function New({ onCreated, hidden = false, folderId = null }) {
+export default function New({ onCreated, hidden = false, folderId = null, ...rest }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const rootRef = useRef(null);
 
@@ -15,7 +15,7 @@ export default function New({ onCreated, hidden = false, folderId = null }) {
   }, []);
 
   return (
-    <div className="new" ref={rootRef}>
+    <div className="new" ref={rootRef} {...rest}>
       <div className={hidden ? "new--hidden-trigger" : ""}>
         <button
           type="button"

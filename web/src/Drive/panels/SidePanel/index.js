@@ -22,7 +22,7 @@ export default function SidePanel({ onCreated }) {
     
     <div className="drive-sidebar" aria-label="Sidebar">
       <div className="drive-sidebar__section">
-        <New onCreated={onCreated}/>
+        <New onCreated={onCreated} data-tutorial="new-button" />
 
         {items.map((it) => {
           const Icon = it.icon;
