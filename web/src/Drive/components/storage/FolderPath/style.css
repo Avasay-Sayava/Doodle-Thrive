@@ -1,0 +1,16 @@
+.folder-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: var(--color-bg-secondary);
+  border-radius: 9999px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  border: none;
+}
+
+.folder-button:hover {
+  background-color: var(--color-bg-hover);
+}

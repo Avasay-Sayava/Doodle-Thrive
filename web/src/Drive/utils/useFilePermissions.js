@@ -36,10 +36,8 @@ const mergePermissions = (data) => {
 };
 
 export const roleFromPermissions = (perms) => {
-  // If user has all permissions (owner), return "owner"
-  if (perms?.self?.write && perms?.content?.write && perms?.permissions?.write) {
-    return "owner";
-  }
+  // Never return "owner" from permissions - owner is determined by file.owner field
+  // Return "admin" as the highest role from permissions
   if (perms?.permissions?.write) return "admin";
   if (perms?.self?.write || perms?.content?.write) return "editor";
   if (perms?.self?.read || perms?.content?.read) return "viewer";
@@ -240,12 +238,23 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
             }
 
             const isOwnerEntry = fileData.owner ? userId === fileData.owner : false;
+            const computedRole = isOwnerEntry ? "owner" : roleFromPermissions(perms);
+
+            console.log("[loadShared] Processing user:", {
+              userId,
+              username,
+              isOwnerEntry,
+              fileOwner: fileData.owner,
+              perms,
+              computedRole,
+              isCurrentUser: userId === currentUserId
+            });
 
             return {
               userId,
               username,
               imageUrl,
-              role: isOwnerEntry ? "owner" : roleFromPermissions(perms),
+              role: computedRole,
               isOwner: isOwnerEntry,
             };
           })
@@ -254,9 +263,11 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         let finalEntries = entries;
 
         if (preserveUserId && preserveRole) {
+          console.log("[loadShared] Preserving userId:", preserveUserId, "with role:", preserveRole);
           const targetEntry = entries.find((e) => e.userId === preserveUserId);
           finalEntries = entries.filter((e) => e.userId !== preserveUserId);
           if (targetEntry) {
+            console.log("[loadShared] Found target entry, applying preserved role");
             finalEntries.push({ ...targetEntry, role: preserveRole });
           }
         }
@@ -266,6 +277,13 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
           if (b.isOwner && !a.isOwner) return 1;
           return a.username.localeCompare(b.username);
         });
+
+        console.log("[loadShared] Final entries:", finalEntries.map(e => ({
+          userId: e.userId,
+          username: e.username,
+          role: e.role,
+          isOwner: e.isOwner
+        })));
 
         setSharedWith(finalEntries);
       } catch (err) {
@@ -280,6 +298,14 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
 
   const updatePermission = useCallback(
     async (entry, nextRole) => {
+      console.log("[updatePermission] Called with:", { 
+        entryUserId: entry.userId, 
+        entryUsername: entry.username,
+        nextRole, 
+        currentUserId,
+        isOwner: entry.isOwner 
+      });
+
       if (!fileId || entry.isOwner) return;
 
       setSharedWith((prev) =>
@@ -288,10 +314,43 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
 
       try {
         if (nextRole === "owner") {
-          // First give admin permissions, then transfer ownership
+          console.log("[updatePermission] Starting ownership transfer...");
+          
+          // Get current user's username to grant them admin after transfer
+          let currentUsername = null;
+          if (currentUserId) {
+            try {
+              const res = await fetch(`${API_BASE}/api/users/${currentUserId}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+              });
+              if (res.ok) {
+                const userData = await res.json();
+                currentUsername = userData.username;
+                console.log("[updatePermission] Current user username:", currentUsername);
+              }
+            } catch (err) {
+              console.error("Failed to get current user data", err);
+            }
+          }
+
+          // First give admin permissions to new owner, then transfer ownership
+          console.log("[updatePermission] Giving admin to new owner:", entry.username);
           await shareFile(fileId, entry.username, "admin");
-          await wait(200); // Small delay to ensure admin permissions are set
-          await transferOwnership(fileId, entry.username);
+          await wait(200);
+          
+          console.log("[updatePermission] Transferring ownership to:", entry.username);
+          const newOwnerId = await transferOwnership(fileId, entry.username);
+          console.log("[updatePermission] New owner ID:", newOwnerId);
+          
+          // Give previous owner (current user) admin permissions
+          if (currentUsername) {
+            console.log("[updatePermission] Giving admin to previous owner:", currentUsername);
+            await wait(200);
+            await shareFile(fileId, currentUsername, "admin");
+          }
+          
+          console.log("[updatePermission] Ownership transfer complete");
         } else if (nextRole === "none") {
           await revokeAccess(fileId, entry.username);
         } else {
@@ -299,14 +358,16 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         }
 
         await wait();
+        console.log("[updatePermission] Reloading shared users with preserveUserId:", entry.userId, "preserveRole:", nextRole);
         await loadShared({ preserveUserId: entry.userId, preserveRole: nextRole });
         onRefresh?.();
       } catch (err) {
+        console.error("[updatePermission] Error:", err);
         setError(err?.message || "Failed to update permissions");
         await loadShared({});
       }
     },
-    [fileId, loadShared, onRefresh]
+    [fileId, loadShared, onRefresh, currentUserId]
   );
 
   return {

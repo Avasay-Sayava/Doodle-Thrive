@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FileView from "../FileView";
 import useUserId from "../../utils/useUserId";
+import getUser from "../../utils/getUser";
 import { sortFiles } from "../../utils/sortFiles";
 import IconShared from "../../components/icons/IconShared";
 
@@ -58,12 +59,16 @@ function SharedView({ refreshKey, onRefresh }) {
         const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
         const sharedFiles = allFiles.filter((f) => f.owner !== id);
 
-        setFiles(sortFiles(sharedFiles, sortBy, sortDir, foldersMode));
+        for (let i = 0; i < sharedFiles.length; i++) {
+          sharedFiles[i].ownerUsername = await getUser(sharedFiles[i].owner);
+        }
+
+        setFiles(sharedFiles);
       } catch (err) {
         setError(err?.message || "Failed to load files");
       }
     })();
-  }, [navigate, refreshKey, id, sortBy, sortDir, foldersMode]);
+  }, [navigate, refreshKey, id]);
 
   return (
     <div className="file-view">
@@ -82,7 +87,7 @@ function SharedView({ refreshKey, onRefresh }) {
 
       {error && <div className="error-message">{error}</div>}
       <FileView 
-        allFiles={files} 
+        allFiles={sortFiles(files, sortBy, sortDir, foldersMode)} 
         onRefresh={onRefresh}
         sortBy={sortBy}
         sortDir={sortDir}

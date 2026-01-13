@@ -10,6 +10,7 @@
 
 .file-view__header {
   margin-bottom: 12px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -182,21 +183,6 @@ tbody tr:hover {
   color: var(--color-text-primary);
 }
 
-.folder-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  background-color: var(--color-bg-secondary);
-  border-radius: 9999px;
-  font-size: 14px;
-  color: var(--color-text-primary);
-  cursor: pointer;
-}
-
-.folder-button:hover {
-  background-color: var(--color-bg-hover);
-}
 .btn-empty-trash {
   padding: 8px 16px;
   background: var(--color-bg-error);

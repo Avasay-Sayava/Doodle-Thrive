@@ -8,6 +8,30 @@ const Permissions = require("../models/permissions");
 const exists = (x) => x !== undefined && x !== null;
 
 /**
+ * Check if user has access to a file/folder via parent folder permissions
+ * @param {string} userId The user ID
+ * @param {string} fileId The file/folder ID
+ * @returns {boolean} True if user has access via any parent
+ */
+const hasAccessViaParent = (userId, fileId) => {
+  let current = Files.info(fileId);
+  
+  while (current && current.parent) {
+    const parent = Files.info(current.parent);
+    if (!parent) break;
+    
+    // If user has content.read on parent, they can access this file
+    if (Permissions.check(userId, parent.id, "content", "read")) {
+      return true;
+    }
+    
+    current = parent;
+  }
+  
+  return false;
+};
+
+/**
  * Handles the creation request for a new file or folder.
  * Validates input, checks parent existence, and delegates to the model.
  * @param {import("express").Request} req The Express Request object.
@@ -20,7 +44,7 @@ exports.create = async (req, res) => {
     if (!exists(token))
       return res.status(403).json({ error: "Authorization token required" });
 
-    const userId = (() => {try {return (() => {try {return jwt.verify(token, process.env.JWT_SECRET)} catch(err) {return undefined} })(); } catch(err) {return undefined} })();;
+    const userId = (() => {try {return (() => {try {return jwt.verify(token, process.env.JWT_SECRET)} catch(err) {return undefined} })(); } catch(err) {return undefined} })();
     if (!exists(userId) || !Regex.id.test(userId) || !Users.get(userId))
       return res.status(401).json({ error: "Invalid authorization token" });
 
@@ -93,6 +117,7 @@ exports.getAll = async (req, res) => {
     const files = await Files.getAll();
     const out = {};
 
+    // add files user owns or has direct permissions to
     for (const file of Object.values(files))
       if (
         Permissions.check(userId, file.id, "self", "read") &&
@@ -102,6 +127,29 @@ exports.getAll = async (req, res) => {
           ...file,
           starred: Users.getStarred(userId).includes(file.id),
         };
+
+    // recursively add descendants of folders user has content.read access to
+    const addDescendants = (parentId) => {
+      for (const file of Object.values(files)) {
+        if (file.parent === parentId && !out[file.id] && file.trashed === false) {
+          out[file.id] = {
+            ...file,
+            starred: Users.getStarred(userId).includes(file.id),
+          };
+          // If this child is a folder, recursively add its descendants
+          if (file.type === "folder") {
+            addDescendants(file.id);
+          }
+        }
+      }
+    };
+
+    const accessibleFolders = Object.values(out).filter(f => f.type === "folder");
+    for (const folder of accessibleFolders) {
+      if (Permissions.check(userId, folder.id, "content", "read")) {
+        addDescendants(folder.id);
+      }
+    }
 
     return res.status(200).json(out);
   } catch (err) {
@@ -136,10 +184,11 @@ exports.get = async (req, res) => {
     if (Files.info(id).trashed === true && Files.info(id).owner !== userId)
       return res.status(404).json({ error: "File/folder not found" });
 
-    if (!Permissions.check(userId, id, "self", "read"))
+    // Check if user has direct permission or access via parent folder
+    if (!Permissions.check(userId, id, "self", "read") && !hasAccessViaParent(userId, id))
       return res.status(404).json({ error: "File/folder not found" });
 
-    if (!Permissions.check(userId, id, "content", "read"))
+    if (!Permissions.check(userId, id, "content", "read") && !hasAccessViaParent(userId, id))
       return res.status(403).json({ error: "Insufficient permissions" });
 
     const file = await Files.get(id);
@@ -242,6 +291,29 @@ exports.update = async (req, res) => {
 
       if (!Permissions.check(userId, parent, "content", "write"))
         return res.status(403).json({ error: "Insufficient permissions" });
+    }
+
+    if (exists(owner) && owner !== Files.info(id)?.owner) {
+      // move to root
+      trimmedData.parent = null;
+
+      // update owner for all children
+      const updateChildrenOwner = async (folderId, newOwner) => {
+        const allFiles = await Files.getAll();
+        for (const file of Object.values(allFiles)) {
+          if (file.parent === folderId) {
+            await Files.update(file.id, { owner: newOwner });
+            // update children of folders
+            if (file.type === "folder") {
+              await updateChildrenOwner(file.id, newOwner);
+            }
+          }
+        }
+      };
+
+      if (Files.info(id).type === "folder") {
+        await updateChildrenOwner(id, owner);
+      }
     }
 
     const updated = await Files.update(id, trimmedData);
