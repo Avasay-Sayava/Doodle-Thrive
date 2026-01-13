@@ -69,30 +69,6 @@ export const findUserIdByUsername = async (username) => {
   return match[0];
 };
 
-const transferOwnership = async (fileId, username) => {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("Missing auth token");
-  const newOwnerId = await findUserIdByUsername(username);
-
-  const res = await fetch(`${API_BASE}/api/files/${fileId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ owner: newOwnerId }),
-  });
-
-  if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(
-      `Failed to transfer ownership (HTTP ${res.status}): ${txt}`
-    );
-  }
-
-  return newOwnerId;
-};
-
 const revokeAccess = async (fileId, username) => {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("Missing auth token");
@@ -334,8 +310,6 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
           // First give admin permissions to new owner, then transfer ownership
           await shareFile(fileId, entry.username, "admin");
           await wait(200);
-
-          const newOwnerId = await transferOwnership(fileId, entry.username);
 
           // Give previous owner (current user) admin permissions
           if (currentUsername) {

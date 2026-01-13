@@ -33,7 +33,7 @@
     position: relative;
     z-index: 901;
     box-shadow: 0 0 16px rgba(255, 255, 255, 0.8);
-    border-radius: 4px;
+    border-radius: 14px;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 

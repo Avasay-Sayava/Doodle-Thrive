@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import Modal from "../Modal";
 import "./style.css";
 
-const STORAGE_KEY = "tutorial_completed";
+const STORAGE_KEY = "tutorial-completed";
 
 function useHighlight(selector, active) {
     useEffect(() => {
@@ -99,7 +99,7 @@ function WizardModal({ onComplete }) {
     const STEP_TARGETS = {
         2: '.new__button',
         3: '[data-tutorial="settings-button"] svg',
-        4: '.file-view',
+        4: '.file-view__table-wrapper',
         5: '.search-bar',
     };
 
