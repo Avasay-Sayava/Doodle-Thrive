@@ -1,41 +1,76 @@
-/* Modal Overlay */
-.modal__overlay {
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
+.modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  padding: 0;
   max-width: 100vw;
   max-height: 100vh;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+     -moz-box-pack: center;
+          justify-content: center;
   z-index: 1000;
 }
 
-.modal__overlay::backdrop {
+.modal-overlay::-webkit-backdrop {
   background-color: var(--color-text-primary);
   opacity: 0.5;
 }
 
-/* Modal Content */
-.modal__content {
+.modal-overlay::backdrop {
+  background-color: var(--color-text-primary);
+  opacity: 0.5;
+}
+
+.modal-content {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
   height: 100%;
   overflow: hidden;
 }
 
-/* Modal Header */
-.modal__header {
+.modal-header {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+     -moz-box-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   padding: 24px 24px 16px;
   border-bottom: 1px solid var(--color-border);
 }
 
-.modal__title {
+.modal-title {
   margin: 0;
   font-size: 24px;
   font-weight: 700;
@@ -43,7 +78,7 @@
   letter-spacing: -0.5px;
 }
 
-.modal__close {
+.modal-close {
   background: none;
   border: none;
   outline: none;
@@ -51,38 +86,39 @@
   cursor: pointer;
   width: 32px;
   height: 32px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+     -moz-box-pack: center;
+          justify-content: center;
+  -webkit-border-radius: 10px;
+     -moz-border-radius: 10px;
+          border-radius: 10px;
+  -webkit-transition: background 0.15s ease;
+  -o-transition: background 0.15s ease;
+  -moz-transition: background 0.15s ease;
   transition: background 0.15s ease;
   font-size: 24px;
   line-height: 1;
   padding: 0;
 }
 
-.modal__close:hover {
+.modal-close:hover {
   background: var(--color-bg-hover);
 }
 
-/* Modal Body */
-.modal__body {
+.modal-body {
   padding: 24px;
   overflow-y: auto;
-  flex: 1;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .modal__header {
-    padding: 20px 20px 12px;
-  }
-
-  .modal__title {
-    font-size: 20px;
-  }
-
-  .modal__body {
-    padding: 20px;
-  }
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+     -moz-box-flex: 1;
+          flex: 1;
 }

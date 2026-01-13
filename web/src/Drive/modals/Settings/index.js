@@ -2,7 +2,13 @@ import "./style.css";
 import { useState, useCallback } from "react";
 import Modal from "../Modal";
 
-export default function Settings({ currentTheme, setCurrentTheme, children }) {
+export default function Settings({
+  currentTheme,
+  setCurrentTheme,
+  defaultPage,
+  setDefaultPage,
+  children,
+}) {
   const [showJoke, setShowJoke] = useState(false);
 
   const handleThemeToggle = useCallback(
@@ -10,7 +16,15 @@ export default function Settings({ currentTheme, setCurrentTheme, children }) {
       const themeValue = event.target.checked ? "soviet" : "pink";
       setCurrentTheme(themeValue);
     },
-    [setCurrentTheme]
+    [setCurrentTheme],
+  );
+
+  const handleDefaultPageToggle = useCallback(
+    (event) => {
+      const pageValue = event.target.value;
+      setDefaultPage(pageValue);
+    },
+    [setDefaultPage],
   );
 
   const handlePrivacyClick = useCallback(
@@ -22,7 +36,7 @@ export default function Settings({ currentTheme, setCurrentTheme, children }) {
         setShowJoke(false);
       }, 1500);
     },
-    [showJoke]
+    [showJoke],
   );
 
   const renderBody = useCallback(
@@ -31,7 +45,6 @@ export default function Settings({ currentTheme, setCurrentTheme, children }) {
 
       return (
         <>
-          {/* Visuals Section */}
           <section className="settings-group">
             <h3 className="group-title">Visuals</h3>
             <div className="settings-row">
@@ -46,12 +59,37 @@ export default function Settings({ currentTheme, setCurrentTheme, children }) {
                   onChange={handleThemeToggle}
                   checked={currentTheme === "soviet"}
                 />
-                <label htmlFor="dark-mode-toggle"></label>
+                <label
+                  htmlFor="dark-mode-toggle"
+                  className="switch-label"
+                ></label>
               </div>
             </div>
           </section>
 
-          {/* Privacy Joke Section */}
+          <section className="settings-group">
+            <h3 className="group-title">General</h3>
+            <div className="settings-row">
+              <div className="settings-info">
+                <span className="label-text">Default Page</span>
+                <span className="sub-text">
+                  Switch between Home and My Drive
+                </span>
+              </div>
+              <div className="switch-container">
+                <select
+                  id="default-page-select"
+                  className="settings-select"
+                  onChange={handleDefaultPageToggle}
+                  value={defaultPage}
+                >
+                  <option value="home">Home</option>
+                  <option value="mydrive">My Drive</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
           <section className="settings-group">
             <h3 className="group-title">Security</h3>
             <div
@@ -73,7 +111,7 @@ export default function Settings({ currentTheme, setCurrentTheme, children }) {
                 />
                 <label
                   htmlFor="privacy-toggle"
-                  className="disabled-label"
+                  className="switch-label disabled-label"
                 ></label>
               </div>
               {showJoke && (
@@ -86,7 +124,14 @@ export default function Settings({ currentTheme, setCurrentTheme, children }) {
         </>
       );
     },
-    [currentTheme, handlePrivacyClick, handleThemeToggle, showJoke]
+    [
+      currentTheme,
+      defaultPage,
+      handlePrivacyClick,
+      handleThemeToggle,
+      handleDefaultPageToggle,
+      showJoke,
+    ],
   );
 
   return (

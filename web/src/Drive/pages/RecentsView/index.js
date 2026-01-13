@@ -17,7 +17,11 @@ function RecentsView({ refreshKey, onRefresh }) {
   const [sortDir, setSortDir] = useState("asc");
   const [foldersMode, setFoldersMode] = useState("mixed");
 
-  const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+  const handleSortChange = ({
+    sortBy: newSortBy,
+    sortDir: newSortDir,
+    foldersMode: newFoldersMode,
+  }) => {
     setSortBy(newSortBy);
     setSortDir(newSortDir);
     setFoldersMode(newFoldersMode);
@@ -51,14 +55,17 @@ function RecentsView({ refreshKey, onRefresh }) {
         }
 
         const filesObj = await res.json();
-        const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
-        const rootFiles = allFiles.filter((f) => f.parent == null);
+        const allFiles = (
+          Array.isArray(filesObj) ? filesObj : Object.values(filesObj)
+        ).filter((f) => f.trashed !== true);
 
-        for (let i = 0; i < rootFiles.length; i++) {
-          rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
+        for (let i = 0; i < allFiles.length; i++) {
+          allFiles[i].ownerUsername = await getUser(allFiles[i].owner);
         }
 
-        setFiles(sortFiles(rootFiles, sortBy, sortDir, foldersMode));
+        setFiles(
+          sortFiles(allFiles, sortBy, sortDir, foldersMode).slice(0, 30),
+        );
         handleSortChange({ sortBy, sortDir, foldersMode });
       } catch (err) {
         setError(err?.message || "Failed to load files");
@@ -68,13 +75,16 @@ function RecentsView({ refreshKey, onRefresh }) {
 
   return (
     <div className="file-view">
-      <div className="file-view__header">
-        <div className="file-view__header">
-          <h1 className="view-title">
-            <IconRecent className="view-title__icon" width={24} height={24} aria-hidden="true" />
-            <span className="view-title__text">Recents</span>
-          </h1>
-        </div>
+      <div className="file-view-header">
+        <h1 className="view-title">
+          <IconRecent
+            className="view-title-icon"
+            width={24}
+            height={24}
+            aria-hidden="true"
+          />
+          <span className="view-title-text">Recents</span>
+        </h1>
       </div>
 
       {error && <div className="error-message">{error}</div>}

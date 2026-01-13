@@ -10,7 +10,7 @@ import IconBin from "../../components/icons/IconBin";
 
 export default function SidePanel({ onCreated }) {
   const items = [
-    { to: "/drive", end: true, label: "Home", icon: IconHome },
+    { to: "/drive/home", end: true, label: "Home", icon: IconHome },
     { to: "/drive/mydrive", end: true, label: "My Drive", icon: IconFile },
     { to: "/drive/starred", label: "Starred", icon: IconStar },
     { to: "/drive/shared", label: "Shared with me", icon: IconShared },
@@ -19,10 +19,9 @@ export default function SidePanel({ onCreated }) {
   ];
 
   return (
-    
     <div className="drive-sidebar" aria-label="Sidebar">
-      <div className="drive-sidebar__section">
-        <New onCreated={onCreated}/>
+      <div className="drive-sidebar-section">
+        <New onCreated={onCreated} data-tutorial="new-button" />
 
         {items.map((it) => {
           const Icon = it.icon;
@@ -33,13 +32,13 @@ export default function SidePanel({ onCreated }) {
               to={it.to}
               end={it.end}
               className={({ isActive }) =>
-                `drive-sidebar__item ${isActive ? "is-active" : ""}`
+                `drive-sidebar-item ${isActive ? "is-active" : ""}`
               }
             >
-              <span className="drive-sidebar__icon" aria-hidden="true">
+              <span className="drive-sidebar-icon" aria-hidden="true">
                 <Icon />
               </span>
-              <span className="drive-sidebar__label">{it.label}</span>
+              <span className="drive-sidebar-label">{it.label}</span>
             </NavLink>
           );
         })}

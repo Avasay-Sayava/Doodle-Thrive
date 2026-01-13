@@ -128,6 +128,21 @@ exports.update = async (
   { name, owner, content, trashed, parent, description }
 ) => {
   const file = files[id];
+  const previousParent = file.parent;
+  const ownerChanged = owner !== undefined && owner !== file.owner;
+  let newParent = parent;
+
+  if (ownerChanged) newParent = null;
+
+  const propagateOwner = (folderId, ownerId) => {
+    for (const childId of files[folderId]?.children || []) {
+      const child = files[childId];
+      if (!child) continue;
+      child.owner = ownerId;
+      child.modified = Date.now();
+      if (child.type === "folder") propagateOwner(childId, ownerId);
+    }
+  };
 
   if (content !== undefined && file.type === "file") {
     const response = await Storage.delete(id);
@@ -146,19 +161,31 @@ exports.update = async (
 
   if (name) file.name = name;
 
-  if (parent !== undefined) {
+  if (ownerChanged) {
+    if (previousParent && files[previousParent]) {
+      files[previousParent].children = files[previousParent].children.filter(
+        (childId) => childId !== id
+      );
+    }
+    file.parent = null;
+  } else if (newParent !== undefined) {
     if (file.parent && files[file.parent]) {
       files[file.parent].children = files[file.parent].children.filter(
         (childId) => childId !== id
       );
     }
-    if (parent && files[parent]?.children) {
-      files[parent].children.push(id);
+    if (newParent && files[newParent]?.children) {
+      files[newParent].children.push(id);
     }
-    file.parent = parent;
+    file.parent = newParent;
   }
 
-  if (owner) file.owner = owner;
+  if (owner) {
+    file.owner = owner;
+    if (ownerChanged && file.type === "folder") {
+      propagateOwner(id, owner);
+    }
+  }
 
   if (description) file.description = description;
 

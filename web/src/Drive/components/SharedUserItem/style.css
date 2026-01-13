@@ -1,62 +1,87 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 .shared-user-item {
+  display: -ms-grid;
   display: grid;
+  -ms-grid-columns: 38px 10px 1fr 10px auto;
   grid-template-columns: 38px 1fr auto;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   gap: 10px;
 }
 
-.shared-user-item__info {
+.shared-user-item-info {
   min-width: 0;
 }
 
-.shared-user-item__name {
+.shared-user-item-name {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   gap: 8px;
   font-weight: 600;
   color: var(--color-text-primary);
   line-height: 1.2;
 }
 
-.shared-user-item__badge {
+.shared-user-item-badge {
   padding: 2px 8px;
-  border-radius: 999px;
+  -webkit-border-radius: 999px;
+     -moz-border-radius: 999px;
+          border-radius: 999px;
   background: var(--color-bg-hover);
   color: var(--color-text-secondary);
   font-size: 11px;
   line-height: 1.4;
 }
 
-.shared-user-item__badge--owner {
-  background: var(--color-primary-faint, rgba(99, 102, 241, 0.15));
+.shared-user-item-badge-owner {
+  background: var(--color-primary-faint);
   color: var(--color-primary);
   font-weight: 700;
 }
 
-.shared-user-item__meta {
+.shared-user-item-meta {
   color: var(--color-text-secondary);
   font-size: 13px;
   margin-top: 2px;
 }
 
-.shared-user-item__role-label {
+.shared-user-item-role-label {
   color: var(--color-text-secondary);
   font-weight: 600;
 }
 
-.shared-user-item__add-btn {
+.shared-user-item-add-btn {
   background: var(--color-primary);
-  color: white;
+  color: var(--color-bg-main-alt);
   border: none;
-  border-radius: 6px;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
   padding: 6px 16px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  -webkit-transition: background 0.2s;
+  -o-transition: background 0.2s;
+  -moz-transition: background 0.2s;
   transition: background 0.2s;
 }
 
-.shared-user-item__add-btn:hover {
+.shared-user-item-add-btn:hover {
   background: var(--color-primary-hover, var(--color-primary));
   opacity: 0.9;
 }

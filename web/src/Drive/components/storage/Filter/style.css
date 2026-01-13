@@ -1,24 +1,66 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 .gd-sort {
   position: relative;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
   display: inline-flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
 }
 
-.gd-sort__button {
+.gd-sort-button {
   height: 32px;
   padding: 0 10px;
-  border-radius: 999px;
+  -webkit-border-radius: 999px;
+     -moz-border-radius: 999px;
+          border-radius: 999px;
+
+  display: -webkit-inline-box;
+
+  display: -webkit-inline-flex;
+
+  display: -moz-inline-box;
 
   display: inline-flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   gap: 8px;
 
   background: transparent;
   color: var(--color-text-secondary);
 
   border: 1px solid;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   -webkit-tap-highlight-color: transparent;
+
+  -webkit-transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+
+  -o-transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+
+  -moz-transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
 
   transition:
     background-color 120ms ease,
@@ -26,52 +68,69 @@
     color 120ms ease;
 }
 
-.gd-sort__button:hover {
+.gd-sort-button:hover {
   background: var(--color-bg-hover);
   color: var(--color-text-primary);
 }
 
-.gd-sort__button.is-open {
+.gd-sort-button.is-open {
   background: var(--color-bg-selected);
   border-color: var(--color-border);
   color: var(--color-text-primary);
 }
 
-.gd-sort__label {
+.gd-sort-label {
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0;
 }
 
-.gd-sort__icon {
+.gd-sort-icon {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+     -moz-box-pack: center;
+          justify-content: center;
   color: currentColor;
 }
 
-.gd-sort__menu {
+.gd-sort-menu {
   position: absolute;
+  top: -webkit-calc(100% + 8px);
+  top: -moz-calc(100% + 8px);
   top: calc(100% + 8px);
   right: 0;
 
   width: 260px;
   background: var(--color-bg-main);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  -webkit-border-radius: 12px;
+     -moz-border-radius: 12px;
+          border-radius: 12px;
 
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+  -webkit-box-shadow: 0 12px 28px var(--color-shadow-md);
+
+     -moz-box-shadow: 0 12px 28px var(--color-shadow-md);
+
+          box-shadow: 0 12px 28px var(--color-shadow-md);
   overflow: hidden;
   z-index: 1000;
 
   padding: 6px 0;
 }
 
-.gd-sort__section {
+.gd-sort-section {
   padding: 4px 0;
 }
 
-.gd-sort__title {
+.gd-sort-title {
   padding: 8px 14px;
   font-size: 11px;
   font-weight: 600;
@@ -80,57 +139,94 @@
   letter-spacing: 0.04em;
 }
 
-.gd-sort__item {
+.gd-sort-item {
   width: 100%;
   padding: 10px 14px;
 
+  display: -webkit-box;
+
+  display: -webkit-flex;
+
+  display: -moz-box;
+
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   gap: 10px;
 
   text-align: left;
   background: transparent;
   color: var(--color-text-primary);
 
-  border-radius: 0;
-  user-select: none;
+  -webkit-border-radius: 0;
+
+     -moz-border-radius: 0;
+
+          border-radius: 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+
+  -webkit-transition: background-color 120ms ease;
+
+  -o-transition: background-color 120ms ease;
+
+  -moz-transition: background-color 120ms ease;
 
   transition: background-color 120ms ease;
 }
 
-.gd-sort__item:hover {
+.gd-sort-item:hover {
   background: var(--color-bg-hover);
 }
 
-.gd-sort__item:active {
+.gd-sort-item:active {
   background: var(--color-bg-selected);
 }
 
-.gd-sort__check {
+.gd-sort-check {
   width: 18px;
   height: 18px;
-  flex: 0 0 18px;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 18px;
+     -moz-box-flex: 0;
+          flex: 0 0 18px;
+
+  display: -webkit-inline-box;
+
+  display: -webkit-inline-flex;
+
+  display: -moz-inline-box;
 
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+     -moz-box-pack: center;
+          justify-content: center;
 
   color: var(--color-primary);
 }
 
-.gd-sort__text {
+.gd-sort-text {
   font-size: 13px;
   color: var(--color-text-primary);
 }
 
-.gd-sort__divider {
+.gd-sort-divider {
   height: 1px;
   background: var(--color-border);
   margin: 6px 0;
 }
 
-.gd-sort__button:focus-visible,
-.gd-sort__item:focus-visible {
+.gd-sort-button:focus-visible,
+.gd-sort-item:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }

@@ -6,7 +6,7 @@
   border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  color: var(--color-text-main);
+  color: var(--color-text-primary);
   padding: 0 12px;
   gap: 8px;
 }
@@ -15,7 +15,7 @@
     background-color: var(--color-bg-hover);
 }
 
-.header-button__text {
+.header-button-text {
   font-size: 14px;
-  color: var(--color-text-main);
+  color: var(--color-text-primary);
 }

@@ -1,7 +1,23 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 .file-actions {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+     -moz-box-pack: end;
+          justify-content: flex-end;
   gap: 6px;
 }
 
@@ -10,13 +26,27 @@
   height: 32px;
   padding: 0;
   border: 0;
-  border-radius: 9999px;
+  -webkit-border-radius: 9999px;
+     -moz-border-radius: 9999px;
+          border-radius: 9999px;
   background-color: transparent;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+     -moz-box-pack: center;
+          justify-content: center;
   cursor: pointer;
   color: var(--color-text-secondary);
+  -webkit-transition: background-color 120ms ease, color 120ms ease;
+  -o-transition: background-color 120ms ease, color 120ms ease;
+  -moz-transition: background-color 120ms ease, color 120ms ease;
   transition: background-color 120ms ease, color 120ms ease;
 }
 
@@ -26,31 +56,34 @@
 }
 
 .file-action-btn:hover {
-  background-color: rgba(60, 64, 67, 0.12);
+  background-color: var(--color-bg-hover);
   color: var(--color-text-primary);
 }
 
-.file-action-btn--hover {
+.file-action-btn-hover {
   opacity: 0;
   pointer-events: none;
+  -webkit-transition: opacity 120ms ease;
+  -o-transition: opacity 120ms ease;
+  -moz-transition: opacity 120ms ease;
   transition: opacity 120ms ease;
 }
 
-.file-row:hover .file-action-btn--hover {
+.file-row:hover .file-action-btn-hover {
   opacity: 1;
   pointer-events: auto;
 }
 
-.file-row:hover .file-action-btn--hover:disabled {
+.file-row:hover .file-action-btn-hover:disabled {
   opacity: 0.5;
 }
 
-.file-action-btn--starred {
-  color: var(--color--icon-starred);
+.file-action-btn-starred {
+  color: var(--color-icon-starred);
 }
 
-.file-action-btn--starred:hover {
-  color: var(--color--icon-starred-hover);
+.file-action-btn-starred:hover {
+  color: var(--color-icon-starred-hover);
 }
 
 .file-action-btn:disabled {

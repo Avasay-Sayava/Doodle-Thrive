@@ -7,7 +7,12 @@
  */
 import "./style.css";
 
-export default function PermissionSelect({ value, onChange, options = [], disabled = false }) {
+export default function PermissionSelect({
+  value,
+  onChange,
+  options = [],
+  disabled = false,
+}) {
   return (
     <select
       className="permission-select"

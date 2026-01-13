@@ -79,7 +79,7 @@ export default function Modal({
         createPortal(
           <dialog
             ref={dialogRef}
-            className="modal__overlay"
+            className="modal-overlay"
             onClick={(e) => {
               if (e.target === dialogRef.current) {
                 close();
@@ -91,16 +91,16 @@ export default function Modal({
             }}
           >
             <Card isOpen={isOpen} className={className}>
-              <div 
-                className="modal__content" 
-                role="dialog" 
+              <div
+                className="modal-content"
+                role="dialog"
                 aria-modal="true"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="modal__header">
-                  <h2 className="modal__title">{title}</h2>
+                <div className="modal-header">
+                  <h2 className="modal-title">{title}</h2>
                   <button
-                    className="modal__close"
+                    className="modal-close"
                     onClick={close}
                     aria-label="Close"
                   >
@@ -108,13 +108,13 @@ export default function Modal({
                   </button>
                 </div>
 
-                <div className="modal__body">
+                <div className="modal-body">
                   {renderBody ? renderBody(isOpen, shouldRender, close) : null}
                 </div>
               </div>
             </Card>
           </dialog>,
-          document.body
+          document.body,
         )}
     </>
   );

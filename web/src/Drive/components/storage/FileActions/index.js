@@ -13,9 +13,11 @@ import renameFile from "../../../utils/renameFile";
 import downloadFile from "../../../utils/downloadFile";
 import patchFile from "../../../utils/patchFile";
 import { roleFromPermissions } from "../../../utils/useFilePermissions";
+import useUserId from "../../../utils/useUserId";
 import GetText from "../../../modals/GetText";
 import ShareDialog from "../../../modals/ShareDialog";
 import MoveFile from "../../../modals/MoveFile";
+import ConfirmDialog from "../../../modals/ConfirmDialog";
 
 export default function FileActions({
   children,
@@ -25,11 +27,13 @@ export default function FileActions({
   currentUserPerms = null,
   openOnLeftClick = false,
 }) {
+  const currentUserId = useUserId();
   const menuRef = useRef(null);
 
   const openRenameModalRef = useRef(null);
   const openShareModalRef = useRef(null);
   const openMoveModalRef = useRef(null);
+  const openDeleteConfirmRef = useRef(null);
 
   const [hoverKey, setHoverKey] = useState(null);
   const [descPos, setDescPos] = useState({ x: 0, y: 0 });
@@ -64,8 +68,11 @@ export default function FileActions({
       return;
     }
 
-    // Don't trigger onLeftClick if clicking on a button or within the actions column
-    if (e.target.closest('button') || e.target.closest('.col-actions') || e.target.closest('.file-actions')) {
+    if (
+      e.target.closest("button") ||
+      e.target.closest(".col-actions") ||
+      e.target.closest(".file-actions")
+    ) {
       return;
     }
 
@@ -124,7 +131,6 @@ export default function FileActions({
     const canShare = ["admin", "owner"].includes(userRole);
     const isTrashed = file?.trashed === true;
 
-    // If file is in bin, only show restore button
     if (isTrashed) {
       return [
         {
@@ -134,7 +140,17 @@ export default function FileActions({
             patchFile(file?.id, { trashed: false }).then(() => {
               onRefresh?.();
             });
-          }
+          },
+        },
+        { key: "sep-1", type: "separator" },
+        {
+          key: "delete",
+          label: "Delete Permanently",
+          danger: true,
+          onClick: (e) => {
+            e.stopPropagation();
+            openDeleteConfirmRef.current?.();
+          },
         },
       ];
     }
@@ -166,7 +182,7 @@ export default function FileActions({
         key: "description",
         label: "Description",
         rightArrow: true,
-        disabled: !canEdit,
+        disabled: !currentUserPerms?.self?.read,
       },
       { key: "sep-2", type: "separator" },
       {
@@ -182,15 +198,15 @@ export default function FileActions({
         key: "bin",
         label: "Move to bin",
         danger: true,
-        disabled: !canEdit,
+        disabled: !canEdit || file?.owner !== currentUserId,
         onClick: (e) => {
           patchFile(file?.id, { trashed: true }).then(() => {
             onRefresh?.();
           });
-        }
+        },
       },
     ];
-  }, [file, onRefresh, currentUserPerms]);
+  }, [file, onRefresh, currentUserPerms, currentUserId]);
 
   const handleItemClick = (item, e) => {
     if (item.disabled) return;
@@ -207,7 +223,7 @@ export default function FileActions({
   const enhancedRow = cloneElement(row, {
     onContextMenu,
     onClick,
-    className: [row.props.className, open ? "file-actions__row-open" : ""]
+    className: [row.props.className, open ? "file-actions-row-open" : ""]
       .filter(Boolean)
       .join(" "),
   });
@@ -238,14 +254,14 @@ export default function FileActions({
         <>
           <div
             ref={menuRef}
-            className="file-actions__menu"
-            style={{ left: pos.x, top: pos.y }}
+            className="file-actions-menu"
+            style={{ position: "fixed", left: pos.x, top: pos.y }}
             role="menu"
             aria-label="File actions"
           >
             {items.map((item) => {
               if (item.type === "separator") {
-                return <div key={item.key} className="file-actions__sep" />;
+                return <div key={item.key} className="file-actions-sep" />;
               }
 
               const isDesc = item.key === "description";
@@ -255,7 +271,7 @@ export default function FileActions({
                   key={item.key}
                   type="button"
                   className={[
-                    "file-actions__item",
+                    "file-actions-item",
                     item.danger ? "is-danger" : "",
                     item.disabled ? "is-disabled" : "",
                   ]
@@ -272,11 +288,11 @@ export default function FileActions({
                     if (!isDesc) return;
                   }}
                 >
-                  <span className="file-actions__label">{item.label}</span>
+                  <span className="file-actions-label">{item.label}</span>
 
-                  <span className="file-actions__right">
+                  <span className="file-actions-right">
                     {item.rightArrow ? (
-                      <span className="file-actions__arrow" aria-hidden="true">
+                      <span className="file-actions-arrow" aria-hidden="true">
                         ▸
                       </span>
                     ) : null}
@@ -288,14 +304,14 @@ export default function FileActions({
 
           {hoverKey === "description" && (
             <div
-              className="file-actions__desc"
-              style={{ left: descPos.x, top: descPos.y }}
+              className="file-actions-desc"
+              style={{ position: "fixed", left: descPos.x, top: descPos.y }}
               onMouseEnter={() => setHoverKey("description")}
               onMouseLeave={closeDescPanel}
               role="note"
             >
-              <div className="file-actions__desc-title">Description</div>
-              <div className="file-actions__desc-body">
+              <div className="file-actions-desc-title">Description</div>
+              <div className="file-actions-desc-body">
                 {file?.description?.trim()
                   ? file.description
                   : "No description"}
@@ -303,7 +319,7 @@ export default function FileActions({
             </div>
           )}
         </>,
-        document.body
+        document.body,
       )
     : null;
 
@@ -343,6 +359,44 @@ export default function FileActions({
           return null;
         }}
       </MoveFile>
+
+      <ConfirmDialog
+        title="Delete Permanently?"
+        message="Are you sure you want to permanently delete this file? This cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        isDangerous={true}
+        onConfirm={async () => {
+          try {
+            const res = await fetch(
+              `${process.env.API_BASE_URL || "http://localhost:3300"}/api/files/${file?.id}`,
+              {
+                method: "DELETE",
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              },
+            );
+
+            if (!res.ok) {
+              const text = await res.text();
+              console.error("Failed to delete file:", text);
+              alert(`Failed to delete file: ${text}`);
+              return;
+            }
+
+            onRefresh?.();
+          } catch (err) {
+            console.error("Error deleting file:", err);
+            alert(`Error deleting file: ${err.message}`);
+          }
+        }}
+      >
+        {(openDeleteConfirm) => {
+          openDeleteConfirmRef.current = openDeleteConfirm;
+          return null;
+        }}
+      </ConfirmDialog>
 
       {enhancedRow}
       {menuPortal}

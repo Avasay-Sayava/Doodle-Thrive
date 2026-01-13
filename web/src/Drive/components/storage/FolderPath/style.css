@@ -1,0 +1,95 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
+.folder-path-icon-shared {
+  color: var(--color-text-primary);
+}
+
+.folder-path {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  gap: 8px;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.folder-path-group {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.folder-path-create-btn {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.folder-path-separator {
+  display: contents;
+}
+
+.folder-path-sep-text {
+  font-size: inherit;
+  color: var(--color-text-secondary);
+  margin: 0 4px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+}
+
+.folder-button {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: transparent;
+  -webkit-border-radius: 9999px;
+     -moz-border-radius: 9999px;
+          border-radius: 9999px;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  cursor: pointer;
+  border: none;
+  -webkit-transition: background-color 0.2s ease;
+  -o-transition: background-color 0.2s ease;
+  -moz-transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease;
+}
+
+.folder-button:hover {
+  background-color: var(--color-bg-hover);
+}

@@ -1,85 +1,84 @@
-/* CSS Variables (light theme)
-   Pretty like hello kitty😉
-   why css..
-   I think im going to kms.
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
 */
+
 :root[theme="pink"] {
-  /* Primary */
   --color-primary: #e91e63;
   --color-primary-alt: #f35489;
   --color-primary-light: #f8bbd0;
   --color-primary-hover: #f06292;
 
-  /* Backgrounds */
   --color-bg-main: #ffffff;
   --color-bg-main-alt: #ebebeb;
   --color-bg-main-secondary: #f1dfdf;
   --color-bg-hover: #fce4ec;
   --color-bg-selected: #f8bbd0;
   --color-bg-disabled: #ffe7ee;
-  --color-bg-error: var(--color-bg-disabled);
   --color-bg-toggle: #f48fb1;
   --color-bg-toggle-thumb: #ffffff;
 
-  /* Text */
   --color-text-primary: #1f1f1f;
   --color-text-secondary: #3c4043;
   --color-text-muted: #5f6368;
   --color-text-error: #d32f2f;
 
-  /* Borders and dividers */
   --color-border: #e0e0e0;
 
-  /* Focus */
   --color-focus: #f48fb1;
 
-  /* Icons */
-  --color-icon-primary: #1f1f1f;
-  --color-icon-secondary: #5f6368;
-  --color--icon-starred: #fbc02d;
+  --color-icon-starred: #fbc02d;
+
+  --color-primary-faint: rgba(99, 102, 241, 0.15);
+  --color-shadow-sm: rgba(0, 0, 0, 0.1);
+  --color-shadow-md: rgba(0, 0, 0, 0.14);
+  --color-shadow-lg: rgba(0, 0, 0, 0.15);
+  --color-shadow-xl: rgba(0, 0, 0, 0.18);
+  --color-shadow-overlay: rgba(0, 0, 0, 0.35);
+  --color-shadow-dark-overlay: rgba(0, 0, 0, 0.5);
 }
 
-/* the most ugly dark theme ive ever seen, pressing random colors goes hard */
-
-/* CSS Variables (dark theme) */
 :root[theme="soviet"] {
-  /* Primary */
   --color-primary: #ffffff;
   --color-primary-alt: #bdbdbd;
   --color-primary-light: #424242;
   --color-primary-hover: #e0e0e0;
 
-  /* Backgrounds */
   --color-bg-main: #0a0a0a;
   --color-bg-main-alt: #1a1a1a;
   --color-bg-main-secondary: #212121;
   --color-bg-hover: #333333;
   --color-bg-selected: #424242;
   --color-bg-disabled: #333333;
-  --color-bg-error: #212121;
   --color-bg-toggle: #616161;
   --color-bg-toggle-thumb: #9e9e9e;
 
-  /* Text */
   --color-text-primary: #ffffff;
   --color-text-secondary: #9e9e9e;
   --color-text-muted: #616161;
   --color-text-error: #9e9e9e;
 
-  /* Borders and dividers */
   --color-border: #424242;
 
-  /* Focus */
   --color-focus: #ffffff;
 
-  /* Icons */
-  --color-icon-primary: #1f1f1f;
-  --color-icon-secondary: #5f6368;
-  --color--icon-starred: #ffffff;
+  --color-icon-starred: #ffffff;
+
+  --color-primary-faint: rgba(99, 102, 241, 0.15);
+  --color-shadow-sm: rgba(0, 0, 0, 0.1);
+  --color-shadow-md: rgba(0, 0, 0, 0.14);
+  --color-shadow-lg: rgba(0, 0, 0, 0.15);
+  --color-shadow-xl: rgba(0, 0, 0, 0.18);
+  --color-shadow-overlay: rgba(0, 0, 0, 0.35);
+  --color-shadow-dark-overlay: rgba(0, 0, 0, 0.5);
 }
 
 * {
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 html,
@@ -87,12 +86,14 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--color-bg-main);
-  /* this took way to long */
-  font-family: 'Rubik', system-ui, -apple-system, BlinkMacSystemFont,
-               'Segoe UI', Roboto, Arial, sans-serif;
+  font-family: "Rubik", system-ui, -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, Arial, sans-serif;
   color: var(--color-text-primary);
   font-size: 14px;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 #root {
@@ -106,5 +107,8 @@ table {
 }
 
 dialog {
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }

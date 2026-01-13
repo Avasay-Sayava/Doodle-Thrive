@@ -1,8 +1,15 @@
-.file-actions__row-open {
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
+.file-actions-row-open {
   background-color: var(--color-bg-hover);
 }
 
-.file-actions__menu {
+.file-actions-menu {
   position: fixed;
   z-index: 9999;
 
@@ -11,26 +18,47 @@
 
   background: var(--color-bg-main);
   border: 1px solid var(--color-border);
-  border-radius: 10px;
+  -webkit-border-radius: 10px;
+     -moz-border-radius: 10px;
+          border-radius: 10px;
 
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
-  user-select: none;
+  -webkit-box-shadow: 0 12px 28px var(--color-shadow-xl);
+
+     -moz-box-shadow: 0 12px 28px var(--color-shadow-xl);
+
+          box-shadow: 0 12px 28px var(--color-shadow-xl);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
-.file-actions__sep {
+.file-actions-sep {
   height: 1px;
   margin: 6px 0;
   background: var(--color-border);
 }
 
-.file-actions__item {
+.file-actions-item {
   width: 100%;
   border: 0;
   background: transparent;
 
+  display: -webkit-box;
+
+  display: -webkit-flex;
+
+  display: -moz-box;
+
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+     -moz-box-pack: justify;
+          justify-content: space-between;
 
   padding: 10px 12px;
   text-align: left;
@@ -40,38 +68,44 @@
   font-size: 14px;
 }
 
-.file-actions__item:hover {
+.file-actions-item:hover {
   background: var(--color-bg-hover);
 }
 
-.file-actions__label {
+.file-actions-label {
   white-space: nowrap;
 }
 
-.file-actions__right {
+.file-actions-right {
   color: var(--color-text-muted);
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
   display: inline-flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
 }
 
-.file-actions__arrow {
+.file-actions-arrow {
   font-size: 14px;
 }
 
-.file-actions__item.is-disabled {
+.file-actions-item.is-disabled {
   opacity: 0.45;
   cursor: default;
 }
 
-.file-actions__item.is-disabled:hover {
+.file-actions-item.is-disabled:hover {
   background: transparent;
 }
 
-.file-actions__item.is-danger .file-actions__label {
-  color: #b42318;
+.file-actions-item.is-danger .file-actions-label {
+  color: var(--color-text-error);
 }
 
-.file-actions__desc {
+.file-actions-desc {
   position: fixed;
   z-index: 10000;
 
@@ -81,20 +115,26 @@
   padding: 10px 12px;
   background: var(--color-bg-main);
   border: 1px solid var(--color-border);
-  border-radius: 10px;
+  -webkit-border-radius: 10px;
+     -moz-border-radius: 10px;
+          border-radius: 10px;
 
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  -webkit-box-shadow: 0 12px 28px var(--color-shadow-xl);
+
+     -moz-box-shadow: 0 12px 28px var(--color-shadow-xl);
+
+          box-shadow: 0 12px 28px var(--color-shadow-xl);
 
   overflow: hidden;
 }
 
-.file-actions__desc-title {
+.file-actions-desc-title {
   font-size: 12px;
   color: var(--color-text-muted);
   margin-bottom: 6px;
 }
 
-.file-actions__desc-body {
+.file-actions-desc-body {
   font-size: 13px;
   color: var(--color-text-primary);
   line-height: 1.35;

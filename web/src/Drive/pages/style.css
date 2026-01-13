@@ -1,26 +1,55 @@
-/* sorry for so many signutres was made in attempts to debug, no time to fix */
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
 
 .file-view {
   width: 100%;
   height: 100%;
   padding: 16px 24px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
 }
 
-.file-view__header {
+.file-view-header {
   margin-bottom: 12px;
+  height: 32px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+     -moz-box-pack: justify;
+          justify-content: space-between;
 }
 
-.file-view__header h1 {
+.file-view-header h1 {
   margin: 0;
   font-size: 20px;
   font-weight: 500;
   color: var(--color-text-primary);
 }
 
-.file-view__table-wrapper {
-  flex: 1;
+.file-view-table-wrapper {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+     -moz-box-flex: 1;
+          flex: 1;
   min-height: 0;
   background-color: var(--color-bg-main);
   overflow-y: auto;
@@ -29,7 +58,7 @@
   -ms-overflow-style: none;
 }
 
-.file-view__table-wrapper::-webkit-scrollbar {
+.file-view-table-wrapper::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
@@ -40,6 +69,7 @@
 }
 
 .files-table thead th {
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 5;
@@ -48,7 +78,9 @@
   color: var(--color-text-primary);
 
   border-bottom: 1px solid var(--color-border);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  -webkit-box-shadow: 0 1px 0 var(--color-shadow-sm);
+     -moz-box-shadow: 0 1px 0 var(--color-shadow-sm);
+          box-shadow: 0 1px 0 var(--color-shadow-sm);
 }
 
 .files-table th {
@@ -70,6 +102,9 @@
 }
 
 tbody tr {
+  -webkit-transition: background-color 120ms ease;
+  -o-transition: background-color 120ms ease;
+  -moz-transition: background-color 120ms ease;
   transition: background-color 120ms ease;
 }
 
@@ -83,50 +118,43 @@ tbody tr:hover {
 }
 
 .sort-controls {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
   gap: 8px;
-  align-items: center;
-  justify-content: flex-end;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+     -moz-box-pack: end;
+          justify-content: flex-end;
 }
 
-.sort-select {
-  padding: 6px 10px;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  font-size: 12px;
-  background-color: var(--color-bg-main);
-  color: var(--color-text-primary);
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.sort-select:hover {
-  border-color: var(--color-text-muted);
-}
-
-.sort-select:focus {
-  outline: none;
-  border-color: #1f8ce6;
-  box-shadow: 0 0 0 2px rgba(31, 140, 230, 0.1);
-}
-
-.file-view__error {
+.file-view-error {
   padding: 48px 24px;
   text-align: center;
   font-size: 18px;
   font-weight: 500;
-  color: #d93025;
+  color: var(--color-text-error);
 }
 
 .mydrive-title {
   all: unset;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
   display: inline-flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   gap: 8px;
 
   margin: 0;
   padding: 6px 10px;
-  border-radius: 9999px;
 
   font-size: 20px;
   font-weight: 500;
@@ -143,12 +171,14 @@ tbody tr:hover {
   background-color: var(--color-bg-selected);
 }
 
-.mydrive-title__chev {
+.mydrive-title-chev {
   font-size: 14px;
   color: var(--color-text-secondary);
 }
 
 .no-files-row td {
+  height: -webkit-calc(100vh - 180px);
+  height: -moz-calc(100vh - 180px);
   height: calc(100vh - 180px);
   text-align: center;
   vertical-align: middle;
@@ -170,8 +200,14 @@ tbody tr:hover {
 }
 
 .view-title {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
   display: inline-flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   gap: 10px;
 
   margin: 0;
@@ -180,18 +216,28 @@ tbody tr:hover {
   color: var(--color-text-primary);
 }
 
-.folder-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  background-color: var(--color-bg-secondary);
-  border-radius: 9999px;
+.btn-empty-trash {
+  padding: 8px 16px;
+  background: var(--color-bg-disabled);
+  color: var(--color-text-error);
+  border: 1px solid var(--color-text-error);
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
   font-size: 14px;
-  color: var(--color-text-primary);
+  font-weight: 500;
   cursor: pointer;
+  -webkit-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  transition: all 0.2s;
 }
 
-.folder-button:hover {
-  background-color: var(--color-bg-hover);
+.btn-empty-trash:hover {
+  background: var(--color-text-error);
+  color: var(--color-bg-main);
+}
+
+.btn-empty-trash:active {
+  opacity: 0.8;
 }

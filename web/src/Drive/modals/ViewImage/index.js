@@ -23,9 +23,9 @@ export default function ViewImage({ file, children }) {
     try {
       const fileData = await getFile(file.id);
       const base64Content = fileData?.content || "";
-      
+
       if (!base64Content) throw new Error("No image content");
-      
+
       // Content is already base64 from upload
       const mimeType = getMimeType(file?.name);
       const dataUrl = `data:${mimeType};base64,${base64Content}`;
@@ -48,22 +48,22 @@ export default function ViewImage({ file, children }) {
       if (!shouldRender) return null;
 
       return (
-        <div className="view-image-modal__content">
-          {error && <div className="view-image-modal__error">{error}</div>}
+        <div className="view-image-modal-content">
+          {error && <div className="view-image-modal-error">{error}</div>}
 
           {loading ? (
-            <div className="view-image-modal__loading">Loading image...</div>
+            <div className="view-image-modal-loading">Loading image...</div>
           ) : imageSrc ? (
             <img
               src={imageSrc}
               alt={file?.name || "Image"}
-              className="view-image-modal__image"
+              className="view-image-modal-image"
             />
           ) : null}
 
-          <div className="view-image-modal__actions">
+          <div className="view-image-modal-actions">
             <button
-              className="view-image-modal__button view-image-modal__button--close"
+              className="view-image-modal-button view-image-modal-button-close"
               onClick={close}
             >
               Close
@@ -72,7 +72,7 @@ export default function ViewImage({ file, children }) {
         </div>
       );
     },
-    [imageSrc, loading, error, file?.name]
+    [imageSrc, loading, error, file?.name],
   );
 
   return (

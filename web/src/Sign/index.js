@@ -4,11 +4,6 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import "./style.css";
 
-/**
- * * @param {object} props
- * @param {"signin"|"signup"} [props.mode]
- * @returns {JSX.Element}
- */
 function Sign({ mode = "signin" }) {
   const [activeMode, setActiveMode] = useState(mode);
   const [isOpen, setIsOpen] = useState(true);
@@ -31,9 +26,15 @@ function Sign({ mode = "signin" }) {
     <div className="sign-layout">
       <Card isOpen={isOpen}>
         {activeMode === "signin" ? (
-          <SignIn changeMode={() => handleModeChange("signup")} autofill={autofill} />
+          <SignIn
+            changeMode={() => handleModeChange("signup")}
+            autofill={autofill}
+          />
         ) : (
-          <SignUp changeMode={() => handleModeChange("signin")} autofill={autofill} />
+          <SignUp
+            changeMode={() => handleModeChange("signin")}
+            autofill={autofill}
+          />
         )}
       </Card>
     </div>

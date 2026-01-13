@@ -1,11 +1,12 @@
 # Doodle Drive
 
 ## Overview
-This project implements a distributed file system inspired by Google Drive, consisting of a NodeJS API Gateway and a C++ Backend Server.
+This project implements a distributed file system inspired by Google Drive, consisting of a React web server, NodeJS API Gateway and a C++ Backend Server.
 
 ## Project Structure
+* **Web**: React website
 * **API**: NodeJS Express Server (MVC Architecture)
-* **base**: C++ TCP Server
+* **Base**: C++ TCP Server
 
 ## Disabling Changes to Branches of Parts
 To disable changes to branches of finished parts of the project, you create a ruleset in GitHub repository settings:
@@ -21,13 +22,14 @@ To disable changes to branches of finished parts of the project, you create a ru
 5. Save the ruleset
 
 ## Installation & Running
-The project is containerized using Docker. For running parts of the project, there are predefined bash files.
+The project is containerized using Docker. For running parts of the project (Base server, API and the Website), there are predefined bash files.
 * **To enable the usage of the bash files**, you need to run this command in the root directory:
     ```bash
-    chmod +x ./api-server.bash ./api-console.bash ./base-server.bash ./base-client.bash ./base-tests.bash ./website.bash
+    chmod +x ./api-server.bash ./api-console.bash ./base-server.bash ./base-client.bash ./base-tests.bash ./website.bash ./run-everything.bash ./website.bash 
     ```
 
     For the objectively fake programmers who don't have bash (or even don't have git bash while using GitHub), each section that uses a bash file is accompanied by the commands to run it.
+* **To run the entire project at once**, including the website, API and base server, you need to run the  `./run-everything.bash` command, with no arguments.
 
 * **To start the backend base C++ server**, you need to run the `./base-server.bash` file:
     ```bash
@@ -89,6 +91,208 @@ The project is containerized using Docker. For running parts of the project, the
     docker exec -it <api_server_name> sh
     ```
     TIP: Using the `bash` file you have a predefined sh console that is much more easy to use.
+
+
+
+## Website Usage & Structure
+
+The website is the frontend client for the Doodle Drive system, built with React.
+
+### Structure
+The application handles routing using `react-router-dom` and represents a file management system, like Google Drive, Key areas include:
+* **Authentication**: Only authenticated users who have signed up, can use the system.
+* **Drive Interface**: The core workspace for managing files, like Google Drive.
+
+It includes, all CRUD operations for files, made simple with a UI and even a full file sharing system insipired by Google Drive.
+
+### Authentication
+Users must authenticate to access their drive.
+![Sign In Page](assets/signin_page.png)
+
+### Drive Interface
+The main layout structure:
+* **Header**: Contains the application logo, the global search bar, and the user profile menu.
+* **Sidebar**: Offers navigation to views like Home, My Drive, Starred, Shared, Recents and Bin, plus the "New" button that enables the adding of files and folder, and even the ability to upload files from your computer.
+* **Content Area**: The file viewing system, contains file actions by hovering over a file, or right clicking them, the ability to open images and edit text files, and the ability to open folders and directly add files to them using right click.
+
+#### Main Pages
+The **Home View** aggregates important files.
+![Drive Interface - Home View](assets/home_view.png)
+
+The **My Drive** page is the root of your personal storage.
+![My Drive View](assets/mydrive_view.png)
+
+And all the other views Starred, Shared, Recents, Bin, Search and folder view (accessible by opening a folder), you can view for your own by runing the website as instructed above!
+
+### Searching
+Users can find files and folders by using the search bar.
+![Search View](assets/search_view.png)
+
+### Directory Navigation
+**Inside a Directory**, users can view specific contents of a folder by left clicking it, and even directly adding files/folders to it using right click.
+![Directory View](assets/directory_view.png)
+
+### File Operations
+#### Add Content
+The "New" button allows creating filer, folder and uploading files.
+![Add Content](assets/add_content.png)
+
+#### Share Content
+Files can be shared with other users by specifying their username and permissions.
+![Share Content](assets/share_content.png)
+
+#### Edit Content
+Text files can be opened and edited directly within the website's editor (Images can also be opened (supported versions are: jpeg, jpg, png and webp))
+![Edit Content](assets/edit_content.png)
+
+#### Delete Content
+Items can be removed and sent to the Bin (and restored when right clicking them inside the Bin view).
+![Delete Content](assets/delete_content.png)
+
+### Settings
+The settings page includes themes (Pink (light), Soviet (dark)).
+![Settings Page](assets/settings_page.png)
+
+
+## API Usage Examples
+
+For the full protocol, documentation can be found in [`base/README.md`](api/README.md).
+
+### Startup Example
+**Start the API server:** (connecting to C++ server at `base-server:3000`, with default variables)
+```bash
+server_name=base-server server_port=3000 ./api-server.bash
+```
+
+**Connect to the API server's console:** (with default variables)
+```bash
+./api-console.bash
+```
+
+### Possible Requests
+* **Create user:**
+    ```bash
+    curl -i -X POST http://localhost:3300/api/users -H "Content-Type: application/json" -d '{"username": "USERNAME", "password": "PASSWORD", "info": {"image": "data:image/png;base64,BASE64/STRING", "description": "DESCRIPTION"}}'
+    ```
+    ```
+    HTTP/1.1 201 Created
+    X-Powered-By: Express
+    Location: /api/users/ebe7aa8d-e2c0-496b-93ca-41f015cfe29b
+    Date: Wed, 24 Dec 2025 20:35:34 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+    Content-Length: 0
+    ```
+
+* **Get user info:**
+    ```bash
+    curl -i http://localhost:3300/api/users/ebe7aa8d-e2c0-496b-93ca-41f015cfe29b
+    ```
+    ```
+    HTTP/1.1 200 OK
+    X-Powered-By: Express
+    Content-Type: application/json; charset=utf-8
+    Content-Length: 79
+    ETag: W/"4f-n/7UR/+HDnWF83Yfto44xNgrJYw"
+    Date: Wed, 24 Dec 2025 20:36:17 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+
+    {"id":"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b","username":"USERNAME","info":{"image":"data:image/png;base64,BASE64/STRING","description":"DESCRIPTION"}}
+    ```
+
+* **Get all info by username and password:**
+    ```bash
+    curl -i http://localhost:3300/api/tokens -H "Content-Type: application/json" -d '{"username": "USERNAME", "password": "PASSWORD"}'
+    ```
+    ```
+    HTTP/1.1 200 OK
+    X-Powered-By: Express
+    Content-Type: application/json; charset=utf-8
+    Content-Length: 45
+    ETag: W/"2d-NCQl3Cc/bgZV4e5JIj+cMb0/ayA"
+    Date: Wed, 24 Dec 2025 21:24:47 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+
+    {"id":"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b"}
+    ```
+
+* **Create a folder:**
+    ```bash
+    curl -i -X POST http://localhost:3300/api/files -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NTg3MTI1YTQtZTRhYi00ZGY4LWFhNWYtZmNhOTAxZDJhYTBm.HTk-0YRIwRpPwI-9mITUzboKn2XC5FmSKmIqi_qPfSI" -H "Content-Type: application/json" -d '{"name": "folder"}'
+    ```
+    ```
+    HTTP/1.1 201 Created
+    X-Powered-By: Express
+    Location: /api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082
+    Date: Wed, 24 Dec 2025 20:54:09 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+    Content-Length: 0
+    ```
+
+* **Create a file**
+    ```bash
+    curl -i -X POST http://localhost:3300/api/files -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NTg3MTI1YTQtZTRhYi00ZGY4LWFhNWYtZmNhOTAxZDJhYTBm.HTk-0YRIwRpPwI-9mITUzboKn2XC5FmSKmIqi_qPfSI" -H "Content-Type: application/json" -d '{"name": "file.txt", "parent": "4a0ec9ae-751a-46ab-a3d6-4295a8df5082", "content": "Hello, World!"}'
+    ```
+    ```
+    HTTP/1.1 201 Created
+    X-Powered-By: Express
+    Location: /api/files/31798e34-3b62-40b1-b3fe-cd46a494c85c
+    Date: Wed, 24 Dec 2025 20:54:41 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+    Content-Length: 0
+    ```
+
+* **Get a file's content:**
+    ```bash
+    curl -i http://localhost:3300/api/files/31798e34-3b62-40b1-b3fe-cd46a494c85c -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NTg3MTI1YTQtZTRhYi00ZGY4LWFhNWYtZmNhOTAxZDJhYTBm.HTk-0YRIwRpPwI-9mITUzboKn2XC5FmSKmIqi_qPfSI"
+    ```
+    ```
+    HTTP/1.1 200 OK
+    X-Powered-By: Express
+    Content-Type: application/json; charset=utf-8
+    Content-Length: 153
+    ETag: W/"99-9fQUOcXvxdwX6m8OJpfxLMXe6JI"
+    Date: Wed, 24 Dec 2025 20:56:05 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+
+    {"id":"31798e34-3b62-40b1-b3fe-cd46a494c85c","name":"file.txt","type":"file","parent":"4a0ec9ae-751a-46ab-a3d6-4295a8df5082","content":"Hello, World!"}
+    ```
+
+* **Add user's permissions** to a file/folder:
+    ```bash
+    curl -i -X POST http://localhost:3300/api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082/permissions -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NTg3MTI1YTQtZTRhYi00ZGY4LWFhNWYtZmNhOTAxZDJhYTBm.HTk-0YRIwRpPwI-9mITUzboKn2XC5FmSKmIqi_qPfSI" -H "Content-Type: application/json" -d '{"options": {"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b": {"read": true, "write": true, "permissions": {"read": true, "write": true}}}}'
+    ```
+    ```
+    HTTP/1.1 201 Created
+    X-Powered-By: Express
+    Location: /api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082/permissions/97621e35-eb84-4e73-9fe4-781a8607aa60
+    Date: Wed, 24 Dec 2025 21:04:04 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+    Content-Length: 0
+    ```
+
+* **Search a query:**
+    ```bash
+    curl -i http://localhost:3300/api/search/Hello -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NTg3MTI1YTQtZTRhYi00ZGY4LWFhNWYtZmNhOTAxZDJhYTBm.HTk-0YRIwRpPwI-9mITUzboKn2XC5FmSKmIqi_qPfSI"
+    ```
+    ```
+    HTTP/1.1 200 OK
+    X-Powered-By: Express
+    Content-Type: application/json; charset=utf-8
+    Content-Length: 2
+    ETag: W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
+    Date: Wed, 24 Dec 2025 21:07:58 GMT
+    Connection: keep-alive
+    Keep-Alive: timeout=5
+
+    {"31798e34-3b62-40b1-b3fe-cd46a494c85c": {"id": "31798e34-3b62-40b1-b3fe-cd46a494c85c", "name": "file.txt", "parent": "4a0ec9ae-751a-46ab-a3d6-4295a8df5082", "content": "Hello, World!"}}
+    ```
 
 
 ## C++ Server Usage Examples
@@ -159,201 +363,3 @@ For the full protocol, documentation can be found in [`base/README.md`](base/REA
     ```
     204 No Content
     ```
-
-## API Usage Examples
-
-For the full protocol, documentation can be found in [`base/README.md`](api/README.md).
-
-### Startup Example
-**Start the API server:** (connecting to C++ server at `base-server:3000`, with default variables)
-```bash
-server_name=base-server server_port=3000 ./api-server.bash
-```
-
-**Connect to the API server's console:** (with default variables)
-```bash
-./api-console.bash
-```
-
-### Possible Requests
-* **Create user:**
-    ```bash
-    curl -i -X POST http://localhost:3300/api/users -H "Content-Type: application/json" -d '{"username": "USERNAME", "password": "PASSWORD", "info": {"image": "data:image/png;base64,BASE64/STRING", "description": "DESCRIPTION"}}'
-    ```
-    ```
-    HTTP/1.1 201 Created
-    X-Powered-By: Express
-    Location: /api/users/ebe7aa8d-e2c0-496b-93ca-41f015cfe29b
-    Date: Wed, 24 Dec 2025 20:35:34 GMT
-    Connection: keep-alive
-    Keep-Alive: timeout=5
-    Content-Length: 0
-    ```
-
-* **Get user info:**
-    ```bash
-    curl -i http://localhost:3300/api/users/ebe7aa8d-e2c0-496b-93ca-41f015cfe29b
-    ```
-    ```
-    HTTP/1.1 200 OK
-    X-Powered-By: Express
-    Content-Type: application/json; charset=utf-8
-    Content-Length: 79
-    ETag: W/"4f-n/7UR/+HDnWF83Yfto44xNgrJYw"
-    Date: Wed, 24 Dec 2025 20:36:17 GMT
-    Connection: keep-alive
-    Keep-Alive: timeout=5
-
-    {"id":"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b","username":"USERNAME","info":{"image":"data:image/png;base64,BASE64/STRING","description":"DESCRIPTION"}}
-    ```
-
-* **Get all info by username and password:**
-    ```bash
-    curl -i http://localhost:3300/api/tokens -H "Content-Type: application/json" -d '{"username": "USERNAME", "password": "PASSWORD"}'
-    ```
-    ```
-    HTTP/1.1 200 OK
-    X-Powered-By: Express
-    Content-Type: application/json; charset=utf-8
-    Content-Length: 45
-    ETag: W/"2d-NCQl3Cc/bgZV4e5JIj+cMb0/ayA"
-    Date: Wed, 24 Dec 2025 21:24:47 GMT
-    Connection: keep-alive
-    Keep-Alive: timeout=5
-
-    {"id":"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b"}
-    ```
-
-* **Create a folder:**
-    ```bash
-    curl -i -X POST http://localhost:3300/api/files -H "Username: USERNAME" -H "Password: PASSWORD" -H "Content-Type: application/json" -d '{"name": "folder"}'
-    ```
-    ```
-    HTTP/1.1 201 Created
-    X-Powered-By: Express
-    Location: /api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082
-    Date: Wed, 24 Dec 2025 20:54:09 GMT
-    Connection: keep-alive
-    Keep-Alive: timeout=5
-    Content-Length: 0
-    ```
-
-* **Create a file**
-    ```bash
-    curl -i -X POST http://localhost:3300/api/files -H "Username: USERNAME" -H "Password: PASSWORD" -H "Content-Type: application/json" -d '{"name": "file.txt", "parent": "4a0ec9ae-751a-46ab-a3d6-4295a8df5082", "content": "Hello, World!"}'
-    ```
-    ```
-    HTTP/1.1 201 Created
-    X-Powered-By: Express
-    Location: /api/files/31798e34-3b62-40b1-b3fe-cd46a494c85c
-    Date: Wed, 24 Dec 2025 20:54:41 GMT
-    Connection: keep-alive
-    Keep-Alive: timeout=5
-    Content-Length: 0
-    ```
-
-* **Get a file's content:**
-    ```bash
-    curl -i http://localhost:3300/api/files/31798e34-3b62-40b1-b3fe-cd46a494c85c -H "Username: USERNAME" -H "Password: PASSWORD"
-    ```
-    ```
-    HTTP/1.1 200 OK
-    X-Powered-By: Express
-    Content-Type: application/json; charset=utf-8
-    Content-Length: 153
-    ETag: W/"99-9fQUOcXvxdwX6m8OJpfxLMXe6JI"
-    Date: Wed, 24 Dec 2025 20:56:05 GMT
-    Connection: keep-alive
-    Keep-Alive: timeout=5
-
-    {"id":"31798e34-3b62-40b1-b3fe-cd46a494c85c","name":"file.txt","type":"file","parent":"4a0ec9ae-751a-46ab-a3d6-4295a8df5082","content":"Hello, World!"}
-    ```
-
-* **Add user's permissions** to a file/folder:
-    ```bash
-    curl -i -X POST http://localhost:3300/api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082/permissions -H "Username: USERNAME" -H "Password: PASSWORD" -H "Content-Type: application/json" -d '{"options": {"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b": {"read": true, "write": true, "permissions": {"read": true, "write": true}}}}'
-    ```
-    ```
-    HTTP/1.1 201 Created
-    X-Powered-By: Express
-    Location: /api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082/permissions/97621e35-eb84-4e73-9fe4-781a8607aa60
-    Date: Wed, 24 Dec 2025 21:04:04 GMT
-    Connection: keep-alive
-    Keep-Alive: timeout=5
-    Content-Length: 0
-    ```
-
-* **Search a query:**
-    ```bash
-    curl -i http://localhost:3300/api/search/Hello -H "Username: USERNAME" -H "Password: PASSWORD"
-    ```
-    ```
-    HTTP/1.1 200 OK
-    X-Powered-By: Express
-    Content-Type: application/json; charset=utf-8
-    Content-Length: 2
-    ETag: W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
-    Date: Wed, 24 Dec 2025 21:07:58 GMT
-    Connection: keep-alive
-    Keep-Alive: timeout=5
-
-    {"31798e34-3b62-40b1-b3fe-cd46a494c85c": {"id": "31798e34-3b62-40b1-b3fe-cd46a494c85c", "name": "file.txt", "parent": "4a0ec9ae-751a-46ab-a3d6-4295a8df5082", "content": "Hello, World!"}}
-    ```
-
-## Website Usage & Structure
-
-The website acts as the frontend client for the Doodle Drive system, built with React.
-
-### Structure
-The application handles routing using `react-router-dom` and represents a comprehensive file management system. Key areas include:
-* **Authentication**: Secure entry points.
-* **Drive Interface**: The core workspace for managing files.
-* **Settings**: User preference configuration.
-
-### Authentication
-Users must authenticate to access their drive.
-![Sign In Page](assets/signin_page.png)
-
-### Drive Interface
-The main layout provides a persistent navigation structure:
-* **Header**: Contains the application logo, the global search bar, and the user profile menu.
-* **Sidebar**: Offers navigation to views like Home, My Drive, Shared, and Bin, plus the "New" button.
-* **Content Area**: Renders the active folder or view.
-
-#### Main Pages
-The **Home View** aggregates important files.
-![Drive Interface - Home View](assets/home_view.png)
-
-The **My Drive** page is the root of your personal storage.
-![My Drive View](assets/mydrive_view.png)
-
-### Searching
-Users can find files instantly using the search bar.
-![Search View](assets/search_view.png)
-
-### Directory Navigation
-**Inside a Directory**, users can view specific contents of a folder.
-![Directory View](assets/directory_view.png)
-
-### File Operations
-#### Add Content
-The "New" button allows creating folders and files.
-![Add Content](assets/add_content.png)
-
-#### Share Content
-Files can be shared with other users by specifying their username and permissions.
-![Share Content](assets/share_content.png)
-
-#### Edit Content
-Text files can be opened and edited directly within the website's editor.
-![Edit Content](assets/edit_content.png)
-
-#### Delete Content
-Items can be removed and sent to the Bin.
-![Delete Content](assets/delete_content.png)
-
-### Settings
-The settings page includes personalization options such as themes (Pink (light), Soviet (dark)).
-![Settings Page](assets/settings_page.png)
-
-### More Features

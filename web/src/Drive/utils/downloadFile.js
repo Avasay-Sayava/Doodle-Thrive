@@ -26,10 +26,9 @@ export default async function downloadFile(id) {
   const file = JSON.parse(raw);
 
   if (file.type !== "folder") {
-    const blob = new Blob(
-      [String(file.content ?? "")],
-      { type: "text/plain;charset=utf-8" }
-    );
+    const blob = new Blob([String(file.content ?? "")], {
+      type: "text/plain;charset=utf-8",
+    });
 
     triggerDownload(blob, file.name || "file");
     return;

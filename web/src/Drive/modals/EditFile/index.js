@@ -48,13 +48,13 @@ export default function EditFile({ file, onSave = () => {}, children }) {
         const newModified = Date.now();
         await patchFile(file.id, { content });
         setOriginalContent(content);
-        
+
         // Pass updated metadata to parent for immediate UI update
         onSave({
           id: file.id,
           content,
           modified: newModified,
-          size: content.length
+          size: content.length,
         });
         close();
       } catch (err) {
@@ -63,7 +63,7 @@ export default function EditFile({ file, onSave = () => {}, children }) {
         setSaving(false);
       }
     },
-    [file?.id, content, onSave]
+    [file?.id, content, onSave],
   );
 
   const handleClose = useCallback(() => {
@@ -78,14 +78,14 @@ export default function EditFile({ file, onSave = () => {}, children }) {
       const hasChanges = content !== originalContent;
 
       return (
-        <div className="edit-file-modal__content">
-          {error && <div className="edit-file-modal__error">{error}</div>}
+        <div className="edit-file-modal-content">
+          {error && <div className="edit-file-modal-error">{error}</div>}
 
           {loading ? (
-            <div className="edit-file-modal__loading">Loading file...</div>
+            <div className="edit-file-modal-loading">Loading file...</div>
           ) : (
             <textarea
-              className="edit-file-modal__textarea"
+              className="edit-file-modal-textarea"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Enter file content..."
@@ -93,9 +93,9 @@ export default function EditFile({ file, onSave = () => {}, children }) {
             />
           )}
 
-          <div className="edit-file-modal__actions">
+          <div className="edit-file-modal-actions">
             <button
-              className="edit-file-modal__button edit-file-modal__button--cancel"
+              className="edit-file-modal-button edit-file-modal-button-cancel"
               onClick={() => {
                 handleClose();
                 close();
@@ -105,7 +105,7 @@ export default function EditFile({ file, onSave = () => {}, children }) {
               Cancel
             </button>
             <button
-              className="edit-file-modal__button edit-file-modal__button--save"
+              className="edit-file-modal-button edit-file-modal-button-save"
               onClick={() => handleSave(close)}
               disabled={!hasChanges || saving || loading}
             >
@@ -115,7 +115,7 @@ export default function EditFile({ file, onSave = () => {}, children }) {
         </div>
       );
     },
-    [content, originalContent, loading, error, saving, handleSave, handleClose]
+    [content, originalContent, loading, error, saving, handleSave, handleClose],
   );
 
   return (

@@ -1,12 +1,24 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 .permission-select {
   padding: 8px 10px;
-  border-radius: 10px;
+  -webkit-border-radius: 10px;
+     -moz-border-radius: 10px;
+          border-radius: 10px;
   border: 2px solid var(--color-focus);
   background: var(--color-bg-main);
   color: var(--color-text-primary);
   font-weight: 500;
   cursor: pointer;
   font-size: 14px;
+  -webkit-transition: border-color 0.15s ease;
+  -o-transition: border-color 0.15s ease;
+  -moz-transition: border-color 0.15s ease;
   transition: border-color 0.15s ease;
 }
 

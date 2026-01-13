@@ -2,16 +2,15 @@ import Regex from "../../utils/regex";
 
 const API_BASE = import.meta.env.API_BASE_URL || "http://localhost:3300";
 
-
 async function getUser(user) {
-  if(!Regex.id.test(user)) return user;
+  if (!Regex.id.test(user)) return user;
   const res = await fetch(`${API_BASE}/api/users/${user}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      }
-  })
-  if(!res.ok) {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
     const txt = await res.text();
     throw new Error(`Get user failed (HTTP ${res.status}): ${txt}`);
   }

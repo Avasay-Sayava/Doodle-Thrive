@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FileView from "../FileView";
 import useUserId from "../../utils/useUserId";
+import getUser from "../../utils/getUser";
 import { sortFiles } from "../../utils/sortFiles";
 import IconShared from "../../components/icons/IconShared";
 
@@ -18,34 +19,36 @@ function SharedView({ refreshKey, onRefresh }) {
   const [sortDir, setSortDir] = useState("asc");
   const [foldersMode, setFoldersMode] = useState("folders-first");
 
-  const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+  const handleSortChange = ({
+    sortBy: newSortBy,
+    sortDir: newSortDir,
+    foldersMode: newFoldersMode,
+  }) => {
     setSortBy(newSortBy);
     setSortDir(newSortDir);
     setFoldersMode(newFoldersMode);
   };
 
   useEffect(() => {
-    // Wait for user ID to be available before fetching files
     if (!id) return;
 
     (async () => {
       try {
         setError("");
-        
+
         const jwt = localStorage.getItem("token");
-        if (!jwt){
+        if (!jwt) {
           localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }
-
 
         const res = await fetch(`${API_BASE}/api/files`, {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },
         });
         if (!res.ok) {
-          if(res.status === 401){
+          if (res.status === 401) {
             localStorage.removeItem("token");
             navigate("/signin", { replace: true });
             return;
@@ -55,36 +58,39 @@ function SharedView({ refreshKey, onRefresh }) {
         }
 
         const filesObj = await res.json();
-        const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
+        const allFiles = (
+          Array.isArray(filesObj) ? filesObj : Object.values(filesObj)
+        ).filter((f) => f.trashed !== true);
         const sharedFiles = allFiles.filter((f) => f.owner !== id);
 
-        setFiles(sortFiles(sharedFiles, sortBy, sortDir, foldersMode));
+        for (let i = 0; i < sharedFiles.length; i++) {
+          sharedFiles[i].ownerUsername = await getUser(sharedFiles[i].owner);
+        }
+
+        setFiles(sharedFiles);
       } catch (err) {
         setError(err?.message || "Failed to load files");
       }
     })();
-  }, [navigate, refreshKey, id, sortBy, sortDir, foldersMode]);
+  }, [navigate, refreshKey, id]);
 
   return (
     <div className="file-view">
-      <div className="file-view__header">
-        <div className="file-view__header">
-          <h1 className="view-title">
-            <IconShared
-              className="view-title__icon"
-              width={24}
-              height={24}
-              aria-hidden="true"
-              style={{ color: "var(--color-icon-primary)" }}
-            />
-            <span className="view-title__text">Shared with me</span>
-          </h1>
-        </div>
+      <div className="file-view-header">
+        <h1 className="view-title">
+          <IconShared
+            className="view-title-icon view-title-icon-shared"
+            width={24}
+            height={24}
+            aria-hidden="true"
+          />
+          <span className="view-title-text">Shared with me</span>
+        </h1>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView 
-        allFiles={files} 
+      <FileView
+        allFiles={sortFiles(files, sortBy, sortDir, foldersMode)}
         onRefresh={onRefresh}
         sortBy={sortBy}
         sortDir={sortDir}
@@ -93,7 +99,6 @@ function SharedView({ refreshKey, onRefresh }) {
       />
     </div>
   );
-
 }
 
 export default SharedView;

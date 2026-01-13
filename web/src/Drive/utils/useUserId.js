@@ -3,10 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-/**
- * Custom hook to fetch the current user's ID from the tokens endpoint
- * @returns {string|null} The user's ID, or null if not authenticated
- */
 export default function useUserId() {
   const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
