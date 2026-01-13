@@ -16,7 +16,7 @@ import IconMore from "../../icons/IconMore";
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 const hasPermission = (permissions, path) => {
-  return path.split('.').reduce((obj, key) => obj?.[key], permissions) === true;
+  return path.split(".").reduce((obj, key) => obj?.[key], permissions) === true;
 };
 
 const mergePermissions = (data) => {
@@ -39,7 +39,8 @@ const mergePermissions = (data) => {
         },
         permissions: {
           read: current.permissions.read || Boolean(perms?.permissions?.read),
-          write: current.permissions.write || Boolean(perms?.permissions?.write),
+          write:
+            current.permissions.write || Boolean(perms?.permissions?.write),
         },
       };
     });
@@ -50,13 +51,13 @@ const mergePermissions = (data) => {
 const fetchFilePermissions = async (fileId, currentUserId) => {
   try {
     const jwt = localStorage.getItem("token");
-    
+
     const fileRes = await fetch(`${API_BASE}/api/files/${fileId}`, {
       headers: { Authorization: `Bearer ${jwt}` },
     });
-    const fileData = await fileRes.ok ? await fileRes.json() : {};
+    const fileData = (await fileRes.ok) ? await fileRes.json() : {};
     const isOwner = fileData.owner === currentUserId;
-    
+
     if (isOwner) {
       return {
         [currentUserId]: {
@@ -66,7 +67,7 @@ const fetchFilePermissions = async (fileId, currentUserId) => {
         },
       };
     }
-    
+
     const res = await fetch(`${API_BASE}/api/files/${fileId}/permissions`, {
       headers: { Authorization: `Bearer ${jwt}` },
     });
@@ -86,9 +87,9 @@ function FileSelect({ file, onRefresh, isTrashed = false }) {
   const [isStarred, setIsStarred] = useState(Boolean(starred));
   const [userPermissions, setUserPermissions] = useState({});
 
-  const canShare = hasPermission(userPermissions, 'permissions.write');
-  const canDownload = hasPermission(userPermissions, 'content.read');
-  const canRename = hasPermission(userPermissions, 'self.write');
+  const canShare = hasPermission(userPermissions, "permissions.write");
+  const canDownload = hasPermission(userPermissions, "content.read");
+  const canRename = hasPermission(userPermissions, "self.write");
 
   useEffect(() => {
     setIsStarred(Boolean(starred));
@@ -190,7 +191,12 @@ function FileSelect({ file, onRefresh, isTrashed = false }) {
         </>
       )}
 
-      <FileActions file={file} onRefresh={onRefresh} currentUserPerms={userPermissions} openOnLeftClick>
+      <FileActions
+        file={file}
+        onRefresh={onRefresh}
+        currentUserPerms={userPermissions}
+        openOnLeftClick
+      >
         <button
           className="file-action-btn"
           title="More"

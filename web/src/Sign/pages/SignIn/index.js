@@ -18,12 +18,15 @@ function SignIn({ changeMode, autofill = {} }) {
 
   const [formData, setFormData] = useState({
     username: autofill?.get?.username || "",
-    password: autofill?.get?.password || ""
+    password: autofill?.get?.password || "",
   });
 
   useEffect(() => {
     const current = autofill?.get || {};
-    if (current.username !== formData.username || current.password !== formData.password) {
+    if (
+      current.username !== formData.username ||
+      current.password !== formData.password
+    ) {
       autofill?.set({ ...current, ...formData });
     }
   }, [formData, autofill]);
@@ -31,15 +34,15 @@ function SignIn({ changeMode, autofill = {} }) {
   const [errors, setErrors] = useState({
     username: false,
     password: false,
-    general: false
+    general: false,
   });
 
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: false }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: false }));
   };
 
   const handleSubmit = async (e) => {
@@ -51,7 +54,7 @@ function SignIn({ changeMode, autofill = {} }) {
     setErrors({
       username: !usernameValid,
       password: !passwordValid,
-      general: false
+      general: false,
     });
 
     if (!usernameValid || !passwordValid) return;
@@ -73,7 +76,7 @@ function SignIn({ changeMode, autofill = {} }) {
       navigate("/drive");
     } catch (error) {
       console.error("API Error:", error);
-      setErrors(prev => ({ ...prev, general: true }));
+      setErrors((prev) => ({ ...prev, general: true }));
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +93,11 @@ function SignIn({ changeMode, autofill = {} }) {
         onChange={handleChange}
         error={errors.username}
         errorMessage={
-          <><b>Invalid username.</b> Must be 2-32 characters long using only letters, numbers, spaces, underscores, hyphens, or periods, with no consecutive periods.</>
+          <>
+            <b>Invalid username.</b> Must be 2-32 characters long using only
+            letters, numbers, spaces, underscores, hyphens, or periods, with no
+            consecutive periods.
+          </>
         }
       />
 
@@ -102,7 +109,9 @@ function SignIn({ changeMode, autofill = {} }) {
         onChange={handleChange}
         error={errors.password}
         errorMessage={
-          <><b>Invalid password.</b> Must be 8-64 characters long.</>
+          <>
+            <b>Invalid password.</b> Must be 8-64 characters long.
+          </>
         }
       />
 
@@ -114,11 +123,15 @@ function SignIn({ changeMode, autofill = {} }) {
 
       {errors.general && (
         <div className="error-message">
-          <p><b>Sign in failed.</b> Check credentials.</p>
+          <p>
+            <b>Sign in failed.</b> Check credentials.
+          </p>
         </div>
       )}
 
-      <a href="#" onClick={() => changeMode()}>Don't have an account? Sign Up</a>
+      <a href="#" onClick={() => changeMode()}>
+        Don't have an account? Sign Up
+      </a>
     </form>
   );
 }

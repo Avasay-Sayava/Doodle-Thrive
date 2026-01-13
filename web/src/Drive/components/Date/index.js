@@ -4,13 +4,13 @@ function getDate(timestamp) {
   if (!timestamp) return "Unknown";
   const date = new Date(timestamp);
   if (isNaN(date.getTime())) return "Unknown";
-  
+
   const now = new Date();
   const diff = Math.abs(now - date);
   const seconds = Math.floor(diff / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
-  
+
   // If the date is today, return relative time
   if (hours < 24 && date.getDate() === now.getDate()) {
     if (hours > 0) return `${hours} hour${hours > 1 ? "s" : ""} ago`;

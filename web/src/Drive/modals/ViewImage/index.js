@@ -23,9 +23,9 @@ export default function ViewImage({ file, children }) {
     try {
       const fileData = await getFile(file.id);
       const base64Content = fileData?.content || "";
-      
+
       if (!base64Content) throw new Error("No image content");
-      
+
       // Content is already base64 from upload
       const mimeType = getMimeType(file?.name);
       const dataUrl = `data:${mimeType};base64,${base64Content}`;
@@ -72,7 +72,7 @@ export default function ViewImage({ file, children }) {
         </div>
       );
     },
-    [imageSrc, loading, error, file?.name]
+    [imageSrc, loading, error, file?.name],
   );
 
   return (

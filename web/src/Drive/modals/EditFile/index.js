@@ -48,13 +48,13 @@ export default function EditFile({ file, onSave = () => {}, children }) {
         const newModified = Date.now();
         await patchFile(file.id, { content });
         setOriginalContent(content);
-        
+
         // Pass updated metadata to parent for immediate UI update
         onSave({
           id: file.id,
           content,
           modified: newModified,
-          size: content.length
+          size: content.length,
         });
         close();
       } catch (err) {
@@ -63,7 +63,7 @@ export default function EditFile({ file, onSave = () => {}, children }) {
         setSaving(false);
       }
     },
-    [file?.id, content, onSave]
+    [file?.id, content, onSave],
   );
 
   const handleClose = useCallback(() => {
@@ -115,7 +115,7 @@ export default function EditFile({ file, onSave = () => {}, children }) {
         </div>
       );
     },
-    [content, originalContent, loading, error, saving, handleSave, handleClose]
+    [content, originalContent, loading, error, saving, handleSave, handleClose],
   );
 
   return (

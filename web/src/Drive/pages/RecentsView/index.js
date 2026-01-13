@@ -64,7 +64,7 @@ function RecentsView({ refreshKey, onRefresh }) {
         }
 
         setFiles(
-          sortFiles(allFiles, sortBy, sortDir, foldersMode).slice(0, 30)
+          sortFiles(allFiles, sortBy, sortDir, foldersMode).slice(0, 30),
         );
         handleSortChange({ sortBy, sortDir, foldersMode });
       } catch (err) {

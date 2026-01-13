@@ -11,7 +11,12 @@ function fileToBase64(file) {
   });
 }
 
-export default async function newFile({ fileName, fileType, parentId = null, fileObject = null }) {
+export default async function newFile({
+  fileName,
+  fileType,
+  parentId = null,
+  fileObject = null,
+}) {
   const jwt = localStorage.getItem("token");
   if (!jwt) throw new Error("Not authenticated");
 

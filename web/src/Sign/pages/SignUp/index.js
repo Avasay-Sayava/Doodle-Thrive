@@ -22,14 +22,14 @@ function SignUp({ changeMode, autofill = {} }) {
     password: false,
     image: false,
     description: false,
-    general: false
+    general: false,
   });
 
   const [formData, setFormData] = useState({
     username: autofill?.get?.username || "",
     password: autofill?.get?.password || "",
     description: autofill?.get?.description || "",
-    profile: autofill?.get?.profile || null
+    profile: autofill?.get?.profile || null,
   });
 
   useEffect(() => {
@@ -59,8 +59,8 @@ function SignUp({ changeMode, autofill = {} }) {
     const { name, value, type, files } = e.target;
     const finalValue = type === "file" ? files[0] : value;
 
-    setFormData(prev => ({ ...prev, [name]: finalValue }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: false }));
+    setFormData((prev) => ({ ...prev, [name]: finalValue }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: false }));
   };
 
   const handleSubmit = async (e) => {
@@ -68,9 +68,12 @@ function SignUp({ changeMode, autofill = {} }) {
 
     const usernameValid = Regex.username.test(formData.username);
     const passwordValid = Regex.password.test(formData.password);
-    const imageValid = (Regex.image
-      .test(formData.profile ? await base64(formData.profile) : "") ||
-      formData.profile === null) && (formData.profile?.size ?? 0) <= 10 * 1024 * 1024;
+    const imageValid =
+      (Regex.image.test(
+        formData.profile ? await base64(formData.profile) : "",
+      ) ||
+        formData.profile === null) &&
+      (formData.profile?.size ?? 0) <= 10 * 1024 * 1024;
     const descriptionValid = formData.description.length <= 512;
 
     setErrors({
@@ -78,10 +81,11 @@ function SignUp({ changeMode, autofill = {} }) {
       password: !passwordValid,
       image: !imageValid,
       description: !descriptionValid,
-      general: false
+      general: false,
     });
 
-    if (!usernameValid || !passwordValid || !descriptionValid || !imageValid) return;
+    if (!usernameValid || !passwordValid || !descriptionValid || !imageValid)
+      return;
 
     setIsLoading(true);
 
@@ -96,8 +100,8 @@ function SignUp({ changeMode, autofill = {} }) {
         password: formData.password,
         info: {
           image: imageBase64,
-          description: formData.description
-        }
+          description: formData.description,
+        },
       };
 
       const response = await fetch(`${API_BASE}/api/users`, {
@@ -109,10 +113,9 @@ function SignUp({ changeMode, autofill = {} }) {
       if (!response.ok) throw new Error("Sign up failed");
 
       changeMode();
-
     } catch (error) {
       console.error("API Error:", error);
-      setErrors(prev => ({ ...prev, general: true }));
+      setErrors((prev) => ({ ...prev, general: true }));
     } finally {
       setIsLoading(false);
     }
@@ -129,7 +132,11 @@ function SignUp({ changeMode, autofill = {} }) {
         onChange={handleChange}
         error={errors.username}
         errorMessage={
-          <><b>Invalid username.</b> Must be 2-32 characters long using only letters, numbers, spaces, underscores, hyphens, or periods, with no consecutive periods.</>
+          <>
+            <b>Invalid username.</b> Must be 2-32 characters long using only
+            letters, numbers, spaces, underscores, hyphens, or periods, with no
+            consecutive periods.
+          </>
         }
       />
 
@@ -141,7 +148,9 @@ function SignUp({ changeMode, autofill = {} }) {
         onChange={handleChange}
         error={errors.password}
         errorMessage={
-          <><b>Invalid password.</b> Must be 8-64 characters long.</>
+          <>
+            <b>Invalid password.</b> Must be 8-64 characters long.
+          </>
         }
       />
 
@@ -152,7 +161,10 @@ function SignUp({ changeMode, autofill = {} }) {
         onChange={handleChange}
         error={errors.image}
         errorMessage={
-          <><b>Invalid image.</b> Must be a valid image file (png, jpeg, jpg, webp) under 10MB.</>
+          <>
+            <b>Invalid image.</b> Must be a valid image file (png, jpeg, jpg,
+            webp) under 10MB.
+          </>
         }
       />
 
@@ -164,7 +176,9 @@ function SignUp({ changeMode, autofill = {} }) {
         onChange={handleChange}
         error={errors.description}
         errorMessage={
-          <><b>Invalid description.</b> Must be up to 512 characters long.</>
+          <>
+            <b>Invalid description.</b> Must be up to 512 characters long.
+          </>
         }
       />
 
@@ -176,11 +190,16 @@ function SignUp({ changeMode, autofill = {} }) {
 
       {errors.general && (
         <div className="error-message" id="error-message-general">
-          <p><b>Sign up failed.</b> Please check your username and password and try again.</p>
+          <p>
+            <b>Sign up failed.</b> Please check your username and password and
+            try again.
+          </p>
         </div>
       )}
 
-      <a href="#" onClick={() => changeMode()}>Already have an account? Sign In</a>
+      <a href="#" onClick={() => changeMode()}>
+        Already have an account? Sign In
+      </a>
     </form>
   );
 }

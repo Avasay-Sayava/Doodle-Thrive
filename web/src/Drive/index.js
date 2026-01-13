@@ -23,7 +23,9 @@ function Drive({ openSettings, defaultPage }) {
 
   return (
     <div className="app-shell">
-            <header className="app-topbar"><Header openSettings={openSettings} /></header>
+      <header className="app-topbar">
+        <Header openSettings={openSettings} />
+      </header>
 
       <div className="app-body">
         <aside className="app-sidebar">
@@ -32,15 +34,90 @@ function Drive({ openSettings, defaultPage }) {
 
         <main className="app-content">
           <Routes>
-            <Route path="home" element={<HomeView key={refreshKey} refreshKey={refreshKey} onRefresh={onRefresh} />} />
-            <Route path="mydrive" element={<MydriveView key={refreshKey} refreshKey={refreshKey} onRefresh={onRefresh} />} />
-            <Route path="folders/:folderId" element={<FolderView key={refreshKey} refreshKey={refreshKey} onRefresh={onRefresh} />} />
-            <Route path="search" element={<SearchView key={refreshKey} refreshKey={refreshKey} onRefresh={onRefresh} />} />
-            <Route path="starred" element={<StarredView key={refreshKey} refreshKey={refreshKey} onRefresh={onRefresh} />} />
-            <Route path="shared" element={<SharedView key={refreshKey} refreshKey={refreshKey} onRefresh={onRefresh} />} />
-            <Route path="recent" element={<RecentsView key={refreshKey} refreshKey={refreshKey} onRefresh={onRefresh} />} />
-            <Route path="bin" element={<BinView key={refreshKey} refreshKey={refreshKey} onRefresh={onRefresh} />} />
-            <Route path="*" element={<Navigate to={`/drive/${defaultPage}`} replace />} />
+            <Route
+              path="home"
+              element={
+                <HomeView
+                  key={refreshKey}
+                  refreshKey={refreshKey}
+                  onRefresh={onRefresh}
+                />
+              }
+            />
+            <Route
+              path="mydrive"
+              element={
+                <MydriveView
+                  key={refreshKey}
+                  refreshKey={refreshKey}
+                  onRefresh={onRefresh}
+                />
+              }
+            />
+            <Route
+              path="folders/:folderId"
+              element={
+                <FolderView
+                  key={refreshKey}
+                  refreshKey={refreshKey}
+                  onRefresh={onRefresh}
+                />
+              }
+            />
+            <Route
+              path="search"
+              element={
+                <SearchView
+                  key={refreshKey}
+                  refreshKey={refreshKey}
+                  onRefresh={onRefresh}
+                />
+              }
+            />
+            <Route
+              path="starred"
+              element={
+                <StarredView
+                  key={refreshKey}
+                  refreshKey={refreshKey}
+                  onRefresh={onRefresh}
+                />
+              }
+            />
+            <Route
+              path="shared"
+              element={
+                <SharedView
+                  key={refreshKey}
+                  refreshKey={refreshKey}
+                  onRefresh={onRefresh}
+                />
+              }
+            />
+            <Route
+              path="recent"
+              element={
+                <RecentsView
+                  key={refreshKey}
+                  refreshKey={refreshKey}
+                  onRefresh={onRefresh}
+                />
+              }
+            />
+            <Route
+              path="bin"
+              element={
+                <BinView
+                  key={refreshKey}
+                  refreshKey={refreshKey}
+                  onRefresh={onRefresh}
+                />
+              }
+            />
+            <Route
+              path="*"
+              element={<Navigate to={`/drive/${defaultPage}`} replace />}
+            />
           </Routes>
         </main>
       </div>

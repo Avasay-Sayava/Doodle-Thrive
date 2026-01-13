@@ -6,13 +6,19 @@ import IconUpload from "../../icons/IconUpload";
 import GetText from "../../../modals/GetText";
 import newFile from "../../../utils/newFile";
 
-export default function ActionsMenu({ onClose, isOpen, onCreated, folderId = null, anchorPoint = null }) {
+export default function ActionsMenu({
+  onClose,
+  isOpen,
+  onCreated,
+  folderId = null,
+  anchorPoint = null,
+}) {
   const openFolderRef = useRef(null);
   const openFileRef = useRef(null);
   const fileInputRef = useRef(null);
-  
-  const menuStyle = anchorPoint 
-    ? { position: "fixed", top: anchorPoint.y, left: anchorPoint.x } 
+
+  const menuStyle = anchorPoint
+    ? { position: "fixed", top: anchorPoint.y, left: anchorPoint.x }
     : {};
 
   const refresh = () => {
@@ -31,11 +37,11 @@ export default function ActionsMenu({ onClose, isOpen, onCreated, folderId = nul
     if (!files.length) return;
 
     for (const f of files) {
-      await newFile({ 
-        fileName: f.name, 
-        fileType: "file", 
-        parentId: folderId, 
-        fileObject: f 
+      await newFile({
+        fileName: f.name,
+        fileType: "file",
+        parentId: folderId,
+        fileObject: f,
       });
     }
     refresh();
@@ -49,7 +55,10 @@ export default function ActionsMenu({ onClose, isOpen, onCreated, folderId = nul
         submitLabel="Create"
         onSubmit={(name) => create(name, "file")}
       >
-        {(open) => { openFileRef.current = open; return null; }}
+        {(open) => {
+          openFileRef.current = open;
+          return null;
+        }}
       </GetText>
 
       <GetText
@@ -58,13 +67,27 @@ export default function ActionsMenu({ onClose, isOpen, onCreated, folderId = nul
         submitLabel="Create"
         onSubmit={(name) => create(name, "folder")}
       >
-        {(open) => { openFolderRef.current = open; return null; }}
+        {(open) => {
+          openFolderRef.current = open;
+          return null;
+        }}
       </GetText>
 
-      <input ref={fileInputRef} type="file" multiple className="new-hidden-input" onChange={pickFiles} />
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        className="new-hidden-input"
+        onChange={pickFiles}
+      />
 
       {isOpen && (
-        <div className="new-menu" role="menu" aria-label="New menu" style={menuStyle}>
+        <div
+          className="new-menu"
+          role="menu"
+          aria-label="New menu"
+          style={menuStyle}
+        >
           <button
             type="button"
             className="new-menu-item"

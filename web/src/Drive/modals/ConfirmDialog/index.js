@@ -26,20 +26,19 @@ export default function ConfirmDialog({
   const modalOpenRef = useRef(null);
   const modalCloseRef = useRef(null);
 
-  
   return (
     <>
       <Modal
         title={title}
         renderBody={(isOpen, shouldRender, close) => {
-                    return (
+          return (
             <div className="confirm-dialog">
               <p className="confirm-dialog-message">{message}</p>
               <div className="confirm-dialog-actions">
                 <button
                   className="confirm-dialog-button confirm-dialog-button-cancel"
                   onClick={() => {
-                                        close();
+                    close();
                     onCancel?.();
                   }}
                 >
@@ -50,7 +49,7 @@ export default function ConfirmDialog({
                     isDangerous ? "is-dangerous" : ""
                   }`}
                   onClick={() => {
-                                        close();
+                    close();
                     onConfirm?.();
                   }}
                 >
@@ -62,7 +61,7 @@ export default function ConfirmDialog({
         }}
       >
         {(open, close) => {
-                    modalOpenRef.current = open;
+          modalOpenRef.current = open;
           modalCloseRef.current = close;
           return children?.(open);
         }}

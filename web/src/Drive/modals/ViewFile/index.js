@@ -66,7 +66,7 @@ export default function ViewFile({ file, children }) {
         </div>
       );
     },
-    [content, loading, error]
+    [content, loading, error],
   );
 
   return (

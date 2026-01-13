@@ -42,35 +42,37 @@ export default function SharedUserList({
           <div className="shared-user-list-empty">{emptyMessage}</div>
         ) : null}
 
-        {[...users].sort((a, b) => {
-          if (a.isOwner) return -1;
-          if (b.isOwner) return 1;
-          if (a.userId === currentUserId) return -1;
-          if (b.userId === currentUserId) return 1;
-          return (a.username || '').localeCompare(b.username || '');
-        }).map((entry) => {
-          const filteredOptions = entry.isOwner 
-            ? [] 
-            : roleOptions.filter(opt => {
-                if (opt.value === "owner" && entry.userId === currentUserId) {
-                  return false;
-                }
-                return true;
-              });
-          
-          return (
-            <SharedUserItem
-              key={entry.userId}
-              entry={entry}
-              currentUserId={currentUserId}
-              roleOptions={filteredOptions}
-              onRoleChange={onRoleChange}
-              labels={labels}
-              showAddButton={showAddButton}
-              onAddUser={onAddUser}
-            />
-          );
-        })}
+        {[...users]
+          .sort((a, b) => {
+            if (a.isOwner) return -1;
+            if (b.isOwner) return 1;
+            if (a.userId === currentUserId) return -1;
+            if (b.userId === currentUserId) return 1;
+            return (a.username || "").localeCompare(b.username || "");
+          })
+          .map((entry) => {
+            const filteredOptions = entry.isOwner
+              ? []
+              : roleOptions.filter((opt) => {
+                  if (opt.value === "owner" && entry.userId === currentUserId) {
+                    return false;
+                  }
+                  return true;
+                });
+
+            return (
+              <SharedUserItem
+                key={entry.userId}
+                entry={entry}
+                currentUserId={currentUserId}
+                roleOptions={filteredOptions}
+                onRoleChange={onRoleChange}
+                labels={labels}
+                showAddButton={showAddButton}
+                onAddUser={onAddUser}
+              />
+            );
+          })}
       </div>
     </div>
   );

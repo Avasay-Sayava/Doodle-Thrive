@@ -6,7 +6,9 @@ import RelativeDate from "../../Date";
 import EditFile from "../../../modals/EditFile";
 import ViewFile from "../../../modals/ViewFile";
 import ViewImage from "../../../modals/ViewImage";
-import useFilePermissions, { roleFromPermissions } from "../../../utils/useFilePermissions";
+import useFilePermissions, {
+  roleFromPermissions,
+} from "../../../utils/useFilePermissions";
 import useUserId from "../../../utils/useUserId";
 import { useNavigate } from "react-router-dom";
 import { getFileIcon } from "../../../utils/getFileIcon";
@@ -18,7 +20,11 @@ function FileRow({ file, onRefresh }) {
   const [localFile, setLocalFile] = useState(file);
   const [hasLoadedPermissions, setHasLoadedPermissions] = useState(false);
   const currentUserId = useUserId();
-  const { currentUserPerms, loadShared, loading } = useFilePermissions(file?.id, currentUserId, onRefresh);
+  const { currentUserPerms, loadShared, loading } = useFilePermissions(
+    file?.id,
+    currentUserId,
+    onRefresh,
+  );
 
   useEffect(() => {
     setLocalFile(file);
@@ -26,7 +32,11 @@ function FileRow({ file, onRefresh }) {
   }, [file]);
 
   useEffect(() => {
-    if (file?.id && currentUserId && (file?.type === "file" || file?.type === "folder")) {
+    if (
+      file?.id &&
+      currentUserId &&
+      (file?.type === "file" || file?.type === "folder")
+    ) {
       loadShared().finally(() => {
         setHasLoadedPermissions(true);
       });
@@ -38,20 +48,19 @@ function FileRow({ file, onRefresh }) {
   const { name, modified, content, ownerUsername, type } = localFile;
 
   const isImageFile = isImage(name);
-  
+
   const userRole = roleFromPermissions(currentUserPerms);
-  
+
   const canEdit = ["editor", "admin", "owner"].includes(userRole);
 
   const handleFileClick = (e, openModal) => {
-    const isAnyModalOpen = document.querySelector('dialog[open]');
-    
+    const isAnyModalOpen = document.querySelector("dialog[open]");
+
     if (type === "file") {
       if (!loading && !localFile.trashed) {
         openModal();
       }
-    }
-    else if (type === "folder") {
+    } else if (type === "folder") {
       if (!isAnyModalOpen) {
         navigate(`/drive/folders/${localFile.id}`, { replace: true });
       }
@@ -59,12 +68,12 @@ function FileRow({ file, onRefresh }) {
   };
 
   const handleSave = (updatedData) => {
-    setLocalFile(prev => ({
+    setLocalFile((prev) => ({
       ...prev,
       content: updatedData.content,
-      modified: updatedData.modified
+      modified: updatedData.modified,
     }));
-    
+
     onRefresh?.();
   };
 
@@ -96,9 +105,13 @@ function FileRow({ file, onRefresh }) {
                 <td className="col-modified">
                   <RelativeDate timestamp={modified} />
                 </td>
-              <td className="col-size">{getFileSize({ type, content })}</td>
+                <td className="col-size">{getFileSize({ type, content })}</td>
                 <td className="col-actions">
-                  <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
+                  <FileSelect
+                    file={localFile}
+                    onRefresh={onRefresh}
+                    isTrashed={localFile.trashed}
+                  />
                 </td>
               </tr>
             </FileActions>
@@ -126,7 +139,11 @@ function FileRow({ file, onRefresh }) {
                 </td>
                 <td className="col-size">{getFileSize({ type, content })}</td>
                 <td className="col-actions">
-                  <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
+                  <FileSelect
+                    file={localFile}
+                    onRefresh={onRefresh}
+                    isTrashed={localFile.trashed}
+                  />
                 </td>
               </tr>
             </FileActions>
@@ -154,7 +171,11 @@ function FileRow({ file, onRefresh }) {
                 </td>
                 <td className="col-size">{getFileSize({ type, content })}</td>
                 <td className="col-actions">
-                  <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
+                  <FileSelect
+                    file={localFile}
+                    onRefresh={onRefresh}
+                    isTrashed={localFile.trashed}
+                  />
                 </td>
               </tr>
             </FileActions>

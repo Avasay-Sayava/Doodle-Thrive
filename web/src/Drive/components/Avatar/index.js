@@ -10,8 +10,8 @@ export default function Avatar({ username, imageUrl, size = 38 }) {
   const initial = (username || "?").slice(0, 1).toUpperCase();
 
   return (
-    <div 
-      className="avatar" 
+    <div
+      className="avatar"
       style={{ width: `${size}px`, height: `${size}px` }}
       aria-hidden="true"
     >

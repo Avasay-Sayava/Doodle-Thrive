@@ -33,7 +33,7 @@ export default function GetText({
       setValue("");
       setSelectValue(defaultSelectValue);
     },
-    [value, selectValue, onSubmit, defaultSelectValue, selectOptions]
+    [value, selectValue, onSubmit, defaultSelectValue, selectOptions],
   );
 
   const handleClose = useCallback(() => {
@@ -96,7 +96,15 @@ export default function GetText({
         </>
       );
     },
-    [value, placeholder, submitLabel, selectOptions, selectLabel, selectValue, submit]
+    [
+      value,
+      placeholder,
+      submitLabel,
+      selectOptions,
+      selectLabel,
+      selectValue,
+      submit,
+    ],
   );
 
   return (

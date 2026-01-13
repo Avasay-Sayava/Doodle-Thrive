@@ -3,7 +3,11 @@ function isFolder(x) {
 }
 
 // creates comparator for sorting files
-export function createSortComparator(sortBy = "name", sortDir = "asc", foldersMode = "mixed") {
+export function createSortComparator(
+  sortBy = "name",
+  sortDir = "asc",
+  foldersMode = "mixed",
+) {
   return (a, b) => {
     if (foldersMode === "folders-first") {
       const af = isFolder(a);
@@ -25,6 +29,11 @@ export function createSortComparator(sortBy = "name", sortDir = "asc", foldersMo
   };
 }
 
-export function sortFiles(files = [], sortBy = "name", sortDir = "asc", foldersMode = "mixed") {
+export function sortFiles(
+  files = [],
+  sortBy = "name",
+  sortDir = "asc",
+  foldersMode = "mixed",
+) {
   return [...files].sort(createSortComparator(sortBy, sortDir, foldersMode));
 }

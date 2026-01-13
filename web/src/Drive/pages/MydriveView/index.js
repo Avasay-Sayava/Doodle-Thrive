@@ -62,7 +62,7 @@ function MydriveView({ refreshKey, onRefresh }) {
           Array.isArray(filesObj) ? filesObj : Object.values(filesObj)
         ).filter((f) => f.trashed !== true);
         const rootFiles = allFiles.filter(
-          (f) => f.parent == null && f.owner === id
+          (f) => f.parent == null && f.owner === id,
         );
 
         for (let i = 0; i < rootFiles.length; i++) {
@@ -80,7 +80,11 @@ function MydriveView({ refreshKey, onRefresh }) {
     <div className="file-view">
       <div className="file-view-header">
         <h1 className="view-title">
-          <FolderPath folderId={null} onRefresh={onRefresh} onPermissionsLoad={setCanWrite} />
+          <FolderPath
+            folderId={null}
+            onRefresh={onRefresh}
+            onPermissionsLoad={setCanWrite}
+          />
         </h1>
       </div>
 

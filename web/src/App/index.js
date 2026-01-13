@@ -9,11 +9,11 @@ import Settings from "../Drive/modals/Settings";
 
 function App() {
   const [currentTheme, setCurrentTheme] = useState(
-    localStorage.getItem("theme") === "soviet" ? "soviet" : "pink"
+    localStorage.getItem("theme") === "soviet" ? "soviet" : "pink",
   );
 
   const [defaultPage, setDefaultPage] = useState(
-    localStorage.getItem("default-page") === "mydrive" ? "mydrive" : "home"
+    localStorage.getItem("default-page") === "mydrive" ? "mydrive" : "home",
   );
 
   useEffect(() => {
@@ -39,7 +39,9 @@ function App() {
             <Route path="/signup" element={<Sign mode="signup" />} />
             <Route
               path="/drive/*"
-              element={<Drive openSettings={openSettings} defaultPage={defaultPage} />}
+              element={
+                <Drive openSettings={openSettings} defaultPage={defaultPage} />
+              }
             />
             <Route path="*" element={<Sign mode="signin" />} />
           </Routes>

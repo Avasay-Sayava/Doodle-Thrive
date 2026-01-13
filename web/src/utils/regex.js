@@ -9,7 +9,7 @@ const Regex = {
   /** Pattern for filenames (1-256 chars, no slashes or newlines). */
   filename: /^[^/\r\n]{1,256}$/,
   /** Allow all. */
-  filecontent: {test: () => true},
+  filecontent: { test: () => true },
   /** Pattern for usernames (2-32 chars, alphanumeric/dots/dashes/underscores, no double dots). */
   username: /^(?!.*\.\.)[A-Za-z\d_\.\- ]{2,32}$/,
   /** Pattern for passwords (8-64 characters). */

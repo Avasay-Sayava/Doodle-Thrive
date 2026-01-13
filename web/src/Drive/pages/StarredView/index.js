@@ -8,8 +8,7 @@ import { sortFiles } from "../../utils/sortFiles";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-
-function StarredView({ refreshKey, onRefresh}) {
+function StarredView({ refreshKey, onRefresh }) {
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
@@ -18,7 +17,11 @@ function StarredView({ refreshKey, onRefresh}) {
   const [sortDir, setSortDir] = useState("asc");
   const [foldersMode, setFoldersMode] = useState("folders-first");
 
-  const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+  const handleSortChange = ({
+    sortBy: newSortBy,
+    sortDir: newSortDir,
+    foldersMode: newFoldersMode,
+  }) => {
     setSortBy(newSortBy);
     setSortDir(newSortDir);
     setFoldersMode(newFoldersMode);
@@ -30,12 +33,11 @@ function StarredView({ refreshKey, onRefresh}) {
         setError("");
 
         const jwt = localStorage.getItem("token");
-        if (!jwt){
+        if (!jwt) {
           localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }
-
 
         const res = await fetch(`${API_BASE}/api/files`, {
           method: "GET",
@@ -43,7 +45,7 @@ function StarredView({ refreshKey, onRefresh}) {
         });
 
         if (!res.ok) {
-          if(res.status === 401){
+          if (res.status === 401) {
             localStorage.removeItem("token");
             navigate("/signin", { replace: true });
             return;
@@ -53,8 +55,10 @@ function StarredView({ refreshKey, onRefresh}) {
         }
 
         const filesObj = await res.json();
-        
-        const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
+
+        const allFiles = (
+          Array.isArray(filesObj) ? filesObj : Object.values(filesObj)
+        ).filter((f) => f.trashed !== true);
         const starred = allFiles.filter((f) => f.starred === true);
         for (let i = 0; i < starred.length; i++) {
           starred[i].ownerUsername = await getUser(starred[i].owner);
@@ -69,24 +73,23 @@ function StarredView({ refreshKey, onRefresh}) {
   }, [navigate, refreshKey, sortBy, sortDir, foldersMode]);
 
   return (
-
     <div className="file-view">
       <div className="file-view-header">
-          <h1 className="view-title">
-            <IconStar
-              className="view-title-icon"
-              width={24}
-              height={24}
-              aria-hidden="true"
-              style={{ color: "var(--color-icon-starred)" }}
-            />
-            <span className="view-title-text">Starred</span>
-          </h1>
+        <h1 className="view-title">
+          <IconStar
+            className="view-title-icon"
+            width={24}
+            height={24}
+            aria-hidden="true"
+            style={{ color: "var(--color-icon-starred)" }}
+          />
+          <span className="view-title-text">Starred</span>
+        </h1>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView 
-        allFiles={files} 
+      <FileView
+        allFiles={files}
         onRefresh={onRefresh}
         sortBy={sortBy}
         sortDir={sortDir}

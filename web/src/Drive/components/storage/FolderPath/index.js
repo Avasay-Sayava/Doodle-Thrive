@@ -10,163 +10,202 @@ import ActionsMenu from "../New/ActionsMenu";
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
 export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
-    const [path, setPath] = useState([]);
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [menuPosition, setMenuPosition] = useState(null);
-    const menuRef = useRef(null);
-    const navigate = useNavigate();
-    const currentUserId = useUserId();
-    const { currentUserPerms, loadShared } = useFilePermissions(folderId, currentUserId);
-    
-    const canWrite = !folderId || (currentUserPerms?.content?.write ?? false);
+  const [path, setPath] = useState([]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState(null);
+  const menuRef = useRef(null);
+  const navigate = useNavigate();
+  const currentUserId = useUserId();
+  const { currentUserPerms, loadShared } = useFilePermissions(
+    folderId,
+    currentUserId,
+  );
 
-    useEffect(() => {
-        onPermissionsLoad?.(canWrite);
-    }, [canWrite, onPermissionsLoad]);
+  const canWrite = !folderId || (currentUserPerms?.content?.write ?? false);
 
-    useEffect(() => {
-        if (folderId && currentUserId) {
-            loadShared();
-        }
-    }, [folderId, currentUserId, loadShared]);
+  useEffect(() => {
+    onPermissionsLoad?.(canWrite);
+  }, [canWrite, onPermissionsLoad]);
 
-    const goRoot = useCallback(() => navigate(`/drive/mydrive`, { replace: true }), [navigate]);
-    const goShared = useCallback(() => navigate(`/drive/shared`, { replace: true }), [navigate]);
+  useEffect(() => {
+    if (folderId && currentUserId) {
+      loadShared();
+    }
+  }, [folderId, currentUserId, loadShared]);
 
-    useEffect(() => {
-        const onDown = (e) => {
-            if (!menuRef.current?.contains(e.target)) setMenuOpen(false);
-        };
-        document.addEventListener("mousedown", onDown);
-        return () => document.removeEventListener("mousedown", onDown);
-    }, []);
+  const goRoot = useCallback(
+    () => navigate(`/drive/mydrive`, { replace: true }),
+    [navigate],
+  );
+  const goShared = useCallback(
+    () => navigate(`/drive/shared`, { replace: true }),
+    [navigate],
+  );
 
-    useEffect(() => {
-        if (!folderId) {
-            setPath([]);
-            return;
-        }
+  useEffect(() => {
+    const onDown = (e) => {
+      if (!menuRef.current?.contains(e.target)) setMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
 
-        (async () => {
-            const tempPath = [];
-            let currId = folderId;
+  useEffect(() => {
+    if (!folderId) {
+      setPath([]);
+      return;
+    }
 
-            while (currId) {
-                try {
-                    const jwt = localStorage.getItem("token");
-                    const res = await fetch(`${API_BASE}/api/files/${currId}`, {
-                        method: "GET",
-                        headers: { Authorization: `Bearer ${jwt}` },
-                    });
+    (async () => {
+      const tempPath = [];
+      let currId = folderId;
 
-                    if (!res.ok) {
-                        if (tempPath.length === 0) {
-                            goRoot();
-                        } else {
-                            setPath(tempPath);
-                        }
-                        return;
-                    }
+      while (currId) {
+        try {
+          const jwt = localStorage.getItem("token");
+          const res = await fetch(`${API_BASE}/api/files/${currId}`, {
+            method: "GET",
+            headers: { Authorization: `Bearer ${jwt}` },
+          });
 
-                    const folder = await res.json();
-                    tempPath.unshift(folder);
-                    currId = folder.parent;
-                } catch {
-                    if (tempPath.length === 0) {
-                        goRoot();
-                    } else {
-                        setPath(tempPath);
-                    }
-                    return;
-                }
+          if (!res.ok) {
+            if (tempPath.length === 0) {
+              goRoot();
+            } else {
+              setPath(tempPath);
             }
+            return;
+          }
+
+          const folder = await res.json();
+          tempPath.unshift(folder);
+          currId = folder.parent;
+        } catch {
+          if (tempPath.length === 0) {
+            goRoot();
+          } else {
             setPath(tempPath);
-        })();
-    }, [folderId, goRoot]);
+          }
+          return;
+        }
+      }
+      setPath(tempPath);
+    })();
+  }, [folderId, goRoot]);
 
-    const isShared = currentUserId && path.length > 0 && path[path.length - 1].owner !== currentUserId;
-    
-    const showEllipsis = path.length > 3;
-    const displayPath = showEllipsis ? [path[path.length - 2], path[path.length - 1]] : path;
+  const isShared =
+    currentUserId &&
+    path.length > 0 &&
+    path[path.length - 1].owner !== currentUserId;
 
-    return (
-        <span className="folder-path" ref={menuRef}>
-            <div className="folder-path-group">
-                {isShared ? (
-                    <>
-                        <IconShared width={24} height={24} aria-hidden="true" style={{ color: "var(--color-text-primary)" }} />
-                        <button onClick={goShared} className="folder-button">Shared with me</button>
-                    </>
-                ) : (
-                    <>
-                        <IconFile width={24} height={24} aria-hidden="true" />
-                        <button onClick={goRoot} className="folder-button">My Drive</button>
-                    </>
-                )}
-                {!folderId && canWrite && (
-                    <button 
-                        onClick={(e) => {
-                            setMenuOpen(!menuOpen);
-                            setMenuPosition({ x: e.currentTarget.getBoundingClientRect().left, y: e.currentTarget.getBoundingClientRect().bottom });
-                        }}
-                        className="folder-path-create-btn"
-                        title="Create item in this folder"
-                    >
-                        +
-                    </button>
+  const showEllipsis = path.length > 3;
+  const displayPath = showEllipsis
+    ? [path[path.length - 2], path[path.length - 1]]
+    : path;
+
+  return (
+    <span className="folder-path" ref={menuRef}>
+      <div className="folder-path-group">
+        {isShared ? (
+          <>
+            <IconShared
+              width={24}
+              height={24}
+              aria-hidden="true"
+              style={{ color: "var(--color-text-primary)" }}
+            />
+            <button onClick={goShared} className="folder-button">
+              Shared with me
+            </button>
+          </>
+        ) : (
+          <>
+            <IconFile width={24} height={24} aria-hidden="true" />
+            <button onClick={goRoot} className="folder-button">
+              My Drive
+            </button>
+          </>
+        )}
+        {!folderId && canWrite && (
+          <button
+            onClick={(e) => {
+              setMenuOpen(!menuOpen);
+              setMenuPosition({
+                x: e.currentTarget.getBoundingClientRect().left,
+                y: e.currentTarget.getBoundingClientRect().bottom,
+              });
+            }}
+            className="folder-path-create-btn"
+            title="Create item in this folder"
+          >
+            +
+          </button>
+        )}
+        <ActionsMenu
+          isOpen={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          onCreated={onRefresh}
+          folderId={folderId}
+          anchorPoint={menuPosition}
+        />
+      </div>
+      {showEllipsis && (
+        <span className="folder-path-separator">
+          <span className="folder-path-sep-text">&gt;</span>
+          <span className="folder-path-sep-text">...</span>
+        </span>
+      )}
+      {displayPath.map((folder, idx) => {
+        const isLast = idx === displayPath.length - 1;
+        return (
+          <span key={folder.id} className="folder-path-separator">
+            <span className="folder-path-sep-text">&gt;</span>
+            {isLast ? (
+              <div className="folder-path-group">
+                <button
+                  onClick={() =>
+                    navigate(`/drive/folders/${folder.id}`, { replace: true })
+                  }
+                  className="folder-button"
+                >
+                  {folder.name}
+                </button>
+                {canWrite && (
+                  <button
+                    onClick={(e) => {
+                      setMenuOpen(!menuOpen);
+                      setMenuPosition({
+                        x: e.currentTarget.getBoundingClientRect().left,
+                        y: e.currentTarget.getBoundingClientRect().bottom,
+                      });
+                    }}
+                    className="folder-path-create-btn"
+                    title="Create item in this folder"
+                  >
+                    +
+                  </button>
                 )}
                 <ActionsMenu
-                    isOpen={menuOpen}
-                    onClose={() => setMenuOpen(false)}
-                    onCreated={onRefresh}
-                    folderId={folderId}
-                    anchorPoint={menuPosition}
+                  isOpen={menuOpen}
+                  onClose={() => setMenuOpen(false)}
+                  onCreated={onRefresh}
+                  folderId={folder.id}
+                  anchorPoint={menuPosition}
                 />
-            </div>
-            {showEllipsis && (
-                <span className="folder-path-separator">
-                    <span className="folder-path-sep-text">&gt;</span>
-                    <span className="folder-path-sep-text">...</span>
-                </span>
+              </div>
+            ) : (
+              <button
+                onClick={() =>
+                  navigate(`/drive/folders/${folder.id}`, { replace: true })
+                }
+                className="folder-button"
+              >
+                {folder.name}
+              </button>
             )}
-             {displayPath.map((folder, idx) => {
-                const isLast = idx === displayPath.length - 1;
-                return (
-                    <span key={folder.id} className="folder-path-separator">
-                        <span className="folder-path-sep-text">&gt;</span>
-                        {isLast ? (
-                            <div className="folder-path-group">
-                                <button onClick={() => navigate(`/drive/folders/${folder.id}`, { replace: true })} className="folder-button">
-                                    {folder.name}
-                                </button>
-                                {canWrite && (
-                                    <button 
-                                        onClick={(e) => {
-                                            setMenuOpen(!menuOpen);
-                                            setMenuPosition({ x: e.currentTarget.getBoundingClientRect().left, y: e.currentTarget.getBoundingClientRect().bottom });
-                                        }}
-                                        className="folder-path-create-btn"
-                                        title="Create item in this folder"
-                                    >
-                                        +
-                                    </button>
-                                )}
-                                <ActionsMenu
-                                    isOpen={menuOpen}
-                                    onClose={() => setMenuOpen(false)}
-                                    onCreated={onRefresh}
-                                    folderId={folder.id}
-                                    anchorPoint={menuPosition}
-                                />
-                            </div>
-                        ) : (
-                            <button onClick={() => navigate(`/drive/folders/${folder.id}`, { replace: true })} className="folder-button">
-                                {folder.name}
-                            </button>
-                        )}
-                    </span>
-                );
-             })}
-        </span>
-    );
+          </span>
+        );
+      })}
+    </span>
+  );
 }

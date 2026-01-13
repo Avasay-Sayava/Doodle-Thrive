@@ -63,7 +63,7 @@ export const findUserIdByUsername = async (username) => {
 
   const data = await res.json();
   const match = Object.entries(data || {}).find(
-    ([, user]) => user.username === username
+    ([, user]) => user.username === username,
   );
   if (!match) throw new Error("User not found");
   return match[0];
@@ -79,7 +79,7 @@ const revokeAccess = async (fileId, username) => {
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
-    }
+    },
   );
 
   if (!permissionsRes.ok) {
@@ -163,7 +163,7 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         if (!fileRes.ok) {
           const txt = await fileRes.text();
           throw new Error(
-            `Failed to fetch file (HTTP ${fileRes.status}): ${txt}`
+            `Failed to fetch file (HTTP ${fileRes.status}): ${txt}`,
           );
         }
 
@@ -186,7 +186,7 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         if (!res.ok) {
           const txt = await res.text();
           throw new Error(
-            `Failed to fetch permissions (HTTP ${res.status}): ${txt}`
+            `Failed to fetch permissions (HTTP ${res.status}): ${txt}`,
           );
         }
 
@@ -237,7 +237,7 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
               role: computedRole,
               isOwner: isOwnerEntry,
             };
-          })
+          }),
         );
 
         let finalEntries = entries;
@@ -264,7 +264,7 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         setLoading(false);
       }
     },
-    [currentUserId, fileId]
+    [currentUserId, fileId],
   );
 
   const updatePermission = useCallback(
@@ -296,8 +296,8 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
 
       setSharedWith((prev) =>
         prev.map((item) =>
-          item.userId === entry.userId ? { ...item, role: nextRole } : item
-        )
+          item.userId === entry.userId ? { ...item, role: nextRole } : item,
+        ),
       );
 
       try {
@@ -310,7 +310,7 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
                 {
                   method: "GET",
                   headers: { "Content-Type": "application/json" },
-                }
+                },
               );
               if (res.ok) {
                 const userData = await res.json();
@@ -349,7 +349,7 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         await loadShared({});
       }
     },
-    [fileId, loadShared, onRefresh, currentUserId, isCurrentOwner]
+    [fileId, loadShared, onRefresh, currentUserId, isCurrentOwner],
   );
 
   return {

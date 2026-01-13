@@ -68,7 +68,11 @@ export default function FileActions({
       return;
     }
 
-    if (e.target.closest('button') || e.target.closest('.col-actions') || e.target.closest('.file-actions')) {
+    if (
+      e.target.closest("button") ||
+      e.target.closest(".col-actions") ||
+      e.target.closest(".file-actions")
+    ) {
       return;
     }
 
@@ -136,7 +140,7 @@ export default function FileActions({
             patchFile(file?.id, { trashed: false }).then(() => {
               onRefresh?.();
             });
-          }
+          },
         },
         { key: "sep-1", type: "separator" },
         {
@@ -144,9 +148,9 @@ export default function FileActions({
           label: "Delete Permanently",
           danger: true,
           onClick: (e) => {
-                                    e.stopPropagation();
+            e.stopPropagation();
             openDeleteConfirmRef.current?.();
-          }
+          },
         },
       ];
     }
@@ -199,7 +203,7 @@ export default function FileActions({
           patchFile(file?.id, { trashed: true }).then(() => {
             onRefresh?.();
           });
-        }
+        },
       },
     ];
   }, [file, onRefresh, currentUserPerms, currentUserId]);
@@ -315,7 +319,7 @@ export default function FileActions({
             </div>
           )}
         </>,
-        document.body
+        document.body,
       )
     : null;
 
@@ -363,20 +367,25 @@ export default function FileActions({
         cancelLabel="Cancel"
         isDangerous={true}
         onConfirm={async () => {
-                    try {
-            const res = await fetch(`${process.env.API_BASE_URL || "http://localhost:3300"}/api/files/${file?.id}`, {
-              method: "DELETE",
-              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-            });
-            
+          try {
+            const res = await fetch(
+              `${process.env.API_BASE_URL || "http://localhost:3300"}/api/files/${file?.id}`,
+              {
+                method: "DELETE",
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+              },
+            );
+
             if (!res.ok) {
               const text = await res.text();
               console.error("Failed to delete file:", text);
               alert(`Failed to delete file: ${text}`);
               return;
             }
-            
-                        onRefresh?.();
+
+            onRefresh?.();
           } catch (err) {
             console.error("Error deleting file:", err);
             alert(`Error deleting file: ${err.message}`);
@@ -384,7 +393,7 @@ export default function FileActions({
         }}
       >
         {(openDeleteConfirm) => {
-                    openDeleteConfirmRef.current = openDeleteConfirm;
+          openDeleteConfirmRef.current = openDeleteConfirm;
           return null;
         }}
       </ConfirmDialog>

@@ -12,7 +12,7 @@ function DropDownItem({ item, type, setOpen }) {
   const currentUserId = useUserId();
   const { currentUserPerms, loadShared } = useFilePermissions(
     item?.id,
-    currentUserId
+    currentUserId,
   );
   const [canEdit, setCanEdit] = useState(true);
 

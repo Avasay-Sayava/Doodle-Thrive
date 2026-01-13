@@ -25,7 +25,7 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
     const fetchFolders = async () => {
       try {
         setLoading(true);
-        
+
         const jwt = localStorage.getItem("token");
         if (!jwt) {
           return;
@@ -41,7 +41,9 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
         }
 
         const allFiles = await res.json();
-        const filesArray = Array.isArray(allFiles) ? allFiles : Object.values(allFiles);
+        const filesArray = Array.isArray(allFiles)
+          ? allFiles
+          : Object.values(allFiles);
 
         const tokenRes = await fetch(`${API_BASE}/api/tokens`, {
           method: "GET",
@@ -56,26 +58,29 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
         const currentUserId = tokenData.id;
 
         const foldersList = filesArray.filter(
-          (f) => f.type === "folder" && f.trashed !== true && f.id !== file?.id
+          (f) => f.type === "folder" && f.trashed !== true && f.id !== file?.id,
         );
 
         const foldersWithPerms = await Promise.all(
           foldersList.map(async (folder) => {
             try {
-              const permRes = await fetch(`${API_BASE}/api/files/${folder.id}/permissions`, {
-                method: "GET",
-                headers: { Authorization: `Bearer ${jwt}` },
-              });
+              const permRes = await fetch(
+                `${API_BASE}/api/files/${folder.id}/permissions`,
+                {
+                  method: "GET",
+                  headers: { Authorization: `Bearer ${jwt}` },
+                },
+              );
 
               if (!permRes.ok) {
                 return null;
               }
 
               const data = await permRes.json();
-                            
+
               let userPerms = null;
               const ownerId = folder.owner;
-              
+
               for (const permId in data) {
                 const permEntry = data[permId];
                 if (permEntry[currentUserId]) {
@@ -83,16 +88,26 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
                     userPerms = {
                       self: { read: false, write: false },
                       content: { read: false, write: false },
-                      permissions: { read: false, write: false }
+                      permissions: { read: false, write: false },
                     };
                   }
                   const perms = permEntry[currentUserId];
-                  userPerms.self.read = userPerms.self.read || perms?.self?.read || false;
-                  userPerms.self.write = userPerms.self.write || perms?.self?.write || false;
-                  userPerms.content.read = userPerms.content.read || perms?.content?.read || false;
-                  userPerms.content.write = userPerms.content.write || perms?.content?.write || false;
-                  userPerms.permissions.read = userPerms.permissions.read || perms?.permissions?.read || false;
-                  userPerms.permissions.write = userPerms.permissions.write || perms?.permissions?.write || false;
+                  userPerms.self.read =
+                    userPerms.self.read || perms?.self?.read || false;
+                  userPerms.self.write =
+                    userPerms.self.write || perms?.self?.write || false;
+                  userPerms.content.read =
+                    userPerms.content.read || perms?.content?.read || false;
+                  userPerms.content.write =
+                    userPerms.content.write || perms?.content?.write || false;
+                  userPerms.permissions.read =
+                    userPerms.permissions.read ||
+                    perms?.permissions?.read ||
+                    false;
+                  userPerms.permissions.write =
+                    userPerms.permissions.write ||
+                    perms?.permissions?.write ||
+                    false;
                 }
               }
 
@@ -107,23 +122,26 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
                 userRole = null;
               }
 
-              
               const canWrite = ["editor", "admin", "owner"].includes(userRole);
 
               if (!canWrite) {
-                                return null;
+                return null;
               }
 
               if (file?.owner !== ownerId) {
-                                return null;
+                return null;
               }
 
-                            return { ...folder, canWrite: true };
+              return { ...folder, canWrite: true };
             } catch (err) {
-              console.error("[MoveFile] Error processing folder:", folder.name, err);
+              console.error(
+                "[MoveFile] Error processing folder:",
+                folder.name,
+                err,
+              );
               return null;
             }
-          })
+          }),
         );
 
         const writableFolders = foldersWithPerms.filter((f) => f !== null);
@@ -143,7 +161,9 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
           }
 
           const parentPath = buildPath(folder.parent, allFolders);
-          paths[folderId] = parentPath ? `${parentPath} > ${folder.name}` : folder.name;
+          paths[folderId] = parentPath
+            ? `${parentPath} > ${folder.name}`
+            : folder.name;
           return paths[folderId];
         };
 
@@ -164,23 +184,23 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
       await onSubmit(selectedId);
       close();
     },
-    [selectedId, onSubmit]
+    [selectedId, onSubmit],
   );
 
   const [currentUserId, setCurrentUserId] = useState(null);
-  
+
   useEffect(() => {
     if (!isOpen) return;
     const fetchUserId = async () => {
       try {
         const jwt = localStorage.getItem("token");
         if (!jwt) return;
-        
+
         const tokenRes = await fetch(`${API_BASE}/api/tokens`, {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },
         });
-        
+
         if (tokenRes.ok) {
           const tokenData = await tokenRes.json();
           setCurrentUserId(tokenData.id);
@@ -207,25 +227,32 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
                   }`}
                   onClick={() => setSelectedId(null)}
                 >
-                  <span className="move-file-folder-icon"><IconFolder /></span>
+                  <span className="move-file-folder-icon">
+                    <IconFolder />
+                  </span>
                   <span className="move-file-folder-name">My Drive (Root)</span>
                 </div>
               )}
               {folders.length === 0 ? (
                 <div className="move-file-empty">
-                  No folders available. You can only move files to folders where you have write
-                  permission, and cannot move files across different owners.
+                  No folders available. You can only move files to folders where
+                  you have write permission, and cannot move files across
+                  different owners.
                 </div>
               ) : (
                 folders.map((folder) => (
                   <div
                     key={folder.id}
                     className={`move-file-folder-item ${
-                      selectedId === folder.id ? "move-file-folder-selected" : ""
+                      selectedId === folder.id
+                        ? "move-file-folder-selected"
+                        : ""
                     }`}
                     onClick={() => setSelectedId(folder.id)}
                   >
-                    <span className="move-file-folder-icon"><IconFolder /></span>
+                    <span className="move-file-folder-icon">
+                      <IconFolder />
+                    </span>
                     <span className="move-file-folder-name">
                       {folderPath[folder.id] || folder.name}
                     </span>
@@ -245,7 +272,9 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
                 type="button"
                 className="move-file-btn move-file-btn-primary"
                 onClick={() => handleSubmit(close)}
-                disabled={selectedId === undefined || selectedId === file?.parent}
+                disabled={
+                  selectedId === undefined || selectedId === file?.parent
+                }
               >
                 Move
               </button>
@@ -254,7 +283,16 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
         )}
       </div>
     ),
-    [loading, folders, selectedId, folderPath, file?.parent, file?.owner, currentUserId, handleSubmit]
+    [
+      loading,
+      folders,
+      selectedId,
+      folderPath,
+      file?.parent,
+      file?.owner,
+      currentUserId,
+      handleSubmit,
+    ],
   );
 
   return (

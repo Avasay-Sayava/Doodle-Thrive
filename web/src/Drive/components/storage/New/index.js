@@ -2,7 +2,12 @@ import "./style.css";
 import { useEffect, useRef, useState } from "react";
 import ActionsMenu from "./ActionsMenu";
 
-export default function New({ onCreated, hidden = false, folderId = null, ...rest }) {
+export default function New({
+  onCreated,
+  hidden = false,
+  folderId = null,
+  ...rest
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const rootRef = useRef(null);
 

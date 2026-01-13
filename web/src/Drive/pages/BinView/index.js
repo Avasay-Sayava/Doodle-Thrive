@@ -9,7 +9,7 @@ import ConfirmDialog from "../../modals/ConfirmDialog";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-function BinView({ refreshKey, onRefresh}) {
+function BinView({ refreshKey, onRefresh }) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -19,19 +19,23 @@ function BinView({ refreshKey, onRefresh}) {
   const [sortDir, setSortDir] = useState("asc");
   const [foldersMode, setFoldersMode] = useState("folders-first");
 
-  const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+  const handleSortChange = ({
+    sortBy: newSortBy,
+    sortDir: newSortDir,
+    foldersMode: newFoldersMode,
+  }) => {
     setSortBy(newSortBy);
     setSortDir(newSortDir);
     setFoldersMode(newFoldersMode);
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     (async () => {
       try {
         setError("");
 
         const jwt = localStorage.getItem("token");
-        if (!jwt){
+        if (!jwt) {
           localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
@@ -43,7 +47,7 @@ function BinView({ refreshKey, onRefresh}) {
         });
 
         if (!res.ok) {
-          if(res.status === 401) {
+          if (res.status === 401) {
             localStorage.removeItem("token");
             navigate("/signin", { replace: true });
             return;
@@ -53,11 +57,13 @@ function BinView({ refreshKey, onRefresh}) {
         }
 
         const filesObj = await res.json();
-        const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
+        const allFiles = Array.isArray(filesObj)
+          ? filesObj
+          : Object.values(filesObj);
         const binFiles = allFiles.filter((f) => {
           if (f.trashed !== true) return false;
           if (!f.parent) return true;
-          const parent = allFiles.find(p => p.id === f.parent);
+          const parent = allFiles.find((p) => p.id === f.parent);
           return !parent || parent.trashed !== true;
         });
 
@@ -76,13 +82,13 @@ function BinView({ refreshKey, onRefresh}) {
   const handleEmptyTrash = async () => {
     try {
       const jwt = localStorage.getItem("token");
-      
+
       for (const file of files) {
         const res = await fetch(`${API_BASE}/api/files/${file.id}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${jwt}` },
         });
-        
+
         if (!res.ok) {
           const text = await res.text();
           console.error(`Failed to delete file ${file.id}:`, text);
@@ -100,11 +106,16 @@ function BinView({ refreshKey, onRefresh}) {
     <div className="file-view">
       <div className="file-view-header">
         <h1 className="view-title">
-          <IconBin className="view-title-icon" width={24} height={24} aria-hidden="true" />
+          <IconBin
+            className="view-title-icon"
+            width={24}
+            height={24}
+            aria-hidden="true"
+          />
           <span className="view-title-text">Bin</span>
         </h1>
         {files.length > 0 && (
-          <button 
+          <button
             className="btn-empty-trash"
             onClick={() => openEmptyTrashConfirmRef.current?.()}
             title="Empty trash"
@@ -115,8 +126,8 @@ function BinView({ refreshKey, onRefresh}) {
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView 
-        allFiles={files} 
+      <FileView
+        allFiles={files}
         onRefresh={onRefresh}
         sortBy={sortBy}
         sortDir={sortDir}

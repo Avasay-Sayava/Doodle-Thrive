@@ -91,9 +91,9 @@ export default function Modal({
             }}
           >
             <Card isOpen={isOpen} className={className}>
-              <div 
-                className="modal-content" 
-                role="dialog" 
+              <div
+                className="modal-content"
+                role="dialog"
                 aria-modal="true"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -114,7 +114,7 @@ export default function Modal({
               </div>
             </Card>
           </dialog>,
-          document.body
+          document.body,
         )}
     </>
   );

@@ -19,7 +19,6 @@ export default function SidePanel({ onCreated }) {
   ];
 
   return (
-    
     <div className="drive-sidebar" aria-label="Sidebar">
       <div className="drive-sidebar-section">
         <New onCreated={onCreated} data-tutorial="new-button" />

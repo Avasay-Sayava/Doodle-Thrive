@@ -2,7 +2,13 @@ import "./style.css";
 import { useState, useCallback } from "react";
 import Modal from "../Modal";
 
-export default function Settings({ currentTheme, setCurrentTheme, defaultPage, setDefaultPage, children }) {
+export default function Settings({
+  currentTheme,
+  setCurrentTheme,
+  defaultPage,
+  setDefaultPage,
+  children,
+}) {
   const [showJoke, setShowJoke] = useState(false);
 
   const handleThemeToggle = useCallback(
@@ -10,7 +16,7 @@ export default function Settings({ currentTheme, setCurrentTheme, defaultPage, s
       const themeValue = event.target.checked ? "soviet" : "pink";
       setCurrentTheme(themeValue);
     },
-    [setCurrentTheme]
+    [setCurrentTheme],
   );
 
   const handleDefaultPageToggle = useCallback(
@@ -18,7 +24,7 @@ export default function Settings({ currentTheme, setCurrentTheme, defaultPage, s
       const pageValue = event.target.value;
       setDefaultPage(pageValue);
     },
-    [setDefaultPage]
+    [setDefaultPage],
   );
 
   const handlePrivacyClick = useCallback(
@@ -30,7 +36,7 @@ export default function Settings({ currentTheme, setCurrentTheme, defaultPage, s
         setShowJoke(false);
       }, 1500);
     },
-    [showJoke]
+    [showJoke],
   );
 
   const renderBody = useCallback(
@@ -54,7 +60,10 @@ export default function Settings({ currentTheme, setCurrentTheme, defaultPage, s
                   onChange={handleThemeToggle}
                   checked={currentTheme === "soviet"}
                 />
-                <label htmlFor="dark-mode-toggle" className="switch-label"></label>
+                <label
+                  htmlFor="dark-mode-toggle"
+                  className="switch-label"
+                ></label>
               </div>
             </div>
           </section>
@@ -65,10 +74,17 @@ export default function Settings({ currentTheme, setCurrentTheme, defaultPage, s
             <div className="settings-row">
               <div className="settings-info">
                 <span className="label-text">Default Page</span>
-                <span className="sub-text">Switch between Home and MyDrive</span>
+                <span className="sub-text">
+                  Switch between Home and MyDrive
+                </span>
               </div>
               <div className="switch-container">
-                <select id="default-page-select" className="settings-select" onChange={handleDefaultPageToggle} value={defaultPage}>
+                <select
+                  id="default-page-select"
+                  className="settings-select"
+                  onChange={handleDefaultPageToggle}
+                  value={defaultPage}
+                >
                   <option value="home">Home</option>
                   <option value="mydrive">My Drive</option>
                 </select>
@@ -111,7 +127,14 @@ export default function Settings({ currentTheme, setCurrentTheme, defaultPage, s
         </>
       );
     },
-    [currentTheme, defaultPage, handlePrivacyClick, handleThemeToggle, handleDefaultPageToggle, showJoke]
+    [
+      currentTheme,
+      defaultPage,
+      handlePrivacyClick,
+      handleThemeToggle,
+      handleDefaultPageToggle,
+      showJoke,
+    ],
   );
 
   return (

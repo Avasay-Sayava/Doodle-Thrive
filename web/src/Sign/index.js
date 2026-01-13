@@ -26,9 +26,15 @@ function Sign({ mode = "signin" }) {
     <div className="sign-layout">
       <Card isOpen={isOpen}>
         {activeMode === "signin" ? (
-          <SignIn changeMode={() => handleModeChange("signup")} autofill={autofill} />
+          <SignIn
+            changeMode={() => handleModeChange("signup")}
+            autofill={autofill}
+          />
         ) : (
-          <SignUp changeMode={() => handleModeChange("signin")} autofill={autofill} />
+          <SignUp
+            changeMode={() => handleModeChange("signin")}
+            autofill={autofill}
+          />
         )}
       </Card>
     </div>

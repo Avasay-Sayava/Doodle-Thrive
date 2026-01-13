@@ -19,7 +19,11 @@ function SharedView({ refreshKey, onRefresh }) {
   const [sortDir, setSortDir] = useState("asc");
   const [foldersMode, setFoldersMode] = useState("folders-first");
 
-  const handleSortChange = ({ sortBy: newSortBy, sortDir: newSortDir, foldersMode: newFoldersMode }) => {
+  const handleSortChange = ({
+    sortBy: newSortBy,
+    sortDir: newSortDir,
+    foldersMode: newFoldersMode,
+  }) => {
     setSortBy(newSortBy);
     setSortDir(newSortDir);
     setFoldersMode(newFoldersMode);
@@ -31,21 +35,20 @@ function SharedView({ refreshKey, onRefresh }) {
     (async () => {
       try {
         setError("");
-        
+
         const jwt = localStorage.getItem("token");
-        if (!jwt){
+        if (!jwt) {
           localStorage.removeItem("token");
           navigate("/signin", { replace: true });
           return;
         }
-
 
         const res = await fetch(`${API_BASE}/api/files`, {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },
         });
         if (!res.ok) {
-          if(res.status === 401){
+          if (res.status === 401) {
             localStorage.removeItem("token");
             navigate("/signin", { replace: true });
             return;
@@ -55,7 +58,9 @@ function SharedView({ refreshKey, onRefresh }) {
         }
 
         const filesObj = await res.json();
-        const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
+        const allFiles = (
+          Array.isArray(filesObj) ? filesObj : Object.values(filesObj)
+        ).filter((f) => f.trashed !== true);
         const sharedFiles = allFiles.filter((f) => f.owner !== id);
 
         for (let i = 0; i < sharedFiles.length; i++) {
@@ -72,21 +77,21 @@ function SharedView({ refreshKey, onRefresh }) {
   return (
     <div className="file-view">
       <div className="file-view-header">
-          <h1 className="view-title">
-            <IconShared
-              className="view-title-icon"
-              width={24}
-              height={24}
-              aria-hidden="true"
-              style={{ color: "var(--color-text-primary)" }}
-            />
-            <span className="view-title-text">Shared with me</span>
-          </h1>
+        <h1 className="view-title">
+          <IconShared
+            className="view-title-icon"
+            width={24}
+            height={24}
+            aria-hidden="true"
+            style={{ color: "var(--color-text-primary)" }}
+          />
+          <span className="view-title-text">Shared with me</span>
+        </h1>
       </div>
 
       {error && <div className="error-message">{error}</div>}
-      <FileView 
-        allFiles={sortFiles(files, sortBy, sortDir, foldersMode)} 
+      <FileView
+        allFiles={sortFiles(files, sortBy, sortDir, foldersMode)}
         onRefresh={onRefresh}
         sortBy={sortBy}
         sortDir={sortDir}
@@ -95,7 +100,6 @@ function SharedView({ refreshKey, onRefresh }) {
       />
     </div>
   );
-
 }
 
 export default SharedView;

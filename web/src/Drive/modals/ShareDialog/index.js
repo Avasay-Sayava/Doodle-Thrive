@@ -58,7 +58,6 @@ export default function ShareDialog({ file, onRefresh, children }) {
     }
   }, [currentUserId, fileId, loadShared]);
 
-
   useEffect(() => {
     const trimmed = inputValue.trim();
     if (!trimmed || trimmed.length < 1) {
@@ -66,8 +65,7 @@ export default function ShareDialog({ file, onRefresh, children }) {
       return undefined;
     }
 
-    const controller = new AbortController();
-    const timer = setTimeout(async () => {
+    (async () => {
       setLoadingUsers(true);
       try {
         const jwt = localStorage.getItem("token");
@@ -103,12 +101,7 @@ export default function ShareDialog({ file, onRefresh, children }) {
       } finally {
         setLoadingUsers(false);
       }
-    }, 0);
-
-    return () => {
-      controller.abort();
-      clearTimeout(timer);
-    };
+    })();
   }, [inputValue, sharedWith]);
 
   const handleRoleChange = useCallback(
@@ -118,7 +111,7 @@ export default function ShareDialog({ file, onRefresh, children }) {
       }
       updatePermission(entry, nextRole);
     },
-    [updatePermission, currentUserId]
+    [updatePermission, currentUserId],
   );
 
   const handleAddUser = useCallback(
@@ -145,7 +138,10 @@ export default function ShareDialog({ file, onRefresh, children }) {
         .then(() => wait())
         .then(() => loadShared({ preserveUserId: undefined }))
         .catch((err) => {
-          if (err.message.includes("not found") || err.message.includes("404")) {
+          if (
+            err.message.includes("not found") ||
+            err.message.includes("404")
+          ) {
             setError("User not found");
           } else if (err.message.includes("already has access")) {
             setError("This user already has access to this file");
@@ -154,7 +150,7 @@ export default function ShareDialog({ file, onRefresh, children }) {
           }
         });
     },
-    [fileId, sharedWith, ownerId, loadShared]
+    [fileId, sharedWith, ownerId, loadShared],
   );
 
   const handleSubmit = useCallback(() => {
@@ -293,7 +289,7 @@ export default function ShareDialog({ file, onRefresh, children }) {
       handleAddUser,
       handleSubmit,
       userFound,
-    ]
+    ],
   );
 
   return (
