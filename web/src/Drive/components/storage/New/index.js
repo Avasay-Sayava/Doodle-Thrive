@@ -10,6 +10,7 @@ export default function New({
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const buttonRef = useRef(null);
+  const menuRef = useRef(null);
 
   const anchorPoint = useMemo(() => {
     if (!menuOpen || !buttonRef.current) return null;
@@ -22,7 +23,7 @@ export default function New({
 
   useEffect(() => {
     const onDown = (e) => {
-      if (!buttonRef.current?.contains(e.target)) setMenuOpen(false);
+      if (!buttonRef.current?.contains(e.target) && !menuRef.current?.contains(e.target)) setMenuOpen(false);
     };
     document.addEventListener("mousedown", onDown);
     return () => document.removeEventListener("mousedown", onDown);
@@ -45,6 +46,7 @@ export default function New({
       </div>
 
       <ActionsMenu
+        ref={menuRef}
         isOpen={menuOpen}
         onClose={() => setMenuOpen(false)}
         onCreated={onCreated}

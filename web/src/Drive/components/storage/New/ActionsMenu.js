@@ -1,18 +1,18 @@
 import "./style.css";
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, forwardRef } from "react";
 import IconFile from "../../icons/IconFile";
 import IconFolder from "../../icons/IconFolder";
 import IconUpload from "../../icons/IconUpload";
 import GetText from "../../../modals/GetText";
 import newFile from "../../../utils/newFile";
 
-export default function ActionsMenu({
+const ActionsMenu = forwardRef(function ActionsMenu({
   onClose,
   isOpen,
   onCreated,
   folderId = null,
   anchorPoint = null,
-}) {
+}, ref) {
   const openFolderRef = useRef(null);
   const openFileRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -87,6 +87,7 @@ export default function ActionsMenu({
 
       {isOpen && (
         <div
+          ref={ref}
           className="new-menu"
           role="menu"
           aria-label="New menu"
@@ -140,3 +141,6 @@ export default function ActionsMenu({
     </>
   );
 }
+);
+
+export default ActionsMenu;
