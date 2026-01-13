@@ -118,7 +118,6 @@ function SignIn({ changeMode, autofill = {} }) {
         </div>
       )}
 
-      {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
       <a href="#" onClick={() => changeMode()}>Don't have an account? Sign Up</a>
     </form>
   );

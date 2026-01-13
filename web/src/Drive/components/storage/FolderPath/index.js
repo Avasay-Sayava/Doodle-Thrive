@@ -18,14 +18,12 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
     const currentUserId = useUserId();
     const { currentUserPerms, loadShared } = useFilePermissions(folderId, currentUserId);
     
-    // For My Drive (null folderId), always allow write. For folders, check if user has content.write permission
     const canWrite = !folderId || (currentUserPerms?.content?.write ?? false);
 
     useEffect(() => {
         onPermissionsLoad?.(canWrite);
     }, [canWrite, onPermissionsLoad]);
 
-    // Load permissions for the folder when it changes
     useEffect(() => {
         if (folderId && currentUserId) {
             loadShared();
@@ -62,7 +60,6 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
                     });
 
                     if (!res.ok) {
-                        // If we have a path, keep it; only redirect if we couldn't get the initial folder
                         if (tempPath.length === 0) {
                             goRoot();
                         } else {
@@ -75,7 +72,6 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
                     tempPath.unshift(folder);
                     currId = folder.parent;
                 } catch {
-                    // If we have a path, keep it; only redirect if we couldn't get the initial folder
                     if (tempPath.length === 0) {
                         goRoot();
                     } else {
@@ -88,10 +84,8 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
         })();
     }, [folderId, goRoot]);
 
-    // Check if the current folder is shared (owned by someone else)
     const isShared = currentUserId && path.length > 0 && path[path.length - 1].owner !== currentUserId;
     
-    // Show ellipsis if more than 3 folders
     const showEllipsis = path.length > 3;
     const displayPath = showEllipsis ? [path[path.length - 2], path[path.length - 1]] : path;
 

@@ -52,14 +52,13 @@ export default function ShareDialog({ file, onRefresh, children }) {
     updatePermission,
   } = useFilePermissions(fileId, currentUserId);
 
-  // Reload shared users when currentUserId becomes available
   useEffect(() => {
     if (currentUserId && fileId) {
       loadShared();
     }
   }, [currentUserId, fileId, loadShared]);
 
-  // User search effect
+
   useEffect(() => {
     const trimmed = inputValue.trim();
     if (!trimmed || trimmed.length < 1) {
@@ -114,7 +113,6 @@ export default function ShareDialog({ file, onRefresh, children }) {
 
   const handleRoleChange = useCallback(
     (entry, nextRole) => {
-      // If changing current user's permission, refresh the view
       if (entry.userId === currentUserId) {
         onRefreshRef.current?.();
       }

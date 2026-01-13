@@ -180,7 +180,6 @@ function SignUp({ changeMode, autofill = {} }) {
         </div>
       )}
 
-      {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
       <a href="#" onClick={() => changeMode()}>Already have an account? Sign In</a>
     </form>
   );

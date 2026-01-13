@@ -6,7 +6,6 @@ import DropDown from './DropDown';
 import { useNavigate } from 'react-router-dom';
 import { sortFiles } from '../../../Drive/utils/sortFiles';
 
-// Assume auth is already handled (e.g., via proxy or global fetch wrapper)
 const API_BASE = process.env.API_BASE_URL || 'http://localhost:3300';
 
 function SearchBar() {
@@ -68,7 +67,6 @@ function SearchBar() {
 
                 const data = await res.json();
                 const list = Object.values(data || {}).filter(f => !f.trashed);
-                // Sort search results by name
                 const sortedList = sortFiles(list, "name", "asc", "mixed");
                 setResults(sortedList);
             } catch (err) {

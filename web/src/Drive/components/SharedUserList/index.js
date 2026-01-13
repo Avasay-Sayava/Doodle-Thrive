@@ -1,22 +1,6 @@
 import SharedUserItem from "../SharedUserItem";
 import "./style.css";
 
-/**
- * SharedUserList - displays list of shared users with permission management
- * @param {Array} users - array of shared user entries
- * @param {string} currentUserId - logged-in user ID
- * @param {Array} roleOptions - available permission options
- * @param {Function} onRoleChange - callback when role changes
- * @param {Object} labels - role label map
- * @param {boolean} loading - show loading state
- * @param {string} error - error message
- * @param {Function} onRefresh - refresh button callback
- * @param {string} title - custom title for the list
- * @param {boolean} showAddButton - show add button instead of select
- * @param {Function} onAddUser - callback when add button is clicked
- * @param {boolean} hideRefresh - hide the refresh button
- * @param {string} emptyMessage - custom empty state message
- */
 export default function SharedUserList({
   users = [],
   currentUserId,
@@ -59,20 +43,15 @@ export default function SharedUserList({
         ) : null}
 
         {[...users].sort((a, b) => {
-          // Owner always first
           if (a.isOwner) return -1;
           if (b.isOwner) return 1;
-          // Current user second (if not owner)
           if (a.userId === currentUserId) return -1;
           if (b.userId === currentUserId) return 1;
-          // Others by username
           return (a.username || '').localeCompare(b.username || '');
         }).map((entry) => {
-          // Filter role options based on entry type
           const filteredOptions = entry.isOwner 
             ? [] 
             : roleOptions.filter(opt => {
-                // If user can't be owner, filter out owner option
                 if (opt.value === "owner" && entry.userId === currentUserId) {
                   return false;
                 }

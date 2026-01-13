@@ -2,16 +2,7 @@ import Avatar from "../Avatar";
 import PermissionSelect from "../PermissionSelect";
 import "./style.css";
 
-/**
- * SharedUserItem - displays a single shared user with permission controls
- * @param {Object} entry - user entry with userId, username, imageUrl, role, isOwner
- * @param {string} currentUserId - logged-in user ID
- * @param {Array} roleOptions - available permission options
- * @param {Function} onRoleChange - callback when role changes
- * @param {Object} labels - role label map
- * @param {boolean} showAddButton - show add button instead of select
- * @param {Function} onAddUser - callback when add button is clicked
- */
+// displays shared user with permission controls
 export default function SharedUserItem({
   entry,
   currentUserId,

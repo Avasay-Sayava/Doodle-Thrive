@@ -26,7 +26,7 @@ function ProfilePicture() {
             return;
         }
 
-        // Wait for user ID to be available before fetching user data
+        // wait for user id
         if (!id) return;
 
         (async () => {

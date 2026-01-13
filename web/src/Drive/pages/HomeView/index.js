@@ -56,15 +56,11 @@ function HomeView({ refreshKey, onRefresh}) {
         const filesObj = await res.json();
         const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
         
-        // Include files with no parent OR files where parent exists but user doesn't have access to it
         const rootFiles = allFiles.filter((f) => {
-          // If no parent, it's root
           if (f.parent == null) return true;
           
-          // If has parent, check if parent is accessible
           const parent = allFiles.find(file => file.id === f.parent);
           
-          // If parent not in allFiles (user doesn't have access), show this file in home
           return !parent;
         });
 

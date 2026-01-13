@@ -4,11 +4,6 @@ import Filter from "../../components/storage/Filter";
 import ActionsMenu from "../../components/storage/New/ActionsMenu";
 import { useEffect, useState } from "react";
 
-/**
- * Returns a file view component.
- * @param {{ allFiles: Array }} param0 
- * @returns {JSX.Element} The FileView component.
- */ 
 function FileView({ 
   allFiles = [], 
   onRefresh, 
@@ -24,7 +19,6 @@ function FileView({
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    // Replace with latest set to avoid stale rows when search results change
     setFiles(allFiles);
   }, [allFiles, sortBy, sortDir]);
 

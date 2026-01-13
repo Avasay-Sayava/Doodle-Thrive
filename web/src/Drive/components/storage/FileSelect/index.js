@@ -15,12 +15,10 @@ import IconMore from "../../icons/IconMore";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-// Helper to check if user has permission
 const hasPermission = (permissions, path) => {
   return path.split('.').reduce((obj, key) => obj?.[key], permissions) === true;
 };
 
-// Helper to merge permissions from API response
 const mergePermissions = (data) => {
   const merged = {};
   Object.values(data || {}).forEach((entry) => {
@@ -49,19 +47,16 @@ const mergePermissions = (data) => {
   return merged;
 };
 
-// Helper to fetch file permissions
 const fetchFilePermissions = async (fileId, currentUserId) => {
   try {
     const jwt = localStorage.getItem("token");
     
-    // Fetch file metadata to check ownership
     const fileRes = await fetch(`${API_BASE}/api/files/${fileId}`, {
       headers: { Authorization: `Bearer ${jwt}` },
     });
     const fileData = await fileRes.ok ? await fileRes.json() : {};
     const isOwner = fileData.owner === currentUserId;
     
-    // If user is owner, return full permissions
     if (isOwner) {
       return {
         [currentUserId]: {
@@ -72,7 +67,6 @@ const fetchFilePermissions = async (fileId, currentUserId) => {
       };
     }
     
-    // Otherwise fetch and merge permissions
     const res = await fetch(`${API_BASE}/api/files/${fileId}/permissions`, {
       headers: { Authorization: `Bearer ${jwt}` },
     });
@@ -92,7 +86,6 @@ function FileSelect({ file, onRefresh, isTrashed = false }) {
   const [isStarred, setIsStarred] = useState(Boolean(starred));
   const [userPermissions, setUserPermissions] = useState({});
 
-  // Check permissions
   const canShare = hasPermission(userPermissions, 'permissions.write');
   const canDownload = hasPermission(userPermissions, 'content.read');
   const canRename = hasPermission(userPermissions, 'self.write');
@@ -103,9 +96,7 @@ function FileSelect({ file, onRefresh, isTrashed = false }) {
 
   useEffect(() => {
     if (!currentUserId) return;
-    // Fetch permissions when component mounts or file id changes
     fetchFilePermissions(id, currentUserId).then((perms) => {
-      // Get the current user's permissions from the response
       setUserPermissions(perms[currentUserId] || {});
     });
   }, [id, currentUserId]);

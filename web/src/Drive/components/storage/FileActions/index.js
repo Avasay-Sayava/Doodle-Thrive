@@ -68,7 +68,6 @@ export default function FileActions({
       return;
     }
 
-    // Don't trigger onLeftClick if clicking on a button or within the actions column
     if (e.target.closest('button') || e.target.closest('.col-actions') || e.target.closest('.file-actions')) {
       return;
     }
@@ -128,7 +127,6 @@ export default function FileActions({
     const canShare = ["admin", "owner"].includes(userRole);
     const isTrashed = file?.trashed === true;
 
-    // If file is in bin, show restore and delete permanently options
     if (isTrashed) {
       return [
         {
@@ -147,7 +145,6 @@ export default function FileActions({
           danger: true,
           onClick: (e) => {
                                     e.stopPropagation();
-            // Call the modal open immediately - the menu will close via handleItemClick
             openDeleteConfirmRef.current?.();
           }
         },

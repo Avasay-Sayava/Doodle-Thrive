@@ -4,11 +4,6 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import "./style.css";
 
-/**
- * * @param {object} props
- * @param {"signin"|"signup"} [props.mode]
- * @returns {JSX.Element}
- */
 function Sign({ mode = "signin" }) {
   const [activeMode, setActiveMode] = useState(mode);
   const [isOpen, setIsOpen] = useState(true);

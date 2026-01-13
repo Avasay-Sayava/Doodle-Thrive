@@ -65,7 +65,7 @@ function RecentsView({ refreshKey, onRefresh }) {
 
         setFiles(
           sortFiles(allFiles, sortBy, sortDir, foldersMode).slice(0, 30)
-        ); // show top 30 recent files
+        );
         handleSortChange({ sortBy, sortDir, foldersMode });
       } catch (err) {
         setError(err?.message || "Failed to load files");

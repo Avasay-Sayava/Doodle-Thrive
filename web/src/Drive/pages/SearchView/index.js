@@ -39,7 +39,7 @@ function SearchView({ refreshKey, onRefresh }) {
         }
     }, [location.state]);
 
-    // Immediately clear results when query or refreshKey changes (header search triggers refreshKey)
+
     useEffect(() => {
         setFiles([]);
         setError("");
@@ -91,7 +91,6 @@ function SearchView({ refreshKey, onRefresh }) {
         })();
     }, [query, navigate, sortBy, sortDir, foldersMode, searchRefreshKey]);
 
-    // Clear navigation state after initial read to avoid repeated auto-open on reload
     useEffect(() => {
         if (location.state?.openFileId) {
             navigate(location.pathname + location.search, { replace: true });

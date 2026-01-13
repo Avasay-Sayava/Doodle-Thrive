@@ -6,12 +6,6 @@ import IconFolder from "../../components/icons/IconFolder";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-/**
- * MoveFile modal - allows user to select a destination folder
- * @param {Object} file - the file/folder to move
- * @param {Function} onSubmit - callback with selected folderId (null for root)
- * @param {Function} children - render prop: (open, close) => JSX for trigger
- */
 export default function MoveFile({ file, onSubmit = () => {}, children }) {
   const [folders, setFolders] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
@@ -19,14 +13,12 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
   const [folderPath, setFolderPath] = useState({});
   const [isOpen, setIsOpen] = useState(false);
 
-  // Set initial selection to current parent when modal opens
   useEffect(() => {
     if (isOpen) {
       setSelectedId(file?.parent ?? null);
     }
   }, [isOpen, file?.parent]);
 
-  // Fetch all folders and their permissions
   useEffect(() => {
     if (!isOpen) return;
 
@@ -39,7 +31,6 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
           return;
         }
 
-        // Fetch all files
         const res = await fetch(`${API_BASE}/api/files`, {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },
@@ -50,10 +41,8 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
         }
 
         const allFiles = await res.json();
-        // Convert object format to array if needed
         const filesArray = Array.isArray(allFiles) ? allFiles : Object.values(allFiles);
 
-        // Get current user ID from token
         const tokenRes = await fetch(`${API_BASE}/api/tokens`, {
           method: "GET",
           headers: { Authorization: `Bearer ${jwt}` },
@@ -66,12 +55,10 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
         const tokenData = await tokenRes.json();
         const currentUserId = tokenData.id;
 
-        // Filter to folders only
         const foldersList = filesArray.filter(
           (f) => f.type === "folder" && f.trashed !== true && f.id !== file?.id
         );
 
-        // Fetch permissions for each folder
         const foldersWithPerms = await Promise.all(
           foldersList.map(async (folder) => {
             try {
@@ -86,11 +73,9 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
 
               const data = await permRes.json();
                             
-              // Parse permissions structure: { permissionId: { userId: perms } }
               let userPerms = null;
               const ownerId = folder.owner;
               
-              // Merge all permissions for current user across all permission entries
               for (const permId in data) {
                 const permEntry = data[permId];
                 if (permEntry[currentUserId]) {
@@ -101,7 +86,6 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
                       permissions: { read: false, write: false }
                     };
                   }
-                  // Merge permissions
                   const perms = permEntry[currentUserId];
                   userPerms.self.read = userPerms.self.read || perms?.self?.read || false;
                   userPerms.self.write = userPerms.self.write || perms?.self?.write || false;
@@ -112,10 +96,8 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
                 }
               }
 
-              // Check if current user is owner
               const isOwner = ownerId === currentUserId;
 
-              // Determine user role based on permissions
               let userRole;
               if (isOwner) {
                 userRole = "owner";
@@ -126,14 +108,12 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
               }
 
               
-              // User can move to this folder if they have write permission (editor, admin, or owner)
               const canWrite = ["editor", "admin", "owner"].includes(userRole);
 
               if (!canWrite) {
                                 return null;
               }
 
-              // Only show folders owned by the file's owner
               if (file?.owner !== ownerId) {
                                 return null;
               }
@@ -146,12 +126,10 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
           })
         );
 
-        // Filter out null values (folders without write permission)
         const writableFolders = foldersWithPerms.filter((f) => f !== null);
 
         setFolders(writableFolders);
 
-        // Build folder paths for display
         const paths = {};
         const buildPath = (folderId, allFolders) => {
           if (paths[folderId]) return paths[folderId];
@@ -189,7 +167,6 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
     [selectedId, onSubmit]
   );
 
-  // Check if current user ID is available
   const [currentUserId, setCurrentUserId] = useState(null);
   
   useEffect(() => {
@@ -223,7 +200,6 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
         ) : (
           <>
             <div className="move-file-folders">
-              {/* Only show "My Drive (Root)" if the file is owned by the current user */}
               {file?.owner === currentUserId && (
                 <div
                   className={`move-file-folder-item ${

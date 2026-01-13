@@ -1,10 +1,3 @@
-/**
- * Get human-readable file size
- * @param {Object} file - File object with type and content
- * @param {string} file.type - 'file' or 'folder'
- * @param {string} file.content - File content
- * @returns {string} Formatted file size
- */
 export function getFileSize({ type, content }) {
   if (type === "folder") return "-";
   let bytes = content?.length || 0;

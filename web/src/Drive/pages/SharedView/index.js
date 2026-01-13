@@ -26,7 +26,6 @@ function SharedView({ refreshKey, onRefresh }) {
   };
 
   useEffect(() => {
-    // Wait for user ID to be available before fetching files
     if (!id) return;
 
     (async () => {

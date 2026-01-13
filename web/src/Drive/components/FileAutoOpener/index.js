@@ -4,11 +4,7 @@ import useFilePermissions, { roleFromPermissions } from "../../utils/useFilePerm
 import EditFile from "../../modals/EditFile";
 import ViewFile from "../../modals/ViewFile";
 
-/**
- * FileAutoOpener - Automatically opens a file in the appropriate modal based on permissions
- * @param {Object} file - The file to open
- * @param {Function} onDone - Callback when file is opened
- */
+// auto opens file in appropriate modal based on permissions
 export default function FileAutoOpener({ file, onDone }) {
     const currentUserId = useUserId();
     const { currentUserPerms, loadShared, loading } = useFilePermissions(file?.id, currentUserId);

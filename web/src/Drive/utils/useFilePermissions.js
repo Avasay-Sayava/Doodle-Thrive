@@ -37,8 +37,7 @@ const mergePermissions = (data) => {
 };
 
 export const roleFromPermissions = (perms) => {
-  // Never return "owner" from permissions - owner is determined by file.owner field
-  // Return "admin" as the highest role from permissions
+  // owner is determined by file.owner field, not permissions
   if (perms?.permissions?.write) return "admin";
   if (perms?.self?.write || perms?.content?.write) return "editor";
   if (perms?.self?.read || perms?.content?.read) return "viewer";
@@ -134,12 +133,6 @@ const revokeAccess = async (fileId, username) => {
   return targetUserId;
 };
 
-/**
- * useFilePermissions - hook for managing file permissions and sharing
- * @param {string} fileId - file ID
- * @param {string} currentUserId - current user ID
- * @param {Function} onRefresh - callback after permission changes
- */
 export default function useFilePermissions(fileId, currentUserId, onRefresh) {
   const [sharedWith, setSharedWith] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -176,7 +169,6 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         const fileData = await fileRes.json();
         setOwnerId(fileData.owner);
 
-        // If current user is the owner, set full permissions
         if (fileData.owner === currentUserId) {
           setCurrentUserPerms({
             self: { read: true, write: true },
@@ -210,7 +202,6 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
 
         const entries = await Promise.all(
           Object.entries(merged).map(async ([userId, perms]) => {
-            // Store current user's permissions
             if (userId === currentUserId) {
               setCurrentUserPerms(perms);
             }
@@ -287,7 +278,6 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
 
       try {
         if (nextRole === "owner") {
-          // Get current user's username to grant them admin after transfer
           let currentUsername = null;
           if (currentUserId) {
             try {
@@ -307,11 +297,9 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
             }
           }
 
-          // First give admin permissions to new owner, then transfer ownership
           await shareFile(fileId, entry.username, "admin");
           await wait(200);
 
-          // Give previous owner (current user) admin permissions
           if (currentUsername) {
             await wait(200);
             await shareFile(fileId, currentUsername, "admin");

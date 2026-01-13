@@ -1,11 +1,6 @@
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
-/**
- * Shares a file with another user.
- * @param {string} id 
- * @param {string} username 
- * @param {"viewer"|"editor"|"admin"} option 
- */
+// shares file with user, merges with existing permissions
 export default async function shareFile(id, username, option) {
     const token = localStorage.getItem("token");
 
@@ -22,8 +17,7 @@ export default async function shareFile(id, username, option) {
 
     const permissionsData = await permissions.json();
 
-    // Build mergedOptions from existing permissions
-    // permissionsData is {permissionId: {userId: permissionObject}}
+    // merge existing permissions from all users
     const oldPermissionIds = Object.keys(permissionsData);
     const mergedOptions = {};
     for (const pId of oldPermissionIds) {
@@ -90,7 +84,7 @@ export default async function shareFile(id, username, option) {
         throw new Error("Failed to update file permissions");
     }
 
-    // Now delete old permission entries (after adding new ones to avoid losing access)
+    // delete old permission entries after adding new ones
     for (const pId of oldPermissionIds) {
         await fetch(`${API_BASE}/api/files/${id}/permissions/${pId}`, {
             method: "DELETE",

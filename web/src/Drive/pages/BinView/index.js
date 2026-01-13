@@ -54,12 +54,9 @@ function BinView({ refreshKey, onRefresh}) {
 
         const filesObj = await res.json();
         const allFiles = Array.isArray(filesObj) ? filesObj : Object.values(filesObj);
-        // Only show files that are trashed but whose parent is NOT trashed
         const binFiles = allFiles.filter((f) => {
           if (f.trashed !== true) return false;
-          // If file has no parent (root level), show it
           if (!f.parent) return true;
-          // Check if parent is also trashed
           const parent = allFiles.find(p => p.id === f.parent);
           return !parent || parent.trashed !== true;
         });
@@ -80,7 +77,6 @@ function BinView({ refreshKey, onRefresh}) {
     try {
       const jwt = localStorage.getItem("token");
       
-      // Delete all trashed files
       for (const file of files) {
         const res = await fetch(`${API_BASE}/api/files/${file.id}`, {
           method: "DELETE",

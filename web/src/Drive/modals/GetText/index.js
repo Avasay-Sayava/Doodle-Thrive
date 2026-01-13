@@ -2,15 +2,7 @@ import "./style.css";
 import { useRef, useState, useCallback } from "react";
 import Modal from "../Modal";
 
-/**
- * GetText modal - a simple popup for user text input with optional dropdown.
- * @param {string} title - modal title
- * @param {string} placeholder - input placeholder
- * @param {string} submitLabel - button label
- * @param {Function} onSubmit - submit callback
- * @param {Function} onClose - close callback
- * @param {Array} selectOptions - dropdown options
- */
+// simple text input modal with optional dropdown
 export default function GetText({
   title = "Enter text",
   placeholder = "",
@@ -38,7 +30,6 @@ export default function GetText({
         await onSubmit(trimmed);
       }
 
-      // Keep dialog open; just reset inputs for next action
       setValue("");
       setSelectValue(defaultSelectValue);
     },
