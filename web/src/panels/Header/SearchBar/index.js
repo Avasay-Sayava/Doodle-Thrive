@@ -21,7 +21,10 @@ function SearchBar() {
     useEffect(() => {
         if (enter) {
             setOpen(false);
-            navigate(`/drive/search?query=${query}`, { replace: true });
+            navigate(`/drive/search?query=${query}`, { 
+                replace: true,
+                state: { refreshKey: Date.now() }
+            });
             setQuery('');
             setEnter(false);
         }
@@ -44,7 +47,8 @@ function SearchBar() {
         }
 
         const controller = new AbortController();
-        const timer = setTimeout(async () => {
+        
+        (async () => {
             setLoading(true);
             try {
                 const jwt = localStorage.getItem('token');
@@ -55,15 +59,15 @@ function SearchBar() {
                     return;
                 }
 
-                const res = await fetch(`${API_BASE}/api/search/${query}`, {
+                const res = await fetch(`${API_BASE}/api/search/${encodeURIComponent(query)}`, {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${jwt}`,                       
-                    }
+                    },
                 });
 
                 const data = await res.json();
-                const list = Object.values(data || {});
+                const list = Object.values(data || {}).filter(f => !f.trashed);
                 // Sort search results by name
                 const sortedList = sortFiles(list, "name", "asc", "mixed");
                 setResults(sortedList);
@@ -73,11 +77,10 @@ function SearchBar() {
             } finally {
                 setLoading(false);
             }
-        }, 0); // debounce a bit
+        })();
 
         return () => {
             controller.abort();
-            clearTimeout(timer);
         };
     }, [navigate, query]);
 

@@ -137,7 +137,10 @@ export default function GetText({
         <>
           <div className="get-text-modal__input-wrapper">
             <input
-              ref={inputRef}
+              ref={(el) => {
+                inputRef.current = el;
+                if (el) el.focus();
+              }}
               className="get-text-modal__input"
               value={value}
               onChange={(e) => {
@@ -245,6 +248,7 @@ export default function GetText({
   return (
     <Modal
       title={title}
+      onOpen={onOpen}
       onClose={handleClose}
       renderBody={renderBody}
       className="get-text-modal"

@@ -26,7 +26,7 @@ function DropDown({ results = [], loading, setOpen }) {
     return (
         <div className="search-dropdown">
             {results.map((item) => (
-                <DropDownItem item={item} type={item.type} setOpen={setOpen}/>
+                <DropDownItem key={item.id} item={item} type={item.type} setOpen={setOpen}/>
             ))}
         </div>
     );

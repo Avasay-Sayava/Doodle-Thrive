@@ -5,6 +5,8 @@ import FileActions from "../FileActions";
 import RelativeDate from "../../Date";
 import IconFolder from "../../icons/IconFolder";
 import IconFile from "../../icons/IconFile";
+import IconImageFile from "../../icons/IconImageFile";
+import IconFileLocked from "../../icons/IconFileLocked";
 import EditFile from "../../../modals/EditFile";
 import ViewFile from "../../../modals/ViewFile";
 import ViewImage from "../../../modals/ViewImage";
@@ -28,6 +30,18 @@ function isImageFile(filename) {
   if (!filename) return false;
   const ext = filename.toLowerCase().split(".").pop();
   return ["jpg", "jpeg", "png", "webp"].includes(ext);
+}
+
+function getFileIcon(type, name, isTrashed, canEdit) {
+  if (type === "file" && isImageFile(name)) {
+    return <IconImageFile />;
+  }
+
+  if (type === "file" && !canEdit) {
+    return <IconFileLocked />;
+  }
+
+  return type === "folder" ? <IconFolder /> : <IconFile />;
 }
 
 function FileRow({ file, onRefresh }) {
@@ -114,7 +128,7 @@ function FileRow({ file, onRefresh }) {
               <tr className="file-row">
                 <td className="col-name">
                   <span className="file-icon" aria-hidden="true">
-                    {type === "folder" ? <IconFolder /> : <IconFile />}
+                    {getFileIcon(type, name, localFile.trashed, canEdit)}
                   </span>
                   {name}
                 </td>
@@ -142,7 +156,7 @@ function FileRow({ file, onRefresh }) {
               <tr className="file-row">
                 <td className="col-name">
                   <span className="file-icon" aria-hidden="true">
-                    {type === "folder" ? <IconFolder /> : <IconFile />}
+                    {getFileIcon(type, name, localFile.trashed, canEdit)}
                   </span>
                   {name}
                 </td>
@@ -170,7 +184,7 @@ function FileRow({ file, onRefresh }) {
               <tr className="file-row">
                 <td className="col-name">
                   <span className="file-icon" aria-hidden="true">
-                    {type === "folder" ? <IconFolder /> : <IconFile />}
+                    {getFileIcon(type, name, localFile.trashed, canEdit)}
                   </span>
                   {name}
                 </td>

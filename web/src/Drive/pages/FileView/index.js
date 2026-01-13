@@ -2,9 +2,7 @@ import "../style.css";
 import FileRow from "../../components/storage/FileRow";
 import Filter from "../../components/storage/Filter";
 import ActionsMenu from "../../components/storage/New/ActionsMenu";
-import GetText from "../../modals/GetText";
-import newFile from "../../utils/newFile";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Returns a file view component.
@@ -25,12 +23,8 @@ function FileView({
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    // New files always on top
-    setFiles((prevFiles) => {
-      const existingIds = new Set(prevFiles.map((f) => f.id));
-      const newFiles = allFiles.filter((f) => !existingIds.has(f.id));
-      return [ ...newFiles, ...prevFiles];
-    });
+    // Replace with latest set to avoid stale rows when search results change
+    setFiles(allFiles);
   }, [allFiles, sortBy, sortDir]);
 
   useEffect(() => {
