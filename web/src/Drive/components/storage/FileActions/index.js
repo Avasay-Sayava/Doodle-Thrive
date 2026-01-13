@@ -16,6 +16,7 @@ import { roleFromPermissions } from "../../../utils/useFilePermissions";
 import GetText from "../../../modals/GetText";
 import ShareDialog from "../../../modals/ShareDialog";
 import MoveFile from "../../../modals/MoveFile";
+import ConfirmDialog from "../../../modals/ConfirmDialog";
 
 export default function FileActions({
   children,
@@ -30,6 +31,7 @@ export default function FileActions({
   const openRenameModalRef = useRef(null);
   const openShareModalRef = useRef(null);
   const openMoveModalRef = useRef(null);
+  const openDeleteConfirmRef = useRef(null);
 
   const [hoverKey, setHoverKey] = useState(null);
   const [descPos, setDescPos] = useState({ x: 0, y: 0 });
@@ -124,7 +126,7 @@ export default function FileActions({
     const canShare = ["admin", "owner"].includes(userRole);
     const isTrashed = file?.trashed === true;
 
-    // If file is in bin, only show restore button
+    // If file is in bin, show restore and delete permanently options
     if (isTrashed) {
       return [
         {
@@ -134,6 +136,19 @@ export default function FileActions({
             patchFile(file?.id, { trashed: false }).then(() => {
               onRefresh?.();
             });
+          }
+        },
+        { key: "sep-1", type: "separator" },
+        {
+          key: "delete",
+          label: "Delete Permanently",
+          danger: true,
+          onClick: (e) => {
+            console.log("[FileActions] Delete clicked, event:", e);
+            console.log("[FileActions] openDeleteConfirmRef.current:", openDeleteConfirmRef.current);
+            e.stopPropagation();
+            // Call the modal open immediately - the menu will close via handleItemClick
+            openDeleteConfirmRef.current?.();
           }
         },
       ];
@@ -343,6 +358,42 @@ export default function FileActions({
           return null;
         }}
       </MoveFile>
+
+      <ConfirmDialog
+        title="Delete Permanently?"
+        message="Are you sure you want to permanently delete this file? This cannot be undone."
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        isDangerous={true}
+        onConfirm={async () => {
+          console.log("[FileActions] ConfirmDialog onConfirm called");
+          try {
+            const res = await fetch(`${process.env.API_BASE_URL || "http://localhost:3300"}/api/files/${file?.id}`, {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+            });
+            
+            if (!res.ok) {
+              const text = await res.text();
+              console.error("Failed to delete file:", text);
+              alert(`Failed to delete file: ${text}`);
+              return;
+            }
+            
+            console.log("[FileActions] File deleted successfully, calling onRefresh");
+            onRefresh?.();
+          } catch (err) {
+            console.error("Error deleting file:", err);
+            alert(`Error deleting file: ${err.message}`);
+          }
+        }}
+      >
+        {(openDeleteConfirm) => {
+          console.log("[FileActions] ConfirmDialog render function called, setting ref");
+          openDeleteConfirmRef.current = openDeleteConfirm;
+          return null;
+        }}
+      </ConfirmDialog>
 
       {enhancedRow}
       {menuPortal}

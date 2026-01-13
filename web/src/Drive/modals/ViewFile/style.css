@@ -5,72 +5,98 @@
   min-height: 400px;
 }
 
+.view-file-modal__textarea {
+  flex: 1;
+  min-height: 300px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  background: var(--color-bg-main);
+  color: var(--color-text-primary);
+  width: min(80vw, 700px);
+  height: 100%;
+  resize: none;
+}
+
+.view-file-modal__textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
 .view-file-modal__loading {
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: #666;
+  color: var(--color-text-secondary);
   font-size: 14px;
 }
 
 .view-file-modal__error {
   padding: 12px;
-  background-color: #fee;
-  color: #c00;
-  border: 1px solid #fcc;
-  border-radius: 4px;
+  background: var(--color-bg-error);
+  color: var(--color-text-error);
+  border-radius: 8px;
   font-size: 14px;
+  border-left: 3px solid var(--color-text-error);
 }
 
 .view-file-modal__text-wrapper {
   flex: 1;
   min-height: 300px;
   overflow: auto;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #f9f9f9;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg-main);
   width: min(80vw, 700px);
 }
 
 .view-file-modal__text {
-  margin: 0;
+  margin-top: 0;
   padding: 12px;
   font-family: monospace;
   font-size: 14px;
   line-height: 1.5;
-  color: #333;
+  color: var(--color-text-primary);
   white-space: pre-wrap;
   word-wrap: break-word;
+  user-select: text;
 }
 
 .view-file-modal__actions {
+  margin-top: auto;
+  width: min(80vw, 700px);
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   padding-top: 12px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--color-border);
 }
 
 .view-file-modal__button {
   padding: 8px 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #f5f5f5;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg-button);
+  color: var(--color-text-primary);
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.2s;
 }
 
 .view-file-modal__button:hover {
-  background-color: #e8e8e8;
+  background: var(--color-bg-hover);
 }
 
 .view-file-modal__button--close {
-  border-color: #999;
-  color: #333;
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
 }
 
 .view-file-modal__button--close:hover {
-  background-color: #ddd;
+  background: var(--color-bg-hover);
 }

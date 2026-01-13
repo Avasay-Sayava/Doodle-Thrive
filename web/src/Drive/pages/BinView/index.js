@@ -1,10 +1,11 @@
 import "../style.css";
 import FileView from "../FileView";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import getUser from "../../utils/getUser";
 import { useNavigate } from "react-router-dom";
 import { sortFiles } from "../../utils/sortFiles";
 import IconBin from "../../components/icons/IconBin";
+import ConfirmDialog from "../../modals/ConfirmDialog";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -12,6 +13,7 @@ function BinView({ refreshKey, onRefresh}) {
   const [files, setFiles] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const openEmptyTrashConfirmRef = useRef(null);
 
   const [sortBy, setSortBy] = useState("name");
   const [sortDir, setSortDir] = useState("asc");
@@ -74,15 +76,46 @@ function BinView({ refreshKey, onRefresh}) {
     })();
   }, [foldersMode, navigate, refreshKey, sortBy, sortDir]);
 
+  const handleEmptyTrash = async () => {
+    try {
+      const jwt = localStorage.getItem("token");
+      
+      // Delete all trashed files
+      for (const file of files) {
+        const res = await fetch(`${API_BASE}/api/files/${file.id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${jwt}` },
+        });
+        
+        if (!res.ok) {
+          const text = await res.text();
+          console.error(`Failed to delete file ${file.id}:`, text);
+        }
+      }
+
+      onRefresh?.();
+    } catch (err) {
+      console.error("Error emptying trash:", err);
+      setError("Failed to empty trash: " + (err?.message || "Unknown error"));
+    }
+  };
+
   return (
     <div className="file-view">
       <div className="file-view__header">
-        <div className="file-view__header">
-          <h1 className="view-title">
-            <IconBin className="view-title__icon" width={24} height={24} aria-hidden="true" />
-            <span className="view-title__text">Bin</span>
-          </h1>
-        </div>
+        <h1 className="view-title">
+          <IconBin className="view-title__icon" width={24} height={24} aria-hidden="true" />
+          <span className="view-title__text">Bin</span>
+        </h1>
+        {files.length > 0 && (
+          <button 
+            className="btn-empty-trash"
+            onClick={() => openEmptyTrashConfirmRef.current?.()}
+            title="Empty trash"
+          >
+            Empty Trash
+          </button>
+        )}
       </div>
 
       {error && <div className="error-message">{error}</div>}
@@ -94,6 +127,20 @@ function BinView({ refreshKey, onRefresh}) {
         foldersMode={foldersMode}
         onSortChange={handleSortChange}
       />
+
+      <ConfirmDialog
+        title="Empty Trash?"
+        message="Are you sure you want to empty the entire trash? All files will be permanently deleted. This cannot be undone."
+        confirmLabel="Empty Trash"
+        cancelLabel="Cancel"
+        isDangerous={true}
+        onConfirm={handleEmptyTrash}
+      >
+        {(openEmptyTrashConfirm) => {
+          openEmptyTrashConfirmRef.current = openEmptyTrashConfirm;
+          return null;
+        }}
+      </ConfirmDialog>
     </div>
   );
 }

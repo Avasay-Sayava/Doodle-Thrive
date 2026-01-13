@@ -22,9 +22,9 @@ export default function ViewFile({ file, children }) {
     try {
       const fileData = await getFile(file.id);
       const fileContent = fileData?.content || "";
-      
+
       if (fileContent === undefined) throw new Error("No file content");
-      
+
       setContent(fileContent);
     } catch (err) {
       setError(err?.message || "Failed to load file");
@@ -49,11 +49,11 @@ export default function ViewFile({ file, children }) {
 
           {loading ? (
             <div className="view-file-modal__loading">Loading file...</div>
-          ) : content ? (
+          ) : (
             <div className="view-file-modal__text-wrapper">
               <pre className="view-file-modal__text">{content}</pre>
             </div>
-          ) : null}
+          )}
 
           <div className="view-file-modal__actions">
             <button
