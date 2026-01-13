@@ -63,7 +63,7 @@ export default function ViewImage({ file, children }) {
 
           <div className="view-image-modal-actions">
             <button
-              className="view-image-modal-button view-image-modal-button--close"
+              className="view-image-modal-button view-image-modal-button-close"
               onClick={close}
             >
               Close

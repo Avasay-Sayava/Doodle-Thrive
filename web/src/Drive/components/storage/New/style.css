@@ -141,28 +141,28 @@
   cursor: not-allowed;
 }
 
-.new-modal-btn--ghost {
+.new-modal-btn-ghost {
   color: var(--color-primary);
 }
 
-.new-modal-btn--ghost:hover {
+.new-modal-btn-ghost:hover {
   background: var(--color-bg-hover);
 }
 
-.new-modal-btn--primary {
+.new-modal-btn-primary {
   background: var(--color-primary);
   color: var(--color-bg-main);
 }
 
-.new-modal-btn--primary:hover {
+.new-modal-btn-primary:hover {
   background: var(--color-primary-hover);
 }
 
-.new--hidden-trigger {
+.new-hidden-trigger {
   position: relative;
 }
 
-.new--hidden-trigger .new-button {
+.new-hidden-trigger .new-button {
   opacity: 0; 
   position: absolute;
   top: 0;

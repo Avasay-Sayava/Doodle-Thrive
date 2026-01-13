@@ -1,15 +1,14 @@
-/* Modal Overlay */
 .modal-overlay {
   position: fixed;
   inset: 0;
+  max-width: 100vw;
+  max-height: 100vh;
+  padding: 0;
   background-color: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  padding: 0;
-  max-width: 100vw;
-  max-height: 100vh;
   z-index: 1000;
 }
 
@@ -18,7 +17,6 @@
   opacity: 0.5;
 }
 
-/* Modal Content */
 .modal-content {
   display: flex;
   flex-direction: column;
@@ -26,7 +24,6 @@
   overflow: hidden;
 }
 
-/* Modal Header */
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -65,7 +62,6 @@
   background: var(--color-bg-hover);
 }
 
-/* Modal Body */
 .modal-body {
   padding: 24px;
   overflow-y: auto;

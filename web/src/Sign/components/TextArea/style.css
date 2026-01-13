@@ -1,13 +1,13 @@
 textarea {
     padding: 10px;
     margin-top: 5px;
+    min-height: 80px;
     border: 1px solid var(--color-border);
     border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.2s;
+    font-size: 16px;
     font-family: inherit;
     resize: none;
-    min-height: 80px;
+    transition: border-color 0.2s;
 }
 
 textarea:focus {

@@ -30,26 +30,26 @@
   color: var(--color-text-primary);
 }
 
-.file-action-btn--hover {
+.file-action-btn-hover {
   opacity: 0;
   pointer-events: none;
   transition: opacity 120ms ease;
 }
 
-.file-row:hover .file-action-btn--hover {
+.file-row:hover .file-action-btn-hover {
   opacity: 1;
   pointer-events: auto;
 }
 
-.file-row:hover .file-action-btn--hover:disabled {
+.file-row:hover .file-action-btn-hover:disabled {
   opacity: 0.5;
 }
 
-.file-action-btn--starred {
+.file-action-btn-starred {
   color: var(--color-icon-starred);
 }
 
-.file-action-btn--starred:hover {
+.file-action-btn-starred:hover {
   color: var(--color-icon-starred-hover);
 }
 

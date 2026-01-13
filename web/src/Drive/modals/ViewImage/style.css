@@ -53,11 +53,11 @@
   transition: all 0.2s ease;
 }
 
-.view-image-modal-button--close {
+.view-image-modal-button-close {
   background: var(--color-primary);
   color: white;
 }
 
-.view-image-modal-button--close:hover {
+.view-image-modal-button-close:hover {
   background: var(--color-primary-hover);
 }

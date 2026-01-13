@@ -63,16 +63,16 @@
   transition: background 0.15s ease;
 }
 
-.share-dialog-btn--primary {
+.share-dialog-btn-primary {
   background: var(--color-primary);
-  color: white;
+  color: var(--color-bg-main-alt);
 }
 
-.share-dialog-btn--primary:hover:not(:disabled) {
+.share-dialog-btn-primary:hover:not(:disabled) {
   background: var(--color-primary-hover);
 }
 
-.share-dialog-btn--primary:disabled {
+.share-dialog-btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -188,7 +188,7 @@
   line-height: 1.4;
 }
 
-.share-modal-badge--owner {
+.share-modal-badge-owner {
   background: var(--color-primary-faint);
   color: var(--color-primary);
   font-weight: 700;

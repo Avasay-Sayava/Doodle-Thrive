@@ -91,21 +91,21 @@
   cursor: not-allowed;
 }
 
-.move-file-btn--cancel {
+.move-file-btn-cancel {
   background-color: transparent;
   color: var(--color-text-primary);
   border: 1px solid var(--color-border);
 }
 
-.move-file-btn--cancel:hover:not(:disabled) {
+.move-file-btn-cancel:hover:not(:disabled) {
   background-color: var(--color-bg-hover);
 }
 
-.move-file-btn--primary {
+.move-file-btn-primary {
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-bg-main-alt);
 }
 
-.move-file-btn--primary:hover:not(:disabled) {
+.move-file-btn-primary:hover:not(:disabled) {
   background-color: var(--color-primary-hover);
 }

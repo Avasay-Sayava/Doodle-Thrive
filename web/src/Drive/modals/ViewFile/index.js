@@ -57,7 +57,7 @@ export default function ViewFile({ file, children }) {
 
           <div className="view-file-modal-actions">
             <button
-              className="view-file-modal-button view-file-modal-button--close"
+              className="view-file-modal-button view-file-modal-button-close"
               onClick={close}
             >
               Close

@@ -95,7 +95,7 @@ export default function EditFile({ file, onSave = () => {}, children }) {
 
           <div className="edit-file-modal-actions">
             <button
-              className="edit-file-modal-button edit-file-modal-button--cancel"
+              className="edit-file-modal-button edit-file-modal-button-cancel"
               onClick={() => {
                 handleClose();
                 close();
@@ -105,7 +105,7 @@ export default function EditFile({ file, onSave = () => {}, children }) {
               Cancel
             </button>
             <button
-              className="edit-file-modal-button edit-file-modal-button--save"
+              className="edit-file-modal-button edit-file-modal-button-save"
               onClick={() => handleSave(close)}
               disabled={!hasChanges || saving || loading}
             >

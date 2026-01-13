@@ -260,14 +260,14 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
             <div className="move-file-actions">
               <button
                 type="button"
-                className="move-file-btn move-file-btn--cancel"
+                className="move-file-btn move-file-btn-cancel"
                 onClick={close}
               >
                 Cancel
               </button>
               <button
                 type="button"
-                className="move-file-btn move-file-btn--primary"
+                className="move-file-btn move-file-btn-primary"
                 onClick={() => handleSubmit(close)}
                 disabled={selectedId === undefined || selectedId === file?.parent}
               >

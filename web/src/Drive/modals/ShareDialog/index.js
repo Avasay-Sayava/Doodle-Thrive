@@ -271,7 +271,7 @@ export default function ShareDialog({ file, onRefresh, children }) {
           <div className="share-dialog-actions">
             <button
               type="button"
-              className="share-dialog-btn share-dialog-btn--primary"
+              className="share-dialog-btn share-dialog-btn-primary"
               onClick={handleSubmit}
               disabled={!userFound || !inputValue.trim()}
             >

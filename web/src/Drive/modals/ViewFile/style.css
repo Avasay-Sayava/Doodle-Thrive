@@ -92,11 +92,11 @@
   background: var(--color-bg-hover);
 }
 
-.view-file-modal-button--close {
+.view-file-modal-button-close {
   border-color: var(--color-border);
   color: var(--color-text-primary);
 }
 
-.view-file-modal-button--close:hover {
+.view-file-modal-button-close:hover {
   background: var(--color-bg-hover);
 }

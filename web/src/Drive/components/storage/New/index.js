@@ -16,7 +16,7 @@ export default function New({ onCreated, hidden = false, folderId = null, ...res
 
   return (
     <div className="new" ref={rootRef} {...rest}>
-      <div className={hidden ? "new--hidden-trigger" : ""}>
+      <div className={hidden ? "new-hidden-trigger" : ""}>
         <button
           type="button"
           className="new-button"

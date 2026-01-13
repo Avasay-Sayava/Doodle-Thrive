@@ -131,7 +131,7 @@ function FileSelect({ file, onRefresh, isTrashed = false }) {
           <ShareDialog file={file} onRefresh={onRefresh}>
             {(open) => (
               <button
-                className="file-action-btn file-action-btn--hover"
+                className="file-action-btn file-action-btn-hover"
                 title={canShare ? "Share" : "No permission to share"}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -145,7 +145,7 @@ function FileSelect({ file, onRefresh, isTrashed = false }) {
           </ShareDialog>
 
           <button
-            className="file-action-btn file-action-btn--hover"
+            className="file-action-btn file-action-btn-hover"
             title={canDownload ? "Download" : "No permission to download"}
             onClick={() => canDownload && downloadFile(id)}
             disabled={!canDownload}
@@ -163,7 +163,7 @@ function FileSelect({ file, onRefresh, isTrashed = false }) {
           >
             {(open) => (
               <button
-                className="file-action-btn file-action-btn--hover"
+                className="file-action-btn file-action-btn-hover"
                 title={canRename ? "Rename" : "No permission to rename"}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -178,7 +178,7 @@ function FileSelect({ file, onRefresh, isTrashed = false }) {
 
           {isStarred && (
             <button
-              className="file-action-btn file-action-btn--starred"
+              className="file-action-btn file-action-btn-starred"
               title={isStarred ? "Unstar" : "Star"}
               onClick={onToggleStar}
             >
@@ -187,8 +187,8 @@ function FileSelect({ file, onRefresh, isTrashed = false }) {
           )}
           {!isStarred && (
             <button
-              className={`file-action-btn file-action-btn--hover ${
-                isStarred ? "file-action-btn--starred" : ""
+              className={`file-action-btn file-action-btn-hover ${
+                isStarred ? "file-action-btn-starred" : ""
               }`}
               title={isStarred ? "Unstar" : "Star"}
               onClick={onToggleStar}

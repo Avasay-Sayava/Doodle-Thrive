@@ -10,7 +10,6 @@
   font-family: 'Roboto', Arial, sans-serif;
 }
 
-/* Left Section */
 .header-left {
   display: flex;
   align-items: center;
@@ -24,14 +23,12 @@
   font-weight: 400;
 }
 
-/* Middle Section - Search Area */
 .header-middle {
   flex: 1;
   max-width: 720px;
   margin: 0 40px;
 }
 
-/* Right Section - Icons */
 .header-right {
   display: flex;
   align-items: center;

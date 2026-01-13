@@ -96,7 +96,7 @@ export default function GetText({
           <div className="get-text-modal-actions">
             <button
               type="button"
-              className="get-text-modal-btn get-text-modal-btn--primary"
+              className="get-text-modal-btn get-text-modal-btn-primary"
               onClick={() => submit(close)}
             >
               {submitLabel}

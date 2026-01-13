@@ -29,7 +29,7 @@ export default function SharedUserItem({
         <div className="shared-user-item-name">
           <span>{entry.username}</span>
           {entry.isOwner && (
-            <span className="shared-user-item-badge shared-user-item-badge--owner">
+            <span className="shared-user-item-badge shared-user-item-badge-owner">
               Owner
             </span>
           )}

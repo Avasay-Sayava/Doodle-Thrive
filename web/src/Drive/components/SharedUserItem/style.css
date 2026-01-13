@@ -27,7 +27,7 @@
   line-height: 1.4;
 }
 
-.shared-user-item-badge--owner {
+.shared-user-item-badge-owner {
   background: var(--color-primary-faint);
   color: var(--color-primary);
   font-weight: 700;
@@ -46,7 +46,7 @@
 
 .shared-user-item-add-btn {
   background: var(--color-primary);
-  color: white;
+  color: var(--color-bg-main-alt);
   border: none;
   border-radius: 6px;
   padding: 6px 16px;
