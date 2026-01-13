@@ -68,7 +68,6 @@ function SharedView({ refreshKey, onRefresh }) {
   return (
     <div className="file-view">
       <div className="file-view__header">
-        <div className="file-view__header">
           <h1 className="view-title">
             <IconShared
               className="view-title__icon"
@@ -79,7 +78,6 @@ function SharedView({ refreshKey, onRefresh }) {
             />
             <span className="view-title__text">Shared with me</span>
           </h1>
-        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}

@@ -153,11 +153,9 @@ function SearchView({ refreshKey, onRefresh }) {
     return (
         <div className="file-view">
             <div className="file-view__header">
-                <div className="file-view__header">
-                    <h1>
-                        <span className="mydrive-title__text">Results for "{query}"</span>
-                    </h1>
-                </div>
+                <h1>
+                    <span className="mydrive-title__text">Results for "{query}"</span>
+                </h1>
             </div>
 
             {error && <div className="error-message">{error}</div>}

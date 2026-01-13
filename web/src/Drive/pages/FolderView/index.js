@@ -125,11 +125,9 @@ function FolderView({ refreshKey, onRefresh }) {
     return (
         <div className="file-view">
             <div className="file-view__header">
-                <div className="file-view__header">
-                    <h1 className="view-title">
-                        <FolderPath folderId={folderId} />
-                    </h1>
-                </div>
+                <h1 className="view-title">
+                    <FolderPath folderId={folderId} />
+                </h1>
             </div>
 
             {error && <div className="error-message">{error}</div>}

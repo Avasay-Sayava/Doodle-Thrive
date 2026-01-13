@@ -69,12 +69,10 @@ function HomeView({ refreshKey, onRefresh}) {
   return (
     <div className="file-view">
       <div className="file-view__header">
-        <div className="file-view__header">
         <h1 className="view-title">
           <IconHome className="view-title__icon" width={24} height={24} aria-hidden="true" />
           <span className="view-title__text">Home</span>
         </h1>
-        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}

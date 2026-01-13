@@ -72,7 +72,6 @@ function StarredView({ refreshKey, onRefresh}) {
 
     <div className="file-view">
       <div className="file-view__header">
-        <div className="file-view__header">
           <h1 className="view-title">
             <IconStar
               className="view-title__icon"
@@ -83,7 +82,6 @@ function StarredView({ refreshKey, onRefresh}) {
             />
             <span className="view-title__text">Starred</span>
           </h1>
-        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
