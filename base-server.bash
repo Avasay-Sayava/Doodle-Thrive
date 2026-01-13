@@ -1,15 +1,13 @@
 #!/bin/bash
 
-                    # COLOR     STYLE
-RED='\033[0;31m'    # RED       REGULAR
-GREEN='\033[0;32m'  # GREEN     REGULAR
-YELLOW='\033[1;33m' # ORANGE    BOLD
-ORANGE='\033[0;33m' # ORANGE    REGULAR
-CYAN='\033[0;36m'   # CYAN      REGULAR
-BLUE='\033[1;34m'   # BLUE      BOLD
-NC='\033[0m'        # NO COLOR
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+ORANGE='\033[0;33m'
+CYAN='\033[0;36m'
+BLUE='\033[1;34m'
+NC='\033[0m'
 
-# SETUP
 default_build=true
 if [ -z "${build}" ]; then
     echo -e "${CYAN}No build option provided, defaulting to build: ${GREEN}${default_build}${NC}"
@@ -18,7 +16,6 @@ else
     echo -e "${CYAN}Using provided build option: ${GREEN}${build}${NC}"
 fi
 
-# SET BUILD ARG
 case $build in
     true)
         build_arg="--build"
@@ -42,16 +39,18 @@ fi
 
 default_port=3000
 if [ -z "${port}" ]; then
-    echo -e "${CYAN}No port provided, using default port: ${ORANGE}${default_port}${NC}"
-    port=$default_port
+    read -p "Enter the base server port to use (default: ${default_port}): " user_port
+    port=${user_port:-$default_port}
+    echo -e "${CYAN}Using base server port: ${ORANGE}${port}${NC}"
 else
     echo -e "${CYAN}Using provided port: ${ORANGE}${port}${NC}"
 fi
 
 default_threads=10
 if [ -z "${threads}" ]; then
-    echo -e "${CYAN}No thread count provided, using default thread count: ${ORANGE}${default_threads}${NC}"
-    threads=$default_threads
+    read -p "Enter number of server threads (default: ${default_threads}): " user_threads
+    threads=${user_threads:-$default_threads}
+    echo -e "${CYAN}Using thread count: ${ORANGE}${threads}${NC}"
 else
     echo -e "${CYAN}Using provided thread count: ${ORANGE}${threads}${NC}"
 fi
@@ -78,7 +77,6 @@ fi
 
 echo
 
-# START NEW CONTAINER
 echo -e "${CYAN}Starting the new server...${NC}"
 
 if docker-compose run $build_arg -d -p $port:$port -e THREADS=$threads --name $name base-server $port; then
@@ -87,4 +85,3 @@ else
     echo -e "${RED}Error: Failed to start container.${NC}"
     exit 1
 fi
-i
