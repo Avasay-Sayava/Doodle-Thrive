@@ -13,6 +13,7 @@ import renameFile from "../../../utils/renameFile";
 import downloadFile from "../../../utils/downloadFile";
 import patchFile from "../../../utils/patchFile";
 import { roleFromPermissions } from "../../../utils/useFilePermissions";
+import useUserId from "../../../utils/useUserId";
 import GetText from "../../../modals/GetText";
 import ShareDialog from "../../../modals/ShareDialog";
 import MoveFile from "../../../modals/MoveFile";
@@ -26,6 +27,7 @@ export default function FileActions({
   currentUserPerms = null,
   openOnLeftClick = false,
 }) {
+  const currentUserId = useUserId();
   const menuRef = useRef(null);
 
   const openRenameModalRef = useRef(null);
@@ -179,7 +181,7 @@ export default function FileActions({
         key: "description",
         label: "Description",
         rightArrow: true,
-        disabled: !canEdit,
+        disabled: !currentUserPerms?.self?.read,
       },
       { key: "sep-2", type: "separator" },
       {
@@ -195,7 +197,7 @@ export default function FileActions({
         key: "bin",
         label: "Move to bin",
         danger: true,
-        disabled: !canEdit,
+        disabled: !canEdit || file?.owner !== currentUserId,
         onClick: (e) => {
           patchFile(file?.id, { trashed: true }).then(() => {
             onRefresh?.();
@@ -203,7 +205,7 @@ export default function FileActions({
         }
       },
     ];
-  }, [file, onRefresh, currentUserPerms]);
+  }, [file, onRefresh, currentUserPerms, currentUserId]);
 
   const handleItemClick = (item, e) => {
     if (item.disabled) return;

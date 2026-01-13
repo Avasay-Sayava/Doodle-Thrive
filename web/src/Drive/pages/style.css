@@ -52,7 +52,7 @@
   color: var(--color-text-primary);
 
   border-bottom: 1px solid var(--color-border);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 0 var(--color-shadow-sm);
 }
 
 .files-table th {
@@ -93,33 +93,12 @@ tbody tr:hover {
   justify-content: flex-end;
 }
 
-.sort-select {
-  padding: 6px 10px;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  font-size: 12px;
-  background-color: var(--color-bg-main);
-  color: var(--color-text-primary);
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.sort-select:hover {
-  border-color: var(--color-text-muted);
-}
-
-.sort-select:focus {
-  outline: none;
-  border-color: #1f8ce6;
-  box-shadow: 0 0 0 2px rgba(31, 140, 230, 0.1);
-}
-
 .file-view__error {
   padding: 48px 24px;
   text-align: center;
   font-size: 18px;
   font-weight: 500;
-  color: #d93025;
+  color: var(--color-text-error);
 }
 
 .mydrive-title {
@@ -185,7 +164,7 @@ tbody tr:hover {
 
 .btn-empty-trash {
   padding: 8px 16px;
-  background: var(--color-bg-error);
+  background: var(--color-bg-disabled);
   color: var(--color-text-error);
   border: 1px solid var(--color-text-error);
   border-radius: 6px;

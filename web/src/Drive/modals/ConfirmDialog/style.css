@@ -19,7 +19,7 @@
   padding: 8px 16px;
   border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: var(--color-bg-button);
+  background: var(--color-bg-main);
   color: var(--color-text-primary);
   font-size: 14px;
   font-weight: 500;
@@ -47,12 +47,13 @@
 }
 
 .confirm-dialog__button--confirm.is-dangerous {
-  background: var(--color-bg-error);
+  background: var(--color-bg-disabled);
   color: var(--color-text-error);
   border-color: var(--color-text-error);
 }
 
 .confirm-dialog__button--confirm.is-dangerous:hover {
   background: var(--color-text-error);
-  color: var(--color-bg-main);
+  color: white;
+  border-color: var(--color-text-error);
 }

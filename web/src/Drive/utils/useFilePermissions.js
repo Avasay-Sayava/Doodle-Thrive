@@ -27,7 +27,8 @@ const mergePermissions = (data) => {
         },
         permissions: {
           read: current.permissions.read || Boolean(perms?.permissions?.read),
-          write: current.permissions.write || Boolean(perms?.permissions?.write),
+          write:
+            current.permissions.write || Boolean(perms?.permissions?.write),
         },
       };
     });
@@ -61,7 +62,9 @@ export const findUserIdByUsername = async (username) => {
   }
 
   const data = await res.json();
-  const match = Object.entries(data || {}).find(([, user]) => user.username === username);
+  const match = Object.entries(data || {}).find(
+    ([, user]) => user.username === username
+  );
   if (!match) throw new Error("User not found");
   return match[0];
 };
@@ -82,7 +85,9 @@ const transferOwnership = async (fileId, username) => {
 
   if (!res.ok) {
     const txt = await res.text();
-    throw new Error(`Failed to transfer ownership (HTTP ${res.status}): ${txt}`);
+    throw new Error(
+      `Failed to transfer ownership (HTTP ${res.status}): ${txt}`
+    );
   }
 
   return newOwnerId;
@@ -93,10 +98,13 @@ const revokeAccess = async (fileId, username) => {
   if (!token) throw new Error("Missing auth token");
   const targetUserId = await findUserIdByUsername(username);
 
-  const permissionsRes = await fetch(`${API_BASE}/api/files/${fileId}/permissions`, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const permissionsRes = await fetch(
+    `${API_BASE}/api/files/${fileId}/permissions`,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
   if (!permissionsRes.ok) {
     throw new Error("Failed to retrieve file permissions");
@@ -111,12 +119,18 @@ const revokeAccess = async (fileId, username) => {
       if (userId === targetUserId) continue;
 
       mergedOptions[userId] = mergedOptions[userId] ?? emptyPerms();
-      mergedOptions[userId].self.read = permissionsData[pId][userId].self?.read || false;
-      mergedOptions[userId].self.write = permissionsData[pId][userId].self?.write || false;
-      mergedOptions[userId].content.read = permissionsData[pId][userId].content?.read || false;
-      mergedOptions[userId].content.write = permissionsData[pId][userId].content?.write || false;
-      mergedOptions[userId].permissions.read = permissionsData[pId][userId].permissions?.read || false;
-      mergedOptions[userId].permissions.write = permissionsData[pId][userId].permissions?.write || false;
+      mergedOptions[userId].self.read =
+        permissionsData[pId][userId].self?.read || false;
+      mergedOptions[userId].self.write =
+        permissionsData[pId][userId].self?.write || false;
+      mergedOptions[userId].content.read =
+        permissionsData[pId][userId].content?.read || false;
+      mergedOptions[userId].content.write =
+        permissionsData[pId][userId].content?.write || false;
+      mergedOptions[userId].permissions.read =
+        permissionsData[pId][userId].permissions?.read || false;
+      mergedOptions[userId].permissions.write =
+        permissionsData[pId][userId].permissions?.write || false;
     }
   }
 
@@ -178,7 +192,9 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
 
         if (!fileRes.ok) {
           const txt = await fileRes.text();
-          throw new Error(`Failed to fetch file (HTTP ${fileRes.status}): ${txt}`);
+          throw new Error(
+            `Failed to fetch file (HTTP ${fileRes.status}): ${txt}`
+          );
         }
 
         const fileData = await fileRes.json();
@@ -200,7 +216,9 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
 
         if (!res.ok) {
           const txt = await res.text();
-          throw new Error(`Failed to fetch permissions (HTTP ${res.status}): ${txt}`);
+          throw new Error(
+            `Failed to fetch permissions (HTTP ${res.status}): ${txt}`
+          );
         }
 
         const raw = await res.json();
@@ -237,18 +255,12 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
               console.error("Failed to resolve user data", err);
             }
 
-            const isOwnerEntry = fileData.owner ? userId === fileData.owner : false;
-            const computedRole = isOwnerEntry ? "owner" : roleFromPermissions(perms);
-
-            console.log("[loadShared] Processing user:", {
-              userId,
-              username,
-              isOwnerEntry,
-              fileOwner: fileData.owner,
-              perms,
-              computedRole,
-              isCurrentUser: userId === currentUserId
-            });
+            const isOwnerEntry = fileData.owner
+              ? userId === fileData.owner
+              : false;
+            const computedRole = isOwnerEntry
+              ? "owner"
+              : roleFromPermissions(perms);
 
             return {
               userId,
@@ -263,11 +275,9 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         let finalEntries = entries;
 
         if (preserveUserId && preserveRole) {
-          console.log("[loadShared] Preserving userId:", preserveUserId, "with role:", preserveRole);
           const targetEntry = entries.find((e) => e.userId === preserveUserId);
           finalEntries = entries.filter((e) => e.userId !== preserveUserId);
           if (targetEntry) {
-            console.log("[loadShared] Found target entry, applying preserved role");
             finalEntries.push({ ...targetEntry, role: preserveRole });
           }
         }
@@ -277,13 +287,6 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
           if (b.isOwner && !a.isOwner) return 1;
           return a.username.localeCompare(b.username);
         });
-
-        console.log("[loadShared] Final entries:", finalEntries.map(e => ({
-          userId: e.userId,
-          username: e.username,
-          role: e.role,
-          isOwner: e.isOwner
-        })));
 
         setSharedWith(finalEntries);
       } catch (err) {
@@ -298,36 +301,30 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
 
   const updatePermission = useCallback(
     async (entry, nextRole) => {
-      console.log("[updatePermission] Called with:", { 
-        entryUserId: entry.userId, 
-        entryUsername: entry.username,
-        nextRole, 
-        currentUserId,
-        isOwner: entry.isOwner 
-      });
-
       if (!fileId || entry.isOwner) return;
 
       setSharedWith((prev) =>
-        prev.map((item) => (item.userId === entry.userId ? { ...item, role: nextRole } : item))
+        prev.map((item) =>
+          item.userId === entry.userId ? { ...item, role: nextRole } : item
+        )
       );
 
       try {
         if (nextRole === "owner") {
-          console.log("[updatePermission] Starting ownership transfer...");
-          
           // Get current user's username to grant them admin after transfer
           let currentUsername = null;
           if (currentUserId) {
             try {
-              const res = await fetch(`${API_BASE}/api/users/${currentUserId}`, {
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-              });
+              const res = await fetch(
+                `${API_BASE}/api/users/${currentUserId}`,
+                {
+                  method: "GET",
+                  headers: { "Content-Type": "application/json" },
+                }
+              );
               if (res.ok) {
                 const userData = await res.json();
                 currentUsername = userData.username;
-                console.log("[updatePermission] Current user username:", currentUsername);
               }
             } catch (err) {
               console.error("Failed to get current user data", err);
@@ -335,22 +332,16 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
           }
 
           // First give admin permissions to new owner, then transfer ownership
-          console.log("[updatePermission] Giving admin to new owner:", entry.username);
           await shareFile(fileId, entry.username, "admin");
           await wait(200);
-          
-          console.log("[updatePermission] Transferring ownership to:", entry.username);
+
           const newOwnerId = await transferOwnership(fileId, entry.username);
-          console.log("[updatePermission] New owner ID:", newOwnerId);
-          
+
           // Give previous owner (current user) admin permissions
           if (currentUsername) {
-            console.log("[updatePermission] Giving admin to previous owner:", currentUsername);
             await wait(200);
             await shareFile(fileId, currentUsername, "admin");
           }
-          
-          console.log("[updatePermission] Ownership transfer complete");
         } else if (nextRole === "none") {
           await revokeAccess(fileId, entry.username);
         } else {
@@ -358,8 +349,10 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
         }
 
         await wait();
-        console.log("[updatePermission] Reloading shared users with preserveUserId:", entry.userId, "preserveRole:", nextRole);
-        await loadShared({ preserveUserId: entry.userId, preserveRole: nextRole });
+        await loadShared({
+          preserveUserId: entry.userId,
+          preserveRole: nextRole,
+        });
         onRefresh?.();
       } catch (err) {
         console.error("[updatePermission] Error:", err);

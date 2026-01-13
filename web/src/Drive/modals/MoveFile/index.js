@@ -19,6 +19,13 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
   const [folderPath, setFolderPath] = useState({});
   const [isOpen, setIsOpen] = useState(false);
 
+  // Set initial selection to current parent when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedId(file?.parent ?? null);
+    }
+  }, [isOpen, file?.parent]);
+
   // Fetch all folders and their permissions
   useEffect(() => {
     if (!isOpen) return;
@@ -78,34 +85,62 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
               }
 
               const data = await permRes.json();
-              const sharedWith = data.sharedWith || [];
-              // Try multiple ways to get owner ID
-              const ownerId = data.ownerId || folder.owner || data.owner;
+                            
+              // Parse permissions structure: { permissionId: { userId: perms } }
+              let userPerms = null;
+              const ownerId = folder.owner;
+              
+              // Merge all permissions for current user across all permission entries
+              for (const permId in data) {
+                const permEntry = data[permId];
+                if (permEntry[currentUserId]) {
+                  if (!userPerms) {
+                    userPerms = {
+                      self: { read: false, write: false },
+                      content: { read: false, write: false },
+                      permissions: { read: false, write: false }
+                    };
+                  }
+                  // Merge permissions
+                  const perms = permEntry[currentUserId];
+                  userPerms.self.read = userPerms.self.read || perms?.self?.read || false;
+                  userPerms.self.write = userPerms.self.write || perms?.self?.write || false;
+                  userPerms.content.read = userPerms.content.read || perms?.content?.read || false;
+                  userPerms.content.write = userPerms.content.write || perms?.content?.write || false;
+                  userPerms.permissions.read = userPerms.permissions.read || perms?.permissions?.read || false;
+                  userPerms.permissions.write = userPerms.permissions.write || perms?.permissions?.write || false;
+                }
+              }
 
               // Check if current user is owner
               const isOwner = ownerId === currentUserId;
 
-              // Find user's permissions
-              const userPerm = sharedWith.find((s) => s.userId === currentUserId);
-              
+              // Determine user role based on permissions
               let userRole;
-              if (userPerm) {
-                userRole = roleFromPermissions(userPerm.permissions);
-              } else if (isOwner) {
+              if (isOwner) {
                 userRole = "owner";
+              } else if (userPerms) {
+                userRole = roleFromPermissions(userPerms);
               } else {
                 userRole = null;
               }
 
+              
               // User can move to this folder if they have write permission (editor, admin, or owner)
               const canWrite = ["editor", "admin", "owner"].includes(userRole);
 
               if (!canWrite) {
-                return null;
+                                return null;
               }
 
-              return { ...folder, canWrite: true };
+              // Only show folders owned by the file's owner
+              if (file?.owner !== ownerId) {
+                                return null;
+              }
+
+                            return { ...folder, canWrite: true };
             } catch (err) {
+              console.error("[MoveFile] Error processing folder:", folder.name, err);
               return null;
             }
           })
@@ -144,7 +179,7 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
     };
 
     fetchFolders();
-  }, [isOpen, file?.id]);
+  }, [isOpen, file?.id, file?.owner]);
 
   const handleSubmit = useCallback(
     async (close) => {
@@ -154,6 +189,32 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
     [selectedId, onSubmit]
   );
 
+  // Check if current user ID is available
+  const [currentUserId, setCurrentUserId] = useState(null);
+  
+  useEffect(() => {
+    if (!isOpen) return;
+    const fetchUserId = async () => {
+      try {
+        const jwt = localStorage.getItem("token");
+        if (!jwt) return;
+        
+        const tokenRes = await fetch(`${API_BASE}/api/tokens`, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${jwt}` },
+        });
+        
+        if (tokenRes.ok) {
+          const tokenData = await tokenRes.json();
+          setCurrentUserId(tokenData.id);
+        }
+      } catch (err) {
+        console.error("Failed to fetch user ID:", err);
+      }
+    };
+    fetchUserId();
+  }, [isOpen]);
+
   const renderBody = useCallback(
     (isOpen, shouldRender, close) => (
       <div className="move-file-modal">
@@ -162,19 +223,22 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
         ) : (
           <>
             <div className="move-file-folders">
-              <div
-                className={`move-file-folder-item ${
-                  selectedId === null ? "move-file-folder-selected" : ""
-                }`}
-                onClick={() => setSelectedId(null)}
-              >
-                <span className="move-file-folder-icon"><IconFolder /></span>
-                <span className="move-file-folder-name">My Drive (Root)</span>
-              </div>
+              {/* Only show "My Drive (Root)" if the file is owned by the current user */}
+              {file?.owner === currentUserId && (
+                <div
+                  className={`move-file-folder-item ${
+                    selectedId === null ? "move-file-folder-selected" : ""
+                  }`}
+                  onClick={() => setSelectedId(null)}
+                >
+                  <span className="move-file-folder-icon"><IconFolder /></span>
+                  <span className="move-file-folder-name">My Drive (Root)</span>
+                </div>
+              )}
               {folders.length === 0 ? (
                 <div className="move-file-empty">
                   No folders available. You can only move files to folders where you have write
-                  permission.
+                  permission, and cannot move files across different owners.
                 </div>
               ) : (
                 folders.map((folder) => (
@@ -214,7 +278,7 @@ export default function MoveFile({ file, onSubmit = () => {}, children }) {
         )}
       </div>
     ),
-    [loading, folders, selectedId, folderPath, file?.parent, handleSubmit]
+    [loading, folders, selectedId, folderPath, file?.parent, file?.owner, currentUserId, handleSubmit]
   );
 
   return (

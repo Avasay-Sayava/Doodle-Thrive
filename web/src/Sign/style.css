@@ -49,10 +49,12 @@ input[type="submit"]:disabled {
   color: var(--color-text-error);
   font-size: 0.85rem;
   margin-top: 5px;
-  background-color: var(--color-bg-error);
+  background-color: var(--color-bg-disabled);
   border-left: 3px solid var(--color-text-error);
   padding: 8px 12px;
   border-radius: 4px;
+  text-align: center;
+  margin-top: 1rem;
 }
 
 a {

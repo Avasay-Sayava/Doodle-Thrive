@@ -79,7 +79,7 @@ function SharedView({ refreshKey, onRefresh }) {
               width={24}
               height={24}
               aria-hidden="true"
-              style={{ color: "var(--color-icon-primary)" }}
+              style={{ color: "var(--color-text-primary)" }}
             />
             <span className="view-title__text">Shared with me</span>
           </h1>

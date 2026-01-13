@@ -113,7 +113,7 @@ function SignIn({ changeMode, autofill = {} }) {
       />
 
       {errors.general && (
-        <div className="error-message" style={{ textAlign: 'center', marginTop: '1rem' }}>
+        <div className="error-message">
           <p><b>Sign in failed.</b> Check credentials.</p>
         </div>
       )}

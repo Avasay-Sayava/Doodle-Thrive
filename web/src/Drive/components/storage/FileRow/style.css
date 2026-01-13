@@ -16,6 +16,10 @@
   white-space: nowrap;
 }
 
+.file-row__loading {
+  color: var(--color-text-muted);
+}
+
 .col-name {
   padding-left: 24px;
   width: 42%;

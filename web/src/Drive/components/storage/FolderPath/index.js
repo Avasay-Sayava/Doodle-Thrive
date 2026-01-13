@@ -16,15 +16,21 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
     const menuRef = useRef(null);
     const navigate = useNavigate();
     const currentUserId = useUserId();
-    const { currentUserPerms } = useFilePermissions(folderId, currentUserId);
+    const { currentUserPerms, loadShared } = useFilePermissions(folderId, currentUserId);
     
-    // For My Drive (null folderId), always allow write. For folders, check if user is owner or has write permission
-    const isOwner = folderId && path.length > 0 ? path[path.length - 1].owner === currentUserId : true;
-    const canWrite = !folderId || isOwner || (currentUserPerms?.content?.write ?? false);
+    // For My Drive (null folderId), always allow write. For folders, check if user has content.write permission
+    const canWrite = !folderId || (currentUserPerms?.content?.write ?? false);
 
     useEffect(() => {
         onPermissionsLoad?.(canWrite);
     }, [canWrite, onPermissionsLoad]);
+
+    // Load permissions for the folder when it changes
+    useEffect(() => {
+        if (folderId && currentUserId) {
+            loadShared();
+        }
+    }, [folderId, currentUserId, loadShared]);
 
     const goRoot = useCallback(() => navigate(`/drive/mydrive`, { replace: true }), [navigate]);
     const goShared = useCallback(() => navigate(`/drive/shared`, { replace: true }), [navigate]);
@@ -90,17 +96,17 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
     const displayPath = showEllipsis ? [path[path.length - 2], path[path.length - 1]] : path;
 
     return (
-        <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontSize: "inherit", fontWeight: "inherit" }} ref={menuRef}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: "4px", position: "relative" }}>
+        <span className="folder-path" ref={menuRef}>
+            <div className="folder-path__group">
                 {isShared ? (
                     <>
-                        <IconShared width={24} height={24} aria-hidden="true" style={{ color: "var(--color-icon-primary)" }} />
-                        <button onClick={goShared} className="folder-button" style={{ fontSize: "inherit", fontWeight: "inherit", color: "inherit" }}>Shared with me</button>
+                        <IconShared width={24} height={24} aria-hidden="true" style={{ color: "var(--color-text-primary)" }} />
+                        <button onClick={goShared} className="folder-button">Shared with me</button>
                     </>
                 ) : (
                     <>
                         <IconFile width={24} height={24} aria-hidden="true" />
-                        <button onClick={goRoot} className="folder-button" style={{ fontSize: "inherit", fontWeight: "inherit", color: "inherit" }}>My Drive</button>
+                        <button onClick={goRoot} className="folder-button">My Drive</button>
                     </>
                 )}
                 {!folderId && canWrite && (
@@ -109,7 +115,7 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
                             setMenuOpen(!menuOpen);
                             setMenuPosition({ x: e.currentTarget.getBoundingClientRect().left, y: e.currentTarget.getBoundingClientRect().bottom });
                         }}
-                        style={{ fontSize: "inherit", fontWeight: "inherit", color: "inherit", background: "none", border: "none", cursor: "pointer", padding: "0 4px" }}
+                        className="folder-path__create-btn"
                         title="Create item in this folder"
                     >
                         +
@@ -124,19 +130,19 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
                 />
             </div>
             {showEllipsis && (
-                <span style={{ display: "contents" }}>
-                    <span style={{ fontSize: "inherit", color: "var(--color-text-secondary)", margin: "0 4px" }}>&gt;</span>
-                    <span style={{ fontSize: "inherit", color: "var(--color-text-secondary)", display: "flex", alignItems: "center" }}>...</span>
+                <span className="folder-path__separator">
+                    <span className="folder-path__sep-text">&gt;</span>
+                    <span className="folder-path__sep-text">...</span>
                 </span>
             )}
              {displayPath.map((folder, idx) => {
                 const isLast = idx === displayPath.length - 1;
                 return (
-                    <span key={folder.id} style={{ display: "contents" }}>
-                        <span style={{ fontSize: "inherit", color: "var(--color-text-secondary)", margin: "0 4px" }}>&gt;</span>
+                    <span key={folder.id} className="folder-path__separator">
+                        <span className="folder-path__sep-text">&gt;</span>
                         {isLast ? (
-                            <div style={{ display: "inline-flex", alignItems: "center", gap: "4px", position: "relative" }}>
-                                <button onClick={() => navigate(`/drive/folders/${folder.id}`, { replace: true })} className="folder-button" style={{ fontSize: "inherit", fontWeight: "inherit", color: "inherit" }}>
+                            <div className="folder-path__group">
+                                <button onClick={() => navigate(`/drive/folders/${folder.id}`, { replace: true })} className="folder-button">
                                     {folder.name}
                                 </button>
                                 {canWrite && (
@@ -145,7 +151,7 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
                                             setMenuOpen(!menuOpen);
                                             setMenuPosition({ x: e.currentTarget.getBoundingClientRect().left, y: e.currentTarget.getBoundingClientRect().bottom });
                                         }}
-                                        style={{ fontSize: "inherit", fontWeight: "inherit", color: "inherit", background: "none", border: "none", cursor: "pointer", padding: "0 4px" }}
+                                        className="folder-path__create-btn"
                                         title="Create item in this folder"
                                     >
                                         +
@@ -160,7 +166,7 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
                                 />
                             </div>
                         ) : (
-                            <button onClick={() => navigate(`/drive/folders/${folder.id}`, { replace: true })} className="folder-button" style={{ fontSize: "inherit", fontWeight: "inherit", color: "inherit" }}>
+                            <button onClick={() => navigate(`/drive/folders/${folder.id}`, { replace: true })} className="folder-button">
                                 {folder.name}
                             </button>
                         )}

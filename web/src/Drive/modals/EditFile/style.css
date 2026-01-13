@@ -7,7 +7,7 @@
 
 .edit-file-modal__error {
   padding: 12px;
-  background: var(--color-bg-error);
+  background: var(--color-bg-disabled);
   color: var(--color-text-error);
   border-radius: 8px;
   font-size: 14px;

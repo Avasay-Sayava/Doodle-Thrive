@@ -13,7 +13,7 @@
 }
 
 .get-text-modal__overlay::backdrop {
-  background: rgba(0, 0, 0, 0.35);
+  background: var(--color-shadow-overlay);
 }
 
 .get-text-modal {
@@ -70,7 +70,7 @@
   max-height: 200px;
   overflow-y: auto;
   z-index: 1001;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px var(--color-shadow-lg);
 }
 
 .get-text-modal__dropdown-item {
@@ -130,7 +130,7 @@
 .get-text-modal__error {
   margin-top: 10px;
   color: var(--color-text-error);
-  background: var(--color-bg-error);
+  background: var(--color-bg-disabled);
   border-left: 3px solid var(--color-text-error);
   padding: 8px 10px;
   border-radius: 8px;

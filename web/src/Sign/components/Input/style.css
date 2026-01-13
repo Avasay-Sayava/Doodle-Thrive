@@ -16,6 +16,11 @@
     box-shadow: 0 0 0 3px var(--color-bg-hover);
 }
 
+.Input[type="text"].error,
+.Input[type="password"].error {
+    border-color: var(--color-text-error);
+}
+
 .Input[type="file"] {
     margin-top: 5px;
     padding: 5px;

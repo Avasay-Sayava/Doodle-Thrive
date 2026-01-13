@@ -17,8 +17,7 @@ function Input({
 
     return (
         <label>
-            <input className="Input"
-                style={{ borderColor: error ? "red" : undefined }}
+            <input className={`Input${error ? ' error' : ''}`}
                 {...inputProps}
             />
             {error && errorMessage && (

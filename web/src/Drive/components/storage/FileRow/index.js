@@ -82,7 +82,7 @@ function FileRow({ file, onRefresh }) {
       {!hasLoadedPermissions && type === "file" ? (
         <tr className="file-row">
           <td className="col-name" colSpan="5">
-            <span style={{ color: "#999" }}>Loading...</span>
+            <span className="file-row__loading">Loading...</span>
           </td>
         </tr>
       ) : isImage ? (

@@ -26,7 +26,7 @@
 }
 
 .file-action-btn:hover {
-  background-color: rgba(60, 64, 67, 0.12);
+  background-color: var(--color-bg-hover);
   color: var(--color-text-primary);
 }
 
@@ -46,11 +46,11 @@
 }
 
 .file-action-btn--starred {
-  color: var(--color--icon-starred);
+  color: var(--color-icon-starred);
 }
 
 .file-action-btn--starred:hover {
-  color: var(--color--icon-starred-hover);
+  color: var(--color-icon-starred-hover);
 }
 
 .file-action-btn:disabled {

@@ -83,7 +83,7 @@
 
 .shared-user-list__error {
   color: var(--color-text-error);
-  background: var(--color-bg-error);
+  background: var(--color-bg-disabled);
   border-left: 3px solid var(--color-text-error);
   padding: 8px 10px;
   border-radius: 8px;

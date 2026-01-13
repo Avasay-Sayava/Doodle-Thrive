@@ -16,7 +16,7 @@ function Textarea({
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
-                style={{ borderColor: error ? "red" : undefined }}
+                className={error ? 'error' : ''}
                 {...props}
             />
             {error && errorMessage && (

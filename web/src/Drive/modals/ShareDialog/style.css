@@ -38,7 +38,7 @@
 
 .share-dialog__error {
   padding: 10px 12px;
-  background: var(--color-bg-error);
+  background: var(--color-bg-disabled);
   color: var(--color-text-error);
   border-radius: 8px;
   font-size: 13px;
@@ -65,7 +65,7 @@
 
 .share-dialog__btn--primary {
   background: var(--color-primary);
-  color: var(--color-bg-main);
+  color: white;
 }
 
 .share-dialog__btn--primary:hover:not(:disabled) {
@@ -189,7 +189,7 @@
 }
 
 .share-modal__badge--owner {
-  background: var(--color-primary-faint, rgba(99, 102, 241, 0.15));
+  background: var(--color-primary-faint);
   color: var(--color-primary);
   font-weight: 700;
 }

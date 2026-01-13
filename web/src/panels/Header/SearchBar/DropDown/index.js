@@ -6,7 +6,7 @@ function DropDown({ results = [], loading, setOpen }) {
     if (loading) {
         return (
             <div className="search-dropdown">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', minHeight: '60px' }}>
+                <div className="search-dropdown__placeholder">
                     Searching…
                 </div>
             </div>
@@ -16,7 +16,7 @@ function DropDown({ results = [], loading, setOpen }) {
     if (!results.length) {
         return (
             <div className="search-dropdown">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', minHeight: '60px' }}>
+                <div className="search-dropdown__placeholder">
                     No results found
                 </div>
             </div>

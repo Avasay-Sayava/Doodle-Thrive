@@ -28,7 +28,7 @@
 }
 
 .shared-user-item__badge--owner {
-  background: var(--color-primary-faint, rgba(99, 102, 241, 0.15));
+  background: var(--color-primary-faint);
   color: var(--color-primary);
   font-weight: 700;
 }

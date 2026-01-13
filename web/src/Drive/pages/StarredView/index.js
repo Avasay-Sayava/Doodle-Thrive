@@ -78,7 +78,7 @@ function StarredView({ refreshKey, onRefresh}) {
               width={24}
               height={24}
               aria-hidden="true"
-              style={{ color: "var(--color--icon-starred)" }}
+              style={{ color: "var(--color-icon-starred)" }}
             />
             <span className="view-title__text">Starred</span>
           </h1>

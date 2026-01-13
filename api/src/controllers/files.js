@@ -293,29 +293,6 @@ exports.update = async (req, res) => {
         return res.status(403).json({ error: "Insufficient permissions" });
     }
 
-    if (exists(owner) && owner !== Files.info(id)?.owner) {
-      // move to root
-      trimmedData.parent = null;
-
-      // update owner for all children
-      const updateChildrenOwner = async (folderId, newOwner) => {
-        const allFiles = await Files.getAll();
-        for (const file of Object.values(allFiles)) {
-          if (file.parent === folderId) {
-            await Files.update(file.id, { owner: newOwner });
-            // update children of folders
-            if (file.type === "folder") {
-              await updateChildrenOwner(file.id, newOwner);
-            }
-          }
-        }
-      };
-
-      if (Files.info(id).type === "folder") {
-        await updateChildrenOwner(id, owner);
-      }
-    }
-
     const updated = await Files.update(id, trimmedData);
     if (!exists(updated))
       return res.status(404).json({ error: "File/folder not found" });

@@ -1,14 +1,53 @@
+.folder-path {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.folder-path__group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.folder-path__create-btn {
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.folder-path__separator {
+  display: contents;
+}
+
+.folder-path__sep-text {
+  font-size: inherit;
+  color: var(--color-text-secondary);
+  margin: 0 4px;
+  display: flex;
+  align-items: center;
+}
+
 .folder-button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  background-color: var(--color-bg-secondary);
+  background-color: transparent;
   border-radius: 9999px;
-  font-size: 14px;
-  color: var(--color-text-primary);
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
   cursor: pointer;
   border: none;
+  transition: background-color 0.2s ease;
 }
 
 .folder-button:hover {

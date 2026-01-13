@@ -61,7 +61,7 @@ export default function ActionsMenu({ onClose, isOpen, onCreated, folderId = nul
         {(open) => { openFolderRef.current = open; return null; }}
       </GetText>
 
-      <input ref={fileInputRef} type="file" multiple style={{ display: "none" }} onChange={pickFiles} />
+      <input ref={fileInputRef} type="file" multiple className="new__hidden-input" onChange={pickFiles} />
 
       {isOpen && (
         <div className="new__menu" role="menu" aria-label="New menu" style={menuStyle}>

@@ -3,6 +3,10 @@
   display: flex;
 }
 
+.new__hidden-input {
+  display: none;
+}
+
 .new__button {
   display: inline-flex;
   align-items: center;
@@ -112,7 +116,7 @@
 .new__modal-error {
   margin-top: 10px;
   color: var(--color-text-error);
-  background: var(--color-bg-error);
+  background: var(--color-bg-disabled);
   border-left: 3px solid var(--color-text-error);
   padding: 8px 10px;
   border-radius: 8px;
