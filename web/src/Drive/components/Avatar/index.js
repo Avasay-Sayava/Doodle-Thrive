@@ -12,7 +12,7 @@ export default function Avatar({ username, imageUrl, size = 38 }) {
   return (
     <div
       className="avatar"
-      style={{ width: `${size}px`, height: `${size}px` }}
+      style={{ "--avatar-size": `${size}px` }}
       aria-hidden="true"
     >
       {imageUrl ? (

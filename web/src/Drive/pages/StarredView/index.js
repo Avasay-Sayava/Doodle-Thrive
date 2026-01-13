@@ -77,11 +77,10 @@ function StarredView({ refreshKey, onRefresh }) {
       <div className="file-view-header">
         <h1 className="view-title">
           <IconStar
-            className="view-title-icon"
+            className="view-title-icon view-title-icon-starred"
             width={24}
             height={24}
             aria-hidden="true"
-            style={{ color: "var(--color-icon-starred)" }}
           />
           <span className="view-title-text">Starred</span>
         </h1>

@@ -1,3 +1,7 @@
+.folder-path-icon-shared {
+  color: var(--color-text-primary);
+}
+
 .folder-path {
   display: inline-flex;
   align-items: center;

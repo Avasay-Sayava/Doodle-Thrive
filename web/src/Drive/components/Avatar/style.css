@@ -1,4 +1,6 @@
 .avatar {
+  width: var(--avatar-size, 38px);
+  height: var(--avatar-size, 38px);
   border-radius: 12px;
   background: var(--color-bg-hover);
   display: grid;

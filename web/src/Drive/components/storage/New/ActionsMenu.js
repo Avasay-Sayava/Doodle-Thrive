@@ -18,7 +18,7 @@ export default function ActionsMenu({
   const fileInputRef = useRef(null);
 
   const menuStyle = anchorPoint
-    ? { position: "fixed", top: anchorPoint.y, left: anchorPoint.x }
+    ? { "--menu-left": `${anchorPoint.x}px`, "--menu-top": `${anchorPoint.y}px` }
     : {};
 
   const refresh = () => {

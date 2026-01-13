@@ -255,7 +255,7 @@ export default function FileActions({
           <div
             ref={menuRef}
             className="file-actions-menu"
-            style={{ left: pos.x, top: pos.y }}
+            style={{ "--menu-left": `${pos.x}px`, "--menu-top": `${pos.y}px` }}
             role="menu"
             aria-label="File actions"
           >
@@ -305,7 +305,7 @@ export default function FileActions({
           {hoverKey === "description" && (
             <div
               className="file-actions-desc"
-              style={{ left: descPos.x, top: descPos.y }}
+              style={{ "--desc-left": `${descPos.x}px`, "--desc-top": `${descPos.y}px` }}
               onMouseEnter={() => setHoverKey("description")}
               onMouseLeave={closeDescPanel}
               role="note"

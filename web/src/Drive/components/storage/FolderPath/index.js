@@ -109,10 +109,10 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
         {isShared ? (
           <>
             <IconShared
+              className="folder-path-icon-shared"
               width={24}
               height={24}
               aria-hidden="true"
-              style={{ color: "var(--color-text-primary)" }}
             />
             <button onClick={goShared} className="folder-button">
               Shared with me
