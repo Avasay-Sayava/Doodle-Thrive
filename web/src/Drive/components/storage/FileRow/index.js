@@ -3,46 +3,15 @@ import { useState, useEffect } from "react";
 import FileSelect from "../FileSelect";
 import FileActions from "../FileActions";
 import RelativeDate from "../../Date";
-import IconFolder from "../../icons/IconFolder";
-import IconFile from "../../icons/IconFile";
-import IconImageFile from "../../icons/IconImageFile";
-import IconFileLocked from "../../icons/IconFileLocked";
 import EditFile from "../../../modals/EditFile";
 import ViewFile from "../../../modals/ViewFile";
 import ViewImage from "../../../modals/ViewImage";
 import useFilePermissions, { roleFromPermissions } from "../../../utils/useFilePermissions";
 import useUserId from "../../../utils/useUserId";
 import { useNavigate } from "react-router-dom";
-
-function getSize({ type, content }) {
-  if (type === "folder") return "-";
-  let bytes = content?.length || 0;
-  if (bytes < 1024) return bytes + " B";
-  let kb = bytes / 1024;
-  if (kb < 1024) return kb.toFixed(2) + " KB";
-  let mb = kb / 1024;
-  if (mb < 1024) return mb.toFixed(2) + " MB";
-  let gb = mb / 1024;
-  return gb.toFixed(2) + " GB";
-}
-
-function isImageFile(filename) {
-  if (!filename) return false;
-  const ext = filename.toLowerCase().split(".").pop();
-  return ["jpg", "jpeg", "png", "webp"].includes(ext);
-}
-
-function getFileIcon(type, name, isTrashed, canEdit) {
-  if (type === "file" && isImageFile(name)) {
-    return <IconImageFile />;
-  }
-
-  if (type === "file" && !canEdit) {
-    return <IconFileLocked />;
-  }
-
-  return type === "folder" ? <IconFolder /> : <IconFile />;
-}
+import { getFileIcon } from "../../../utils/getFileIcon";
+import { getFileSize } from "../../../utils/getFileSize";
+import { isImageFile } from "../../../utils/fileHelpers";
 
 function FileRow({ file, onRefresh }) {
   const navigate = useNavigate();
@@ -136,7 +105,7 @@ function FileRow({ file, onRefresh }) {
                 <td className="col-modified">
                   <RelativeDate timestamp={modified} />
                 </td>
-                <td className="col-size">{getSize({ type, content })}</td>
+              <td className="col-size">{getFileSize({ type, content })}</td>
                 <td className="col-actions">
                   <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
                 </td>
@@ -164,7 +133,7 @@ function FileRow({ file, onRefresh }) {
                 <td className="col-modified">
                   <RelativeDate timestamp={modified} />
                 </td>
-                <td className="col-size">{getSize({ type, content })}</td>
+                <td className="col-size">{getFileSize({ type, content })}</td>
                 <td className="col-actions">
                   <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
                 </td>
@@ -192,7 +161,7 @@ function FileRow({ file, onRefresh }) {
                 <td className="col-modified">
                   <RelativeDate timestamp={modified} />
                 </td>
-                <td className="col-size">{getSize({ type, content })}</td>
+                <td className="col-size">{getFileSize({ type, content })}</td>
                 <td className="col-actions">
                   <FileSelect file={localFile} onRefresh={onRefresh} isTrashed={localFile.trashed} />
                 </td>
