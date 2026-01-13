@@ -219,7 +219,7 @@ server_name=base-server server_port=3000 ./api-server.bash
 
 * **Create a folder:**
     ```bash
-    curl -i -X POST http://localhost:3300/api/files -H "Username: USERNAME" -H "Password: PASSWORD" -H "Content-Type: application/json" -d '{"name": "folder"}'
+    curl -i -X POST http://localhost:3300/api/files -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NTg3MTI1YTQtZTRhYi00ZGY4LWFhNWYtZmNhOTAxZDJhYTBm.HTk-0YRIwRpPwI-9mITUzboKn2XC5FmSKmIqi_qPfSI" -H "Content-Type: application/json" -d '{"name": "folder"}'
     ```
     ```
     HTTP/1.1 201 Created
@@ -233,7 +233,7 @@ server_name=base-server server_port=3000 ./api-server.bash
 
 * **Create a file**
     ```bash
-    curl -i -X POST http://localhost:3300/api/files -H "Username: USERNAME" -H "Password: PASSWORD" -H "Content-Type: application/json" -d '{"name": "file.txt", "parent": "4a0ec9ae-751a-46ab-a3d6-4295a8df5082", "content": "Hello, World!"}'
+    curl -i -X POST http://localhost:3300/api/files -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NTg3MTI1YTQtZTRhYi00ZGY4LWFhNWYtZmNhOTAxZDJhYTBm.HTk-0YRIwRpPwI-9mITUzboKn2XC5FmSKmIqi_qPfSI" -H "Content-Type: application/json" -d '{"name": "file.txt", "parent": "4a0ec9ae-751a-46ab-a3d6-4295a8df5082", "content": "Hello, World!"}'
     ```
     ```
     HTTP/1.1 201 Created
@@ -247,7 +247,7 @@ server_name=base-server server_port=3000 ./api-server.bash
 
 * **Get a file's content:**
     ```bash
-    curl -i http://localhost:3300/api/files/31798e34-3b62-40b1-b3fe-cd46a494c85c -H "Username: USERNAME" -H "Password: PASSWORD"
+    curl -i http://localhost:3300/api/files/31798e34-3b62-40b1-b3fe-cd46a494c85c -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NTg3MTI1YTQtZTRhYi00ZGY4LWFhNWYtZmNhOTAxZDJhYTBm.HTk-0YRIwRpPwI-9mITUzboKn2XC5FmSKmIqi_qPfSI"
     ```
     ```
     HTTP/1.1 200 OK
@@ -264,7 +264,7 @@ server_name=base-server server_port=3000 ./api-server.bash
 
 * **Add user's permissions** to a file/folder:
     ```bash
-    curl -i -X POST http://localhost:3300/api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082/permissions -H "Username: USERNAME" -H "Password: PASSWORD" -H "Content-Type: application/json" -d '{"options": {"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b": {"read": true, "write": true, "permissions": {"read": true, "write": true}}}}'
+    curl -i -X POST http://localhost:3300/api/files/4a0ec9ae-751a-46ab-a3d6-4295a8df5082/permissions -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NTg3MTI1YTQtZTRhYi00ZGY4LWFhNWYtZmNhOTAxZDJhYTBm.HTk-0YRIwRpPwI-9mITUzboKn2XC5FmSKmIqi_qPfSI" -H "Content-Type: application/json" -d '{"options": {"ebe7aa8d-e2c0-496b-93ca-41f015cfe29b": {"read": true, "write": true, "permissions": {"read": true, "write": true}}}}'
     ```
     ```
     HTTP/1.1 201 Created
@@ -278,7 +278,7 @@ server_name=base-server server_port=3000 ./api-server.bash
 
 * **Search a query:**
     ```bash
-    curl -i http://localhost:3300/api/search/Hello -H "Username: USERNAME" -H "Password: PASSWORD"
+    curl -i http://localhost:3300/api/search/Hello -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.NTg3MTI1YTQtZTRhYi00ZGY4LWFhNWYtZmNhOTAxZDJhYTBm.HTk-0YRIwRpPwI-9mITUzboKn2XC5FmSKmIqi_qPfSI"
     ```
     ```
     HTTP/1.1 200 OK
