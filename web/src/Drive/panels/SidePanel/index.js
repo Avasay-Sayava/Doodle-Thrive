@@ -19,7 +19,7 @@ export default function SidePanel({ onCreated }) {
   ];
 
   return (
-    
+
     <div className="drive-sidebar" aria-label="Sidebar">
       <div className="drive-sidebar__section">
         <New onCreated={onCreated}/>

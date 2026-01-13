@@ -1,9 +1,7 @@
 import "./style.css";
 import { useEffect, useRef, useState, useCallback } from "react";
 import Modal from "../Modal";
-
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
-
 /**
  * GetText modal - a popup for user input with optional search.
  * @param {string} title - modal title
@@ -44,22 +42,18 @@ export default function GetText({
   const [selectValue, setSelectValue] = useState(defaultSelectValue);
   const [userResults, setUserResults] = useState([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
-
   useEffect(() => {
     excludeUsernamesRef.current = excludeUsernames;
   }, [excludeUsernames]);
-
   const submit = useCallback(
     async (close) => {
       const trimmed = value.trim();
       if (!trimmed || !userFound) return;
-
       if (selectOptions) {
         await onSubmit(trimmed, selectValue);
       } else {
         await onSubmit(trimmed);
       }
-
       // Keep dialog open; just reset inputs for next action
       setValue("");
       setSelectValue(defaultSelectValue);
@@ -67,7 +61,6 @@ export default function GetText({
     },
     [value, selectValue, onSubmit, defaultSelectValue, selectOptions, userFound]
   );
-
   // User search effect
   useEffect(() => {
     const trimmed = value.trim();
@@ -75,7 +68,6 @@ export default function GetText({
       setUserResults([]);
       return undefined;
     }
-
     const controller = new AbortController();
     const timer = setTimeout(async () => {
       setLoadingUsers(true);
@@ -85,7 +77,6 @@ export default function GetText({
           setUserResults([]);
           return;
         }
-
         const res = await fetch(`${API_BASE}/api/users`, {
           method: "PATCH",
           headers: {
@@ -94,12 +85,10 @@ export default function GetText({
           },
           body: JSON.stringify({ username: trimmed }),
         });
-
         if (!res.ok) {
           setUserResults([]);
           return;
         }
-
         const data = await res.json();
         const users = Object.entries(data || {})
           .map(([id, { username }]) => ({ id, username }))
@@ -115,24 +104,20 @@ export default function GetText({
         setLoadingUsers(false);
       }
     }, 0);
-
     return () => {
       controller.abort();
       clearTimeout(timer);
     };
   }, [value, showUserSearch]);
-
   const handleClose = useCallback(() => {
     setValue("");
     setSelectValue(defaultSelectValue);
     setUserResults([]);
     onClose();
   }, [defaultSelectValue, onClose]);
-
   const renderBody = useCallback(
     (isOpen, shouldRender, close) => {
       if (!shouldRender) return null;
-
       return (
         <>
           <div className="get-text-modal__input-wrapper">
@@ -151,9 +136,7 @@ export default function GetText({
               autoFocus
             />
           </div>
-
           {error && <div className="get-text-modal__error">{error}</div>}
-
           {buttonAfterInput && (
             <div className="get-text-modal__actions">
               <button
@@ -166,7 +149,6 @@ export default function GetText({
               </button>
             </div>
           )}
-
           {selectOptions && (
             <div className="get-text-modal__select-group">
               <label className="get-text-modal__select-label">
@@ -185,7 +167,6 @@ export default function GetText({
               </select>
             </div>
           )}
-
           {buttonAfterSelect && (
             <div className="get-text-modal__actions">
               <button
@@ -198,7 +179,6 @@ export default function GetText({
               </button>
             </div>
           )}
-
           {renderExtra ? (
             <div className="get-text-modal__extra">
               {renderExtra({ userResults, loadingUsers })}
@@ -206,7 +186,6 @@ export default function GetText({
           ) : extraContent ? (
             <div className="get-text-modal__extra">{extraContent}</div>
           ) : null}
-
           {!buttonAfterSelect && !buttonAfterInput && (
             <div className="get-text-modal__actions">
               <button
@@ -241,7 +220,6 @@ export default function GetText({
       submit,
     ]
   );
-
   return (
     <Modal
       title={title}

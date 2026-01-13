@@ -1,5 +1,5 @@
 import "./style.css";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import Modal from "../Modal";
 
 /**
@@ -26,23 +26,20 @@ export default function ConfirmDialog({
   const modalOpenRef = useRef(null);
   const modalCloseRef = useRef(null);
 
-  console.log("[ConfirmDialog] Render");
 
   return (
     <>
       <Modal
         title={title}
         renderBody={(isOpen, shouldRender, close) => {
-          console.log("[ConfirmDialog] Modal renderBody - isOpen:", isOpen, "shouldRender:", shouldRender);
-          return (
+                    return (
             <div className="confirm-dialog">
               <p className="confirm-dialog__message">{message}</p>
               <div className="confirm-dialog__actions">
                 <button
                   className="confirm-dialog__button confirm-dialog__button--cancel"
                   onClick={() => {
-                    console.log("[ConfirmDialog] Cancel clicked");
-                    close();
+                                        close();
                     onCancel?.();
                   }}
                 >
@@ -53,8 +50,7 @@ export default function ConfirmDialog({
                     isDangerous ? "is-dangerous" : ""
                   }`}
                   onClick={() => {
-                    console.log("[ConfirmDialog] Confirm clicked");
-                    close();
+                                        close();
                     onConfirm?.();
                   }}
                 >
@@ -66,8 +62,7 @@ export default function ConfirmDialog({
         }}
       >
         {(open, close) => {
-          console.log("[ConfirmDialog] Modal children render function called");
-          modalOpenRef.current = open;
+                    modalOpenRef.current = open;
           modalCloseRef.current = close;
           return children?.(open);
         }}

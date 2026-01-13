@@ -6,7 +6,6 @@ import useFilePermissions, {
 } from "../../utils/useFilePermissions";
 import SharedUserList from "../../components/SharedUserList";
 import useUserId from "../../utils/useUserId";
-
 const PERMISSION_OPTIONS = [
   { value: "none", label: "Remove access" },
   { value: "viewer", label: "Viewer access" },
@@ -14,7 +13,6 @@ const PERMISSION_OPTIONS = [
   { value: "admin", label: "Admin access" },
   { value: "owner", label: "Owner access" },
 ];
-
 const ROLE_LABELS = {
   viewer: "Viewer access",
   editor: "Editor access",
@@ -22,21 +20,16 @@ const ROLE_LABELS = {
   none: "No access",
   owner: "Owner access",
 };
-
 const wait = (ms = 350) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export default function ShareDialog({ file, onRefresh, children }) {
   const fileId = file?.id;
   const currentUserId = useUserId();
   const onRefreshRef = useRef(onRefresh);
   const [error, setError] = useState(null);
-  const [searchUsername, setSearchUsername] = useState("");
   const [userFound, setUserFound] = useState(false);
-
   useEffect(() => {
     onRefreshRef.current = onRefresh;
   }, [onRefresh]);
-
   const {
     sharedWith,
     loading: sharedLoading,
@@ -45,34 +38,29 @@ export default function ShareDialog({ file, onRefresh, children }) {
     loadShared,
     updatePermission,
   } = useFilePermissions(fileId, currentUserId, onRefresh);
-
   // Reload shared users when currentUserId becomes available
   useEffect(() => {
     if (currentUserId && fileId) {
       loadShared();
     }
   }, [currentUserId, fileId, loadShared]);
-
   const handleRoleChange = useCallback(
     (entry, nextRole) => {
       updatePermission(entry, nextRole);
     },
     [updatePermission]
   );
-
   const handleAddUser = useCallback(
     (username) => {
       if (!fileId) {
         setError("Unable to share: file not found");
         return;
       }
-
       const existingUser = sharedWith.find((u) => u.username === username);
       if (existingUser) {
         setError("This user already has access to this file");
         return;
       }
-
       findUserIdByUsername(username)
         .then((targetId) => {
           if (ownerId && targetId === ownerId) {
@@ -96,12 +84,10 @@ export default function ShareDialog({ file, onRefresh, children }) {
     },
     [fileId, sharedWith, ownerId, loadShared]
   );
-
   const excludeUsernames = useMemo(
     () => sharedWith.map((u) => u.username),
     [sharedWith]
   );
-
   const renderExtra = useCallback(
     ({ userResults, loadingUsers }) => (
       <>
@@ -142,7 +128,6 @@ export default function ShareDialog({ file, onRefresh, children }) {
       handleAddUser,
     ]
   );
-
   return (
     <GetText
       title="Share"
@@ -164,19 +149,15 @@ export default function ShareDialog({ file, onRefresh, children }) {
       userFound={userFound}
       onSubmit={(username) => {
         setError(null);
-        setSearchUsername(username);
-
         if (!fileId) {
           setError("Unable to share: file not found");
           return Promise.resolve();
         }
-
         const existingUser = sharedWith.find((u) => u.username === username);
         if (existingUser) {
           setError("This user already has access to this file");
           return Promise.resolve();
         }
-
         return findUserIdByUsername(username)
           .then((targetId) => {
             setUserFound(true);

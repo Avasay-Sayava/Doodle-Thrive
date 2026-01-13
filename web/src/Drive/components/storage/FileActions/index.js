@@ -144,9 +144,7 @@ export default function FileActions({
           label: "Delete Permanently",
           danger: true,
           onClick: (e) => {
-            console.log("[FileActions] Delete clicked, event:", e);
-            console.log("[FileActions] openDeleteConfirmRef.current:", openDeleteConfirmRef.current);
-            e.stopPropagation();
+                                    e.stopPropagation();
             // Call the modal open immediately - the menu will close via handleItemClick
             openDeleteConfirmRef.current?.();
           }
@@ -366,22 +364,20 @@ export default function FileActions({
         cancelLabel="Cancel"
         isDangerous={true}
         onConfirm={async () => {
-          console.log("[FileActions] ConfirmDialog onConfirm called");
-          try {
+                    try {
             const res = await fetch(`${process.env.API_BASE_URL || "http://localhost:3300"}/api/files/${file?.id}`, {
               method: "DELETE",
               headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
             });
-            
+
             if (!res.ok) {
               const text = await res.text();
               console.error("Failed to delete file:", text);
               alert(`Failed to delete file: ${text}`);
               return;
             }
-            
-            console.log("[FileActions] File deleted successfully, calling onRefresh");
-            onRefresh?.();
+
+                        onRefresh?.();
           } catch (err) {
             console.error("Error deleting file:", err);
             alert(`Error deleting file: ${err.message}`);
@@ -389,8 +385,7 @@ export default function FileActions({
         }}
       >
         {(openDeleteConfirm) => {
-          console.log("[FileActions] ConfirmDialog render function called, setting ref");
-          openDeleteConfirmRef.current = openDeleteConfirm;
+                    openDeleteConfirmRef.current = openDeleteConfirm;
           return null;
         }}
       </ConfirmDialog>
