@@ -52,13 +52,12 @@ function RecentsView({ refreshKey, onRefresh }) {
 
         const filesObj = await res.json();
         const allFiles = (Array.isArray(filesObj) ? filesObj : Object.values(filesObj)).filter((f) => f.trashed !== true);
-        const rootFiles = allFiles.filter((f) => f.parent == null);
 
-        for (let i = 0; i < rootFiles.length; i++) {
-          rootFiles[i].ownerUsername = await getUser(rootFiles[i].owner);
+        for (let i = 0; i < allFiles.length; i++) {
+          allFiles[i].ownerUsername = await getUser(allFiles[i].owner);
         }
 
-        setFiles(sortFiles(rootFiles, sortBy, sortDir, foldersMode));
+        setFiles(sortFiles(allFiles, sortBy, sortDir, foldersMode).slice(0, 30)); // show top 30 recent files
         handleSortChange({ sortBy, sortDir, foldersMode });
       } catch (err) {
         setError(err?.message || "Failed to load files");

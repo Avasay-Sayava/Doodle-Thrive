@@ -16,7 +16,6 @@ import "./style.css";
  * @param {Function} onAddUser - callback when add button is clicked
  * @param {boolean} hideRefresh - hide the refresh button
  * @param {string} emptyMessage - custom empty state message
- * @param {number} maxVisibleUsers - maximum number of users visible before scrolling
  */
 export default function SharedUserList({
   users = [],
@@ -32,7 +31,6 @@ export default function SharedUserList({
   onAddUser,
   hideRefresh = false,
   emptyMessage = "No one else has access yet.",
-  maxVisibleUsers,
 }) {
   return (
     <div className="shared-user-list">
@@ -55,7 +53,7 @@ export default function SharedUserList({
 
       {error && <div className="shared-user-list__error">{error}</div>}
 
-      <div className={`shared-user-list__items${maxVisibleUsers ? ' shared-user-list__items--limited' : ''}`}>
+      <div className={`shared-user-list__items`}>
         {users.length === 0 && !loading && !error ? (
           <div className="shared-user-list__empty">{emptyMessage}</div>
         ) : null}

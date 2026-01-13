@@ -34,6 +34,9 @@ export default function GetText({
   buttonAfterSelect = false,
   buttonAfterInput = false,
   excludeUsernames = [],
+  error = null,
+  userFound = true,
+  onInputChange = () => {},
 }) {
   const inputRef = useRef(null);
   const excludeUsernamesRef = useRef(excludeUsernames);
@@ -49,7 +52,7 @@ export default function GetText({
   const submit = useCallback(
     async (close) => {
       const trimmed = value.trim();
-      if (!trimmed) return;
+      if (!trimmed || !userFound) return;
 
       if (selectOptions) {
         await onSubmit(trimmed, selectValue);
@@ -62,7 +65,7 @@ export default function GetText({
       setSelectValue(defaultSelectValue);
       setUserResults([]);
     },
-    [value, selectValue, onSubmit, defaultSelectValue, selectOptions]
+    [value, selectValue, onSubmit, defaultSelectValue, selectOptions, userFound]
   );
 
   // User search effect
@@ -137,7 +140,10 @@ export default function GetText({
               ref={inputRef}
               className="get-text-modal__input"
               value={value}
-              onChange={(e) => setValue(e.target.value)}
+              onChange={(e) => {
+                setValue(e.target.value);
+                onInputChange(e.target.value);
+              }}
               placeholder={placeholder}
               onKeyDown={(e) => {
                 if (e.key === "Enter") submit(close);
@@ -146,12 +152,15 @@ export default function GetText({
             />
           </div>
 
+          {error && <div className="get-text-modal__error">{error}</div>}
+
           {buttonAfterInput && (
             <div className="get-text-modal__actions">
               <button
                 type="button"
                 className="get-text-modal__btn get-text-modal__btn--primary"
                 onClick={() => submit(close)}
+                disabled={!userFound}
               >
                 {submitLabel}
               </button>
@@ -183,6 +192,7 @@ export default function GetText({
                 type="button"
                 className="get-text-modal__btn get-text-modal__btn--primary"
                 onClick={() => submit(close)}
+                disabled={!userFound}
               >
                 {submitLabel}
               </button>
@@ -203,6 +213,7 @@ export default function GetText({
                 type="button"
                 className="get-text-modal__btn get-text-modal__btn--primary"
                 onClick={() => submit(close)}
+                disabled={!userFound}
               >
                 {submitLabel}
               </button>
@@ -214,16 +225,19 @@ export default function GetText({
     [
       value,
       placeholder,
-      loadingUsers,
-      userResults,
+      error,
       buttonAfterInput,
+      userFound,
       submitLabel,
       selectOptions,
       selectLabel,
       selectValue,
       buttonAfterSelect,
-      extraContent,
       renderExtra,
+      userResults,
+      loadingUsers,
+      extraContent,
+      onInputChange,
       submit,
     ]
   );

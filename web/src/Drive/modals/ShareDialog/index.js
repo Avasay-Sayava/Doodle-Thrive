@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useEffect, useRef } from "react";
+import { useCallback, useMemo, useEffect, useRef, useState } from "react";
 import GetText from "../GetText";
 import shareFile from "../../utils/shareFile";
 import useFilePermissions, {
@@ -29,6 +29,9 @@ export default function ShareDialog({ file, onRefresh, children }) {
   const fileId = file?.id;
   const currentUserId = useUserId();
   const onRefreshRef = useRef(onRefresh);
+  const [error, setError] = useState(null);
+  const [searchUsername, setSearchUsername] = useState("");
+  const [userFound, setUserFound] = useState(false);
 
   useEffect(() => {
     onRefreshRef.current = onRefresh;
@@ -60,20 +63,21 @@ export default function ShareDialog({ file, onRefresh, children }) {
   const handleAddUser = useCallback(
     (username) => {
       if (!fileId) {
-        console.error("Missing file id");
+        setError("Unable to share: file not found");
         return;
       }
 
       const existingUser = sharedWith.find((u) => u.username === username);
       if (existingUser) {
-        console.error(`${username} already has access`);
+        setError("This user already has access to this file");
         return;
       }
 
       findUserIdByUsername(username)
         .then((targetId) => {
           if (ownerId && targetId === ownerId) {
-            throw new Error("Owner already has full access.");
+            setError("The file owner already has full access");
+            return;
           }
           return shareFile(fileId, username, "viewer");
         })
@@ -81,7 +85,13 @@ export default function ShareDialog({ file, onRefresh, children }) {
         .then(() => loadShared({ preserveUserId: undefined }))
         .then(() => onRefreshRef.current?.())
         .catch((err) => {
-          console.error("Failed to add user:", err);
+          if (err.message.includes("not found") || err.message.includes("404")) {
+            setError("User not found");
+          } else if (err.message.includes("already has access")) {
+            setError("This user already has access to this file");
+          } else {
+            setError("Failed to share file. Please try again");
+          }
         });
     },
     [fileId, sharedWith, ownerId, loadShared]
@@ -108,7 +118,8 @@ export default function ShareDialog({ file, onRefresh, children }) {
           showAddButton={true}
           onAddUser={handleAddUser}
           hideRefresh={true}
-          emptyMessage="No new users found."          maxVisibleUsers={3}        />
+          emptyMessage="No new users found."
+        />
         <SharedUserList
           users={sharedWith}
           currentUserId={currentUserId}
@@ -138,32 +149,55 @@ export default function ShareDialog({ file, onRefresh, children }) {
       placeholder="Add people by username"
       submitLabel="Share"
       showUserSearch
-      onOpen={loadShared}
+      onOpen={() => {
+        setError(null);
+        setUserFound(true);
+        loadShared();
+      }}
+      onInputChange={() => {
+        setError(null);
+        setUserFound(true);
+      }}
       renderExtra={renderExtra}
       excludeUsernames={excludeUsernames}
+      error={error}
+      userFound={userFound}
       onSubmit={(username) => {
+        setError(null);
+        setSearchUsername(username);
+
         if (!fileId) {
-          return Promise.reject(new Error("Missing file id"));
+          setError("Unable to share: file not found");
+          return Promise.resolve();
         }
 
         const existingUser = sharedWith.find((u) => u.username === username);
         if (existingUser) {
-          return Promise.reject(new Error(`${username} already has access`));
+          setError("This user already has access to this file");
+          return Promise.resolve();
         }
 
-        const action = findUserIdByUsername(username).then((targetId) => {
-          if (ownerId && targetId === ownerId) {
-            throw new Error("Owner already has full access.");
-          }
-          return shareFile(fileId, username, "viewer");
-        });
-
-        return Promise.resolve(action)
+        return findUserIdByUsername(username)
+          .then((targetId) => {
+            setUserFound(true);
+            if (ownerId && targetId === ownerId) {
+              setError("The file owner already has full access");
+              setUserFound(false);
+              return Promise.resolve();
+            }
+            return shareFile(fileId, username, "viewer");
+          })
           .then(() => wait())
           .then(() => loadShared({ preserveUserId: undefined }))
           .then(() => onRefreshRef.current?.())
           .catch((err) => {
-            throw err;
+            setUserFound(false);
+            if (err.message.includes("not found") || err.message.includes("404")) {
+              setError("User not found");
+            } else if (err.message) {
+              setError("Failed to share file. Please try again");
+            }
+            return Promise.resolve();
           });
       }}
     >
