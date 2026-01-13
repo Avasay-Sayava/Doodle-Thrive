@@ -57,17 +57,17 @@ function FileRow({ file, onRefresh }) {
   const { name, modified, content, ownerUsername, type } = localFile;
 
   const isImage = isImageFile(name);
-
+  
   // Get user's role based on permissions
   const userRole = roleFromPermissions(currentUserPerms);
-
+  
   // Check if current user can edit (editor or above)
   const canEdit = ["editor", "admin", "owner"].includes(userRole);
 
   const handleFileClick = (e, openModal) => {
     // Check if any modal is open (dialog element with open attribute)
     const isAnyModalOpen = document.querySelector('dialog[open]');
-
+    
     if (type === "file") {
       // Don't open file if it's in trash
       if (!loading && !localFile.trashed) {
@@ -89,7 +89,7 @@ function FileRow({ file, onRefresh }) {
       content: updatedData.content,
       modified: updatedData.modified
     }));
-
+    
     // Still call parent refresh if needed
     onRefresh?.();
   };

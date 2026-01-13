@@ -78,7 +78,7 @@ export default function SharedUserList({
                 }
                 return true;
               });
-
+          
           return (
             <SharedUserItem
               key={entry.userId}
