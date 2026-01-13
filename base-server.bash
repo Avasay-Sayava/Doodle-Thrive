@@ -81,9 +81,10 @@ echo
 # START NEW CONTAINER
 echo -e "${CYAN}Starting the new server...${NC}"
 
-if docker-compose run $build_arg -d -e THREADS=$threads --name $name base-server $port; then
+if docker-compose run $build_arg -d -p $port:$port -e THREADS=$threads --name $name base-server $port; then
     echo -e "${GREEN}Success! ${CYAN}Container ${GREEN}'${name}'${CYAN} started on port ${ORANGE}${port}${CYAN}.${NC}"
 else
     echo -e "${RED}Error: Failed to start container.${NC}"
     exit 1
 fi
+i
