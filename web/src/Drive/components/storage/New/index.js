@@ -1,5 +1,5 @@
 import "./style.css";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import ActionsMenu from "./ActionsMenu";
 
 export default function New({
@@ -9,20 +9,30 @@ export default function New({
   ...rest
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const rootRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  const anchorPoint = useMemo(() => {
+    if (!menuOpen || !buttonRef.current) return null;
+    const rect = buttonRef.current.getBoundingClientRect();
+    return {
+      x: rect.left,
+      y: rect.bottom + 4,
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     const onDown = (e) => {
-      if (!rootRef.current?.contains(e.target)) setMenuOpen(false);
+      if (!buttonRef.current?.contains(e.target)) setMenuOpen(false);
     };
     document.addEventListener("mousedown", onDown);
     return () => document.removeEventListener("mousedown", onDown);
   }, []);
 
   return (
-    <div className="new" ref={rootRef} {...rest}>
+    <div className="new" {...rest}>
       <div className={hidden ? "new-hidden-trigger" : ""}>
         <button
+          ref={buttonRef}
           type="button"
           className="new-button"
           onClick={() => setMenuOpen((v) => !v)}
@@ -39,6 +49,7 @@ export default function New({
         onClose={() => setMenuOpen(false)}
         onCreated={onCreated}
         folderId={folderId}
+        anchorPoint={anchorPoint}
       />
     </div>
   );

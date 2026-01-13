@@ -129,11 +129,12 @@ export default function FolderPath({ folderId, onRefresh, onPermissionsLoad }) {
         {!folderId && canWrite && (
           <button
             onClick={(e) => {
-              setMenuOpen(!menuOpen);
-              setMenuPosition({
+              const pos = {
                 x: e.currentTarget.getBoundingClientRect().left,
                 y: e.currentTarget.getBoundingClientRect().bottom,
-              });
+              };
+              setMenuOpen(!menuOpen);
+              setMenuPosition(pos);
             }}
             className="folder-path-create-btn"
             title="Create item in this folder"
