@@ -88,7 +88,7 @@
   gap: 12px;
   justify-content: flex-end;
   padding: 16px 0 0 0;
-  margin-top: 16px;
+  margin-top: auto;
   border-top: 1px solid var(--color-border);
 }
 
@@ -115,7 +115,7 @@
 }
 
 .move-file-btn--cancel:hover:not(:disabled) {
-  background-color: var(--color-hover, rgba(0, 0, 0, 0.05));
+  background-color: var(--color-bg-hover);
 }
 
 .move-file-btn--primary {
@@ -124,7 +124,7 @@
 }
 
 .move-file-btn--primary:hover:not(:disabled) {
-  background-color: var(--color-primary-dark);
+  background-color: var(--color-primary-hover);
 }
 
 .move-file-btn--primary:active:not(:disabled) {

@@ -12,7 +12,7 @@ function SignIn({ changeMode, autofill = {} }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/drive/home", { replace: true });
+      navigate("/drive", { replace: true });
     }
   }, [navigate]);
 
@@ -70,7 +70,7 @@ function SignIn({ changeMode, autofill = {} }) {
       const data = await response.json();
       localStorage.setItem("token", data.token);
 
-      navigate("/drive/home", { replace: true });
+      navigate("/drive");
     } catch (error) {
       console.error("API Error:", error);
       setErrors(prev => ({ ...prev, general: true }));

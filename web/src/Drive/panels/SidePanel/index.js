@@ -10,7 +10,7 @@ import IconBin from "../../components/icons/IconBin";
 
 export default function SidePanel({ onCreated }) {
   const items = [
-    { to: "/drive", end: true, label: "Home", icon: IconHome },
+    { to: "/drive/home", end: true, label: "Home", icon: IconHome },
     { to: "/drive/mydrive", end: true, label: "My Drive", icon: IconFile },
     { to: "/drive/starred", label: "Starred", icon: IconStar },
     { to: "/drive/shared", label: "Shared with me", icon: IconShared },

@@ -13,7 +13,7 @@ function SignUp({ changeMode, autofill = {} }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/drive/home", { replace: true });
+      navigate("/drive", { replace: true });
     }
   }, [navigate]);
 
