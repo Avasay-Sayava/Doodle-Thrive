@@ -1,8 +1,25 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 .move-file-modal {
+  width: min(520px, -webkit-calc(100vw - 32px));
+  width: min(520px, -moz-calc(100vw - 32px));
   width: min(520px, calc(100vw - 32px));
   min-height: 300px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
 }
 
 .move-file-loading {
@@ -12,8 +29,16 @@
 }
 
 .move-file-folders {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
   gap: 4px;
   max-height: 400px;
   overflow-y: auto;
@@ -21,12 +46,23 @@
 }
 
 .move-file-folder-item {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  border-radius: 8px;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
   cursor: pointer;
+  -webkit-transition: background-color 0.15s ease;
+  -o-transition: background-color 0.15s ease;
+  -moz-transition: background-color 0.15s ease;
   transition: background-color 0.15s ease;
 }
 
@@ -42,10 +78,20 @@
 .move-file-folder-icon {
   color: var(--color-text-secondary);
   font-size: 20px;
-  flex-shrink: 0;
+  -webkit-flex-shrink: 0;
+          flex-shrink: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+     -moz-box-pack: center;
+          justify-content: center;
   width: 24px;
   height: 24px;
 }
@@ -53,9 +99,13 @@
 .move-file-folder-name {
   font-size: 14px;
   color: var(--color-text-primary);
-  flex: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+     -moz-box-flex: 1;
+          flex: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+     text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -67,9 +117,15 @@
 }
 
 .move-file-actions {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
   gap: 12px;
-  justify-content: flex-end;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+     -moz-box-pack: end;
+          justify-content: flex-end;
   padding: 16px 0 0 0;
   margin-top: auto;
   border-top: 1px solid var(--color-border);
@@ -77,10 +133,15 @@
 
 .move-file-btn {
   padding: 10px 24px;
-  border-radius: 6px;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
+  -webkit-transition: all 0.15s ease;
+  -o-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
   transition: all 0.15s ease;
   border: none;
   outline: none;

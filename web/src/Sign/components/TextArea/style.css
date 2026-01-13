@@ -1,19 +1,33 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 textarea {
     padding: 10px;
     margin-top: 5px;
     min-height: 80px;
     border: 1px solid var(--color-border);
-    border-radius: 4px;
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
     font-size: 16px;
     font-family: inherit;
     resize: none;
+    -webkit-transition: border-color 0.2s;
+    -o-transition: border-color 0.2s;
+    -moz-transition: border-color 0.2s;
     transition: border-color 0.2s;
 }
 
 textarea:focus {
     outline: none;
     border-color: var(--color-focus);
-    box-shadow: 0 0 0 3px var(--color-bg-hover);
+    -webkit-box-shadow: 0 0 0 3px var(--color-bg-hover);
+       -moz-box-shadow: 0 0 0 3px var(--color-bg-hover);
+            box-shadow: 0 0 0 3px var(--color-bg-hover);
 }
 
 textarea.error {

@@ -1,16 +1,36 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 .view-file-modal-content {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
   gap: 16px;
   min-height: 400px;
 }
 
 .view-file-modal-textarea {
-  flex: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+     -moz-box-flex: 1;
+          flex: 1;
   min-height: 300px;
   padding: 12px;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
   font-family: monospace;
   font-size: 14px;
   line-height: 1.5;
@@ -28,10 +48,22 @@
 }
 
 .view-file-modal-loading {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+     -moz-box-pack: center;
+          justify-content: center;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+     -moz-box-flex: 1;
+          flex: 1;
   color: var(--color-text-secondary);
   font-size: 14px;
 }
@@ -40,17 +72,24 @@
   padding: 12px;
   background: var(--color-bg-disabled);
   color: var(--color-text-error);
-  border-radius: 8px;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
   font-size: 14px;
   border-left: 3px solid var(--color-text-error);
 }
 
 .view-file-modal-text-wrapper {
-  flex: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+     -moz-box-flex: 1;
+          flex: 1;
   min-height: 300px;
   overflow: auto;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
   background: var(--color-bg-main);
   width: min(80vw, 700px);
 }
@@ -64,14 +103,23 @@
   color: var(--color-text-primary);
   white-space: pre-wrap;
   word-wrap: break-word;
-  user-select: text;
+  -webkit-user-select: text;
+     -moz-user-select: text;
+      -ms-user-select: text;
+          user-select: text;
 }
 
 .view-file-modal-actions {
   margin-top: auto;
   width: min(80vw, 700px);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  justify-content: flex-end;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+     -moz-box-pack: end;
+          justify-content: flex-end;
   gap: 8px;
   padding-top: 12px;
   border-top: 1px solid var(--color-border);
@@ -80,11 +128,16 @@
 .view-file-modal-button {
   padding: 8px 16px;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
   background: var(--color-bg-main);
   color: var(--color-text-primary);
   cursor: pointer;
   font-size: 14px;
+  -webkit-transition: background-color 0.2s;
+  -o-transition: background-color 0.2s;
+  -moz-transition: background-color 0.2s;
   transition: background-color 0.2s;
 }
 

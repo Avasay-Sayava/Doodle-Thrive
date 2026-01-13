@@ -1,5 +1,15 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 .new {
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
 }
 
@@ -8,19 +18,33 @@
 }
 
 .new-button {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
   display: inline-flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   gap: 12px;
 
   padding: 14px 22px;
   margin-bottom: 8px;
   font-size: 16px;
-  border-radius: 15px;
+  -webkit-border-radius: 15px;
+     -moz-border-radius: 15px;
+          border-radius: 15px;
 
   border: 1px solid var(--color-border);
   background: var(--color-bg-main);
   color: var(--color-text-primary);
   font-weight: 500;
+
+  -webkit-transition: background-color 0.15s;
+
+  -o-transition: background-color 0.15s;
+
+  -moz-transition: background-color 0.15s;
 
   transition: background-color 0.15s;
 }
@@ -32,7 +56,11 @@
 .new-plus {
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+
+  display: -ms-grid;
 
   display: grid;
   place-items: center;
@@ -50,7 +78,9 @@
 
   background: var(--color-bg-main);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  -webkit-border-radius: 12px;
+     -moz-border-radius: 12px;
+          border-radius: 12px;
   overflow: hidden;
 
   z-index: 50;
@@ -59,8 +89,14 @@
 .new-menu-item {
   width: 100%;
   padding: 12px 14px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   gap: 12px;
   color: var(--color-text-primary);
   font-size: 14px;
@@ -73,7 +109,9 @@
 .new-menu-icon {
   width: 18px;
   height: 18px;
-  flex-shrink: 0;
+  -webkit-flex-shrink: 0;
+          flex-shrink: 0;
+  display: -ms-grid;
   display: grid;
   place-items: center;
 }
@@ -81,15 +119,20 @@
 .new-modal-overlay {
   position: fixed;
   inset: 0;
+  display: -ms-grid;
   display: grid;
   place-items: center;
   z-index: 1000;
 }
 
 .new-modal {
+  width: min(520px, -webkit-calc(100vw - 32px));
+  width: min(520px, -moz-calc(100vw - 32px));
   width: min(520px, calc(100vw - 32px));
   background: var(--color-bg-main);
-  border-radius: 18px;
+  -webkit-border-radius: 18px;
+     -moz-border-radius: 18px;
+          border-radius: 18px;
   padding: 22px 22px 18px;
 }
 
@@ -103,7 +146,9 @@
 .new-modal-input {
   width: 100%;
   padding: 14px 12px;
-  border-radius: 10px;
+  -webkit-border-radius: 10px;
+     -moz-border-radius: 10px;
+          border-radius: 10px;
 
   border: 2px solid var(--color-focus);
   background: var(--color-bg-main);
@@ -117,19 +162,29 @@
   background: var(--color-bg-disabled);
   border-left: 3px solid var(--color-text-error);
   padding: 8px 10px;
-  border-radius: 8px;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
   font-size: 13px;
 }
 
 .new-modal-actions {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  justify-content: flex-end;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+     -moz-box-pack: end;
+          justify-content: flex-end;
   gap: 10px;
   margin-top: 18px;
 }
 
 .new-modal-btn {
-  border-radius: 999px;
+  -webkit-border-radius: 999px;
+     -moz-border-radius: 999px;
+          border-radius: 999px;
   padding: 10px 14px;
   font-weight: 500;
 }

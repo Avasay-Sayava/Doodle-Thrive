@@ -1,11 +1,31 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 .settings-modal-overlay {
   position: fixed;
   inset: 0;
   background-color: transparent;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+     -moz-box-pack: center;
+          justify-content: center;
   z-index: 1000;
+}
+
+.settings-modal-overlay::-webkit-backdrop {
+  background-color: var(--color-shadow-dark-overlay);
 }
 
 .settings-modal-overlay::backdrop {
@@ -17,20 +37,45 @@
   max-width: 600px;
   max-height: 80vh;
   overflow: hidden;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
 }
 
 .settings-modal-content {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
   height: 100%;
 }
 
 .settings-modal-header {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+     -moz-box-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   padding: 24px 24px 16px;
   border-bottom: 1px solid var(--color-border);
 }
@@ -44,7 +89,10 @@
 .settings-modal-body {
   padding: 24px;
   overflow-y: auto;
-  flex: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+     -moz-box-flex: 1;
+          flex: 1;
 }
 
 .settings-group {
@@ -64,9 +112,18 @@
 }
 
 .settings-row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+     -moz-box-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   padding: 16px 0;
   position: relative;
   border-bottom: 1px solid var(--color-border);
@@ -77,8 +134,16 @@
 }
 
 .settings-info {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
   gap: 4px;
 }
 
@@ -103,10 +168,14 @@
   width: 51px;
   height: 28px;
   background-color: var(--color-bg-toggle);
-  border-radius: 14px;
+  -webkit-border-radius: 14px;
+     -moz-border-radius: 14px;
+          border-radius: 14px;
   position: relative;
   cursor: pointer;
-  box-shadow: inset 0 1px 3px var(--color-shadow-sm);
+  -webkit-box-shadow: inset 0 1px 3px var(--color-shadow-sm);
+     -moz-box-shadow: inset 0 1px 3px var(--color-shadow-sm);
+          box-shadow: inset 0 1px 3px var(--color-shadow-sm);
 }
 
 .switch-container .switch-label::after {
@@ -117,8 +186,12 @@
   width: 22px;
   height: 22px;
   background-color: var(--color-bg-toggle-thumb);
-  border-radius: 50%;
-  box-shadow: 0 2px 4px var(--color-shadow-sm);
+  -webkit-border-radius: 50%;
+     -moz-border-radius: 50%;
+          border-radius: 50%;
+  -webkit-box-shadow: 0 2px 4px var(--color-shadow-sm);
+     -moz-box-shadow: 0 2px 4px var(--color-shadow-sm);
+          box-shadow: 0 2px 4px var(--color-shadow-sm);
 }
 
 .switch-container input:checked + .switch-label {
@@ -126,7 +199,10 @@
 }
 
 .switch-container input:checked + .switch-label::after {
-  transform: translateX(23px);
+  -webkit-transform: translateX(23px);
+     -moz-transform: translateX(23px);
+       -o-transform: translateX(23px);
+          transform: translateX(23px);
 }
 
 .switch-container .disabled-label {
@@ -137,7 +213,9 @@
 
 .settings-select {
   padding: 8px 12px;
-  border-radius: 6px;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
   border: 1px solid var(--color-primary-hover);
   background-color: var(--color-bg-main);
   color: var(--color-text-primary);
@@ -159,7 +237,10 @@
 
 .joke-row {
   cursor: pointer;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .joke-popup {
@@ -169,7 +250,9 @@
   background-color: var(--color-bg-main-alt);
   color: var(--color-text-primary);
   padding: 12px 18px;
-  border-radius: 8px;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
   z-index: 20;
@@ -185,30 +268,123 @@
   width: 12px;
   height: 12px;
   background-color: var(--color-bg-main-alt);
-  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+     -moz-transform: rotate(45deg);
+       -o-transform: rotate(45deg);
+          transform: rotate(45deg);
   border-right: 2px solid var(--color-border);
   border-bottom: 2px solid var(--color-border);
 }
 
 .animate-shake {
-  animation: shake 0.5s ease-in-out;
+  -webkit-animation: shake 0.5s ease-in-out;
+     -moz-animation: shake 0.5s ease-in-out;
+       -o-animation: shake 0.5s ease-in-out;
+          animation: shake 0.5s ease-in-out;
+}
+
+@-webkit-keyframes shake {
+  0%,
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  20% {
+    -webkit-transform: translateX(-8px);
+            transform: translateX(-8px);
+  }
+  40% {
+    -webkit-transform: translateX(8px);
+            transform: translateX(8px);
+  }
+  60% {
+    -webkit-transform: translateX(-4px);
+            transform: translateX(-4px);
+  }
+  80% {
+    -webkit-transform: translateX(4px);
+            transform: translateX(4px);
+  }
+}
+
+@-moz-keyframes shake {
+  0%,
+  100% {
+    -moz-transform: translateX(0);
+         transform: translateX(0);
+  }
+  20% {
+    -moz-transform: translateX(-8px);
+         transform: translateX(-8px);
+  }
+  40% {
+    -moz-transform: translateX(8px);
+         transform: translateX(8px);
+  }
+  60% {
+    -moz-transform: translateX(-4px);
+         transform: translateX(-4px);
+  }
+  80% {
+    -moz-transform: translateX(4px);
+         transform: translateX(4px);
+  }
+}
+
+@-o-keyframes shake {
+  0%,
+  100% {
+    -o-transform: translateX(0);
+       transform: translateX(0);
+  }
+  20% {
+    -o-transform: translateX(-8px);
+       transform: translateX(-8px);
+  }
+  40% {
+    -o-transform: translateX(8px);
+       transform: translateX(8px);
+  }
+  60% {
+    -o-transform: translateX(-4px);
+       transform: translateX(-4px);
+  }
+  80% {
+    -o-transform: translateX(4px);
+       transform: translateX(4px);
+  }
 }
 
 @keyframes shake {
   0%,
   100% {
-    transform: translateX(0);
+    -webkit-transform: translateX(0);
+       -moz-transform: translateX(0);
+         -o-transform: translateX(0);
+            transform: translateX(0);
   }
   20% {
-    transform: translateX(-8px);
+    -webkit-transform: translateX(-8px);
+       -moz-transform: translateX(-8px);
+         -o-transform: translateX(-8px);
+            transform: translateX(-8px);
   }
   40% {
-    transform: translateX(8px);
+    -webkit-transform: translateX(8px);
+       -moz-transform: translateX(8px);
+         -o-transform: translateX(8px);
+            transform: translateX(8px);
   }
   60% {
-    transform: translateX(-4px);
+    -webkit-transform: translateX(-4px);
+       -moz-transform: translateX(-4px);
+         -o-transform: translateX(-4px);
+            transform: translateX(-4px);
   }
   80% {
-    transform: translateX(4px);
+    -webkit-transform: translateX(4px);
+       -moz-transform: translateX(4px);
+         -o-transform: translateX(4px);
+            transform: translateX(4px);
   }
 }

@@ -1,3 +1,10 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 .wizard-step {
     text-align: center;
 }
@@ -11,9 +18,14 @@
     padding: 8px 16px;
     font-size: 16px;
     cursor: pointer;
-    border-radius: 8px;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
     border: 1px solid var(--color-border);
     background-color: var(--color-bg-primary);
+    -webkit-transition: background-color 0.2s ease;
+    -o-transition: background-color 0.2s ease;
+    -moz-transition: background-color 0.2s ease;
     transition: background-color 0.2s ease;
 }
 
@@ -32,12 +44,25 @@
 .tutorial-highlight {
     position: relative;
     z-index: 901;
-    box-shadow: 0 0 16px rgba(255, 255, 255, 0.8);
-    border-radius: 14px;
+    -webkit-box-shadow: 0 0 16px rgba(255, 255, 255, 0.8);
+       -moz-box-shadow: 0 0 16px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 16px rgba(255, 255, 255, 0.8);
+    -webkit-border-radius: 14px;
+       -moz-border-radius: 14px;
+            border-radius: 14px;
+    -webkit-transition: -webkit-box-shadow 0.2s ease, -webkit-transform 0.2s ease;
+    transition: -webkit-box-shadow 0.2s ease, -webkit-transform 0.2s ease;
+    -o-transition: box-shadow 0.2s ease, -o-transform 0.2s ease;
+    -moz-transition: box-shadow 0.2s ease, transform 0.2s ease, -moz-box-shadow 0.2s ease, -moz-transform 0.2s ease;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, -webkit-box-shadow 0.2s ease, -moz-box-shadow 0.2s ease, -webkit-transform 0.2s ease, -moz-transform 0.2s ease, -o-transform 0.2s ease;
 }
 
 [data-tutorial="settings-button"] svg.tutorial-highlight {
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1));
-    transform: scale(1.2);
+    -webkit-filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1));
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1));
+    -webkit-transform: scale(1.2);
+       -moz-transform: scale(1.2);
+         -o-transform: scale(1.2);
+            transform: scale(1.2);
 }

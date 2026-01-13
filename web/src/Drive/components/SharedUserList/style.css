@@ -1,36 +1,72 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
 .shared-user-list {
   margin-top: 12px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
   max-height: 130px;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
   gap: 12px;
 }
 
 .shared-user-list-header {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+     -moz-box-pack: justify;
+          justify-content: space-between;
   color: var(--color-text-primary);
   font-weight: 500;
   font-size: 15px;
 }
 
 .shared-user-list-header-actions {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -moz-inline-box;
   display: inline-flex;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
   gap: 8px;
 }
 
 .shared-user-list-refresh-btn {
   width: 32px;
   height: 32px;
-  border-radius: 10px;
+  -webkit-border-radius: 10px;
+     -moz-border-radius: 10px;
+          border-radius: 10px;
   background: var(--color-bg-main);
   color: var(--color-text-primary);
   cursor: pointer;
+  display: -ms-grid;
   display: grid;
   place-items: center;
   font-weight: 700;
+  -webkit-transition: background 0.15s ease;
+  -o-transition: background 0.15s ease;
+  -moz-transition: background 0.15s ease;
   transition: background 0.15s ease;
 }
 
@@ -41,14 +77,24 @@
 .shared-user-list-status {
   background: var(--color-bg-hover);
   color: var(--color-text-secondary);
-  border-radius: 999px;
+  -webkit-border-radius: 999px;
+     -moz-border-radius: 999px;
+          border-radius: 999px;
   padding: 4px 10px;
   font-size: 12px;
 }
 
 .shared-user-list-items {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
   gap: 10px;
   max-height: 250px;
   overflow-y: auto;
@@ -69,7 +115,8 @@
 
 .shared-user-list-items::-webkit-scrollbar-thumb {
   background: var(--color-bg-hover);
-  border-radius: 3px;
+  -webkit-border-radius: 3px;
+          border-radius: 3px;
 }
 
 .shared-user-list-items::-webkit-scrollbar-thumb:hover {
@@ -86,7 +133,9 @@
   background: var(--color-bg-disabled);
   border-left: 3px solid var(--color-text-error);
   padding: 8px 10px;
-  border-radius: 8px;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
   font-size: 13px;
   margin-bottom: 12px;
 }
