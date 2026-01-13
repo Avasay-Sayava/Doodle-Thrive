@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import shareFile from "./shareFile";
+import patchFile from "./patchFile";
 
 const API_BASE = process.env.API_BASE_URL || "http://localhost:3300";
 
@@ -270,6 +271,29 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
     async (entry, nextRole) => {
       if (!fileId || entry.isOwner) return;
 
+      if (nextRole === "owner") {
+        if (!isCurrentOwner) {
+          setError("Only the current owner can transfer ownership");
+          return;
+        }
+
+        try {
+          await patchFile(fileId, { owner: entry.userId });
+          await wait();
+          await loadShared({
+            preserveUserId: entry.userId,
+            preserveRole: "owner",
+          });
+          onRefresh?.();
+        } catch (err) {
+          console.error("[updatePermission] Owner transfer error:", err);
+          setError(err?.message || "Failed to transfer ownership");
+          await loadShared({});
+        }
+
+        return;
+      }
+
       setSharedWith((prev) =>
         prev.map((item) =>
           item.userId === entry.userId ? { ...item, role: nextRole } : item
@@ -315,14 +339,17 @@ export default function useFilePermissions(fileId, currentUserId, onRefresh) {
           preserveUserId: entry.userId,
           preserveRole: nextRole,
         });
-        onRefresh?.();
+
+        if (entry.userId === currentUserId) {
+          onRefresh?.();
+        }
       } catch (err) {
         console.error("[updatePermission] Error:", err);
         setError(err?.message || "Failed to update permissions");
         await loadShared({});
       }
     },
-    [fileId, loadShared, onRefresh, currentUserId]
+    [fileId, loadShared, onRefresh, currentUserId, isCurrentOwner]
   );
 
   return {

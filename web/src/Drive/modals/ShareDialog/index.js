@@ -50,7 +50,7 @@ export default function ShareDialog({ file, onRefresh, children }) {
     ownerId,
     loadShared,
     updatePermission,
-  } = useFilePermissions(fileId, currentUserId);
+  } = useFilePermissions(fileId, currentUserId, onRefresh);
 
   useEffect(() => {
     if (currentUserId && fileId) {

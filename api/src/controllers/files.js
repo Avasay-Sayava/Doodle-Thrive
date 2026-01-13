@@ -228,13 +228,20 @@ exports.update = async (req, res) => {
     if (!exists(trimmedData))
       return res.status(400).json({ error: "Invalid file/folder data" });
 
+    const ownerChange = exists(trimmedData.owner) && trimmedData.owner !== Files.info(id).owner;
+
+    if (ownerChange && !Users.get(trimmedData.owner))
+      return res.status(404).json({ error: "New owner not found" });
+
+    if (ownerChange) trimmedData.parent = null;
+
     const { name, owner, content, trashed, parent, description } = trimmedData;
     const { starred } = req.body;
 
     if (
       !exists(name) &&
       !exists(content) &&
-      !('parent' in trimmedData) &&
+      !("parent" in trimmedData) &&
       !exists(owner) &&
       !exists(description) &&
       !exists(trashed) &&
