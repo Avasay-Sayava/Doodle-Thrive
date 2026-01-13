@@ -7,6 +7,7 @@ import MydriveView from "./pages/MydriveView";
 import SidePanel from "./panels/SidePanel";
 import StarredView from "./pages/StarredView";
 import Header from "../panels/Header";
+import Footer from "../panels/Footer";
 import SharedView from "./pages/SharedView";
 import RecentsView from "./pages/RecentsView";
 import BinView from "./pages/BinView";
@@ -121,6 +122,10 @@ function Drive({ openSettings, defaultPage }) {
           </Routes>
         </main>
       </div>
+
+      <footer className="app-footer">
+        <Footer />
+      </footer>
     </div>
   );
 }
