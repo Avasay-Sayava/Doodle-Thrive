@@ -28,3 +28,8 @@ services:
     build:
       context: web/
       dockerfile: Dockerfile
+
+  phone:
+    build:
+      context: phone/
+      dockerfile: Dockerfile
