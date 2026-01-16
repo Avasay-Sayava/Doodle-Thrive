@@ -1,0 +1,46 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
+.Input[type="text"],
+.Input[type="password"] {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid var(--color-border);
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+    font-size: 16px;
+    font-family: inherit;
+    -webkit-transition: border-color 0.2s;
+    -o-transition: border-color 0.2s;
+    -moz-transition: border-color 0.2s;
+    transition: border-color 0.2s;
+}
+
+.Input[type="text"]:focus,
+.Input[type="password"]:focus {
+    outline: none;
+    border-color: var(--color-focus);
+    -webkit-box-shadow: 0 0 0 3px var(--color-bg-hover);
+       -moz-box-shadow: 0 0 0 3px var(--color-bg-hover);
+            box-shadow: 0 0 0 3px var(--color-bg-hover);
+}
+
+.Input[type="text"].error,
+.Input[type="password"].error {
+    border-color: var(--color-text-error);
+}
+
+.Input[type="file"] {
+    margin-top: 5px;
+    padding: 5px;
+    border: 1px dashed var(--color-text-secondary);
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+    background-color: var(--color-bg-main);
+}

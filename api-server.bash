@@ -56,16 +56,32 @@ else
     echo -e "${CYAN}Using provided timeout: ${ORANGE}${timeout}${NC}"
 fi
 
-if [ -z "${server_name}" ]; then
-    echo -e "${CYAN}No server name provided.${NC}"
-    echo -e "${CYAN}Must provide the server's name to the variable ${GREEN}'${RED}server_name${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}server_name${NC}=${GREEN}base-server${NC} ./api-server.bash')"
-    exit 1
+default_jwt_secret="abcd"
+if [ -z "${jwt_secret}" ]; then
+    echo -e "${CYAN}No jwt secret provided, using default jwt secret: ${ORANGE}${default_jwt_secret}${NC}"
+    jwt_secret=$default_jwt_secret
+else
+    echo -e "${CYAN}Using provided jwt secret: ${ORANGE}${jwt_secret}${NC}"
 fi
 
+# Server name (base-server container) - ask if not provided, similar to website.bash style
+default_server_name="base-server"
+if [ -z "${server_name}" ]; then
+    read -p "Enter the base server container name (default: ${default_server_name}): " user_server_name
+    server_name=${user_server_name:-$default_server_name}
+    echo -e "${CYAN}Using server name: ${GREEN}'${server_name}'${NC}"
+else
+    echo -e "${CYAN}Using provided server name: ${GREEN}'${server_name}'${NC}"
+fi
+
+# Server port - ask if not provided
+default_server_port=3000
 if [ -z "${server_port}" ]; then
-    echo -e "${CYAN}No server port provided.${NC}"
-    echo -e "${CYAN}Must provide the server's port to the variable ${GREEN}'${RED}server_port${GREEN}'${CYAN}. ${NC}(e.g. running '${RED}server_port${NC}=${ORANGE}3000${NC} ./api-server.bash')"
-    exit 1
+    read -p "Enter the base server port (default: ${default_server_port}): " user_server_port
+    server_port=${user_server_port:-$default_server_port}
+    echo -e "${CYAN}Using base server port: ${ORANGE}${server_port}${NC}"
+else
+    echo -e "${CYAN}Using provided base server port: ${ORANGE}${server_port}${NC}"
 fi
 
 echo
@@ -161,7 +177,7 @@ echo
 # START NEW CONTAINER
 echo -e "${CYAN}Starting the new API server...${NC}"
 
-if docker-compose run $build_arg -d --service-ports --name $name api-server $server_name $server_port $port $timeout; then
+if docker-compose run $build_arg -d -p $port:$port -e JWT_SECRET=$jwt_secret --name $name api-server $server_name $server_port $port $timeout; then
     echo -e "${GREEN}Success! ${CYAN}Container ${GREEN}'${name}'${CYAN} started on port ${ORANGE}${port}${CYAN}.${NC}"
 else
     echo -e "${RED}Error: Failed to start API server.${NC}"

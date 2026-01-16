@@ -12,27 +12,31 @@ const files = {};
  * @return {Promise<string>} The generated File ID.
  * @throws {Error} If creation fails on the storage server.
  */
-exports.createFile = async ({ name, content, parent }) => {
-    const UUID = uuid();
+exports.createFile = async ({ name, owner, content, parent, description }) => {
+  const UUID = uuid();
 
-    if (files[UUID])
-        throw new Error("Unexpected ID collision, try again");
+  if (files[UUID]) throw new Error("Unexpected ID collision, try again");
 
-    const response = await Storage.post(UUID, content);
+  const response = await Storage.post(UUID, content);
 
-    if (response.status === 201) {
-        files[UUID] = {
-            id: UUID,
-            name: name,
-            type: "file",
-            parent: parent || null
-        };
+  if (response.status === 201) {
+    files[UUID] = {
+      id: UUID,
+      name: name,
+      type: "file",
+      owner: this.info(parent)?.owner || owner,
+      trashed: false,
+      created: Date.now(),
+      modified: Date.now(),
+      parent: parent || null,
+      description: description,
+    };
 
-        parent && files[parent]?.children?.push(UUID);
+    parent && files[parent]?.children?.push(UUID);
 
-        return UUID;
-    } else throw new Error("Failed to create file");
-}
+    return UUID;
+  } else throw new Error("Failed to create file");
+};
 
 /**
  * Creates a new virtual folder structure.
@@ -41,24 +45,28 @@ exports.createFile = async ({ name, content, parent }) => {
  * @param {string} [folderData.parent] The ID of the parent folder (optional).
  * @return {string} The generated Folder ID.
  */
-exports.createFolder = ({ name, parent }) => {
-    const UUID = uuid();
+exports.createFolder = ({ name, owner, parent, description }) => {
+  const UUID = uuid();
 
-    if (files[UUID])
-        throw new Error("Unexpected ID collision, try again");
+  if (files[UUID]) throw new Error("Unexpected ID collision, try again");
 
-    files[UUID] = {
-        id: UUID,
-        name: name,
-        type: "folder",
-        parent: parent || null,
-        children: []
-    };
+  files[UUID] = {
+    id: UUID,
+    name: name,
+    type: "folder",
+    owner: this.info(parent)?.owner || owner,
+    trashed: false,
+    created: Date.now(),
+    modified: Date.now(),
+    parent: parent || null,
+    children: [],
+    description: description,
+  };
 
-    parent && files[parent]?.children?.push(UUID);
+  parent && files[parent]?.children?.push(UUID);
 
-    return UUID;
-}
+  return UUID;
+};
 
 /**
  * Retrieves all files and folders, fetching content for files from storage.
@@ -66,26 +74,26 @@ exports.createFolder = ({ name, parent }) => {
  * @return {Promise<Object>} A dictionary of all file objects, including their content.
  */
 exports.getAll = async (ids) => {
-    ids = ids || Object.keys(files);
+  ids = ids || Object.keys(files);
 
-    const copy = {};
+  const copy = {};
 
-    const promises = ids.map(async (file) => {
-        copy[file] = { ...files[file] };
-        if (files[file].type === "file") {
-            try {
-                const buffer = await Storage.get(file);
-                copy[file].content = buffer.response;
-            } catch (err) {
-                throw new Error("Failed to retrieve file content");
-            }
-        }
-    });
+  const promises = ids.map(async (file) => {
+    copy[file] = { ...files[file] };
+    if (files[file].type === "file") {
+      try {
+        const buffer = await Storage.get(file);
+        copy[file].content = buffer.response;
+      } catch (err) {
+        throw new Error("Failed to retrieve file content");
+      }
+    }
+  });
 
-    await Promise.all(promises);
+  await Promise.all(promises);
 
-    return copy;
-}
+  return copy;
+};
 
 /**
  * Retrieves a specific file or folder by ID.
@@ -94,57 +102,99 @@ exports.getAll = async (ids) => {
  * @return {Promise<Object>} The file or folder object containing metadata and content.
  */
 exports.get = async (id) => {
-    if (files[id].type === "file") {
-        try {
-            const buffer = await Storage.get(id);
-            return {
-                ...files[id],
-                content: buffer.response
-            };
-        } catch (err) {
-            throw new Error("Failed to retrieve file content");
-        }
+  if (files[id].type === "file") {
+    try {
+      const buffer = await Storage.get(id);
+      return {
+        ...files[id],
+        content: buffer.response,
+      };
+    } catch (err) {
+      throw new Error("Failed to retrieve file content");
     }
+  }
 
-    return files[id];
-}
+  return files[id];
+};
 
 /**
  * Updates a file or folder's metadata or content.
  * @param {string} id The ID of the file/folder to update.
  * @param {object} changes The properties to update.
- * @param {string} [changes.name] New name.
- * @param {string} [changes.content] New content (files only).
- * @param {string} [changes.parent] New parent folder ID.
  * @return {Promise<boolean>} True if successful, False if storage update failed.
  */
-exports.update = async (id, { name, content, parent }) => {
-    const file = files[id];
+exports.update = async (
+  id,
+  { name, owner, content, trashed, parent, description }
+) => {
+  const file = files[id];
+  const previousParent = file.parent;
+  const ownerChanged = owner !== undefined && owner !== file.owner;
+  let newParent = parent;
 
-    if (content) {
-        const response = await Storage.delete(id);
-        if (response.status !== 204)
-            return false;
+  if (ownerChanged) newParent = null;
 
-        const responsePost = await Storage.post(id, content);
-        if (responsePost.status !== 201)
-            return false;
+  const propagateOwner = (folderId, ownerId) => {
+    for (const childId of files[folderId]?.children || []) {
+      const child = files[childId];
+      if (!child) continue;
+      child.owner = ownerId;
+      child.modified = Date.now();
+      if (child.type === "folder") propagateOwner(childId, ownerId);
     }
+  };
 
-    if (name)
-        file.name = name;
+  if (content !== undefined && file.type === "file") {
+    const response = await Storage.delete(id);
+    if (response.status !== 204) return false;
 
-    if (parent) {
-        files[files[id].parent].children = files[files[id].parent].children
-            .filter(childId => childId !== id);
-        files[parent].children.push(id);
-        file.parent = parent;
+    const responsePost = await Storage.post(id, content);
+    if (responsePost.status !== 201) return false;
+  }
+
+  if (trashed !== undefined) {
+    file.trashed = trashed;
+    for (const childId of file.type === "folder" ? file.children : []) {
+      await exports.update(childId, { trashed: trashed });
     }
+  }
 
-    files[id] = file;
+  if (name) file.name = name;
 
-    return true;
-}
+  if (ownerChanged) {
+    if (previousParent && files[previousParent]) {
+      files[previousParent].children = files[previousParent].children.filter(
+        (childId) => childId !== id
+      );
+    }
+    file.parent = null;
+  } else if (newParent !== undefined) {
+    if (file.parent && files[file.parent]) {
+      files[file.parent].children = files[file.parent].children.filter(
+        (childId) => childId !== id
+      );
+    }
+    if (newParent && files[newParent]?.children) {
+      files[newParent].children.push(id);
+    }
+    file.parent = newParent;
+  }
+
+  if (owner) {
+    file.owner = owner;
+    if (ownerChanged && file.type === "folder") {
+      propagateOwner(id, owner);
+    }
+  }
+
+  if (description) file.description = description;
+
+  file.modified = Date.now();
+
+  files[id] = file;
+
+  return true;
+};
 
 /**
  * Deletes a file or folder and all its descendants.
@@ -152,32 +202,30 @@ exports.update = async (id, { name, content, parent }) => {
  * @return {Promise<boolean>} True if successful.
  */
 exports.delete = async (id) => {
-    const file = files[id];
-    if (file.type === "folder") {
-        const promises = file.children
-            .map(async (childId) => {
-                const response = await exports.delete(childId);
-                if (!response)
-                    throw new Error("Failed to delete child file/folder");
-            });
+  const file = files[id];
+  if (file.type === "folder") {
+    const promises = file.children.map(async (childId) => {
+      const response = await exports.delete(childId);
+      if (!response) throw new Error("Failed to delete child file/folder");
+    });
 
-        await Promise.all(promises);
-    }
+    await Promise.all(promises);
+  }
 
-    if (files[id].type === "file") {
-        const response = await Storage.delete(id);
-        if (response.status !== 204)
-            return false;
-    }
+  if (files[id].type === "file") {
+    const response = await Storage.delete(id);
+    if (response.status !== 204) return false;
+  }
 
-    if (file.parent)
-        files[file.parent].children = files[file.parent].children
-            .filter(childId => childId !== id);
+  if (file.parent)
+    files[file.parent].children = files[file.parent].children.filter(
+      (childId) => childId !== id
+    );
 
-    delete files[id];
+  delete files[id];
 
-    return true;
-}
+  return true;
+};
 
 /**
  * Searches the storage layer for files matching the query and resolves them to file objects.
@@ -185,26 +233,26 @@ exports.delete = async (id) => {
  * @return {Promise<Object>} A dictionary of matching file objects.
  */
 exports.search = async (query) => {
-    const response = await Storage.search(query);
-    if (response.status !== 200)
-        return {};
+  const response = await Storage.search(query);
+  if (response.status !== 200) return {};
 
-    const results = Object.keys(files).filter(id => files[id].name.includes(query));
-    const searchResults = response.response.filter(id => !results.includes(id));
-    const outSearchResults = await exports.getAll(searchResults);
+  const results = Object.keys(files).filter((id) =>
+    files[id].name.includes(query)
+  );
+  const searchResults = response.response.filter((id) => !results.includes(id));
+  const outSearchResults = await exports.getAll(searchResults);
 
-    const outSearchResultsValues = Object.values(outSearchResults);
-    for (const value of outSearchResultsValues) {
-        if (!value.name.includes(query) &&
-            !value.content.includes(query)) {
-            delete outSearchResults[value.id];
-        }
+  const outSearchResultsValues = Object.values(outSearchResults);
+  for (const value of outSearchResultsValues) {
+    if (!value.name.includes(query) && !value.content.includes(query)) {
+      delete outSearchResults[value.id];
     }
+  }
 
-    const outResults = await exports.getAll(results);
+  const outResults = await exports.getAll(results);
 
-    return { ...outResults, ...outSearchResults };
-}
+  return { ...outResults, ...outSearchResults };
+};
 
 /**
  * Retrieves metadata for a file or folder synchronously (no content fetch).
@@ -212,5 +260,5 @@ exports.search = async (query) => {
  * @return {Object|null} The metadata object or null if not found.
  */
 exports.info = (id) => {
-    return files[id] || null;
-}
+  return files[id] || null;
+};

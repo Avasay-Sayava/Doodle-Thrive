@@ -1,0 +1,115 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 999999 version,not dead
+*/
+
+tbody tr {
+  -webkit-transition: background-color 120ms ease;
+  -o-transition: background-color 120ms ease;
+  -moz-transition: background-color 120ms ease;
+  transition: background-color 120ms ease;
+}
+
+tbody tr:hover {
+  background-color: var(--color-bg-hover);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.app-shell {
+  height: 100vh;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+          flex-direction: column;
+  background: var(--color-bg-main);
+}
+
+.app-topbar {
+  height: 64px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-main);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+     -moz-box-align: center;
+          align-items: center;
+  padding: 0 16px;
+  -webkit-flex-shrink: 0;
+          flex-shrink: 0;
+}
+
+.app-body {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+     -moz-box-flex: 1;
+          flex: 1;
+  min-height: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+}
+
+.app-sidebar {
+  width: 280px;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 280px;
+     -moz-box-flex: 0;
+          flex: 0 0 280px;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg-main);
+  overflow: auto;
+}
+
+.app-content {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+     -moz-box-flex: 1;
+          flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  background: var(--color-bg-main);
+}
+
+.file-icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+  -webkit-flex-shrink: 0;
+          flex-shrink: 0;
+}
