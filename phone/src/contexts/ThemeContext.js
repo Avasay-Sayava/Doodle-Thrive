@@ -28,24 +28,18 @@ export function ThemeProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    const loadTheme = async () => {
-      try {
-        const stored = await AsyncStorage.getItem(storageKey);
-        if (stored && themes[stored]) {
-          setThemeName(stored);
-        } else {
-          await change(colorScheme === "dark" ? defaultDarkTheme : defaultLightTheme);
-        }
-      } catch (err) {
-        console.error("Failed to load theme", err);
-
-        setError(err);
-      } finally {
-        setLoading(false);
+    AsyncStorage.getItem(storageKey).then(async (theme) => {
+      if (theme && themes[theme]) {
+        setThemeName(theme);
+      } else {
+        await change(colorScheme === "dark" ? defaultDarkTheme : defaultLightTheme);
       }
-    };
-
-    loadTheme();
+    }).catch((err) => {
+      console.error("Failed to load theme", err);
+      setError(err);
+    }).finally(() => {
+      setLoading(false);
+    });
   }, [colorScheme]);
 
   const theme = {

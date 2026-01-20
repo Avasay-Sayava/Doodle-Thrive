@@ -23,23 +23,16 @@ export function AuthProvider({ children }) {
   const { user, loading: userLoading, error: userError } = useUser(uuid, jwt);
 
   useEffect(() => {
-    const loadToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem(storageKey);
-        if (token) {
-          setJWT(token);
-        }
-      } catch (err) {
-        console.error("Failed to load token", err);
-
-        setError(err);
-        setJWT(null);
-      } finally {
-        setLoading(false);
+    AsyncStorage.getItem(storageKey).then(async (token) => {
+      if (token) {
+        setJWT(token);
       }
-    };
-
-    loadToken();
+    }).catch((err) => {
+      console.error(err);
+      setError(err);
+    }).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   const signin = useCallback(async (token) => {
