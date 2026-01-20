@@ -1,12 +1,14 @@
 import { StyleSheet } from "react-native";
 
 export const styles = (theme) => new StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: theme.colors.background
+  },
   centered: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: theme.colors.background,
-    padding: theme.spacing.large,
+    alignItems: "center"
   },
   errorText: {
     color: theme.colors.error,

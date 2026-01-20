@@ -29,7 +29,6 @@
     "plugins": [
       "expo-router"
     ],
-    "scheme": "doodle-drive",
-    "output": "static"
+    "scheme": "doodle-drive"
   }
 }

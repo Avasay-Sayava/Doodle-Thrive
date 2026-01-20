@@ -1,47 +1,41 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import themes from "@/styles/themes";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "react-native";
+import { ThemeProvider as NavThemeProvider } from "@react-navigation/native";
+import themes from "@/styles/themes";
 
 const ThemeContext = createContext(null);
 const storageKey = "theme";
-const defaultDarkTheme = "soviet";
 const defaultLightTheme = "pink";
+const defaultDarkTheme = "soviet";
+const defaultTheme = "pink";
 
 export default ThemeContext;
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(useDefaultTheme());
+  const colorScheme = useColorScheme();
+  const [themeName, setThemeName] = useState(defaultTheme);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const colorScheme = useColorScheme();
+  const activeTheme = themes[themeName];
 
   const change = useCallback(async (name) => {
     if (themes[name]) {
       await AsyncStorage.setItem(storageKey, name);
-      setTheme(themes[name]);
-    } else {
-      throw new Error(`Theme "${name}" not found`);
+      setThemeName(name);
     }
   }, []);
 
   useEffect(() => {
     const loadTheme = async () => {
       try {
-        const theme = await AsyncStorage.getItem(storageKey);
-        if (theme && themes[theme]) {
-          setTheme(themes[theme]);
-          return;
+        const stored = await AsyncStorage.getItem(storageKey);
+        if (stored && themes[stored]) {
+          setThemeName(stored);
+        } else {
+          await change(colorScheme === "dark" ? defaultDarkTheme : defaultLightTheme);
         }
-
-        await change(colorScheme === "dark" ? defaultDarkTheme : defaultLightTheme);
       } catch (err) {
         console.error("Failed to load theme", err);
 
@@ -54,9 +48,18 @@ export function ThemeProvider({ children }) {
     loadTheme();
   }, [colorScheme]);
 
+  const theme = {
+    theme: activeTheme,
+    loading,
+    error,
+    change,
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, change, loading, error }}>
-      {children}
+    <ThemeContext.Provider value={theme}>
+      <NavThemeProvider value={activeTheme}>
+        {children}
+      </NavThemeProvider>
     </ThemeContext.Provider>
   );
 }
@@ -67,9 +70,4 @@ export function useTheme() {
     throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
-}
-
-export function useDefaultTheme() {
-  const colorScheme = useColorScheme();
-  return themes[colorScheme === "dark" ? defaultDarkTheme : defaultLightTheme];
 }

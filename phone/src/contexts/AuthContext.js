@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUUID } from "@/src/hooks/useUUID";
 import { useUser } from "@/src/hooks/useUser";
 
