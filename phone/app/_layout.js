@@ -1,9 +1,9 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useMemo } from "react";
 import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
-import { AuthProvider, useAuth } from "../src/contexts/AuthContext";
-import { ThemeProvider, useTheme } from "../src/contexts/ThemeContext";
-import { styles } from "../styles/app/_layout.styles";
+import { AuthProvider, useAuth } from "@/src/contexts/AuthContext";
+import { ThemeProvider, useTheme } from "@/src/contexts/ThemeContext";
+import { styles } from "@/styles/app/_layout.styles";
 
 function RootNav() {
   const { jwt, loading: authLoading, error: authError, signout } = useAuth();

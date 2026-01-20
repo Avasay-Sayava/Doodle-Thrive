@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import themes from "../../styles/themes";
+import themes from "@/styles/themes";
 import { useColorScheme } from "react-native";
 
 const ThemeContext = createContext(null);

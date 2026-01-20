@@ -6,8 +6,8 @@ import React, {
   useCallback,
 } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useUUID } from "../../src/hooks/useUUID";
-import { useUser } from "../../src/hooks/useUser";
+import { useUUID } from "@/src/hooks/useUUID";
+import { useUser } from "@/src/hooks/useUser";
 
 const AuthContext = createContext(null);
 const storageKey = "token";
