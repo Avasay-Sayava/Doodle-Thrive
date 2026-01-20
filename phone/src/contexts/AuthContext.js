@@ -22,19 +22,6 @@ export function AuthProvider({ children }) {
   const { uuid, loading: uuidLoading, error: uuidError } = useUUID(jwt);
   const { user, loading: userLoading, error: userError } = useUser(uuid, jwt);
 
-  useEffect(() => {
-    AsyncStorage.getItem(storageKey).then(async (token) => {
-      if (token) {
-        setJWT(token);
-      }
-    }).catch((err) => {
-      console.error(err);
-      setError(err);
-    }).finally(() => {
-      setLoading(false);
-    });
-  }, []);
-
   const signin = useCallback(async (token) => {
     await AsyncStorage.setItem(storageKey, token);
     setJWT(token);
@@ -44,6 +31,33 @@ export function AuthProvider({ children }) {
     await AsyncStorage.removeItem(storageKey);
     setJWT(null);
   }, []);
+
+  useEffect(() => {
+    AsyncStorage.getItem(storageKey).then(async (token) => {
+      if (token) {
+        setJWT(token);
+      }
+    }).catch((err) => {
+      console.error("Failed to get jwt token", err);
+      setError(err);
+    }).finally(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (loading || uuidLoading || userLoading)
+      return;
+
+    if (!jwt)
+      return;
+
+    if (!uuid || !user)
+      signout().catch((err) => {
+        console.error("Failed to signout", err);
+        setError(err);
+      });
+  }, [uuid, user]);
 
   const auth = {
     jwt,
