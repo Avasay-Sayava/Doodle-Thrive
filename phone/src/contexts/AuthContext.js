@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import LocalStorage from "@/src/utils/LocalStorage";
 import { useUUID } from "@/src/hooks/useUUID";
 import { useUser } from "@/src/hooks/useUser";
 
@@ -23,17 +23,17 @@ export function AuthProvider({ children }) {
   const { user, loading: userLoading, error: userError } = useUser(uuid, jwt);
 
   const signin = useCallback(async (token) => {
-    await AsyncStorage.setItem(storageKey, token);
+    await LocalStorage.set(storageKey, token);
     setJWT(token);
   }, []);
 
   const signout = useCallback(async () => {
-    await AsyncStorage.removeItem(storageKey);
+    await LocalStorage.remove(storageKey);
     setJWT(null);
   }, []);
 
   useEffect(() => {
-    AsyncStorage.getItem(storageKey).then(async (token) => {
+    LocalStorage.get(storageKey).then(async (token) => {
       if (token) {
         setJWT(token);
       }

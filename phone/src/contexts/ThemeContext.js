@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import LocalStorage from "@/src/utils/LocalStorage";
 import { useColorScheme } from "react-native";
 import { ThemeProvider as NavThemeProvider } from "@react-navigation/native";
 import themes from "@/styles/themes";
@@ -22,13 +22,13 @@ export function ThemeProvider({ children }) {
 
   const change = useCallback(async (name) => {
     if (themes[name]) {
-      await AsyncStorage.setItem(storageKey, name);
+      await LocalStorage.set(storageKey, name);
       setThemeName(name);
     }
   }, []);
 
   useEffect(() => {
-    AsyncStorage.getItem(storageKey).then(async (theme) => {
+    LocalStorage.get(storageKey).then(async (theme) => {
       if (theme && themes[theme]) {
         setThemeName(theme);
       } else {
