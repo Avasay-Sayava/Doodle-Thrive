@@ -6,8 +6,8 @@ import React, {
   useCallback,
 } from "react";
 import LocalStorage from "@/src/utils/LocalStorage";
-import { useUUID } from "@/src/hooks/useUUID";
-import { useUser } from "@/src/hooks/useUser";
+import { useUUID } from "@/src/hooks/api/useUUID";
+import { useUser } from "@/src/hooks/api/useUser";
 
 const AuthContext = createContext(null);
 const storageKey = "token";
