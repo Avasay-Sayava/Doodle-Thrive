@@ -20,17 +20,20 @@ export function useUUID(jwt) {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
-    }).then(async (response) => {
-      if (!response.ok) throw response.status;
-      const data = await response.json();
-      setUUID(data.id);
-    }).catch((err) => {
-      console.error("Failed to fetch UUID", err);
-      setError(err);
-      setUUID(null);
-    }).finally(() => {
-      setLoading(false);
-    });
+    })
+      .then(async (response) => {
+        if (!response.ok) throw response.status;
+        const data = await response.json();
+        setUUID(data.id);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch UUID", err);
+        setError(err);
+        setUUID(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [jwt]);
 
   return { data: uuid, loading, error };

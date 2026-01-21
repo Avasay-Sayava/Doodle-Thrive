@@ -20,17 +20,20 @@ export function useUser(uuid, jwt) {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
-    }).then(async (response) => {
-      if (!response.ok) throw response.status;
-      const data = await response.json();
-      setUser(data);
-    }).catch((err) => {
-      console.error("Failed to fetch user", err);
-      setError(err);
-      setUser(null);
-    }).finally(() => {
-      setLoading(false);
-    });
+    })
+      .then(async (response) => {
+        if (!response.ok) throw response.status;
+        const data = await response.json();
+        setUser(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch user", err);
+        setError(err);
+        setUser(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [uuid, jwt]);
 
   return { data: user, loading, error };

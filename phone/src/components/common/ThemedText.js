@@ -7,10 +7,5 @@ export default function ThemedText({ style, ...props }) {
   const { theme } = useTheme();
   const defaultStyle = useMemo(() => styles(theme), [theme]);
 
-  return (
-    <Text
-      style={[defaultStyle.text, style]}
-      {...props}
-    />
-  );
+  return <Text style={[defaultStyle.text, style]} {...props} />;
 }

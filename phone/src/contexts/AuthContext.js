@@ -33,24 +33,25 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    LocalStorage.get(storageKey).then(async (token) => {
-      if (token) {
-        setJWT(token);
-      }
-    }).catch((err) => {
-      console.error("Failed to get jwt token", err);
-      setError(err);
-    }).finally(() => {
-      setLoading(false);
-    });
+    LocalStorage.get(storageKey)
+      .then(async (token) => {
+        if (token) {
+          setJWT(token);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to get jwt token", err);
+        setError(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {
-    if (loading || uuidLoading || userLoading)
-      return;
+    if (loading || uuidLoading || userLoading) return;
 
-    if (!jwt)
-      return;
+    if (!jwt) return;
 
     if (!uuid || !user)
       signout().catch((err) => {

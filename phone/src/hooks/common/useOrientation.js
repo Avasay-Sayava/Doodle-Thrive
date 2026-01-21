@@ -11,4 +11,4 @@ export function useOrientation() {
 export const Orientation = {
   PORTRAIT: "portrait",
   LANDSCAPE: "landscape",
-}
+};

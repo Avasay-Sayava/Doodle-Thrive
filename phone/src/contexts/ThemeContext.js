@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import LocalStorage from "@/src/utils/LocalStorage";
 import { useColorScheme } from "react-native";
 import { ThemeProvider as NavThemeProvider } from "@react-navigation/native";
@@ -28,18 +34,23 @@ export function ThemeProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    LocalStorage.get(storageKey).then(async (theme) => {
-      if (theme && themes[theme]) {
-        setThemeName(theme);
-      } else {
-        await change(colorScheme === "dark" ? defaultDarkTheme : defaultLightTheme);
-      }
-    }).catch((err) => {
-      console.error("Failed to load theme", err);
-      setError(err);
-    }).finally(() => {
-      setLoading(false);
-    });
+    LocalStorage.get(storageKey)
+      .then(async (theme) => {
+        if (theme && themes[theme]) {
+          setThemeName(theme);
+        } else {
+          await change(
+            colorScheme === "dark" ? defaultDarkTheme : defaultLightTheme,
+          );
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load theme", err);
+        setError(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [colorScheme]);
 
   const theme = {
@@ -51,9 +62,7 @@ export function ThemeProvider({ children }) {
 
   return (
     <ThemeContext.Provider value={theme}>
-      <NavThemeProvider value={activeTheme}>
-        {children}
-      </NavThemeProvider>
+      <NavThemeProvider value={activeTheme}>{children}</NavThemeProvider>
     </ThemeContext.Provider>
   );
 }
