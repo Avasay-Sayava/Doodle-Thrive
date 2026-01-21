@@ -1,71 +1,82 @@
-import { Stack, useRouter, useSegments } from "expo-router";
-import { useEffect, useMemo } from "react";
-import { View, ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+  Stack,
+  useRouter,
+  useSegments,
+  useRootNavigationState,
+} from "expo-router";
+import { useEffect, useMemo, Suspense, useState } from "react";
+import { View, StyleSheet } from "react-native";
+import { ErrorBoundary } from "react-error-boundary";
 import { AuthProvider, useAuth } from "@/src/contexts/AuthContext";
 import { ThemeProvider, useTheme } from "@/src/contexts/ThemeContext";
+import LoadingScreen from "@/src/components/common/LoadingScreen";
+import ErrorFallback from "@/src/components/common/ErrorFallback";
 import { styles } from "@/styles/app/_layout.styles";
 
 function Root() {
-  const { jwt, loading: authLoading, error: authError } = useAuth();
-  const { theme, loading: themeLoading, error: themeError } = useTheme();
-  const segments = useSegments();
+  const { jwt, loading: authLoading } = useAuth();
+  const { theme, loading: themeLoading } = useTheme();
+  const [loading, setLoading] = useState(true);
+
   const router = useRouter();
+  const segments = useSegments();
+  const navigationState = useRootNavigationState();
 
   const style = useMemo(() => styles(theme), [theme]);
-  const loading = authLoading || themeLoading;
 
   useEffect(() => {
-    if (loading) return;
+    if (!navigationState?.key || authLoading || themeLoading) return;
+
     const inAuth = segments[0] === "(auth)";
     if (!jwt && !inAuth) router.replace("/(auth)");
     else if (jwt && inAuth) router.replace("/(drive)");
-  }, [jwt, loading, segments]);
+    else setLoading(false);
+  }, [jwt, segments, navigationState?.key, authLoading, themeLoading]);
 
-  if (loading) {
-    return (
-      <View style={style.centered}>
-        <ActivityIndicator size="large" color={theme.colors.primary} />
-      </View>
-    );
-  }
-
-  if (themeError) {
-    return (
-      <View style={style.centered}>
-        <Text style={style.errorText}>
-          {themeError.message || "An unexpected authentication error occurred."}
-        </Text>
-      </View>
-    );
-  }
-
-  if (authError) {
-    return (
-      <View style={style.centered}>
-        <Text style={style.errorText}>
-          {authError.message || "An unexpected authentication error occurred."}
-        </Text>
-
-        <TouchableOpacity onPress={signout} style={style.retryButton}>
-          <Text style={style.buttonText}>Sign Out & Retry</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+  useEffect(() => {
+    if (authLoading || themeLoading) setLoading(true);
+  }, [authLoading, themeLoading]);
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(auth)" />
-      <Stack.Screen name="(drive)" />
-    </Stack>
+    <>
+      <View style={style.root}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(drive)" />
+        </Stack>
+      </View>
+
+      {loading && (
+        <View style={[StyleSheet.absoluteFill, style.loadingOverlay]}>
+          <LoadingScreen />
+        </View>
+      )}
+    </>
   );
 }
 
-export default function Layout() {
+function Boundary() {
+  const { error: authError, signout } = useAuth();
+  const { error: themeError } = useTheme();
+
+  if (authError) throw authError;
+  if (themeError) throw themeError;
+
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback} onReset={signout}>
+      <Suspense fallback={<LoadingScreen />}>
+        <Root />
+      </Suspense>
+    </ErrorBoundary>
+  );
+}
+
+export default function RootLayout() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <Root />
+        <Boundary />
       </AuthProvider>
     </ThemeProvider>
   );

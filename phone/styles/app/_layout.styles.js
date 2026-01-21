@@ -29,4 +29,8 @@ export const styles = (theme) =>
       fontSize: theme.fonts.sizes.medium,
       fontWeight: theme.fonts.weights.bold,
     },
+    loadingOverlay: {
+      backgroundColor: theme.colors.background,
+      zIndex: 9999,
+    },
   });
