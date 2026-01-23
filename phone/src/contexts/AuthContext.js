@@ -31,15 +31,18 @@ export function AuthProvider({ children }) {
 
   const { user, loading: userLoading, error: userError } = useUser(uuid);
 
-  const signin = useCallback(async (token, userUuid) => {
-    setHeaders({ Authorization: `Bearer ${token}` });
+  const signin = useCallback(
+    async (token, userUuid) => {
+      setHeaders({ Authorization: `Bearer ${token}` });
 
-    await LocalStorage.set(tokenStorageKey, token);
-    await LocalStorage.set(uuidStorageKey, userUuid);
+      await LocalStorage.set(tokenStorageKey, token);
+      await LocalStorage.set(uuidStorageKey, userUuid);
 
-    setJWT(token);
-    setUUID(userUuid);
-  }, [setHeaders]);
+      setJWT(token);
+      setUUID(userUuid);
+    },
+    [setHeaders],
+  );
 
   const signout = useCallback(async () => {
     setHeaders({});
