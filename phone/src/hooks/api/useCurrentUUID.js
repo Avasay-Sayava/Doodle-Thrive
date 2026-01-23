@@ -1,26 +1,23 @@
 import { useState, useEffect } from "react";
+import { useApi } from "@/src/contexts/ApiContext";
 
-const BASE_URL = process.env.API_BASE_URL;
-
-export function useUUID(jwt) {
+export function useCurrentUUID(jwt) {
+  const { api } = useApi();
   const [uuid, setUUID] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    setLoading(true);
+
     if (!jwt) {
       setUUID(null);
       setLoading(false);
       return;
     }
 
-    setLoading(true);
-    fetch(`${BASE_URL}/api/tokens`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    })
+    api.tokens
+      .uuid(jwt)
       .then(async (response) => {
         if (!response.ok) throw response.status;
         const data = await response.json();

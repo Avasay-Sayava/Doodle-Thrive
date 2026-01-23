@@ -1,26 +1,23 @@
 import { useState, useEffect } from "react";
+import { useApi } from "@/src/contexts/ApiContext";
 
-const BASE_URL = process.env.API_BASE_URL;
-
-export function useUser(uuid, jwt) {
+export function useCurrentUser(uuid) {
+  const { api } = useApi();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!uuid || !jwt) {
+    setLoading(true);
+
+    if (!uuid) {
       setUser(null);
       setLoading(false);
       return;
     }
 
-    setLoading(true);
-    fetch(`${BASE_URL}/api/users/${uuid}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    })
+    api.users
+      .get(uuid)
       .then(async (response) => {
         if (!response.ok) throw response.status;
         const data = await response.json();
@@ -34,7 +31,7 @@ export function useUser(uuid, jwt) {
       .finally(() => {
         setLoading(false);
       });
-  }, [uuid, jwt]);
+  }, []);
 
   return { data: user, loading, error };
 }

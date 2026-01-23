@@ -9,6 +9,7 @@ import { View, StyleSheet } from "react-native";
 import { ErrorBoundary } from "react-error-boundary";
 import { AuthProvider, useAuth } from "@/src/contexts/AuthContext";
 import { ThemeProvider, useTheme } from "@/src/contexts/ThemeContext";
+import { ApiProvider } from "@/src/contexts/ApiContext";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
 import ErrorFallback from "@/src/components/common/ErrorFallback";
 import { styles } from "@/styles/app/_layout.styles";
@@ -75,9 +76,11 @@ function Boundary() {
 export default function RootLayout() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <Boundary />
-      </AuthProvider>
+      <ApiProvider>
+        <AuthProvider>
+          <Boundary />
+        </AuthProvider>
+      </ApiProvider>
     </ThemeProvider>
   );
 }

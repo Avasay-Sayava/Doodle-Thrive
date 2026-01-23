@@ -6,8 +6,9 @@ import React, {
   useCallback,
 } from "react";
 import LocalStorage from "@/src/utils/LocalStorage";
-import { useUUID } from "@/src/hooks/api/useUUID";
-import { useUser } from "@/src/hooks/api/useUser";
+import { useCurrentUUID } from "@/src/hooks/api/useCurrentUUID";
+import { useCurrentUser } from "@/src/hooks/api/useCurrentUser";
+import { useApi } from "@/src/contexts/ApiContext";
 
 const AuthContext = createContext(null);
 const storageKey = "token";
@@ -15,12 +16,25 @@ const storageKey = "token";
 export default AuthContext;
 
 export function AuthProvider({ children }) {
+  const { setHeaders } = useApi();
+
   const [jwt, setJWT] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { uuid, loading: uuidLoading, error: uuidError } = useUUID(jwt);
-  const { user, loading: userLoading, error: userError } = useUser(uuid, jwt);
+  useEffect(() => {
+    if (loading) return;
+
+    if (jwt) setHeaders({ Authorization: `Bearer ${jwt}` });
+    else setHeaders({});
+  }, [jwt]);
+
+  const { uuid, loading: uuidLoading, error: uuidError } = useCurrentUUID(jwt);
+  const {
+    user,
+    loading: userLoading,
+    error: userError,
+  } = useCurrentUser(uuid, jwt);
 
   const signin = useCallback(async (token) => {
     await LocalStorage.set(storageKey, token);
