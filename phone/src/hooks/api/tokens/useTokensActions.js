@@ -10,8 +10,6 @@ export function useTokensActions() {
     () => ({
       auth: (username, password) =>
         run(() => api.tokens.auth(username, password)),
-
-      user: (jwt) => run(() => api.tokens.user(jwt)),
     }),
     [api.tokens, run],
   );
