@@ -1,13 +1,13 @@
 import React, { createContext, useCallback, useContext, useRef } from "react";
-import APIClient from "@/src/api/client";
-import Api from "@/src/api";
+import APIClient from "@/src/utils/api/client";
+import Api from "@/src/utils/api";
 import Constants from "expo-constants";
 
 const ApiContext = createContext(null);
 
 export default ApiContext;
 
-const API_PORT = process.env.API_PORT;
+const API_PORT = process.env.EXPO_PUBLIC_API_PORT;
 
 export function ApiProvider({ children }) {
   const client = useRef(null);

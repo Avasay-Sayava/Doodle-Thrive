@@ -13,7 +13,7 @@ class APIClient {
 
   #fetch = async (path, method, headers, body) => {
     return await fetch(
-      `${this.#protocol}://${this.#host}${this.#port}${path}`,
+      `${this.#protocol}://${this.#host}:${this.#port}${path}`,
       {
         method,
         headers: {

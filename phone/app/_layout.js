@@ -1,5 +1,5 @@
 import {
-  Stack,
+  Slot,
   useRouter,
   useSegments,
   useRootNavigationState,
@@ -29,9 +29,20 @@ function Root() {
     if (!navigationState?.key || authLoading || themeLoading) return;
 
     const inAuth = segments[0] === "(auth)";
-    if (!jwt && !inAuth) router.replace("/(auth)");
-    else if (jwt && inAuth) router.replace("/(drive)");
-    else setLoading(false);
+
+    if (jwt) {
+      if (inAuth || segments.length === 0) {
+        router.replace("/(drive)");
+      } else {
+        setLoading(false);
+      }
+    } else {
+      if (!inAuth) {
+        router.replace("/(auth)");
+      } else {
+        setLoading(false);
+      }
+    }
   }, [jwt, segments, navigationState?.key, authLoading, themeLoading]);
 
   useEffect(() => {
@@ -41,11 +52,7 @@ function Root() {
   return (
     <>
       <View style={style.root}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="index" />
-          <Stack.Screen name="(auth)" />
-          <Stack.Screen name="(drive)" />
-        </Stack>
+        <Slot />
       </View>
 
       {loading && (

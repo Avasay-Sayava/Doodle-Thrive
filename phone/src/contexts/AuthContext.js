@@ -5,13 +5,13 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import LocalStorage from "@/src/utils/LocalStorage";
-import { useCurrentUUID } from "@/src/hooks/api/useCurrentUUID";
-import { useCurrentUser } from "@/src/hooks/api/useCurrentUser";
+import LocalStorage from "@/src/utils/common/LocalStorage";
+import { useUser } from "@/src/hooks/api/users/useUser";
 import { useApi } from "@/src/contexts/ApiContext";
 
 const AuthContext = createContext(null);
-const storageKey = "token";
+const tokenStorageKey = "token";
+const uuidStorageKey = "uuid";
 
 export default AuthContext;
 
@@ -19,67 +19,76 @@ export function AuthProvider({ children }) {
   const { setHeaders } = useApi();
 
   const [jwt, setJWT] = useState(null);
+  const [uuid, setUUID] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (loading) return;
-
     if (jwt) setHeaders({ Authorization: `Bearer ${jwt}` });
     else setHeaders({});
-  }, [jwt]);
+  }, [jwt, loading, setHeaders]);
 
-  const { uuid, loading: uuidLoading, error: uuidError } = useCurrentUUID(jwt);
-  const {
-    user,
-    loading: userLoading,
-    error: userError,
-  } = useCurrentUser(uuid, jwt);
+  const { user, loading: userLoading, error: userError } = useUser(uuid);
 
-  const signin = useCallback(async (token) => {
-    await LocalStorage.set(storageKey, token);
+  const signin = useCallback(async (token, userUuid) => {
+    setHeaders({ Authorization: `Bearer ${token}` });
+
+    await LocalStorage.set(tokenStorageKey, token);
+    await LocalStorage.set(uuidStorageKey, userUuid);
+
     setJWT(token);
-  }, []);
+    setUUID(userUuid);
+  }, [setHeaders]);
 
   const signout = useCallback(async () => {
-    await LocalStorage.remove(storageKey);
+    setHeaders({});
+    await LocalStorage.remove(tokenStorageKey);
+    await LocalStorage.remove(uuidStorageKey);
     setJWT(null);
-  }, []);
+    setUUID(null);
+  }, [setHeaders]);
 
   useEffect(() => {
-    LocalStorage.get(storageKey)
-      .then(async (token) => {
-        if (token) {
+    Promise.all([
+      LocalStorage.get(tokenStorageKey),
+      LocalStorage.get(uuidStorageKey),
+    ])
+      .then(([token, savedUuid]) => {
+        if (token && savedUuid) {
+          setHeaders({ Authorization: `Bearer ${token}` });
           setJWT(token);
+          setUUID(savedUuid);
         }
       })
       .catch((err) => {
-        console.error("Failed to get jwt token", err);
+        console.error("Failed to load auth info", err);
         setError(err);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [setHeaders]);
 
   useEffect(() => {
-    if (loading || uuidLoading || userLoading) return;
-
+    if (loading || userLoading) return;
     if (!jwt) return;
 
-    if (!uuid || !user)
+    if (uuid && !user) {
+      console.warn("User validation failed, signing out...");
       signout().catch((err) => {
         console.error("Failed to signout", err);
         setError(err);
       });
-  }, [uuid, user]);
+    }
+  }, [uuid, user, jwt, loading, userLoading, signout]);
 
   const auth = {
     jwt,
     uuid,
     user,
-    loading: loading || uuidLoading || userLoading,
-    error: error || uuidError || userError,
+    loading: loading || (uuid && userLoading),
+    error: error || userError,
     signin,
     signout,
   };

@@ -1,4 +1,4 @@
-import { Stack, useSegments, useRouter } from "expo-router";
+import { Slot, useSegments, useRouter } from "expo-router";
 import { Suspense, useEffect } from "react";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
 
@@ -12,13 +12,7 @@ function Auth() {
     }
   }, [segments, router]);
 
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="signin" />
-      <Stack.Screen name="signup" />
-    </Stack>
-  );
+  return <Slot />;
 }
 
 export default function AuthLayout() {

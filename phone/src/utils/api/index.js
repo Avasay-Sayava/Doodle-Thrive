@@ -115,7 +115,7 @@ class Api {
   };
 
   tokens = {
-    uuid: async (jwt) => {
+    user: async (jwt) => {
       return await this.#client.get("/api/tokens", {
         Authorization: `Bearer ${jwt}`,
       });

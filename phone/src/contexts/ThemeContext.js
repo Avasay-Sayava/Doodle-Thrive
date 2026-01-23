@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import LocalStorage from "@/src/utils/LocalStorage";
+import LocalStorage from "@/src/utils/common/LocalStorage";
 import { useColorScheme } from "react-native";
 import { ThemeProvider as NavThemeProvider } from "@react-navigation/native";
 import themes from "@/styles/themes";

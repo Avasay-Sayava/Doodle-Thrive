@@ -1,10 +1,19 @@
-import { Tabs as Stack } from "expo-router";
-import { Suspense } from "react";
+import { Tabs as Stack, useRouter, useSegments } from "expo-router";
+import { Suspense, useEffect } from "react";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
 
 function Tabs() {
   const { theme } = useTheme();
+
+  const router = useRouter();
+  const segments = useSegments();
+
+  useEffect(() => {
+    if (!segments[2] || segments[2] === "index") {
+      router.replace("/(drive)/(tabs)/home");
+    }
+  }, [segments, router]);
 
   return (
     <Stack
