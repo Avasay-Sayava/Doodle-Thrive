@@ -37,8 +37,8 @@ export default function SignIn() {
         title="Sign In"
         onPress={() => handleSignIn(username, password)}
       />
-      <Link href="/(auth)/signup">
-        <ThemedText>Don't have an account? Sign Up</ThemedText>
+      <Link style={style.link} href="/(auth)/signup">
+        <ThemedText style={style.link}>Don't have an account? Sign Up</ThemedText>
       </Link>
     </View>
   );

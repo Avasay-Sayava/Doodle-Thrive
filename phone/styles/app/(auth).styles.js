@@ -10,4 +10,9 @@ export const styles = (theme) =>
     form: {
       padding: theme.spacing.large,
     },
+    link: {
+      color: theme.colors.primary,
+      marginTop: theme.spacing.medium,
+      textAlign: "center",
+    },
   });

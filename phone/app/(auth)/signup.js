@@ -54,7 +54,7 @@ export default function SignUp() {
         title="Sign Up"
         onPress={() => handleSignUp(username, password)}
       />
-      <Link href="/(auth)/signin">
+      <Link style={style.link} href="/(auth)/signin">
         <ThemedText>Already have an account? Sign In</ThemedText>
       </Link>
     </View>
