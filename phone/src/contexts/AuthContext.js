@@ -31,15 +31,18 @@ export function AuthProvider({ children }) {
 
   const { user, loading: userLoading, error: userError } = useUser(uuid);
 
-  const signin = useCallback(async (token, userUuid) => {
-    setHeaders({ Authorization: `Bearer ${token}` });
+  const signin = useCallback(
+    async (token, userUuid) => {
+      setHeaders({ Authorization: `Bearer ${token}` });
 
-    await LocalStorage.set(tokenStorageKey, token);
-    await LocalStorage.set(uuidStorageKey, userUuid);
+      await LocalStorage.set(tokenStorageKey, token);
+      await LocalStorage.set(uuidStorageKey, userUuid);
 
-    setJWT(token);
-    setUUID(userUuid);
-  }, [setHeaders]);
+      setJWT(token);
+      setUUID(userUuid);
+    },
+    [setHeaders],
+  );
 
   const signout = useCallback(async () => {
     setHeaders({});
@@ -69,19 +72,6 @@ export function AuthProvider({ children }) {
         setLoading(false);
       });
   }, [setHeaders]);
-
-  useEffect(() => {
-    if (loading || userLoading) return;
-    if (!jwt) return;
-
-    if (uuid && !user) {
-      console.warn("User validation failed, signing out...");
-      signout().catch((err) => {
-        console.error("Failed to signout", err);
-        setError(err);
-      });
-    }
-  }, [uuid, user, jwt, loading, userLoading, signout]);
 
   const auth = {
     jwt,

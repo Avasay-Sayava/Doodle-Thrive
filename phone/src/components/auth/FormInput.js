@@ -1,26 +1,67 @@
-import { StyleSheet, TextInput, View } from "react-native";
-import ThemedText from "../common/ThemedText";
+import * as ImagePicker from "expo-image-picker";
+import ErrorLabel from "@/src/components/common/ErrorLabel";
+import { TextInput, TouchableOpacity, View, Text, Image } from "react-native";
+import { useTheme } from "@/src/contexts/ThemeContext";
+import { useMemo } from "react";
+import { styles } from "@/styles/components/auth/FormInput.styles";
 
-export const FormInput = ({
-    type = "text",
-    placeholder = "",
-    value,
-    onChange = () => {},
-    secureTextEntry = false,
-    error = false,
-    errorMessage = "",
-}) => {
+export default function FormInput({
+  type = "text",
+  placeholder = "",
+  value,
+  onChange = () => {},
+  error = false,
+  errorMessage = "",
+}) {
+  const { theme } = useTheme();
+  const style = useMemo(() => styles(theme), [theme]);
+
+  if (type === "image") {
+    const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+      });
+
+      if (!result.canceled) {
+        onChange(result.assets[0].uri);
+      }
+    };
 
     return (
-        <TextInput
-            placeholder={placeholder}
-            value={value}
-            onChangeText={onChange}
-            secureTextEntry={secureTextEntry}
+      <>
+        <TouchableOpacity
+          onPress={pickImage}
+          style={[style.imageInput, error && style.inputError]}
         >
-            <ErrorLabel>
-                {error && errorMessage && <ThemedText>{errorMessage}</ThemedText>}
-            </ErrorLabel>
-        </TextInput>
+          {value ? (
+            <Image source={{ uri: value }} style={style.imagePreview} />
+          ) : (
+            <View style={style.placeholderContainer}>
+              <Text style={style.placeholderText}>
+                {placeholder || "Tap to select an image"}
+              </Text>
+            </View>
+          )}
+        </TouchableOpacity>
+        <ErrorLabel text={errorMessage} visible={error} />
+      </>
     );
-};
+  }
+
+  const secureTextEntry = type === "password";
+
+  return (
+    <>
+      <TextInput
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChange}
+        secureTextEntry={secureTextEntry}
+        placeholderTextColor={style.placeholderText.color}
+        style={[style.textInput, error && style.inputError]}
+      />
+      <ErrorLabel text={"BANANA"} visible={true} />
+    </>
+  );
+}
