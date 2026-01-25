@@ -4,7 +4,7 @@ import ThemedText from "@/src/components/common/ThemedText";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo, useState, useEffect, useContext } from "react";
 import { styles } from "@/styles/app/(auth).styles";
-import { Button, View } from "react-native";
+import { View } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useSignIn } from "@/src/hooks/auth/useSignIn";
 import { AuthFormsContext } from "./_layout";
@@ -16,7 +16,7 @@ export default function SignIn() {
   const style = useMemo(() => styles(theme), [theme]);
   const { handleSignIn } = useSignIn();
 
-  const {usernameRef, passwordRef} = useContext(AuthFormsContext);
+  const { usernameRef, passwordRef } = useContext(AuthFormsContext);
 
   const [username, setUsername] = useState(usernameRef.current || "");
   const [password, setPassword] = useState(passwordRef.current || "");
@@ -43,7 +43,7 @@ export default function SignIn() {
       setError(true);
       return false;
     }
-  }
+  };
 
   return (
     <View style={style.form}>
@@ -63,9 +63,16 @@ export default function SignIn() {
           setPassword(text);
         }}
       />
-      <FormButton title="Sign In" onPress={onSignIn} error={error} errorMessage={errorMessage} />
+      <FormButton
+        title="Sign In"
+        onPress={onSignIn}
+        error={error}
+        errorMessage={errorMessage}
+      />
       <Link style={style.link} href="/(auth)/signup">
-        <ThemedText style={style.link}>Don't have an account? Sign Up</ThemedText>
+        <ThemedText style={style.link}>
+          Don't have an account? Sign Up
+        </ThemedText>
       </Link>
     </View>
   );

@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { Button } from "react-native";
 import { styles } from "@/styles/components/auth/FormButton.styles";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import ErrorLabel from "@/src/components/common/ErrorLabel";
@@ -17,9 +16,9 @@ export default function FormButton({
   return (
     <>
       <TouchableOpacity
-              onPress={onPress}
-              style={[style.buttonContainer, error && style.buttonError]}
-            >
+        onPress={onPress}
+        style={[style.buttonContainer, error && style.buttonError]}
+      >
         <Text style={style.buttonText}>{title}</Text>
       </TouchableOpacity>
       <ErrorLabel visible={error} text={errorMessage} />

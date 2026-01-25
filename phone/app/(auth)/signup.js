@@ -5,10 +5,9 @@ import { useTheme } from "@/src/contexts/ThemeContext";
 import { useContext, useMemo, useState, useEffect } from "react";
 import { styles } from "@/styles/app/(auth).styles";
 import { View } from "react-native";
-import { Link, router } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useSignUp } from "@/src/hooks/auth/useSignUp";
 import { AuthFormsContext } from "@/app/(auth)/_layout";
-import { useRouter } from "expo-router";
 
 export default function SignUp() {
   const router = useRouter();
@@ -23,8 +22,14 @@ export default function SignUp() {
   const [password, setPassword] = useState(passwordRef.current || "");
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState("");
-  const [errors, setErrors] = useState({username: null, password: null, image: null, description: null, general: null});
-    
+  const [errors, setErrors] = useState({
+    username: null,
+    password: null,
+    image: null,
+    description: null,
+    general: null,
+  });
+
   useEffect(() => {
     usernameRef.current = username;
   }, [username]);
@@ -33,14 +38,26 @@ export default function SignUp() {
   }, [password]);
 
   const onSignUp = async () => {
-    const success = await handleSignUp(username, password, image, description, setErrors);
+    const success = await handleSignUp(
+      username,
+      password,
+      image,
+      description,
+      setErrors,
+    );
     if (success) {
-      setErrors({username: null, password: null, image: null, description: null, general: null});
+      setErrors({
+        username: null,
+        password: null,
+        image: null,
+        description: null,
+        general: null,
+      });
       router.replace("/(auth)/signin");
       return true;
     }
     return false;
-  }
+  };
 
   return (
     <View style={style.form}>
@@ -79,9 +96,16 @@ export default function SignUp() {
         }}
         errorMessage={errors.description}
       />
-      <FormButton title="Sign Up" onPress={onSignUp} error={!!errors.general} errorMessage={errors.general} />
+      <FormButton
+        title="Sign Up"
+        onPress={onSignUp}
+        error={!!errors.general}
+        errorMessage={errors.general}
+      />
       <Link style={style.link} href="/(auth)/signin">
-        <ThemedText style={style.link}>Already have an account? Sign In</ThemedText>
+        <ThemedText style={style.link}>
+          Already have an account? Sign In
+        </ThemedText>
       </Link>
     </View>
   );
