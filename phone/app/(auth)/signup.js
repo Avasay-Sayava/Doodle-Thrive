@@ -33,10 +33,11 @@ export default function SignUp() {
   }, [password]);
 
   const onSignUp = async () => {
-    const success = await handleSignUp(username, password, image, description, setErrors);
+    let success = await handleSignUp(username, password, image, description, setErrors);
+    success = true; // TEMPORARY FOR TESTING
     if (success) {
       setErrors({username: null, password: null, image: null, description: null, general: null});
-      router.replace("/home");
+      router.replace("/(auth)/signin");
       return true;
     }
   }

@@ -36,7 +36,7 @@ export default function SignIn() {
     if (success) {
       setErrorMessage(null);
       setError(false);
-      router.replace("/home");
+      router.replace("/(drive)");
       return true;
     } else {
       setErrorMessage("Invalid username or password!");
