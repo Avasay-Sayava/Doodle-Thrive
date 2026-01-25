@@ -5,7 +5,7 @@ import { styles } from "@/styles/components/common/ErrorFallback.styles";
 
 export default function ErrorFallback({ error, resetErrorBoundary }) {
   const { theme } = useTheme();
-  const style = useMemo(() => styles(theme), [theme]);
+  const style = useMemo(() => styles({ theme }), [theme]);
 
   return (
     <View style={style.container}>

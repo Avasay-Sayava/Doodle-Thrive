@@ -14,7 +14,7 @@ export default function SignUp() {
   const router = useRouter();
 
   const { theme } = useTheme();
-  const style = useMemo(() => styles(theme), [theme]);
+  const style = useMemo(() => styles({ theme }), [theme]);
   const { handleSignUp } = useSignUp();
 
   const { usernameRef, passwordRef } = useContext(AuthFormsContext);

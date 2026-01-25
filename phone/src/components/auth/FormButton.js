@@ -11,7 +11,7 @@ export default function FormButton({
   errorMessage = "",
 }) {
   const { theme } = useTheme();
-  const style = useMemo(() => styles(theme), [theme]);
+  const style = useMemo(() => styles({ theme }), [theme]);
 
   return (
     <>
