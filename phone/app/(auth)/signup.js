@@ -39,6 +39,7 @@ export default function SignUp() {
       router.replace("/(auth)/signin");
       return true;
     }
+    return false;
   }
 
   return (

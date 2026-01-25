@@ -68,14 +68,14 @@ export function useSignUp() {
     async (username, password, image, description, setErrors) => {
       const hasErrors = errorMessages(username, password, image, description, setErrors);
       if (hasErrors) {
-        return { success: false };
+        return false;
       }
       return await create(username, password, { image, description })
         .then(() => {
-          return { success: true };
+          return true;
         })
         .catch(() => {
-          return { success: false };
+          return false;
         });
     },
     [create, errorMessages],
