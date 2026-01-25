@@ -4,7 +4,7 @@ import ThemedText from "@/src/components/common/ThemedText";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo, useState, useEffect, useContext } from "react";
 import { styles } from "@/styles/app/(auth).styles";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useSignIn } from "@/src/hooks/auth/useSignIn";
 import { AuthFormsContext } from "./_layout";
