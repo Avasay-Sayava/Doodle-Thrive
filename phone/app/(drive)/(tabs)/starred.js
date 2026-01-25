@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import TabHeader from "@/src/components/drive/tabs/TabHeader";
 import FilePanel from "@/src/components/drive/tabs/FilePanel";
 import { useStarred } from "@/src/hooks/api/files/useStarred";
+import LocalStorage from "@/src/utils/common/LocalStorage";
 
 export default function Starred() {
   const [fileView, setFileView] = useState("grid");

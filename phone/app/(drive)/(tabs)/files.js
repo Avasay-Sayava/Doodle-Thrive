@@ -1,19 +1,20 @@
 import { useEffect, useState, useMemo } from "react";
+import ThemedText from "@/src/components/common/ThemedText";
 import TabHeader from "@/src/components/drive/tabs/TabHeader";
 import FilePanel from "@/src/components/drive/tabs/FilePanel";
-import { useShared } from "@/src/hooks/api/files/useShared";
+import { useFolder } from "@/src/hooks/api/files/useFolder";
 import LocalStorage from "@/src/utils/common/LocalStorage";
 
-export default function Shared() {
+export default function Files() {
   const [fileView, setFileView] = useState("grid");
   const [sortBy, setSortBy] = useState("name");
   const uuid = useMemo(async () => LocalStorage.get("uuid"), []);
-  const { refresh } = useShared();
-  const [sharedFiles, setSharedFiles] = useState({});
+  const [files, setFiles] = useState({});
+  const { refresh } = useFolder();
 
   useEffect(() => {
-    const sharedFiles = refresh(uuid);
-    setSharedFiles(sharedFiles);
+    const files = refresh(uuid);
+    setFiles(files);
   }, [uuid, refresh]);
 
   return (
@@ -24,7 +25,7 @@ export default function Shared() {
         fileView={fileView}
         setFileView={setFileView}
       />
-      <FilePanel files={sharedFiles} fileView={fileView} sortBy={sortBy} />
+      <FilePanel files={files} fileView={fileView} sortBy={sortBy} />
     </>
   );
 }
