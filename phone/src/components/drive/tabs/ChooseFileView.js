@@ -1,9 +1,10 @@
-import { useFolder } from "@/src/hooks/api/files/useFolder";
 import Placeholder from "../../common/Placeholder";
-import { useEffect } from "react";
 
-export default function ChooseFileView() {
-    const { refresh } = useFolder();
+export default function ChooseFileView({ fileView, setFileView }) {
+    // TODO: implement file view switcher (e.g. grid/list).
+    // Currently a placeholder that simply reserves UI space.
+    void fileView;
+    void setFileView;
 
-    return (<Placeholder></Placeholder>);
+    return <Placeholder />;
 }
