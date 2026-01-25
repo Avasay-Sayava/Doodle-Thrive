@@ -25,6 +25,9 @@ export const styles = (theme) =>
     },
     inputError: {
       borderColor: theme.colors.error,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      marginBottom: 0,
     },
     imagePreview: {
       width: "100%",

@@ -9,6 +9,8 @@ export const styles = (theme) =>
     },
     form: {
       padding: theme.spacing.large,
+      flex: 1,
+      justifyContent: "center",
     },
     link: {
       color: theme.colors.primary,

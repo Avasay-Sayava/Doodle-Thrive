@@ -10,11 +10,11 @@ export default function FormInput({
   placeholder = "",
   value,
   onChange = () => {},
-  error = false,
   errorMessage = "",
 }) {
   const { theme } = useTheme();
   const style = useMemo(() => styles(theme), [theme]);
+  const error = errorMessage && errorMessage.length > 0;
 
   if (type === "image") {
     const pickImage = async () => {
@@ -61,7 +61,7 @@ export default function FormInput({
         placeholderTextColor={style.placeholderText.color}
         style={[style.textInput, error && style.inputError]}
       />
-      <ErrorLabel text={"BANANA"} visible={true} />
+      <ErrorLabel text={errorMessage} visible={error} />
     </>
   );
 }
