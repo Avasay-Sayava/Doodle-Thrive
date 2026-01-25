@@ -14,5 +14,5 @@ export function useTokensActions() {
     [api.tokens, run],
   );
 
-  return { ...actions, loading, error, user: data };
+  return { ...actions, loading, error, data };
 }

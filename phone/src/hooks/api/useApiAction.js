@@ -35,5 +35,5 @@ export function useApiAction() {
       });
   }, []);
 
-  return { run, loading, error, user: data };
+  return { run, loading, error, data };
 }

@@ -36,5 +36,5 @@ export function useFilesActions() {
     [api.files, run],
   );
 
-  return { ...actions, loading, error, user: data };
+  return { ...actions, loading, error, data };
 }
