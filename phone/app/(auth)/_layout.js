@@ -1,6 +1,7 @@
 import { Slot, useSegments, useRouter } from "expo-router";
 import { Suspense, useEffect, useRef, createContext } from "react";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
+import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 
 export const AuthFormsContext = createContext(null);
 
@@ -18,14 +19,22 @@ function Auth() {
   }, [segments, router]);
 
   return (
-    <AuthFormsContext.Provider
-      value={{
-        usernameRef: usernameRef,
-        passwordRef: passwordRef,
-      }}
-    >
-      <Slot />
-    </AuthFormsContext.Provider>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled">
+        <AuthFormsContext.Provider
+          value={{
+            usernameRef: usernameRef,
+            passwordRef: passwordRef,
+          }}
+        >
+          <Slot />
+        </AuthFormsContext.Provider>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

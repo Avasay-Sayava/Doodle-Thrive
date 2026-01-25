@@ -8,7 +8,6 @@ export const styles = (theme) =>
       padding: theme.spacing.small,
       borderRadius: theme.borderRadius.small,
       fontSize: theme.fonts.sizes.medium,
-      marginBottom: theme.spacing.medium,
       color: theme.colors.text,
     },
     imageInput: {
@@ -21,7 +20,6 @@ export const styles = (theme) =>
       overflow: "hidden",
       justifyContent: "center",
       alignItems: "center",
-      marginBottom: theme.spacing.small,
     },
     inputError: {
       borderColor: theme.colors.error,
@@ -37,7 +35,6 @@ export const styles = (theme) =>
     placeholderContainer: {
       alignItems: "center",
       justifyContent: "center",
-      padding: theme.spacing.large,
     },
     placeholderText: {
       color: theme.colors.textMuted,

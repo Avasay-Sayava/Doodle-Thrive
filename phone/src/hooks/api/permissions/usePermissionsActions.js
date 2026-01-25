@@ -25,5 +25,5 @@ export function usePermissionsActions() {
     [api.permissions, run],
   );
 
-  return { ...actions, loading, error, user: data };
+  return { ...actions, loading, error, data };
 }

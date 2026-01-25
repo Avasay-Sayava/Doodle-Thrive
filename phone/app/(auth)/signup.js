@@ -1,4 +1,4 @@
-import FormInput from "@/src/components/auth/FormInput";
+import CustomInput from "@/src/components/common/CustomInput";
 import FormButton from "@/src/components/auth/FormButton";
 import ThemedText from "@/src/components/common/ThemedText";
 import { useTheme } from "@/src/contexts/ThemeContext";
@@ -8,6 +8,7 @@ import { View } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useSignUp } from "@/src/hooks/auth/useSignUp";
 import { AuthFormsContext } from "@/app/(auth)/_layout";
+import toBase64 from "@/src/utils/common/toBase64";
 
 export default function SignUp() {
   const router = useRouter();
@@ -38,31 +39,39 @@ export default function SignUp() {
   }, [password]);
 
   const onSignUp = async () => {
-    const success = await handleSignUp(
-      username,
-      password,
-      image,
-      description,
-      setErrors,
-    );
-    if (success) {
-      setErrors({
-        username: null,
-        password: null,
-        image: null,
-        description: null,
-        general: null,
-      });
-      router.replace("/(auth)/signin");
-      return true;
+    try {
+      const base64 = await toBase64(image?.uri);
+
+      const success = await handleSignUp(
+        username,
+        password,
+        base64,
+        description,
+        setErrors,
+      );
+
+      if (success) {
+        setErrors({
+          username: null,
+          password: null,
+          image: null,
+          description: null,
+          general: null,
+        });
+        router.replace("/(auth)/signin");
+        return true;
+      }
+    } catch (err) {
+      console.error(err);
     }
+
     return false;
   };
 
   return (
     <View style={style.form}>
       <ThemedText style={style.title}>Sign Up</ThemedText>
-      <FormInput
+      <CustomInput
         placeholder="username"
         value={username}
         onChange={(text) => {
@@ -70,7 +79,7 @@ export default function SignUp() {
         }}
         errorMessage={errors.username}
       />
-      <FormInput
+      <CustomInput
         type="password"
         placeholder="password"
         value={password}
@@ -79,15 +88,16 @@ export default function SignUp() {
         }}
         errorMessage={errors.password}
       />
-      <FormInput
+      <CustomInput
         type="image"
+        placeholder="tap to select an image"
         value={image}
-        onChange={(uri) => {
-          setImage(uri);
+        onChange={(image) => {
+          setImage(image);
         }}
         errorMessage={errors.image}
       />
-      <FormInput
+      <CustomInput
         type="text"
         placeholder="description"
         value={description}
@@ -99,7 +109,6 @@ export default function SignUp() {
       <FormButton
         title="Sign Up"
         onPress={onSignUp}
-        error={!!errors.general}
         errorMessage={errors.general}
       />
       <Link style={style.link} href="/(auth)/signin">
