@@ -2,7 +2,7 @@ import { Slot, useSegments, useRouter } from "expo-router";
 import { Suspense, useEffect, useRef, createContext } from "react";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
 
-export const AuthFormsContext = createContext();
+export const AuthFormsContext = createContext(null);
 
 function Auth() {
   const router = useRouter();

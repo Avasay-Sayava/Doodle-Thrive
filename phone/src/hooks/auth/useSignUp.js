@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useUsersActions } from "../api/users/useUsersActions";
+import { useUsersActions } from "@/src/hooks/api/users/useUsersActions";
 import Regex from "@/src/utils/common/regex";
 
 export function useSignUp() {
