@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import TabHeader from "./TabHeader";
-import FilePanel from "./FilePanel";
+import FileList from "./FileList";
 import LocalStorage from "@/src/utils/common/LocalStorage";
 
 export default function GeneralTab({
@@ -30,7 +30,7 @@ export default function GeneralTab({
         fileView={fileView}
         setFileView={setFileView}
       />
-      <FilePanel files={files} fileView={fileView} sortBy={sortBy} />
+      <FileList files={files} fileView={fileView} sortBy={sortBy} />
     </>
   );
 }
