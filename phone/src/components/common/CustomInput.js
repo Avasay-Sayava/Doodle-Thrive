@@ -5,7 +5,7 @@ import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo } from "react";
 import { styles } from "@/styles/components/auth/FormInput.styles";
 
-export default function FormInput({
+export default function CustomInput({
   type = "text",
   placeholder = "",
   value,
@@ -39,7 +39,7 @@ export default function FormInput({
           ) : (
             <View style={style.placeholderContainer}>
               <Text style={style.placeholderText}>
-                {placeholder || "Tap to select an image"}
+                {placeholder}
               </Text>
             </View>
           )}

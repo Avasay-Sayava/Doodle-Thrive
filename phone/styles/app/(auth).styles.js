@@ -5,16 +5,17 @@ export const styles = (theme) =>
     title: {
       fontWeight: "bold",
       fontSize: theme.fonts.sizes.large,
-      marginBottom: theme.spacing.medium,
+      marginLeft: theme.spacing.small,
+      marginBottom: theme.spacing.small,
     },
     form: {
       padding: theme.spacing.large,
       flex: 1,
+      gap: theme.spacing.small,
       justifyContent: "center",
     },
     link: {
       color: theme.colors.primary,
-      marginTop: theme.spacing.medium,
       textAlign: "center",
     },
   });

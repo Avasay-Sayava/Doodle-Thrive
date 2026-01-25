@@ -1,4 +1,4 @@
-import FormInput from "@/src/components/auth/FormInput";
+import CustomInput from "@/src/components/common/CustomInput";
 import FormButton from "@/src/components/auth/FormButton";
 import ThemedText from "@/src/components/common/ThemedText";
 import { useTheme } from "@/src/contexts/ThemeContext";
@@ -62,7 +62,7 @@ export default function SignUp() {
   return (
     <View style={style.form}>
       <ThemedText style={style.title}>Sign Up</ThemedText>
-      <FormInput
+      <CustomInput
         placeholder="username"
         value={username}
         onChange={(text) => {
@@ -70,7 +70,7 @@ export default function SignUp() {
         }}
         errorMessage={errors.username}
       />
-      <FormInput
+      <CustomInput
         type="password"
         placeholder="password"
         value={password}
@@ -79,15 +79,16 @@ export default function SignUp() {
         }}
         errorMessage={errors.password}
       />
-      <FormInput
+      <CustomInput
         type="image"
+        placeholder="tap to select an image"
         value={image}
         onChange={(uri) => {
           setImage(uri);
         }}
         errorMessage={errors.image}
       />
-      <FormInput
+      <CustomInput
         type="text"
         placeholder="description"
         value={description}
