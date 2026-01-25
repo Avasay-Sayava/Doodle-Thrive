@@ -36,7 +36,7 @@ export default function SignUp() {
     const success = await handleSignUp(username, password, image, description, setErrors);
     if (success) {
       setErrors({username: null, password: null, image: null, description: null, general: null});
-      router.replace("/(app)/home");
+      router.replace("/home");
       return true;
     }
   }
