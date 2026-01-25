@@ -33,8 +33,7 @@ export default function SignUp() {
   }, [password]);
 
   const onSignUp = async () => {
-    let success = await handleSignUp(username, password, image, description, setErrors);
-    success = true; // TEMPORARY FOR TESTING
+    const success = await handleSignUp(username, password, image, description, setErrors);
     if (success) {
       setErrors({username: null, password: null, image: null, description: null, general: null});
       router.replace("/(auth)/signin");
@@ -79,7 +78,7 @@ export default function SignUp() {
         }}
         errorMessage={errors.description}
       />
-      <FormButton title="Sign Up" onPress={() => handleSignUp(username, password, image, description, setErrors)} error={!!errors.general} errorMessage={errors.general} />
+      <FormButton title="Sign Up" onPress={onSignUp} error={!!errors.general} errorMessage={errors.general} />
       <Link style={style.link} href="/(auth)/signin">
         <ThemedText style={style.link}>Already have an account? Sign In</ThemedText>
       </Link>
