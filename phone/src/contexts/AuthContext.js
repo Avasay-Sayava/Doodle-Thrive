@@ -73,19 +73,6 @@ export function AuthProvider({ children }) {
       });
   }, [setHeaders]);
 
-  useEffect(() => {
-    if (loading || userLoading) return;
-    if (!jwt) return;
-
-    if (uuid && !user) {
-      console.warn("User validation failed, signing out...");
-      signout().catch((err) => {
-        console.error("Failed to signout", err);
-        setError(err);
-      });
-    }
-  }, [uuid, user, jwt, loading, userLoading, signout]);
-
   const auth = {
     jwt,
     uuid,
