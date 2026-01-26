@@ -5,7 +5,6 @@ export default function Shared() {
   return (
     <GeneralTab
       useFilesHook={useShared}
-      requiresUuid={true}
       initialSortBy="name"
       isSortEnabled={true}
     />

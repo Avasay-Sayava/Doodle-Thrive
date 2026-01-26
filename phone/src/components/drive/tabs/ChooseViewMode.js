@@ -1,5 +1,5 @@
 import Placeholder from "../../common/Placeholder";
 
-export default function FileList({ files, fileView, sortBy }) {
+export default function ChooseViewMode({ viewMode, setViewMode }) {
     return <Placeholder />;
 }

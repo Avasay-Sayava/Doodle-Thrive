@@ -30,7 +30,6 @@ export const styles = ({ theme }) =>
     secondary: {
       fontSize: theme.fonts.sizes.small,
       color: theme.colors.textMuted,
-      fontStyle: "italic",
       flexDirection: "row",
       gap: theme.spacing.small
     },

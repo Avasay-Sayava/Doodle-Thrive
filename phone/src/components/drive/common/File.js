@@ -20,7 +20,7 @@ export default function File({ file }) {
         <View style={style.name}>{file.name}</View>
         <View style={style.secondary}>
           {file.starred ? <Icon name="star" size={theme.fonts.sizes.small} color={theme.colors.text} /> : <></>}
-          {file.owner === uuid ? <></> : <Icon name="shared" size={theme.fonts.sizes.small} color={theme.colors.text} />}
+          {file.owner !== uuid ? <Icon name="shared" size={theme.fonts.sizes.small} color={theme.colors.text} /> : <></>}
           <b>:</b>
           <RelativeDate timestamp={file.modified} />
         </View>
