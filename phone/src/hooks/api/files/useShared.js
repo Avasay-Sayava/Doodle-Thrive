@@ -9,7 +9,7 @@ export function useShared() {
 
   const refresh = useCallback(() => {
     getAll();
-  }, [uuid, getAll]);
+  }, [getAll]);
 
   useEffect(() => {
     refresh();

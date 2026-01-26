@@ -30,12 +30,9 @@ export default function ChooseViewMode({ viewMode, setViewMode }) {
     setViewMode((prev) => (prev === "list" ? "grid" : "list"));
   };
 
-  const sliderLeft = anim.interpolate({
+  const translateX = anim.interpolate({
     inputRange: [0, 1],
-    outputRange: [
-      SLIDER_PADDING,
-      2 * SLIDER_PADDING + (CONTAINER_WIDTH - 3 * SLIDER_PADDING) / 2,
-    ],
+    outputRange: [0, SLIDER_WIDTH + SLIDER_PADDING],
   });
 
   return (
@@ -50,10 +47,11 @@ export default function ChooseViewMode({ viewMode, setViewMode }) {
         style={[
           style.slider,
           {
-            left: sliderLeft,
+            left: SLIDER_PADDING,
             width: SLIDER_WIDTH,
             top: SLIDER_PADDING,
             height: SLIDER_HEIGHT,
+            transform: [{ translateX }],
           },
         ]}
       />

@@ -5,7 +5,7 @@ export function useStarred() {
   const { getAll, data, loading, error } = useFilesActions();
 
   const refresh = useCallback(() => {
-    getAll(); 
+    getAll();
   }, [getAll]);
 
   useEffect(() => {

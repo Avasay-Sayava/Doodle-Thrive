@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TabHeader from "./TabHeader";
 import FileList from "@/src/components/drive/common/FileList";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
@@ -56,7 +56,11 @@ export default function GeneralTab({
         viewMode={viewMode}
         setViewMode={setViewMode}
       />
-      <FileList files={/*TODO: replace with `files`*/data} viewMode={viewMode} sortOptions={sortOptions} />
+      <FileList
+        files={/*TODO: replace with `files`*/ data}
+        viewMode={viewMode}
+        sortOptions={sortOptions}
+      />
     </>
   );
 }

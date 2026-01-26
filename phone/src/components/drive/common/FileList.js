@@ -12,14 +12,19 @@ export default function FileList({ files, viewMode, sortOptions }) {
   const { theme } = useTheme();
   const style = useMemo(() => styles({ theme }), [theme]);
 
-  const sorted = files
-    .sort(sortOptions.by === "date" ? dateComparator : nameComparator)
-    .map((file) => <File file={file} />);
+  const sorted = [...files].sort(
+    sortOptions.by === "date" ? dateComparator : nameComparator,
+  );
+
   const reversed = sortOptions.reversed ? sorted.reverse() : sorted;
 
   return (
     <ScrollView contentContainerStyle={style.fill}>
-      <View style={style.container}>{reversed}</View>
+      <View style={style.container}>
+        {reversed.map((file) => (
+          <File key={file.id || file.uuid} file={file} />
+        ))}
+      </View>
     </ScrollView>
   );
 }
