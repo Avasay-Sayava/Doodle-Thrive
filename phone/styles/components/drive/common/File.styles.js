@@ -18,6 +18,8 @@ export const styles = ({ theme }) =>
       backgroundColor: theme.colors.background,
       alignContent: "center",
       justifyContent: "center",
+      fontSize: theme.fonts.sizes.medium,
+      color: theme.colors.text,
     },
     info: {
       flexDirection: "column",
@@ -29,7 +31,7 @@ export const styles = ({ theme }) =>
     },
     secondary: {
       fontSize: theme.fonts.sizes.small,
-      color: theme.colors.textMuted,
+      color: theme.colors.textSecondary,
       flexDirection: "row",
       gap: theme.spacing.small,
     },

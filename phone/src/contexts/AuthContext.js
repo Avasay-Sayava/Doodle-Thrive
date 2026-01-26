@@ -16,7 +16,7 @@ const uuidStorageKey = "uuid";
 export default AuthContext;
 
 export function AuthProvider({ children }) {
-  const { setHeaders } = useApi();
+  const { api, setHeaders } = useApi();
 
   const [jwt, setJWT] = useState(null);
   const [uuid, setUUID] = useState(null);
@@ -31,19 +31,6 @@ export function AuthProvider({ children }) {
 
   const { user, loading: userLoading, error: userError } = useUser(uuid);
 
-  const signin = useCallback(
-    async (token, userUuid) => {
-      setHeaders({ Authorization: `Bearer ${token}` });
-
-      await LocalStorage.set(tokenStorageKey, token);
-      await LocalStorage.set(uuidStorageKey, userUuid);
-
-      setJWT(token);
-      setUUID(userUuid);
-    },
-    [setHeaders],
-  );
-
   const signout = useCallback(async () => {
     setHeaders({});
     await LocalStorage.remove(tokenStorageKey);
@@ -52,16 +39,36 @@ export function AuthProvider({ children }) {
     setUUID(null);
   }, [setHeaders]);
 
+  const signin = useCallback(
+    async (token, userUuid) => {
+      setHeaders({ Authorization: `Bearer ${token}` });
+
+      await LocalStorage.set(tokenStorageKey, token);
+      await LocalStorage.set(uuidStorageKey, userUuid);
+
+      await api.files
+        .getAll()
+        .then((response) => {
+          if (!response.ok) throw new Error(response.status);
+
+          setJWT(token);
+          setUUID(userUuid);
+        })
+        .catch(() => {
+          signout();
+        });
+    },
+    [setHeaders, api.files, signout],
+  );
+
   useEffect(() => {
     Promise.all([
       LocalStorage.get(tokenStorageKey),
       LocalStorage.get(uuidStorageKey),
     ])
-      .then(([token, savedUuid]) => {
+      .then(async ([token, savedUuid]) => {
         if (token && savedUuid) {
-          setHeaders({ Authorization: `Bearer ${token}` });
-          setJWT(token);
-          setUUID(savedUuid);
+          await signin(token, savedUuid);
         }
       })
       .catch((err) => {

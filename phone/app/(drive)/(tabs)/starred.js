@@ -5,7 +5,8 @@ export default function Starred() {
   return (
     <GeneralTab
       useFilesHook={useStarred}
-      initialSortBy="name"
+      initialSortOptions={{ by: name, reversed: false }}
+      initialViewMode="list"
       isSortEnabled={true}
     />
   );

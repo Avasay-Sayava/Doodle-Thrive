@@ -6,8 +6,8 @@ import ChooseViewMode from "@/src/components/drive/tabs/ChooseViewMode";
 import SortButton from "./SortButton";
 
 export default function TabHeader({
-  sortBy,
-  setSortBy,
+  sortOptions,
+  setSortOptions,
   isSortEnabled,
   viewMode,
   setViewMode,
@@ -18,8 +18,8 @@ export default function TabHeader({
   return (
     <View style={[style.headerContainer]}>
       <SortButton
-        sortBy={sortBy}
-        setSortBy={setSortBy}
+        sortOptions={sortOptions}
+        setSortOptions={setSortOptions}
         isEnabled={isSortEnabled}
       />
       <ChooseViewMode viewMode={viewMode} setViewMode={setViewMode} />
