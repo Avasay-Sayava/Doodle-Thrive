@@ -1,25 +1,24 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useMemo } from "react";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 
 export function useFolder(folderId = null) {
-  const { get, getAll, data, loading, error } = useFilesActions();
+  const { getAll, data, loading, error } = useFilesActions();
 
   const refresh = useCallback(() => {
-    if (folderId) {
-      const childrenIds = get(folderId).children;
-      return childrenIds.map((uuid) => get(uuid));
-    } else {
-      const files = Object.values(getAll());
-      return files.filter((file) => file.parent === folderId);
-    }
-  }, [folderId, get]);
+    getAll();
+  }, [getAll]);
 
   useEffect(() => {
     refresh();
   }, [refresh]);
 
+  const files = useMemo(() => {
+    const allFiles = data ? Object.values(data) : null;
+    return allFiles?.filter((file) => file.parent === folderId);
+  }, [data, folderId]);
+
   return {
-    files: data,
+    files,
     loading: loading || (data === null && error === null),
     error,
     refresh,
