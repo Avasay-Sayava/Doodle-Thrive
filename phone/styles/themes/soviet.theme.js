@@ -11,6 +11,7 @@ export default {
     background: "#0a0a0a",
     card: "#1a1a1a",
     text: "#ffffff",
+    textInverted: "#000000",
     border: "#424242",
     notification: "#ffffff",
     error: "#9e9e9e",

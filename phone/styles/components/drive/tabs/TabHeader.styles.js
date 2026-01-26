@@ -4,5 +4,6 @@ export const styles = ({ theme }) =>
   new StyleSheet.create({
     headerContainer: {
       flexDirection: "row",
+      justifyContent: "space-between",
     },
   });
