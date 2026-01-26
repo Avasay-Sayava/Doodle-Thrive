@@ -12,7 +12,7 @@ export default function GeneralTab({
   const [viewMode, setViewMode] = useState(initialViewMode);
   const [sortOptions, setSortOptions] = useState(initialSortOptions);
 
-  const { refresh, loading } = useFilesHook();
+  const { files, refresh, loading } = useFilesHook();
 
   const data = [
     {
@@ -43,10 +43,6 @@ export default function GeneralTab({
     },
   ];
 
-  useEffect(() => {
-    refresh();
-  }, [refresh]);
-
   if (loading) {
     return <LoadingScreen />;
   }
@@ -60,7 +56,7 @@ export default function GeneralTab({
         viewMode={viewMode}
         setViewMode={setViewMode}
       />
-      <FileList files={data} viewMode={viewMode} sortOptions={sortOptions} />
+      <FileList files={/*TODO: replace with `files`*/data} viewMode={viewMode} sortOptions={sortOptions} />
     </>
   );
 }

@@ -1,11 +1,11 @@
 import { useEffect, useCallback, useMemo } from "react";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 
-export function useStarred() {
+export function useHome() {
   const { getAll, data, loading, error } = useFilesActions();
 
   const refresh = useCallback(() => {
-    getAll(); 
+    getAll();
   }, [getAll]);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export function useStarred() {
 
   const files = useMemo(() => {
     const allFiles = data ? Object.values(data) : null;
-    return allFiles?.filter((file) => file.starred);
+    return allFiles?.filter((file) => !data.includes(file.parent));
   }, [data]);
 
   return {
