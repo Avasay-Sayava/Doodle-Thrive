@@ -18,6 +18,7 @@ function Tabs() {
   }, [segments, router]);
 
   return (
+    // TODO: REPLACE WITH ACTUAL STYLE DONT LEAVE IT LIKE THIS
     <View style={{ flex: 1 }}>
       <Header />
       <Stack
