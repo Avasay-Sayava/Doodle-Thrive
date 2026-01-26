@@ -11,7 +11,8 @@ import DeminiIcon from "@/assets/icons/demini";
 import ArrowIcon from "@/assets/icons/arrow";
 import SearchIcon from "@/assets/icons/search";
 import ShareIcon from "@/assets/icons/share";
-import { useTheme } from "@react-navigation/native";
+import LogoutIcon from "@/assets/icons/logout";
+import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo } from "react";
 import { styles } from "@/styles/components/common/Icon.styles";
 
@@ -45,6 +46,8 @@ export default function Icon({ name, size, color }) {
         return SearchIcon;
       case "share":
         return ShareIcon;
+      case "logout":
+        return LogoutIcon;
       default:
         return null;
     }

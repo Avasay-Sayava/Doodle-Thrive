@@ -7,6 +7,7 @@ import MenuButton from "./MenuButton";
 import SearchButton from "@/src/components/drive/tabs/header/SearchButton";
 import Profile from "@/src/components/drive/common/Profile";
 import { useAuth } from "@/src/contexts/AuthContext";
+import LogoutButton from "@/src/components/drive/tabs/header/LogoutButton";
 
 export default function Header() {
   const { theme } = useTheme();
@@ -18,6 +19,7 @@ export default function Header() {
       <MenuButton />
       <SearchButton />
       <AskDemini />
+      <LogoutButton />
       <Profile uuid={uuid} size={40} />
     </View>
   );
