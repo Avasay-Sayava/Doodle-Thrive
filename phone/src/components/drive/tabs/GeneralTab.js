@@ -5,8 +5,8 @@ import LoadingScreen from "@/src/components/common/LoadingScreen";
 
 export default function GeneralTab({
   useFilesHook,
-  initialSortOptions = { by: "name", reversed: false },
-  initialViewMode = "grid",
+  initialSortOptions,
+  initialViewMode = "list",
   isSortEnabled = true,
 }) {
   const [viewMode, setViewMode] = useState(initialViewMode);
@@ -17,7 +17,7 @@ export default function GeneralTab({
   const data = [
     {
       id: "1234",
-      name: "bomba!",
+      name: "boomba!",
       type: "file",
       owner: "i nate higgers",
       content: "i nate higgers",
@@ -30,7 +30,7 @@ export default function GeneralTab({
     },
     {
       id: "12344",
-      name: "bomba!1",
+      name: "boomba!1",
       type: "folder",
       owner: "i nate higgers2",
       content: "i nate higgers",
