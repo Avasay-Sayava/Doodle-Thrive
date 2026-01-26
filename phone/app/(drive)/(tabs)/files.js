@@ -5,7 +5,8 @@ export default function Files() {
   return (
     <GeneralTab
       useFilesHook={() => useFolder(null)}
-      initialSortBy="name"
+      initialSortOptions={{ by: "list", reversed: false }}
+      initialViewMode="list"
       isSortEnabled={true}
     />
   );

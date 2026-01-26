@@ -12,7 +12,7 @@ export function useApiAction() {
 
     return promiseSupplier()
       .then(async (response) => {
-        if (!response.ok) throw response.status;
+        if (!response.ok) throw new Error(response.status);
 
         const contentType = response.headers.get("Content-Type");
         const result =

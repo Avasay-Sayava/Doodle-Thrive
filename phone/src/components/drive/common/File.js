@@ -1,10 +1,11 @@
 import { styles } from "@/styles/components/drive/common/File.styles";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo } from "react";
-import { Pressable, View } from "react-native";
+import { View, Text } from "react-native";
 import { useAuth } from "@/src/contexts/AuthContext";
 import Icon from "@/src/components/common/Icon";
 import RelativeDate from "@/src/components/drive/common/RelativeDate";
+import ActionsMenu from "@/src/components/drive/common/ActionsMenu";
 
 export default function File({ file }) {
   const { theme } = useTheme();
@@ -16,18 +17,18 @@ export default function File({ file }) {
       <View style={style.iconBackdrop}>
         <Icon
           name={file.type}
-          size={theme.fonts.sizes.large}
-          color={theme.colors.text}
+          size={style.iconBackdrop.fontSize}
+          color={style.iconBackdrop.color}
         />
       </View>
       <View style={style.info}>
-        <View style={style.name}>{file.name}</View>
+        <Text style={style.name}>{file.name}</Text>
         <View style={style.secondary}>
           {file.starred ? (
             <Icon
               name="star"
-              size={theme.fonts.sizes.small}
-              color={theme.colors.text}
+              size={style.secondary.fontSize}
+              color={style.secondary.color}
             />
           ) : (
             <></>
@@ -35,23 +36,24 @@ export default function File({ file }) {
           {file.owner !== uuid ? (
             <Icon
               name="shared"
-              size={theme.fonts.sizes.small}
-              color={theme.colors.text}
+              size={style.secondary.fontSize}
+              color={style.secondary.color}
             />
           ) : (
             <></>
           )}
-          <b>:</b>
-          <RelativeDate timestamp={file.modified} />
+          <Text style={style.secondary}>
+            <b>•</b>
+          </Text>
+          <Text style={style.secondary}>
+            <RelativeDate timestamp={file.modified} />
+          </Text>
         </View>
       </View>
-      <Pressable style={style.actionsMenu}>
-        <Icon
-          name="vertical-dots"
-          size={theme.fonts.sizes.large}
-          color={theme.colors.text}
-        />
-      </Pressable>
+
+      <View style={style.actionsMenuContainer}>
+        <ActionsMenu file={file} />
+      </View>
     </View>
   );
 }
