@@ -6,7 +6,7 @@ import { styles } from "@/styles/components/drive/tabs/header/Header.styles";
 import MenuButton from "./MenuButton";
 import SearchButton from "@/src/components/drive/tabs/header/SearchButton";
 import Profile from "@/src/components/drive/common/Profile";
-import {useAuth} from "@/src/contexts/AuthContext";
+import { useAuth } from "@/src/contexts/AuthContext";
 
 export default function Header() {
   const { theme } = useTheme();

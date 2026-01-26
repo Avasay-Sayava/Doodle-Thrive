@@ -40,7 +40,7 @@ export default function SignUp() {
 
   const onSignUp = async () => {
     try {
-      const base64 = await toBase64(image?.uri);
+      const base64 = await toBase64(image);
 
       const success = await handleSignUp(
         username,
@@ -92,8 +92,8 @@ export default function SignUp() {
         type="image"
         placeholder="tap to select an image"
         value={image}
-        onChange={(image) => {
-          setImage(image);
+        onChange={(imageUri) => {
+          setImage(imageUri);
         }}
         errorMessage={errors.image}
       />
