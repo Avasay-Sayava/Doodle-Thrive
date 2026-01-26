@@ -6,7 +6,7 @@ export function useStarred() {
 
   const refresh = useCallback(() => {
     const files = Object.values(getAll());
-    return files.filter(file => file.starred);
+    return files.filter((file) => file.starred);
   }, [getAll]);
 
   useEffect(() => {

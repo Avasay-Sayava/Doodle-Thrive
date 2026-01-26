@@ -18,4 +18,4 @@ export default async function (uri) {
     xhr.open("GET", uri, true);
     xhr.send(null);
   });
-};
+}

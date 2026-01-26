@@ -21,10 +21,12 @@ function Auth() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}>
+      style={{ flex: 1 }}
+    >
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+      >
         <AuthFormsContext.Provider
           value={{
             usernameRef: usernameRef,
