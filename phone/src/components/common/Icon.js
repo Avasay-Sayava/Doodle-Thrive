@@ -7,6 +7,7 @@ import StarIcon from "@/assets/icons/star";
 import SharedIcon from "@/assets/icons/shared";
 import VerticalDotsIcon from "@/assets/icons/vertical-dots";
 import ImageIcon from "@/assets/icons/image";
+import DeminiIcon from "@/assets/icons/demini";
 import { useTheme } from "@react-navigation/native";
 import { useMemo } from "react";
 import { styles } from "@/styles/components/common/Icon.styles";
@@ -33,6 +34,8 @@ export default function Icon({ name, size, color }) {
         return ListIcon;
       case "grid":
         return GridIcon;
+        case "demini":
+        return DeminiIcon;
       default:
         return null;
     }
