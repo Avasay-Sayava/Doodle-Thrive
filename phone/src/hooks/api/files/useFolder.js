@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 
-export function useFiles(folderId = null) {
+export function useFolder(folderId = null) {
   const { get, getAll, data, loading, error } = useFilesActions();
 
   const refresh = useCallback(() => {
@@ -19,4 +19,3 @@ export function useFiles(folderId = null) {
     refresh,
   };
 }
-

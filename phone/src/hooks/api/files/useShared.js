@@ -1,12 +1,11 @@
 import { useEffect, useCallback } from "react";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 
-export function useFiles(folderId = null) {
+export function useShared() {
   const { get, getAll, data, loading, error } = useFilesActions();
-
-  const refresh = useCallback(() => {
-    return folderId ? get(folderId) : Object.fromEntries(Object.entries(getAll()).filter(([key, value]) => !value.parent));
-  }, [folderId, get]);
+  const refresh = useCallback((uuid) => {
+    Object.fromEntries(Object.entries(getAll()).filter(([key, value]) => value.owner != uuid));
+  }, [getAll]);
 
   useEffect(() => {
     refresh();
@@ -19,4 +18,3 @@ export function useFiles(folderId = null) {
     refresh,
   };
 }
-

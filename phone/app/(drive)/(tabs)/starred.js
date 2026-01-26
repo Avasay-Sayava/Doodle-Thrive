@@ -1,3 +1,13 @@
-import Placeholder from "@/src/components/common/Placeholder";
+import GeneralTab from "@/src/components/drive/tabs/GeneralTab";
+import { useStarred } from "@/src/hooks/api/files/useStarred";
 
-export default Placeholder;
+export default function Starred() {
+  return (
+    <GeneralTab
+      useFilesHook={useStarred}
+      requiresUuid={false}
+      initialSortBy="name"
+      isSortEnabled={true}
+    />
+  );
+}

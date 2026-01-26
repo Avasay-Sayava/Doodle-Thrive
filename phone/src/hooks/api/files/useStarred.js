@@ -1,12 +1,11 @@
 import { useEffect, useCallback } from "react";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 
-export function useFiles(folderId = null) {
+export function useStarred() {
   const { get, getAll, data, loading, error } = useFilesActions();
-
   const refresh = useCallback(() => {
-    return folderId ? get(folderId) : Object.fromEntries(Object.entries(getAll()).filter(([key, value]) => !value.parent));
-  }, [folderId, get]);
+    Object.fromEntries(Object.entries(getAll()).filter(([key, value]) => (value.starred)));
+  }, [getAll]);
 
   useEffect(() => {
     refresh();
@@ -19,4 +18,3 @@ export function useFiles(folderId = null) {
     refresh,
   };
 }
-

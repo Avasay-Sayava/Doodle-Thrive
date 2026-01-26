@@ -1,16 +1,13 @@
-import FileList from "@/src/components/drive/common/FileList";
-
-const files = [
-  {
-    id: "",
-    name: "NAME",
-    type: "folder",
-    starred: true,
-    owner: "ere",
-    modified: 1769381127183
-  }
-]
+import GeneralTab from "@/src/components/drive/tabs/GeneralTab";
+import { useFolder } from "@/src/hooks/api/files/useFolder";
 
 export default function Home() {
-  return <FileList files={files} />;
+  return (
+    <GeneralTab
+      useFilesHook={useFolder}
+      requiresUuid={true}
+      initialSortBy="name"
+      isSortEnabled={true}
+    />
+  );
 }
