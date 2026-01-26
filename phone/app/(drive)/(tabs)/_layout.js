@@ -1,7 +1,9 @@
 import { Tabs as Stack, useRouter, useSegments } from "expo-router";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
+import Header from "@/src/components/drive/header/Header";
+import { View } from "react-native-web";
 
 function Tabs() {
   const { theme } = useTheme();
@@ -16,20 +18,24 @@ function Tabs() {
   }, [segments, router]);
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: { backgroundColor: theme.colors.card },
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.textMuted,
-      }}
-    >
-      <Stack.Screen name="index" options={{ href: null }} />
-      <Stack.Screen name="home" options={{ title: "Home" }} />
-      <Stack.Screen name="files" options={{ title: "Files" }} />
-      <Stack.Screen name="shared" options={{ title: "Shared" }} />
-      <Stack.Screen name="starred" options={{ title: "Starred" }} />
-    </Stack>
+    // TODO: REPLACE WITH ACTUAL STYLE DONT LEAVE IT LIKE THIS
+    <View style={{ flex: 1 }}>
+      <Header />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: { backgroundColor: theme.colors.card },
+          tabBarActiveTintColor: theme.colors.primary,
+          tabBarInactiveTintColor: theme.colors.textMuted,
+        }}
+      >
+        <Stack.Screen name="index" options={{ href: null }} />
+        <Stack.Screen name="home" options={{ title: "Home" }} />
+        <Stack.Screen name="files" options={{ title: "Files" }} />
+        <Stack.Screen name="shared" options={{ title: "Shared" }} />
+        <Stack.Screen name="starred" options={{ title: "Starred" }} />
+      </Stack>
+    </View>
   );
 }
 
