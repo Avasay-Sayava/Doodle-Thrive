@@ -31,9 +31,9 @@ function Tabs() {
       >
         <Stack.Screen name="index" options={{ href: null }} />
         <Stack.Screen name="home" options={{ title: "Home" }} />
-        <Stack.Screen name="files" options={{ title: "Files" }} />
-        <Stack.Screen name="shared" options={{ title: "Shared" }} />
         <Stack.Screen name="starred" options={{ title: "Starred" }} />
+        <Stack.Screen name="shared" options={{ title: "Shared" }} />
+        <Stack.Screen name="files" options={{ title: "Files" }} />
       </Stack>
     </View>
   );

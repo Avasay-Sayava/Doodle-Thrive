@@ -7,7 +7,7 @@ export default function Home() {
       useFilesHook={() => useFolder(null)}
       initialSortOptions={{ by: "list", reversed: false }}
       initialViewMode="list"
-      isSortEnabled={true}
+      isSortEnabled={false}
     />
   );
 }
