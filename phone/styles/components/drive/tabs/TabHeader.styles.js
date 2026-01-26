@@ -5,5 +5,6 @@ export const styles = ({ theme }) =>
     headerContainer: {
       flexDirection: "row",
       justifyContent: "space-between",
+      padding: theme.spacing.small,
     },
   });

@@ -42,8 +42,10 @@ export default function File({ file }) {
           ) : (
             <></>
           )}
-          <Text style={style.secondary}>
-            <b>•</b>
+          <Text
+            style={[style.secondary, { fontWeight: theme.fonts.weights.bold }]}
+          >
+            •
           </Text>
           <Text style={style.secondary}>
             <RelativeDate timestamp={file.modified} />

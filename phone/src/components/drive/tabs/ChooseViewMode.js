@@ -1,61 +1,115 @@
-import { TouchableOpacity, Text } from "react-native";
+import React, { useEffect, useRef, useMemo } from "react";
+import { Pressable, View, Animated, StyleSheet } from "react-native";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { styles } from "@/styles/components/drive/tabs/ChooseViewMode.styles";
-import { useState } from "react";
-import { View } from "react-native";
-import { useEffect, useMemo } from "react";
 import Icon from "@/src/components/common/Icon.js";
 
-const SIZE = 24;
+const SIZE = 20;
+const CONTAINER_WIDTH = 96;
+const CONTAINER_HEIGHT = 36;
+const SLIDER_PADDING = 4;
+const SLIDER_WIDTH = (CONTAINER_WIDTH - 3 * SLIDER_PADDING) / 2;
+const SLIDER_HEIGHT = CONTAINER_HEIGHT - 2 * SLIDER_PADDING;
+const animDuration = 150;
+
 export default function ChooseViewMode({ viewMode, setViewMode }) {
   const { theme } = useTheme();
   const style = useMemo(() => styles({ theme }), [theme]);
-  const [gridStyle, setGridStyle] = useState(style.gridInactive);
-  const [listStyle, setListStyle] = useState(style.listInactive);
+
+  const anim = useRef(new Animated.Value(viewMode === "list" ? 0 : 1)).current;
 
   useEffect(() => {
-    if (viewMode == "list") {
-      setGridStyle({
-        style: style.gridInactive,
-        color: theme.colors.textSecondary,
-      });
-      setListStyle({
-        style: style.listActive,
-        color: theme.colors.textInverted,
-      });
-    } else {
-      setGridStyle({
-        style: style.gridActive,
-        color: theme.colors.textInverted,
-      });
-      setListStyle({
-        style: style.listInactive,
-        color: theme.colors.textSecondary,
-      });
-    }
-  }, [viewMode, style]);
+    Animated.timing(anim, {
+      toValue: viewMode === "list" ? 0 : 1,
+      duration: animDuration,
+      useNativeDriver: true,
+    }).start();
+  }, [viewMode]);
+
+  const toggle = () => {
+    setViewMode((prev) => (prev === "list" ? "grid" : "list"));
+  };
+
+  const sliderLeft = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [
+      SLIDER_PADDING,
+      2 * SLIDER_PADDING + (CONTAINER_WIDTH - 3 * SLIDER_PADDING) / 2,
+    ],
+  });
 
   return (
-    <TouchableOpacity
-      style={style.container}
-      onPress={() => {
-        setViewMode(viewMode == "list" ? "grid" : "list");
-      }}
+    <Pressable
+      style={[
+        style.container,
+        { width: CONTAINER_WIDTH, height: CONTAINER_HEIGHT },
+      ]}
+      onPress={toggle}
     >
-      <View style={[style.common, listStyle?.style]}>
-        <Icon
-          name="list"
-          size={SIZE}
-          color={listStyle?.color || theme.colors.textSecondary}
-        />
+      <Animated.View
+        style={[
+          style.slider,
+          {
+            left: sliderLeft,
+            width: SLIDER_WIDTH,
+            top: SLIDER_PADDING,
+            height: SLIDER_HEIGHT,
+          },
+        ]}
+      />
+      <View
+        style={[
+          style.iconsContainer,
+          { paddingHorizontal: SLIDER_PADDING, gap: SLIDER_PADDING },
+        ]}
+      >
+        <IconWrapper name="list" anim={anim} target={0} />
+        <IconWrapper name="grid" anim={anim} target={1} />
       </View>
-      <View style={[style.common, gridStyle?.style]}>
-        <Icon
-          name="grid"
-          size={SIZE}
-          color={gridStyle?.color || theme.colors.textSecondary}
-        />
-      </View>
-    </TouchableOpacity>
+    </Pressable>
+  );
+}
+
+function IconWrapper({ name, anim, target }) {
+  const { theme } = useTheme();
+  const style = useMemo(() => styles({ theme }), [theme]);
+
+  const activeOpacity = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: target === 0 ? [1, 0] : [0, 1],
+  });
+
+  const inactiveOpacity = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: target === 0 ? [0, 1] : [1, 0],
+  });
+
+  return (
+    <View style={style.center}>
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            alignItems: "center",
+            justifyContent: "center",
+            opacity: inactiveOpacity,
+          },
+        ]}
+      >
+        <Icon name={name} size={SIZE} color={theme.colors.textMuted} />
+      </Animated.View>
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            alignItems: "center",
+            justifyContent: "center",
+            opacity: activeOpacity,
+          },
+        ]}
+      >
+        <Icon name={name} size={SIZE} color={theme.colors.text} />
+      </Animated.View>
+    </View>
   );
 }

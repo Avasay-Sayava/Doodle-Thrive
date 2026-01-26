@@ -4,34 +4,23 @@ export const styles = ({ theme }) =>
   new StyleSheet.create({
     container: {
       flexDirection: "row",
-      justifyContent: "space-between",
+      backgroundColor: theme.colors.border,
+      borderRadius: theme.borderRadius.large,
+      position: "relative",
     },
-    common: {
-      margin: theme.spacing.tiny,
-      padding: theme.spacing.small,
+    slider: {
+      position: "absolute",
+      backgroundColor: theme.colors.background,
+      borderRadius: theme.borderRadius.medium,
+    },
+    iconsContainer: {
       flexDirection: "row",
+      flex: 1,
+      zIndex: 1,
+    },
+    center: {
+      flex: 1,
+      alignItems: "center",
       justifyContent: "center",
-    },
-    gridActive: {
-      borderRadius: theme.borderRadius.xlarge,
-      backgroundColor: theme.colors.primary,
-    },
-    gridInactive: {
-      borderBottomLeftRadius: theme.borderRadius.large,
-      borderBottomRightRadius: theme.borderRadius.small,
-      borderTopLeftRadius: theme.borderRadius.large,
-      borderTopRightRadius: theme.borderRadius.small,
-      backgroundColor: theme.colors.backgroundSecondary,
-    },
-    listActive: {
-      borderRadius: theme.borderRadius.xlarge,
-      backgroundColor: theme.colors.primary,
-    },
-    listInactive: {
-      borderBottomRightRadius: theme.borderRadius.large,
-      borderTopRightRadius: theme.borderRadius.large,
-      borderBottomLeftRadius: theme.borderRadius.small,
-      borderTopLeftRadius: theme.borderRadius.small,
-      backgroundColor: theme.colors.backgroundSecondary,
     },
   });
