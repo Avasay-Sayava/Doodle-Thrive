@@ -12,6 +12,7 @@ export const styles = ({ theme }) =>
       gap: theme.spacing.small,
     },
     iconBackdrop: {
+      alignSelf: "center",
       width: theme.spacing.xlarge,
       height: theme.spacing.xlarge,
       borderRadius: theme.borderRadius.large,
@@ -34,17 +35,14 @@ export const styles = ({ theme }) =>
       color: theme.colors.textSecondary,
       flexDirection: "row",
       gap: theme.spacing.small,
-    },
-    actionsMenu: ({ pressed }) => ({
-      width: theme.spacing.xlarge,
-      height: theme.spacing.xlarge,
       alignItems: "center",
-      justifyContent: "center",
-      borderRadius: theme.borderRadius.max,
-      color: theme.colors.text,
-      backgroundColor: pressed ? theme.colors.primary : "transparent",
+    },
+    actionsMenuContainer: {
       position: "absolute",
-      marginRight: theme.spacing.small,
-      right: 0,
-    }),
+      right: theme.spacing.small,
+      top: 0,
+      bottom: 0,
+      justifyContent: "center",
+      alignItems: "center",
+    },
   });

@@ -1,10 +1,11 @@
 import { styles } from "@/styles/components/drive/common/File.styles";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo } from "react";
-import { Pressable, View, Text } from "react-native";
+import { View, Text } from "react-native";
 import { useAuth } from "@/src/contexts/AuthContext";
 import Icon from "@/src/components/common/Icon";
 import RelativeDate from "@/src/components/drive/common/RelativeDate";
+import ActionsMenu from "@/src/components/drive/common/ActionsMenu";
 
 export default function File({ file }) {
   const { theme } = useTheme();
@@ -49,13 +50,10 @@ export default function File({ file }) {
           </Text>
         </View>
       </View>
-      <Pressable style={style.actionsMenu}>
-        <Icon
-          name="vertical-dots"
-          size={theme.fonts.sizes.large}
-          color={theme.colors.text}
-        />
-      </Pressable>
+
+      <View style={style.actionsMenuContainer}>
+        <ActionsMenu file={file} />
+      </View>
     </View>
   );
 }
