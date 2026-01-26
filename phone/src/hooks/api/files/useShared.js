@@ -9,10 +9,7 @@ export function useShared() {
 
   const refresh = useCallback(() => {
     const files = Object.values(getAll());
-    const shared = files.filter((file) => file.owner !== uuid);
-    return shared.filter(
-      (file) => !shared.map((file) => file.id).includes(file.parent),
-    );
+    return files.filter((file) => file.owner !== uuid);
   }, [uuid, getAll]);
 
   useEffect(() => {
