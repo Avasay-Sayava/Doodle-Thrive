@@ -14,6 +14,8 @@ export const styles = ({ theme }) =>
       backgroundColor: theme.colors.text + "22",
     },
     modalContent: {
+      alignSelf: "center",
+      maxWidth: 700,
       backgroundColor: theme.colors.card,
       padding: theme.spacing.medium,
       paddingTop: 0,

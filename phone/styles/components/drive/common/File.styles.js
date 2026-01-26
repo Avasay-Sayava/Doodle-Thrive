@@ -4,7 +4,7 @@ export const styles = ({ theme }) =>
   new StyleSheet.create({
     row: {
       backgroundColor: theme.colors.border,
-      borderRadius: theme.borderRadius.small,
+      borderRadius: theme.borderRadius.medium,
       alignContent: "center",
       justifyContent: "flex-start",
       flexDirection: "row",

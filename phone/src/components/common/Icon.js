@@ -9,6 +9,8 @@ import VerticalDotsIcon from "@/assets/icons/vertical-dots";
 import ImageIcon from "@/assets/icons/image";
 import DeminiIcon from "@/assets/icons/demini";
 import ArrowIcon from "@/assets/icons/arrow";
+import SearchIcon from "@/assets/icons/search";
+import ShareIcon from "@/assets/icons/share";
 import { useTheme } from "@react-navigation/native";
 import { useMemo } from "react";
 import { styles } from "@/styles/components/common/Icon.styles";
@@ -39,6 +41,10 @@ export default function Icon({ name, size, color }) {
         return DeminiIcon;
       case "arrow":
         return ArrowIcon;
+      case "search":
+        return SearchIcon;
+      case "share":
+        return ShareIcon;
       default:
         return null;
     }

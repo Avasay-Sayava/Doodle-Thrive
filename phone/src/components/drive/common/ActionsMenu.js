@@ -58,7 +58,7 @@ export default function ActionsMenu({ file }) {
         }
       },
       onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy > SCREEN_HEIGHT / 4 || gestureState.vy > 0.8) {
+        if (gestureState.dy > SCREEN_HEIGHT / 8 || gestureState.vy > 0.8) {
           closeMenu();
         } else {
           Animated.timing(translateY, {
@@ -106,7 +106,10 @@ export default function ActionsMenu({ file }) {
         </TouchableWithoutFeedback>
 
         <Animated.View
-          style={[style.modalContent, { transform: [{ translateY }] }]}
+          style={[
+            style.modalContent,
+            { transform: [{ translateY }], maxHeight: SCREEN_HEIGHT - 100 },
+          ]}
         >
           <View {...panResponder.panHandlers} style={style.handleContainer}>
             <View style={style.dragHandle} />
@@ -114,7 +117,7 @@ export default function ActionsMenu({ file }) {
 
           <Text style={style.sheetTitle}>{file?.name || "File Options"}</Text>
 
-          <ScrollView style={{ maxHeight: (3 * SCREEN_HEIGHT) / 4 }}>
+          <ScrollView>
             <AnimatedPressable
               style={style.optionItem}
               backgroundColor={style.optionItem.animBackgroundColor}

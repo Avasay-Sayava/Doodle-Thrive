@@ -6,6 +6,7 @@ import {
 } from "expo-router";
 import { useEffect, useMemo, Suspense, useState } from "react";
 import { View, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ErrorBoundary } from "react-error-boundary";
 import { AuthProvider, useAuth } from "@/src/contexts/AuthContext";
 import { ThemeProvider, useTheme } from "@/src/contexts/ThemeContext";
@@ -57,9 +58,9 @@ function Root() {
     );
 
   return (
-    <View style={style.root}>
+    <SafeAreaView style={style.root} edges={["top", "left", "right"]}>
       <Slot />
-    </View>
+    </SafeAreaView>
   );
 }
 

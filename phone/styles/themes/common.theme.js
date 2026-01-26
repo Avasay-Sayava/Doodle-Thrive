@@ -12,9 +12,11 @@ export default {
       medium: 16,
       large: 20,
       xlarge: 24,
+      xxlarge: 32,
     },
     weights: {
       regular: "400",
+      medium: "600",
       bold: "700",
     },
   },

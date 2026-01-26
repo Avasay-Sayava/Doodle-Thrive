@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = ({ theme }) =>
   new StyleSheet.create({
     button: {
-      fontSize: 20,
+      fontSize: theme.fonts.sizes.xlarge,
       width: 40,
       height: 40,
       borderRadius: theme.borderRadius.max,
