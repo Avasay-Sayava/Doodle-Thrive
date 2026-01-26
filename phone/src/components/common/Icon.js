@@ -34,7 +34,7 @@ export default function Icon({ name, size, color }) {
         return ListIcon;
       case "grid":
         return GridIcon;
-        case "demini":
+      case "demini":
         return DeminiIcon;
       default:
         return null;

@@ -3,8 +3,8 @@ import { StyleSheet } from "react-native";
 export const styles = ({ theme }) =>
   new StyleSheet.create({
     container: {
-        flexDirection: "row",
-        justifyContent: "space-between",
+      flexDirection: "row",
+      justifyContent: "space-between",
     },
     common: {
       margin: theme.spacing.tiny,

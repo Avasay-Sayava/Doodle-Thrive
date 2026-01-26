@@ -1,9 +1,9 @@
 import { Tabs as Stack, useRouter, useSegments } from "expo-router";
-import { Suspense, useEffect, useMemo } from "react";
+import { Suspense, useEffect } from "react";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
 import Header from "@/src/components/drive/header/Header";
-import { View } from "react-native-web";
+import { View } from "react-native";
 
 function Tabs() {
   const { theme } = useTheme();
