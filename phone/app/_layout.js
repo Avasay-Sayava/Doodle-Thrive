@@ -23,7 +23,7 @@ function Root() {
   const segments = useSegments();
   const navigationState = useRootNavigationState();
 
-  const style = useMemo(() => styles(theme), [theme]);
+  const style = useMemo(() => styles({ theme }), [theme]);
 
   useEffect(() => {
     if (!navigationState?.key || authLoading || themeLoading) return;

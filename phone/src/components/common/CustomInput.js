@@ -13,7 +13,7 @@ export default function CustomInput({
   errorMessage = "",
 }) {
   const { theme } = useTheme();
-  const style = useMemo(() => styles(theme), [theme]);
+  const style = useMemo(() => styles({ theme }), [theme]);
   const error = errorMessage && errorMessage.length > 0;
 
   if (type === "image") {
