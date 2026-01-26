@@ -2,23 +2,27 @@ import { useMemo } from "react";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { View } from "react-native";
 import { styles } from "@/styles/components/drive/tabs/TabHeader.styles";
-import ChooseFileView from "@/src/components/drive/tabs/ChooseFileView";
+import ChooseViewMode from "@/src/components/drive/tabs/ChooseViewMode";
 import SortButton from "./SortButton";
 
 export default function TabHeader({
-    sortBy,
-    setSortBy,
-    isSortEnabled,
-    fileView,
-    setFileView,
+  sortBy,
+  setSortBy,
+  isSortEnabled,
+  viewMode,
+  setViewMode,
 }) {
-    const { theme } = useTheme();
-    const style = useMemo(() => styles(theme), [theme]);
+  const { theme } = useTheme();
+  const style = useMemo(() => styles({ theme }), [theme]);
 
-    return (
-        <View style={[style.headerContainer]}>
-            <SortButton sortBy={sortBy} setSortBy={setSortBy} isEnabled={isSortEnabled} />
-            <ChooseFileView fileView={fileView} setFileView={setFileView} />
-        </View>
-    );
+  return (
+    <View style={[style.headerContainer]}>
+      <SortButton
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        isEnabled={isSortEnabled}
+      />
+      <ChooseViewMode viewMode={viewMode} setViewMode={setViewMode} />
+    </View>
+  );
 }

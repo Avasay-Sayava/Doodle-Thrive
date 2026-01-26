@@ -5,5 +5,5 @@ export const styles = ({ theme }) =>
     container: {
       alignItems: "center",
       justifyContent: "center",
-    }
+    },
   });

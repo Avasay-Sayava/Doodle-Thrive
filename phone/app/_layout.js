@@ -49,11 +49,12 @@ function Root() {
     if (authLoading || themeLoading) setLoading(true);
   }, [authLoading, themeLoading]);
 
-  if (loading) return (
-    <View style={[StyleSheet.absoluteFill, style.loadingOverlay]}>
-      <LoadingScreen />
-    </View>
-  );
+  if (loading)
+    return (
+      <View style={[StyleSheet.absoluteFill, style.loadingOverlay]}>
+        <LoadingScreen />
+      </View>
+    );
 
   return (
     <View style={style.root}>

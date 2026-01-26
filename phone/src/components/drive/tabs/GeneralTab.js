@@ -1,25 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import TabHeader from "./TabHeader";
-import FileList from "./FileList";
-import LocalStorage from "@/src/utils/common/LocalStorage";
+import FileList from "@/src/components/drive/common/FileList";
 
 export default function GeneralTab({
   useFilesHook,
-  requiresUuid = true,
   initialSortBy = "name",
   isSortEnabled = true,
 }) {
-  const [fileView, setFileView] = useState("grid");
+  const [viewMode, setViewMode] = useState("grid");
   const [sortBy, setSortBy] = useState(initialSortBy);
-  const [files, setFiles] = useState({});
+  const [files, setFiles] = useState([]);
 
   const { refresh } = useFilesHook();
-  const uuid = useMemo(() => LocalStorage.get("uuid"), []);
 
   useEffect(() => {
-    const nextFiles = requiresUuid ? refresh(uuid) : refresh();
+    const nextFiles = refresh();
     setFiles(nextFiles);
-  }, [uuid, refresh, requiresUuid]);
+  }, [refresh]);
 
   return (
     <>
@@ -27,10 +24,10 @@ export default function GeneralTab({
         sortBy={sortBy}
         setSortBy={setSortBy}
         isSortEnabled={isSortEnabled}
-        fileView={fileView}
-        setFileView={setFileView}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
       />
-      <FileList files={files} fileView={fileView} sortBy={sortBy} />
+      <FileList files={files} viewMode={viewMode} sortBy={sortBy} />
     </>
   );
 }

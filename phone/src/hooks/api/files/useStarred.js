@@ -2,9 +2,11 @@ import { useEffect, useCallback } from "react";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 
 export function useStarred() {
-  const { get, getAll, data, loading, error } = useFilesActions();
+  const { getAll, data, loading, error } = useFilesActions();
+
   const refresh = useCallback(() => {
-    Object.fromEntries(Object.entries(getAll()).filter(([key, value]) => (value.starred)));
+    const files = Object.values(getAll());
+    return files.filter((file) => file.starred);
   }, [getAll]);
 
   useEffect(() => {

@@ -5,7 +5,13 @@ export function useFolder(folderId = null) {
   const { get, getAll, data, loading, error } = useFilesActions();
 
   const refresh = useCallback(() => {
-    return folderId ? get(folderId) : Object.fromEntries(Object.entries(getAll()).filter(([key, value]) => !value.parent));
+    if (folderId) {
+      const childrenIds = get(folderId).children;
+      return childrenIds.map((uuid) => get(uuid));
+    } else {
+      const files = Object.values(getAll());
+      return files.filter((file) => file.parent === folderId);
+    }
   }, [folderId, get]);
 
   useEffect(() => {

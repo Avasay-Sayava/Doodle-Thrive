@@ -30,11 +30,10 @@ export const styles = ({ theme }) =>
     secondary: {
       fontSize: theme.fonts.sizes.small,
       color: theme.colors.textMuted,
-      fontStyle: "italic",
       flexDirection: "row",
-      gap: theme.spacing.small
+      gap: theme.spacing.small,
     },
-    actionsMenu: ({pressed}) => ({
+    actionsMenu: ({ pressed }) => ({
       width: theme.spacing.xlarge,
       height: theme.spacing.xlarge,
       alignItems: "center",
@@ -44,6 +43,6 @@ export const styles = ({ theme }) =>
       backgroundColor: pressed ? theme.colors.primary : "transparent",
       position: "absolute",
       marginRight: theme.spacing.small,
-      right: 0
-    })
+      right: 0,
+    }),
   });

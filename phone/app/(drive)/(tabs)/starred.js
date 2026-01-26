@@ -5,7 +5,6 @@ export default function Starred() {
   return (
     <GeneralTab
       useFilesHook={useStarred}
-      requiresUuid={false}
       initialSortBy="name"
       isSortEnabled={true}
     />

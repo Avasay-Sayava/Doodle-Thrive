@@ -1,11 +1,10 @@
 import GeneralTab from "@/src/components/drive/tabs/GeneralTab";
-import { useFiles } from "@/src/hooks/api/files/useFiles";
+import { useFolder } from "@/src/hooks/api/files/useFolder";
 
 export default function Files() {
   return (
     <GeneralTab
-      useFilesHook={useFiles}
-      requiresUuid={true}
+      useFilesHook={() => useFolder(null)}
       initialSortBy="name"
       isSortEnabled={true}
     />

@@ -38,9 +38,7 @@ export default function CustomInput({
             <Image source={{ uri: value }} style={style.imagePreview} />
           ) : (
             <View style={style.placeholderContainer}>
-              <Text style={style.placeholderText}>
-                {placeholder}
-              </Text>
+              <Text style={style.placeholderText}>{placeholder}</Text>
             </View>
           )}
         </TouchableOpacity>

@@ -14,9 +14,12 @@ export function ApiProvider({ children }) {
   const client = useMemo(() => new APIClient("http", host, API_PORT, {}), []);
   const api = useMemo(() => new Api(client), [client]);
 
-  const setHeaders = useCallback((headers) => {
-    client.headers = headers;
-  }, [client.headers]);
+  const setHeaders = useCallback(
+    (headers) => {
+      client.headers = headers;
+    },
+    [client.headers],
+  );
 
   return (
     <ApiContext.Provider value={{ api, setHeaders }}>
