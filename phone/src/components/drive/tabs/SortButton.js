@@ -5,6 +5,8 @@ import { styles } from "@/styles/components/drive/tabs/SortButton.styles";
 import AnimatedPressable from "@/src/components/common/AnimatedPressable";
 import Icon from "@/src/components/common/Icon";
 
+const animDuration = 150;
+
 export default function SortButton({ sortOptions, setSortOptions, isEnabled }) {
   const { theme } = useTheme();
   const style = useMemo(() => styles({ theme }), [theme]);
@@ -17,7 +19,7 @@ export default function SortButton({ sortOptions, setSortOptions, isEnabled }) {
     isAnimating.current = true;
     Animated.timing(anim, {
       toValue: sortOptions.reversed ? 1 : 0,
-      duration: 150,
+      duration: animDuration,
       useNativeDriver: true,
     }).start(({ finished }) => {
       if (finished) {
