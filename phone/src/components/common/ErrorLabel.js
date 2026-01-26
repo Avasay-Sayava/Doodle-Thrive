@@ -5,7 +5,7 @@ import { styles } from "@/styles/components/common/ErrorLabel.styles";
 
 export default function ErrorLabel({ text, visible }) {
   const { theme } = useTheme();
-  const style = useMemo(() => styles(theme), [theme]);
+  const style = useMemo(() => styles({ theme }), [theme]);
 
   return (
     <>

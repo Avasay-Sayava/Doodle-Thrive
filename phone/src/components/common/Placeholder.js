@@ -6,7 +6,7 @@ import { styles } from "@/styles/components/common/Placeholder.styles";
 
 export default function Placeholder() {
   const { theme } = useTheme();
-  const style = useMemo(() => styles(theme), [theme]);
+  const style = useMemo(() => styles({ theme }), [theme]);
 
   return (
     <View style={style.container}>

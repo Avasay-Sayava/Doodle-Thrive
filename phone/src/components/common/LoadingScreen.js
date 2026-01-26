@@ -5,7 +5,7 @@ import { useMemo } from "react";
 
 export default function LoadingScreen() {
   const { theme } = useTheme();
-  const style = useMemo(() => styles(theme), [theme]);
+  const style = useMemo(() => styles({ theme }), [theme]);
 
   return (
     <View style={style.container}>

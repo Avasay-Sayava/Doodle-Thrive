@@ -13,7 +13,7 @@ export default function SignIn() {
   const router = useRouter();
 
   const { theme } = useTheme();
-  const style = useMemo(() => styles(theme), [theme]);
+  const style = useMemo(() => styles({ theme }), [theme]);
   const { handleSignIn } = useSignIn();
 
   const { usernameRef, passwordRef } = useContext(AuthFormsContext);
