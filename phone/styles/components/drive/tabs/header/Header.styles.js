@@ -4,6 +4,8 @@ export const styles = ({ theme }) =>
   new StyleSheet.create({
     container: {
       backgroundColor: theme.colors.border,
+      justifyContent: "center",
+      alignItems: "center",
       width: "100%",
       flexDirection: "row",
       gap: theme.spacing.small,
