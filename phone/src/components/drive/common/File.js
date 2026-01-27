@@ -4,7 +4,7 @@ import { useEffect, useMemo } from "react";
 import { View, Text, useWindowDimensions } from "react-native";
 import { useAuth } from "@/src/contexts/AuthContext";
 import Icon from "@/src/components/common/Icon";
-import FileIcon from "@/src/components/drive/common/FileIcon";
+import getFileIconName from "@/src/utils/common/getFileIconName";
 import RelativeDate from "@/src/components/drive/common/RelativeDate";
 import ActionsMenu from "@/src/components/drive/common/ActionsMenu";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
@@ -34,6 +34,7 @@ export default function File({ file, viewMode }) {
 
   const { uuid } = useAuth();
   const { user, loading, error } = useUser(file.owner);
+  const fileIconName = useMemo(() => getFileIconName(file), [file]);
 
   useEffect(() => {}, [user, loading, error]);
 
@@ -86,7 +87,11 @@ export default function File({ file, viewMode }) {
           )}
         </View>
         <View style={style.gridIconContainer}>
-          <FileIcon file={file} size={48} color={theme.colors.textSecondary} />
+          <Icon
+            name={fileIconName}
+            size={48}
+            color={theme.colors.textSecondary}
+          />
         </View>
         <Text style={style.gridName} numberOfLines={1}>
           {file.name}
@@ -98,8 +103,8 @@ export default function File({ file, viewMode }) {
   return (
     <View style={style.row}>
       <View style={style.iconBackdrop}>
-        <FileIcon
-          file={file}
+        <Icon
+          name={fileIconName}
           size={style.iconBackdrop.fontSize}
           color={style.iconBackdrop.color}
         />
