@@ -9,8 +9,6 @@ export default function Profile({ uuid, size, style: customStyle }) {
   const style = useMemo(() => styles({ theme, size }), [theme, size]);
   const { user } = useUser(uuid);
 
-  console.log(user);
-
   if (user?.info?.image) {
     return (
       <Image
