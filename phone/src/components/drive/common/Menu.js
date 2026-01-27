@@ -5,8 +5,8 @@ export default function Menu() {
     const onClose = () => setIsOpen(false);
 
     return (
-        <PopupModal>
-            {/* Menu content goes here */}
+        <PopupModal isOpen={isOpen} onClose={onClose}>
+            
         </PopupModal>
     )
 }
