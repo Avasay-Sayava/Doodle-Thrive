@@ -5,7 +5,7 @@ import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo } from "react";
 import { styles } from "@/styles/components/auth/FormInput.styles";
 
-export default function CustomInput({
+export default function FormInput({
   type = "text",
   placeholder = "",
   value,

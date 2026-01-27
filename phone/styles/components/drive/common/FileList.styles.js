@@ -2,13 +2,17 @@ import { StyleSheet } from "react-native";
 
 export const styles = ({ theme }) =>
   new StyleSheet.create({
-    container: {
+    listContainer: {
       flexDirection: "column",
       gap: theme.spacing.small,
       flex: 1,
       padding: theme.spacing.small,
     },
-    fill: {
-      flex: 1,
+    gridContainer: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: theme.spacing.small,
+      padding: theme.spacing.small,
+      justifyContent: "flex-start",
     },
   });

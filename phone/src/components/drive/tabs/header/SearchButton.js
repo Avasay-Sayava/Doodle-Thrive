@@ -24,7 +24,7 @@ export default function SearchButton() {
         size={style.button.fontSize}
         color={style.button.color}
       />
-      <Text style={style.text}>Search in Drive...</Text>
+      <Text style={style.text}>Search in Drive</Text>
     </AnimatedPressable>
   );
 }

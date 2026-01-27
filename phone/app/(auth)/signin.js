@@ -1,4 +1,4 @@
-import CustomInput from "@/src/components/common/CustomInput";
+import FormInput from "@/src/components/auth/FormInput";
 import FormButton from "@/src/components/auth/FormButton";
 import ThemedText from "@/src/components/common/ThemedText";
 import { useTheme } from "@/src/contexts/ThemeContext";
@@ -48,14 +48,14 @@ export default function SignIn() {
   return (
     <View style={style.form}>
       <ThemedText style={style.title}>Sign In</ThemedText>
-      <CustomInput
+      <FormInput
         placeholder="username"
         value={username}
         onChange={(text) => {
           setUsername(text);
         }}
       />
-      <CustomInput
+      <FormInput
         type="password"
         placeholder="password"
         value={password}

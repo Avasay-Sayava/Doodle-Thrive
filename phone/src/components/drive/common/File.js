@@ -1,30 +1,109 @@
 import { styles } from "@/styles/components/drive/common/File.styles";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { useEffect, useMemo } from "react";
-import { View, Text } from "react-native";
+import { View, Text, useWindowDimensions } from "react-native";
 import { useAuth } from "@/src/contexts/AuthContext";
 import Icon from "@/src/components/common/Icon";
 import RelativeDate from "@/src/components/drive/common/RelativeDate";
 import ActionsMenu from "@/src/components/drive/common/ActionsMenu";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
 import { useUser } from "@/src/hooks/api/users/useUser";
+import { useOrientation } from "@/src/hooks/common/useOrientation";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function File({ file }) {
+const baseGridWidth = 150;
+
+export default function File({ file, viewMode }) {
   const { theme } = useTheme();
   const style = useMemo(() => styles({ theme }), [theme]);
+
+  const { width: SCREEN_WIDTH } = useWindowDimensions();
+  const orientation = useOrientation();
+
+  useEffect(() => {}, [orientation]);
+
+  const insets = useSafeAreaInsets();
+
+  const safeScreenWidth = SCREEN_WIDTH - insets.left - insets.right;
+
+  const gridCardBaseWidth = Math.min(baseGridWidth, safeScreenWidth / 2);
+  const gridCards = Math.floor(safeScreenWidth / gridCardBaseWidth);
+  const gridCardSize =
+    (safeScreenWidth - theme.spacing.small) / gridCards - theme.spacing.small;
+  console.log(
+    SCREEN_WIDTH,
+    gridCardBaseWidth,
+    gridCards,
+    gridCardSize,
+    theme.spacing.small,
+  );
+
   const { uuid } = useAuth();
   const { user, loading, error } = useUser(file.owner);
 
+  if (/^.*\.(jpg|jpeg|png|webp)$/.test(file.name) && file.type === "file") {
+    file.type = "image";
+  }
+
   useEffect(() => {}, [user, loading, error]);
 
-  if (loading)
-    return (
-      <>
-        <View style={style.row}>
+  if (loading) {
+    if (viewMode === "grid") {
+      return (
+        <View
+          style={[
+            {
+              justifyContent: "center",
+              width: gridCardSize,
+              height: gridCardSize,
+            },
+            style.gridCard,
+          ]}
+        >
           <LoadingScreen />
         </View>
-      </>
+      );
+    }
+    return (
+      <View style={style.row}>
+        <LoadingScreen />
+      </View>
     );
+  }
+
+  if (viewMode === "grid") {
+    return (
+      <View
+        style={[{ width: gridCardSize, height: gridCardSize }, style.gridCard]}
+      >
+        <View style={style.gridActions}>
+          <ActionsMenu file={file} />
+        </View>
+        <View style={style.gridIconsContainer}>
+          {file.starred && (
+            <Icon
+              name="star"
+              size={theme.fonts.sizes.large}
+              color={style.secondary.color}
+            />
+          )}
+          {file.owner !== uuid && (
+            <Icon
+              name="shared"
+              size={theme.fonts.sizes.large}
+              color={style.secondary.color}
+            />
+          )}
+        </View>
+        <View style={style.gridIconContainer}>
+          <Icon name={file.type} size={48} color={theme.colors.textSecondary} />
+        </View>
+        <Text style={style.gridName} numberOfLines={1}>
+          {file.name}
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={style.row}>
@@ -38,23 +117,19 @@ export default function File({ file }) {
       <View style={style.info}>
         <Text style={style.name}>{file.name}</Text>
         <View style={style.secondary}>
-          {file.starred ? (
+          {file.starred && (
             <Icon
               name="star"
               size={style.secondary.fontSize}
               color={style.secondary.color}
             />
-          ) : (
-            <></>
           )}
-          {file.owner !== uuid ? (
+          {file.owner !== uuid && (
             <Icon
               name="shared"
               size={style.secondary.fontSize}
               color={style.secondary.color}
             />
-          ) : (
-            <></>
           )}
           <Text style={style.secondary}>{user.username}</Text>
           <Text
@@ -68,7 +143,7 @@ export default function File({ file }) {
         </View>
       </View>
 
-      <View style={style.actionsMenuContainer}>
+      <View style={style.listActions}>
         <ActionsMenu file={file} />
       </View>
     </View>

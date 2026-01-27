@@ -24,6 +24,7 @@ export const styles = ({ theme }) =>
     },
     info: {
       flexDirection: "column",
+      flex: 1,
     },
     name: {
       fontSize: theme.fonts.sizes.medium,
@@ -37,12 +38,44 @@ export const styles = ({ theme }) =>
       gap: theme.spacing.small,
       alignItems: "center",
     },
-    actionsMenuContainer: {
-      position: "absolute",
-      right: theme.spacing.small,
-      top: 0,
-      bottom: 0,
+    gridCard: {
+      backgroundColor: theme.colors.border,
+      borderRadius: theme.borderRadius.large,
+      padding: theme.spacing.medium,
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+    },
+    gridIconContainer: {
+      flex: 1,
       justifyContent: "center",
       alignItems: "center",
+    },
+    gridName: {
+      position: "absolute",
+      bottom: theme.spacing.medium,
+      fontSize: theme.fonts.sizes.medium,
+      fontWeight: theme.fonts.weights.medium,
+      color: theme.colors.text,
+      textAlign: "center",
+      width: "100%",
+    },
+    gridActions: {
+      position: "absolute",
+      top: theme.spacing.small,
+      right: theme.spacing.small,
+      zIndex: 1,
+    },
+    listActions: {
+      alignSelf: "center",
+      justifyContent: "center",
+    },
+    gridIconsContainer: {
+      position: "absolute",
+      flexDirection: "row",
+      gap: theme.spacing.small,
+      top: theme.spacing.medium,
+      left: theme.spacing.medium,
+      zIndex: 1,
     },
   });

@@ -19,10 +19,12 @@ export default function FileList({ files, viewMode, sortOptions }) {
   const reversed = sortOptions.reversed ? sorted.reverse() : sorted;
 
   return (
-    <ScrollView contentContainerStyle={style.fill}>
-      <View style={style.container}>
+    <ScrollView>
+      <View
+        style={viewMode === "grid" ? style.gridContainer : style.listContainer}
+      >
         {reversed.map((file) => (
-          <File key={file.id || file.uuid} file={file} />
+          <File key={file.id || file.uuid} file={file} viewMode={viewMode} />
         ))}
       </View>
     </ScrollView>

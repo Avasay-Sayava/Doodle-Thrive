@@ -5,7 +5,7 @@ export default function Shared() {
   return (
     <GeneralTab
       useFilesHook={useShared}
-      initialSortOptions={{ by: "list", reversed: false }}
+      initialSortOptions={{ by: "name", reversed: false }}
       initialViewMode="list"
       isSortEnabled={true}
     />
