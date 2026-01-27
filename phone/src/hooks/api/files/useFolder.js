@@ -1,8 +1,10 @@
 import { useEffect, useCallback, useMemo } from "react";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
+import { useFilesRefresh } from "@/src/contexts/FilesRefreshContext";
 
 export function useFolder(folderId = null) {
   const { getAll, data, loading, error } = useFilesActions();
+  const { refreshKey } = useFilesRefresh();
 
   const refresh = useCallback(() => {
     getAll();
@@ -10,11 +12,12 @@ export function useFolder(folderId = null) {
 
   useEffect(() => {
     refresh();
-  }, [refresh]);
+  }, [refresh, refreshKey]);
 
   const files = useMemo(() => {
     const allFiles = data ? Object.values(data) : null;
-    return allFiles?.filter((file) => file.parent === folderId);
+    const filtered = allFiles?.filter((file) => file.parent === folderId);
+    return filtered?.filter((file) => !file.trashed);
   }, [data, folderId]);
 
   return {

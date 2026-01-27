@@ -59,6 +59,12 @@ class Api {
       });
     },
 
+    trash: async (uuid, trashed) => {
+      return await this.#client.patch(`/api/files/${uuid}`, JSON_HEADER, {
+        trashed,
+      });
+    },
+
     updateDescription: async (uuid, description) => {
       return await this.#client.patch(`/api/files/${uuid}`, JSON_HEADER, {
         description,

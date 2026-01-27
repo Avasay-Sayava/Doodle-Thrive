@@ -11,6 +11,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { AuthProvider, useAuth } from "@/src/contexts/AuthContext";
 import { ThemeProvider, useTheme } from "@/src/contexts/ThemeContext";
 import { ApiProvider } from "@/src/contexts/ApiContext";
+import { FilesRefreshProvider } from "@/src/contexts/FilesRefreshContext";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
 import ErrorFallback from "@/src/components/common/ErrorFallback";
 import { styles } from "@/styles/app/_layout.styles";
@@ -85,7 +86,9 @@ export default function RootLayout() {
     <ThemeProvider>
       <ApiProvider>
         <AuthProvider>
-          <Boundary />
+          <FilesRefreshProvider>
+            <Boundary />
+          </FilesRefreshProvider>
         </AuthProvider>
       </ApiProvider>
     </ThemeProvider>

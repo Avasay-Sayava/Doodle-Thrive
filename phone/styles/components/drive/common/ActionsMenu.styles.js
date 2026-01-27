@@ -33,11 +33,18 @@ export const styles = ({ theme }) =>
       alignSelf: "center",
     },
     sheetTitle: {
+      flexDirection: "row",
+      gap: theme.spacing.small,
+      alignItems: "center",
       fontSize: theme.fonts.sizes.large,
-      fontWeight: theme.fonts.weights.bold,
       marginBottom: theme.spacing.medium,
       color: theme.colors.text,
       marginLeft: theme.spacing.small,
+    },
+    sheetTitleText: {
+      fontSize: theme.fonts.sizes.large,
+      fontWeight: theme.fonts.weights.bold,
+      color: theme.colors.text,
     },
     optionItem: {
       animBackgroundColor: theme.colors.text + "22",

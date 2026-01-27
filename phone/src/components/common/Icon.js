@@ -12,6 +12,10 @@ import ArrowIcon from "@/assets/icons/arrow";
 import SearchIcon from "@/assets/icons/search";
 import ShareIcon from "@/assets/icons/share";
 import LogoutIcon from "@/assets/icons/logout";
+import BinIcon from "@/assets/icons/bin";
+import DownloadIcon from "@/assets/icons/download";
+import EditIcon from "@/assets/icons/edit";
+import LinkIcon from "@/assets/icons/link";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo } from "react";
 import { styles } from "@/styles/components/common/Icon.styles";
@@ -48,6 +52,14 @@ export default function Icon({ name, size, color }) {
         return ShareIcon;
       case "logout":
         return LogoutIcon;
+      case "trash":
+        return BinIcon;
+      case "download":
+        return DownloadIcon;
+      case "edit":
+        return EditIcon;
+      case "link":
+        return LinkIcon;
       default:
         return null;
     }

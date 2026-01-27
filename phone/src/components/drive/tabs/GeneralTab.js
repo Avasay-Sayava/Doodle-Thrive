@@ -12,7 +12,7 @@ export default function GeneralTab({
   const [viewMode, setViewMode] = useState(initialViewMode);
   const [sortOptions, setSortOptions] = useState(initialSortOptions);
 
-  const { files, refresh, loading } = useFilesHook();
+  const { files, loading } = useFilesHook();
 
   const data = [
     {
@@ -96,7 +96,7 @@ export default function GeneralTab({
         setViewMode={setViewMode}
       />
       <FileList
-        files={/*TODO: replace with `files`*/ data}
+        files={/*TODO: replace with `files`*/ [...files, ...data]}
         viewMode={viewMode}
         sortOptions={sortOptions}
       />

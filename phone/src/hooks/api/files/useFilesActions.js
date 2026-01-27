@@ -28,10 +28,25 @@ export function useFilesActions() {
 
       star: (uuid, starred) => run(() => api.files.star(uuid, starred)),
 
+      trash: (uuid, trashed) => run(() => api.files.trash(uuid, trashed)),
+
       updateDescription: (uuid, description) =>
         run(() => api.files.updateDescription(uuid, description)),
 
       remove: (uuid) => run(() => api.files.delete(uuid)),
+
+      duplicate: (original) =>
+        run(async () => {
+          if (original.type === "folder")
+            throw new Error("Cannot duplicate folders");
+
+          return await api.files.createFile(
+            `Copy of ${original.name}`,
+            original.content,
+            original.parent,
+            original.description,
+          );
+        }),
     }),
     [api.files, run],
   );
