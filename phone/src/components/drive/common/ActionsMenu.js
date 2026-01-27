@@ -1,15 +1,5 @@
-import React, { useState, useRef, useMemo, useEffect } from "react";
-import {
-  View,
-  Text,
-  Modal,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-  Animated,
-  PanResponder,
-  ScrollView,
-  Clipboard,
-} from "react-native";
+import React, { useState, useMemo, useEffect } from "react";
+import { View, Text, ScrollView, Clipboard } from "react-native";
 import * as Linking from "expo-linking";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { styles } from "@/styles/components/drive/common/ActionsMenu.styles";
@@ -20,16 +10,14 @@ import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 import InputDialog from "@/src/components/drive/common/InputDialog";
 import { useFilesRefresh } from "@/src/contexts/FilesRefreshContext";
 import FileIcon from "@/src/components/drive/common/FileIcon";
-
-const animDuration = 250;
+import PopupModal from "@/src/components/drive/common/PopupModal";
 
 export default function ActionsMenu({ file }) {
   const orientation = useOrientation();
   useEffect(() => {}, [orientation]);
 
   const { refreshAll } = useFilesRefresh();
-  const { height: SCREEN_HEIGHT } = useWindowDimensions();
-  const [visible, setVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [renameVisible, setRenameVisible] = useState(false);
 
   const { theme } = useTheme();
@@ -37,27 +25,16 @@ export default function ActionsMenu({ file }) {
 
   const { star, trash, duplicate, rename } = useFilesActions();
 
-  const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
   const triggerRefresh = () => {
     refreshAll();
   };
 
   const openMenu = () => {
-    setVisible(true);
-    translateY.setValue(SCREEN_HEIGHT);
-    Animated.timing(translateY, {
-      toValue: 0,
-      duration: animDuration,
-      useNativeDriver: true,
-    }).start();
+    setIsOpen(true);
   };
 
   const closeMenu = () => {
-    Animated.timing(translateY, {
-      toValue: SCREEN_HEIGHT,
-      duration: animDuration,
-      useNativeDriver: true,
-    }).start(() => setVisible(false));
+    setIsOpen(false);
   };
 
   const handleShare = () => {
@@ -97,7 +74,7 @@ export default function ActionsMenu({ file }) {
   };
 
   const handleRenameOpen = () => {
-    setVisible(false);
+    setIsOpen(false);
     setRenameVisible(true);
   };
 
@@ -121,37 +98,6 @@ export default function ActionsMenu({ file }) {
     triggerRefresh();
   };
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: (_, gestureState) => {
-        return gestureState.dy > 0;
-      },
-      onPanResponderMove: (_, gestureState) => {
-        if (gestureState.dy > 0) {
-          translateY.setValue(gestureState.dy);
-        }
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy > SCREEN_HEIGHT / 8 || gestureState.vy > 0.8) {
-          closeMenu();
-        } else {
-          Animated.timing(translateY, {
-            toValue: 0,
-            duration: animDuration,
-            useNativeDriver: true,
-          }).start();
-        }
-      },
-    }),
-  ).current;
-
-  const backdropOpacity = translateY.interpolate({
-    inputRange: [0, SCREEN_HEIGHT],
-    outputRange: [1, 0],
-    extrapolate: "clamp",
-  });
-
   const isFile =
     file.type === "file" || (file.type !== "folder" && file.type !== "dir");
 
@@ -171,108 +117,84 @@ export default function ActionsMenu({ file }) {
         />
       </AnimatedPressable>
 
-      <Modal
-        transparent={true}
-        visible={visible}
-        onRequestClose={closeMenu}
-        animationType="none"
-      >
-        <TouchableWithoutFeedback onPress={closeMenu}>
-          <Animated.View
-            style={[style.modalOverlay, { opacity: backdropOpacity }]}
+      <PopupModal isOpen={isOpen} onClose={closeMenu}>
+        <View style={style.sheetTitle}>
+          <FileIcon
+            file={file}
+            color={style.sheetTitle.color}
+            size={style.sheetTitle.fontSize}
           />
-        </TouchableWithoutFeedback>
+          <Text style={style.sheetTitleText}>{file.name}</Text>
+        </View>
 
-        <Animated.View
-          style={[
-            style.modalContent,
-            { transform: [{ translateY }], maxHeight: SCREEN_HEIGHT - 100 },
-          ]}
-        >
-          <View {...panResponder.panHandlers} style={style.handleContainer}>
-            <View style={style.dragHandle} />
-          </View>
+        <ScrollView>
+          <MenuOption
+            icon="share"
+            label="Share"
+            onPress={handleShare}
+            theme={theme}
+            style={style}
+          />
 
-          <View style={style.sheetTitle}>
-            <FileIcon
-              file={file}
-              color={style.sheetTitle.color}
-              size={style.sheetTitle.fontSize}
-            />
-            <Text style={style.sheetTitleText}>
-              {file.name}
-            </Text>
-          </View>
+          <MenuOption
+            icon="star"
+            label={file.starred ? "Remove from Starred" : "Add to Starred"}
+            onPress={handleStar}
+            theme={theme}
+            style={style}
+          />
 
-          <ScrollView>
+          <MenuOption
+            icon="link"
+            label="Copy link"
+            onPress={handleCopyLink}
+            theme={theme}
+            style={style}
+          />
+
+          {isFile && (
             <MenuOption
-              icon="share"
-              label="Share"
-              onPress={handleShare}
+              icon="file"
+              label="Duplicate"
+              onPress={handleDuplicate}
               theme={theme}
               style={style}
             />
+          )}
 
-            <MenuOption
-              icon="star"
-              label={file.starred ? "Remove from Starred" : "Add to Starred"}
-              onPress={handleStar}
-              theme={theme}
-              style={style}
-            />
+          <MenuOption
+            icon="download"
+            label="Download"
+            onPress={handleDownload}
+            theme={theme}
+            style={style}
+          />
 
-            <MenuOption
-              icon="link"
-              label="Copy link"
-              onPress={handleCopyLink}
-              theme={theme}
-              style={style}
-            />
+          <MenuOption
+            icon="edit"
+            label="Rename"
+            onPress={handleRenameOpen}
+            theme={theme}
+            style={style}
+          />
 
-            {isFile && (
-              <MenuOption
-                icon="file"
-                label="Duplicate"
-                onPress={handleDuplicate}
-                theme={theme}
-                style={style}
-              />
-            )}
+          <MenuOption
+            icon="folder"
+            label="Move"
+            onPress={handleMove}
+            theme={theme}
+            style={style}
+          />
 
-            <MenuOption
-              icon="download"
-              label="Download"
-              onPress={handleDownload}
-              theme={theme}
-              style={style}
-            />
-
-            <MenuOption
-              icon="edit"
-              label="Rename"
-              onPress={handleRenameOpen}
-              theme={theme}
-              style={style}
-            />
-
-            <MenuOption
-              icon="folder"
-              label="Move"
-              onPress={handleMove}
-              theme={theme}
-              style={style}
-            />
-
-            <MenuOption
-              icon="trash"
-              label="Move to trash"
-              onPress={handleTrash}
-              theme={theme}
-              style={style}
-            />
-          </ScrollView>
-        </Animated.View>
-      </Modal>
+          <MenuOption
+            icon="trash"
+            label="Move to trash"
+            onPress={handleTrash}
+            theme={theme}
+            style={style}
+          />
+        </ScrollView>
+      </PopupModal>
 
       <InputDialog
         visible={renameVisible}
