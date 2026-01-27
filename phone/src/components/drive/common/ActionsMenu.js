@@ -10,6 +10,7 @@ import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 import InputDialog from "@/src/components/drive/common/InputDialog";
 import { useFilesRefresh } from "@/src/contexts/FilesRefreshContext";
 import PopupModal from "@/src/components/drive/common/PopupModal";
+import getFileIconName from "@/src/utils/common/getFileIconName";
 
 export default function ActionsMenu({ file }) {
   const orientation = useOrientation();
@@ -97,14 +98,14 @@ export default function ActionsMenu({ file }) {
     triggerRefresh();
   };
 
-  const isFile =
-    file.type === "file" || (file.type !== "folder" && file.type !== "dir");
+  const isFile = file.type === "file";
+  const titleIconName = getFileIconName(file);
 
   const menuConfig = {
     title: {
       text: file.name,
       icon: {
-        name: isFile ? "file" : "folder",
+        name: titleIconName,
       },
     },
     buttons: [
