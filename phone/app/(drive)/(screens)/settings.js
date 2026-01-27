@@ -1,3 +1,8 @@
-import Placeholder from "@/src/components/common/Placeholder";
+import { View } from "react-native-web";
 
-export default Placeholder;
+export default function Settings() {
+    return (
+        <View>
+        </View>
+    );
+}
