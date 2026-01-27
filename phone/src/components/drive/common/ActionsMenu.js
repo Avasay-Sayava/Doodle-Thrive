@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { View, Text, ScrollView, Clipboard } from "react-native";
+import { Clipboard } from "react-native";
 import * as Linking from "expo-linking";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { styles } from "@/styles/components/drive/common/ActionsMenu.styles";
@@ -9,7 +9,6 @@ import { useOrientation } from "@/src/hooks/common/useOrientation";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 import InputDialog from "@/src/components/drive/common/InputDialog";
 import { useFilesRefresh } from "@/src/contexts/FilesRefreshContext";
-import FileIcon from "@/src/components/drive/common/FileIcon";
 import PopupModal from "@/src/components/drive/common/PopupModal";
 
 export default function ActionsMenu({ file }) {
@@ -101,6 +100,69 @@ export default function ActionsMenu({ file }) {
   const isFile =
     file.type === "file" || (file.type !== "folder" && file.type !== "dir");
 
+  const menuConfig = {
+    title: {
+      text: file.name,
+      icon: {
+        name: isFile ? "file" : "folder",
+      },
+    },
+    buttons: [
+      {
+        key: "share",
+        icon: "share",
+        label: "Share",
+        onPress: handleShare,
+      },
+      {
+        key: "star",
+        icon: "star",
+        label: file.starred ? "Remove from Starred" : "Add to Starred",
+        onPress: handleStar,
+      },
+      {
+        key: "copy-link",
+        icon: "link",
+        label: "Copy link",
+        onPress: handleCopyLink,
+      },
+      ...(isFile
+        ? [
+            {
+              key: "duplicate",
+              icon: "file",
+              label: "Duplicate",
+              onPress: handleDuplicate,
+            },
+          ]
+        : []),
+      {
+        key: "download",
+        icon: "download",
+        label: "Download",
+        onPress: handleDownload,
+      },
+      {
+        key: "rename",
+        icon: "edit",
+        label: "Rename",
+        onPress: handleRenameOpen,
+      },
+      {
+        key: "move",
+        icon: "folder",
+        label: "Move",
+        onPress: handleMove,
+      },
+      {
+        key: "trash",
+        icon: "trash",
+        label: "Move to trash",
+        onPress: handleTrash,
+      },
+    ],
+  };
+
   return (
     <>
       <AnimatedPressable
@@ -117,84 +179,7 @@ export default function ActionsMenu({ file }) {
         />
       </AnimatedPressable>
 
-      <PopupModal isOpen={isOpen} onClose={closeMenu}>
-        <View style={style.sheetTitle}>
-          <FileIcon
-            file={file}
-            color={style.sheetTitle.color}
-            size={style.sheetTitle.fontSize}
-          />
-          <Text style={style.sheetTitleText}>{file.name}</Text>
-        </View>
-
-        <ScrollView>
-          <MenuOption
-            icon="share"
-            label="Share"
-            onPress={handleShare}
-            theme={theme}
-            style={style}
-          />
-
-          <MenuOption
-            icon="star"
-            label={file.starred ? "Remove from Starred" : "Add to Starred"}
-            onPress={handleStar}
-            theme={theme}
-            style={style}
-          />
-
-          <MenuOption
-            icon="link"
-            label="Copy link"
-            onPress={handleCopyLink}
-            theme={theme}
-            style={style}
-          />
-
-          {isFile && (
-            <MenuOption
-              icon="file"
-              label="Duplicate"
-              onPress={handleDuplicate}
-              theme={theme}
-              style={style}
-            />
-          )}
-
-          <MenuOption
-            icon="download"
-            label="Download"
-            onPress={handleDownload}
-            theme={theme}
-            style={style}
-          />
-
-          <MenuOption
-            icon="edit"
-            label="Rename"
-            onPress={handleRenameOpen}
-            theme={theme}
-            style={style}
-          />
-
-          <MenuOption
-            icon="folder"
-            label="Move"
-            onPress={handleMove}
-            theme={theme}
-            style={style}
-          />
-
-          <MenuOption
-            icon="trash"
-            label="Move to trash"
-            onPress={handleTrash}
-            theme={theme}
-            style={style}
-          />
-        </ScrollView>
-      </PopupModal>
+      <PopupModal isOpen={isOpen} onClose={closeMenu} config={menuConfig} />
 
       <InputDialog
         visible={renameVisible}
@@ -206,20 +191,5 @@ export default function ActionsMenu({ file }) {
         confirmLabel="Rename"
       />
     </>
-  );
-}
-
-function MenuOption({ icon, label, onPress, theme, style }) {
-  return (
-    <AnimatedPressable
-      style={style.optionItem}
-      onPress={onPress}
-      backgroundColor={style.optionItem.animBackgroundColor}
-      durationIn={style.optionItem.durationIn}
-      durationOut={style.optionItem.durationOut}
-    >
-      <Icon name={icon} size={20} color={theme.colors.text} />
-      <Text style={style.optionText}>{label}</Text>
-    </AnimatedPressable>
   );
 }

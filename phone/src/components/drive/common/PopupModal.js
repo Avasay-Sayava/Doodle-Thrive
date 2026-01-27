@@ -6,14 +6,18 @@ import {
   useWindowDimensions,
   Animated,
   PanResponder,
+  ScrollView,
+  Text,
 } from "react-native";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { styles } from "@/styles/components/drive/common/PopupModal.styles";
 import { useOrientation } from "@/src/hooks/common/useOrientation";
+import Icon from "@/src/components/common/Icon";
+import AnimatedPressable from "@/src/components/common/AnimatedPressable";
 
 const animDuration = 250;
 
-export default function PopupModal({ children, isOpen, onClose }) {
+export default function PopupModal({ isOpen, onClose, config }) {
   const orientation = useOrientation();
   useEffect(() => {}, [orientation]);
 
@@ -87,6 +91,56 @@ export default function PopupModal({ children, isOpen, onClose }) {
     extrapolate: "clamp",
   });
 
+  const renderTitleIcon = (iconConfig) => {
+    if (!iconConfig) {
+      return null;
+    }
+
+    return (
+      <Icon
+        name={iconConfig.name}
+        size={iconConfig.size ?? style.sheetTitle.fontSize}
+        color={iconConfig.color ?? style.sheetTitle.color}
+      />
+    );
+  };
+
+  const renderConfigContent = (modalConfig) => {
+    return (
+      <>
+        {modalConfig.title ? (
+          <View style={style.sheetTitle}>
+            {renderTitleIcon(modalConfig.title.icon)}
+            <Text style={style.sheetTitleText}>{modalConfig.title.text}</Text>
+          </View>
+        ) : null}
+        {(modalConfig.buttons || []).length > 0 ? (
+          <ScrollView>
+            {(modalConfig.buttons || []).map((button, index) => (
+              <AnimatedPressable
+                key={button.key ?? `${button.label}-${index}`}
+                style={style.optionItem}
+                onPress={button.onPress}
+                backgroundColor={style.optionItem.animBackgroundColor}
+                durationIn={style.optionItem.durationIn}
+                durationOut={style.optionItem.durationOut}
+              >
+                {button.icon ? (
+                  <Icon
+                    name={button.icon}
+                    size={20}
+                    color={style.optionText.color}
+                  />
+                ) : null}
+                <Text style={style.optionText}>{button.label}</Text>
+              </AnimatedPressable>
+            ))}
+          </ScrollView>
+        ) : null}
+      </>
+    );
+  };
+
   return (
     <Modal
       transparent={true}
@@ -110,7 +164,7 @@ export default function PopupModal({ children, isOpen, onClose }) {
           <View style={style.dragHandle} />
         </View>
 
-        <View>{children}</View>
+        <View>{renderConfigContent(config)}</View>
       </Animated.View>
     </Modal>
   );
