@@ -28,7 +28,6 @@ export function useApiAction() {
       .catch((err) => {
         console.error("API Action failed", err);
         setError(err);
-        throw err;
       })
       .finally(() => {
         setLoading(false);
