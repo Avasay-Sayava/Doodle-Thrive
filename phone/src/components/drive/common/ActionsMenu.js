@@ -1,6 +1,9 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Clipboard } from "react-native";
+import { Alert } from "react-native";
+import * as Clipboard from "expo-clipboard";
 import * as Linking from "expo-linking";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { styles } from "@/styles/components/drive/common/ActionsMenu.styles";
 import Icon from "@/src/components/common/Icon";
@@ -23,7 +26,7 @@ export default function ActionsMenu({ file }) {
   const { theme } = useTheme();
   const style = useMemo(() => styles({ theme }), [theme]);
 
-  const { star, trash, duplicate, rename } = useFilesActions();
+  const { star, trash, duplicate, rename, remove, get } = useFilesActions();
 
   const triggerRefresh = () => {
     refreshAll();
@@ -58,7 +61,8 @@ export default function ActionsMenu({ file }) {
 
     const url = Linking.createURL(path);
     console.log("Generated Link:", url);
-    Clipboard.setString(url);
+
+    await Clipboard.setStringAsync(url);
   };
 
   const handleDuplicate = async () => {
@@ -67,10 +71,31 @@ export default function ActionsMenu({ file }) {
     triggerRefresh();
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     closeMenu();
-    // TODO
-    console.log("Download action triggered");
+    try {
+      const fileData = await get(file.id);
+
+      if (!fileData) {
+        Alert.alert("Error", "Could not retrieve file data.");
+        return;
+      }
+      const content = fileData.content || "";
+
+      const fileUri =
+        FileSystem.documentDirectory + (fileData.name || file.name);
+
+      await FileSystem.writeAsStringAsync(fileUri, content);
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileUri);
+      } else {
+        Alert.alert("Error", "Sharing is not available on this device");
+      }
+    } catch (error) {
+      console.error("Download failed:", error);
+      Alert.alert("Error", "Failed to download file");
+    }
   };
 
   const handleRenameOpen = () => {
@@ -98,71 +123,111 @@ export default function ActionsMenu({ file }) {
     triggerRefresh();
   };
 
+  const handleRestore = async () => {
+    closeMenu();
+    trash(file.id, false);
+    triggerRefresh();
+  };
+
+  const handleDeleteForever = async () => {
+    closeMenu();
+    try {
+      await remove(file.id);
+    } catch (err) {
+      console.error("Failed to delete file permanently", err);
+    }
+    triggerRefresh();
+  };
+
   const isFile = file.type === "file";
+  const isTrashed = !!file.trashed;
   const titleIconName = getFileIconName(file);
 
-  const menuConfig = {
-    title: {
-      text: file.name,
-      icon: {
-        name: titleIconName,
-      },
-    },
-    buttons: [
-      {
-        key: "share",
-        icon: "share",
-        label: "Share",
-        onPress: handleShare,
-      },
-      {
-        key: "star",
-        icon: "star",
-        label: file.starred ? "Remove from Starred" : "Add to Starred",
-        onPress: handleStar,
-      },
-      {
-        key: "copy-link",
-        icon: "link",
-        label: "Copy link",
-        onPress: handleCopyLink,
-      },
-      ...(isFile
-        ? [
-            {
-              key: "duplicate",
-              icon: "file",
-              label: "Duplicate",
-              onPress: handleDuplicate,
-            },
-          ]
-        : []),
-      {
-        key: "download",
-        icon: "download",
-        label: "Download",
-        onPress: handleDownload,
-      },
-      {
-        key: "rename",
-        icon: "edit",
-        label: "Rename",
-        onPress: handleRenameOpen,
-      },
-      {
-        key: "move",
-        icon: "folder",
-        label: "Move",
-        onPress: handleMove,
-      },
-      {
-        key: "trash",
-        icon: "trash",
-        label: "Move to trash",
-        onPress: handleTrash,
-      },
-    ],
-  };
+  const menuConfig = isTrashed
+    ? {
+        title: {
+          text: file.name,
+          icon: {
+            name: titleIconName,
+          },
+        },
+        buttons: [
+          {
+            key: "restore",
+            icon: "folder",
+            label: "Restore",
+            onPress: handleRestore,
+          },
+          {
+            key: "delete-forever",
+            icon: "bin",
+            label: "Delete forever",
+            onPress: handleDeleteForever,
+          },
+        ],
+      }
+    : {
+        title: {
+          text: file.name,
+          icon: {
+            name: titleIconName,
+          },
+        },
+        buttons: [
+          {
+            key: "share",
+            icon: "share",
+            label: "Share",
+            onPress: handleShare,
+          },
+          {
+            key: "star",
+            icon: "star",
+            label: file.starred ? "Remove from Starred" : "Add to Starred",
+            onPress: handleStar,
+          },
+          {
+            key: "copy-link",
+            icon: "link",
+            label: "Copy link",
+            onPress: handleCopyLink,
+          },
+          ...(isFile
+            ? [
+                {
+                  key: "duplicate",
+                  icon: "file",
+                  label: "Duplicate",
+                  onPress: handleDuplicate,
+                },
+                {
+                  key: "download",
+                  icon: "download",
+                  label: "Download",
+                  onPress: handleDownload,
+                },
+              ]
+            : []),
+          {
+            key: "rename",
+            icon: "edit",
+            label: "Rename",
+            onPress: handleRenameOpen,
+          },
+          {
+            key: "move",
+            icon: "folder",
+            label: "Move",
+            onPress: handleMove,
+          },
+          {
+            key: "trash",
+            icon: "trash",
+            label: "Move to trash",
+            onPress: handleTrash,
+          },
+        ],
+      };
 
   return (
     <>

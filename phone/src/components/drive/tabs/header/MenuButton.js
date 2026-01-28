@@ -4,16 +4,14 @@ import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo } from "react";
 import { styles } from "@/styles/components/drive/tabs/header/MenuButton.styles";
 
-export default function MenuButton() {
+export default function MenuButton({ onPress }) {
   const { theme } = useTheme();
   const style = useMemo(() => styles({ theme }), [theme]);
 
   return (
     <AnimatedPressable
       style={style.button}
-      onPress={() => {
-        // TODO: DO THIS
-      }}
+      onPress={onPress}
       durationIn={style.button.durationIn}
       durationOut={style.button.durationOut}
       backgroundColor={style.button.animBackgroundColor}

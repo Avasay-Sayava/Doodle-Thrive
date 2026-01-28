@@ -1,5 +1,5 @@
 import File from "@/src/components/drive/common/File";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 import { styles } from "@/styles/components/drive/common/FileList.styles";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo } from "react";
@@ -19,13 +19,19 @@ export default function FileList({ files, viewMode, sortOptions }) {
   const reversed = sortOptions.reversed ? sorted.reverse() : sorted;
 
   return (
-    <ScrollView>
+    <ScrollView
+      contentContainerStyle={files.length === 0 ? style.centerContainer : null}
+    >
       <View
         style={viewMode === "grid" ? style.gridContainer : style.listContainer}
       >
-        {reversed.map((file) => (
-          <File key={file.id || file.uuid} file={file} viewMode={viewMode} />
-        ))}
+        {files.length === 0 ? (
+          <Text style={style.emptyText}>No files found</Text>
+        ) : (
+          reversed.map((file) => (
+            <File key={file.id || file.uuid} file={file} viewMode={viewMode} />
+          ))
+        )}
       </View>
     </ScrollView>
   );

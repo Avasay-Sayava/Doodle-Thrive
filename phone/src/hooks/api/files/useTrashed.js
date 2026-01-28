@@ -2,7 +2,7 @@ import { useEffect, useCallback, useMemo } from "react";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 import { useFilesRefresh } from "@/src/contexts/FilesRefreshContext";
 
-export function useHome() {
+export function useTrashed() {
   const { getAll, data, loading, error } = useFilesActions();
   const { refreshKey } = useFilesRefresh();
 
@@ -16,10 +16,7 @@ export function useHome() {
 
   const files = useMemo(() => {
     const allFiles = data ? Object.values(data) : null;
-    const filtered = allFiles?.filter(
-      (file) => !allFiles.includes(file.parent),
-    );
-    return filtered?.filter((file) => !file.trashed);
+    return allFiles?.filter((file) => file.trashed);
   }, [data]);
 
   return {

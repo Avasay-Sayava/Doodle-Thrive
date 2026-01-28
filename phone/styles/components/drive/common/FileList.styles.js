@@ -15,4 +15,15 @@ export const styles = ({ theme }) =>
       padding: theme.spacing.small,
       justifyContent: "flex-start",
     },
+    centerContainer: {
+      flexGrow: 1,
+      justifyContent: "center",
+    },
+    emptyText: {
+      textAlign: "center",
+      marginTop: theme.spacing.xlarge,
+      color: theme.colors.textSecondary,
+      fontSize: theme.fonts.sizes.medium,
+      width: "100%",
+    },
   });

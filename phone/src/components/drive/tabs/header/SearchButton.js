@@ -4,16 +4,18 @@ import { useTheme } from "@/src/contexts/ThemeContext";
 import { useMemo } from "react";
 import { styles } from "@/styles/components/drive/tabs/header/SearchButton.styles";
 import { Text } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function SearchButton() {
   const { theme } = useTheme();
+  const router = useRouter();
   const style = useMemo(() => styles({ theme }), [theme]);
 
   return (
     <AnimatedPressable
       style={style.button}
       onPress={() => {
-        // TODO: DO THIS
+        router.replace("/(drive)/(screens)/search");
       }}
       durationIn={style.button.durationIn}
       durationOut={style.button.durationOut}
