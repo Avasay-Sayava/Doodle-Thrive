@@ -6,6 +6,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { styles } from "@/styles/components/drive/common/InputDialog.styles";
@@ -43,48 +44,52 @@ export default function InputDialog({
       animationType="fade"
       onRequestClose={onCancel}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={style.overlay}
-      >
-        <View style={style.container}>
-          <Text style={style.title}>{title}</Text>
+      <TouchableWithoutFeedback onPress={onCancel}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={style.overlay}
+        >
+          <TouchableWithoutFeedback onPress={() => {}}>
+            <View style={style.container}>
+              <Text style={style.title}>{title}</Text>
 
-          <TextInput
-            style={style.input}
-            value={text}
-            onChangeText={setText}
-            placeholder={placeholder}
-            placeholderTextColor={theme.colors.textMuted}
-            autoFocus={true}
-            selectAllOnFocus={true}
-          />
+              <TextInput
+                style={style.input}
+                value={text}
+                onChangeText={setText}
+                placeholder={placeholder}
+                placeholderTextColor={theme.colors.textMuted}
+                autoFocus={true}
+                selectAllOnFocus={true}
+              />
 
-          <View style={style.buttonContainer}>
-            <AnimatedPressable
-              style={style.button}
-              onPress={onCancel}
-              backgroundColor={theme.colors.backgroundAlt}
-            >
-              <Text style={[style.buttonText, { color: theme.colors.text }]}>
-                {cancelLabel}
-              </Text>
-            </AnimatedPressable>
+              <View style={style.buttonContainer}>
+                <AnimatedPressable
+                  style={style.button}
+                  onPress={onCancel}
+                  backgroundColor={theme.colors.backgroundAlt}
+                >
+                  <Text style={[style.buttonText, { color: theme.colors.text }]}>
+                    {cancelLabel}
+                  </Text>
+                </AnimatedPressable>
 
-            <AnimatedPressable
-              style={[style.button, style.confirmButton]}
-              onPress={handleConfirm}
-              backgroundColor={theme.colors.primary}
-            >
-              <Text
-                style={[style.buttonText, { color: theme.colors.background }]}
-              >
-                {confirmLabel}
-              </Text>
-            </AnimatedPressable>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+                <AnimatedPressable
+                  style={[style.button, style.confirmButton]}
+                  onPress={handleConfirm}
+                  backgroundColor={theme.colors.primary}
+                >
+                  <Text
+                    style={[style.buttonText, { color: theme.colors.background }]}
+                  >
+                    {confirmLabel}
+                  </Text>
+                </AnimatedPressable>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 }
