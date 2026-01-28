@@ -1,12 +1,14 @@
 import { Tabs as Stack, useRouter, useSegments } from "expo-router";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
 import Header from "@/src/components/drive/tabs/header/Header";
 import { View } from "react-native";
+import { styles } from "@/styles/app/(drive)/(tabs)/_layout.styles";
 
 function Tabs() {
   const { theme } = useTheme();
+  const style = useMemo(() => styles({ theme }), [theme]);
 
   const router = useRouter();
   const segments = useSegments();
@@ -18,8 +20,7 @@ function Tabs() {
   }, [segments, router]);
 
   return (
-    // TODO: REPLACE WITH ACTUAL STYLE DONT LEAVE IT LIKE THIS
-    <View style={{ flex: 1 }}>
+    <View style={style.fill}>
       <Header />
       <Stack
         screenOptions={{
