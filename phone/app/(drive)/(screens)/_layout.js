@@ -4,7 +4,7 @@ import LoadingScreen from "@/src/components/common/LoadingScreen";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { styles } from "@/styles/app/(drive)/(screens)/_layout.styles";
 import { TouchableOpacity, View } from "react-native";
-import ThemedText from "@/src/components/common/ThemedText";
+import Icon from "@/src/components/common/Icon";
 
 export default function ScreensLayout() {
   const router = useRouter();
@@ -20,7 +20,9 @@ export default function ScreensLayout() {
       <View style={style.container}>
         <View style={style.header}>
           <TouchableOpacity onPress={goBack}>
-            <ThemedText style={style.backButton}>Back</ThemedText>
+            <View style={style.backButton}>
+              <Icon color={style.backButton.color} size={style.backButton.fontSize} name={"arrow"} />
+            </View>
           </TouchableOpacity>
         </View>
         <View style={style.content}>
