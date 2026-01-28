@@ -23,7 +23,7 @@ export default function ActionsMenu({ file }) {
   const { theme } = useTheme();
   const style = useMemo(() => styles({ theme }), [theme]);
 
-  const { star, trash, duplicate, rename } = useFilesActions();
+  const { star, trash, duplicate, rename, remove } = useFilesActions();
 
   const triggerRefresh = () => {
     refreshAll();
@@ -98,71 +98,111 @@ export default function ActionsMenu({ file }) {
     triggerRefresh();
   };
 
+  const handleRestore = async () => {
+    closeMenu();
+    trash(file.id, false);
+    triggerRefresh();
+  };
+
+  const handleDeleteForever = async () => {
+    closeMenu();
+    try {
+      await remove(file.id);
+    } catch (err) {
+      console.error("Failed to delete file permanently", err);
+    }
+    triggerRefresh();
+  };
+
   const isFile = file.type === "file";
+  const isTrashed = !!file.trashed;
   const titleIconName = getFileIconName(file);
 
-  const menuConfig = {
-    title: {
-      text: file.name,
-      icon: {
-        name: titleIconName,
-      },
-    },
-    buttons: [
-      {
-        key: "share",
-        icon: "share",
-        label: "Share",
-        onPress: handleShare,
-      },
-      {
-        key: "star",
-        icon: "star",
-        label: file.starred ? "Remove from Starred" : "Add to Starred",
-        onPress: handleStar,
-      },
-      {
-        key: "copy-link",
-        icon: "link",
-        label: "Copy link",
-        onPress: handleCopyLink,
-      },
-      ...(isFile
-        ? [
-            {
-              key: "duplicate",
-              icon: "file",
-              label: "Duplicate",
-              onPress: handleDuplicate,
-            },
-          ]
-        : []),
-      {
-        key: "download",
-        icon: "download",
-        label: "Download",
-        onPress: handleDownload,
-      },
-      {
-        key: "rename",
-        icon: "edit",
-        label: "Rename",
-        onPress: handleRenameOpen,
-      },
-      {
-        key: "move",
-        icon: "folder",
-        label: "Move",
-        onPress: handleMove,
-      },
-      {
-        key: "trash",
-        icon: "trash",
-        label: "Move to trash",
-        onPress: handleTrash,
-      },
-    ],
-  };
+  const menuConfig = isTrashed
+    ? {
+        title: {
+          text: file.name,
+          icon: {
+            name: titleIconName,
+          },
+        },
+        buttons: [
+          {
+            key: "restore",
+            icon: "folder",
+            label: "Restore",
+            onPress: handleRestore,
+          },
+          {
+            key: "delete-forever",
+            icon: "bin",
+            label: "Delete forever",
+            onPress: handleDeleteForever,
+          },
+        ],
+      }
+    : {
+        title: {
+          text: file.name,
+          icon: {
+            name: titleIconName,
+          },
+        },
+        buttons: [
+          {
+            key: "share",
+            icon: "share",
+            label: "Share",
+            onPress: handleShare,
+          },
+          {
+            key: "star",
+            icon: "star",
+            label: file.starred ? "Remove from Starred" : "Add to Starred",
+            onPress: handleStar,
+          },
+          {
+            key: "copy-link",
+            icon: "link",
+            label: "Copy link",
+            onPress: handleCopyLink,
+          },
+          ...(isFile
+            ? [
+                {
+                  key: "duplicate",
+                  icon: "file",
+                  label: "Duplicate",
+                  onPress: handleDuplicate,
+                },
+              ]
+            : []),
+          {
+            key: "download",
+            icon: "download",
+            label: "Download",
+            onPress: handleDownload,
+          },
+          {
+            key: "rename",
+            icon: "edit",
+            label: "Rename",
+            onPress: handleRenameOpen,
+          },
+          {
+            key: "move",
+            icon: "folder",
+            label: "Move",
+            onPress: handleMove,
+          },
+          {
+            key: "trash",
+            icon: "trash",
+            label: "Move to trash",
+            onPress: handleTrash,
+          },
+        ],
+      };
 
   return (
     <>

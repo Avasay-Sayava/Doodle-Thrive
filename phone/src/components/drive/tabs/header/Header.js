@@ -33,9 +33,20 @@ export default function Header() {
           },
         },
         {
-          key: "close",
-          label: "Close",
-          onPress: () => setMenuOpen(false),
+          key: "recent",
+          label: "Recent",
+          onPress: () => {
+            setMenuOpen(false);
+            router.push("/(drive)/(screens)/recent");
+          },
+        },
+        {
+          key: "trash",
+          label: "Trash",
+          onPress: () => {
+            setMenuOpen(false);
+            router.push("/(drive)/(screens)/trash");
+          },
         },
       ],
     }),
