@@ -69,7 +69,9 @@ export default function InputDialog({
                   onPress={onCancel}
                   backgroundColor={theme.colors.backgroundAlt}
                 >
-                  <Text style={[style.buttonText, { color: theme.colors.text }]}>
+                  <Text
+                    style={[style.buttonText, { color: theme.colors.text }]}
+                  >
                     {cancelLabel}
                   </Text>
                 </AnimatedPressable>
@@ -80,7 +82,10 @@ export default function InputDialog({
                   backgroundColor={theme.colors.primary}
                 >
                   <Text
-                    style={[style.buttonText, { color: theme.colors.background }]}
+                    style={[
+                      style.buttonText,
+                      { color: theme.colors.background },
+                    ]}
                   >
                     {confirmLabel}
                   </Text>

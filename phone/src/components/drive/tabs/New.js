@@ -68,7 +68,10 @@ export default function New({ currentFolderId = null }) {
       refreshAll();
     } catch (error) {
       console.error("Upload failed:", error);
-      Alert.alert("Error", "Failed to upload file. Ensure it is a valid text file.");
+      Alert.alert(
+        "Error",
+        "Failed to upload file. Ensure it is a valid text file.",
+      );
     }
   };
 
@@ -137,7 +140,7 @@ export default function New({ currentFolderId = null }) {
         onCancel={() => setFileDialogVisible(false)}
         onConfirm={handleCreateFile}
         title="New File"
-        placeholder="File name (e.g., notes.txt)"
+        placeholder="File name"
         confirmLabel="Create"
       />
     </>
