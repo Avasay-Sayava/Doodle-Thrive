@@ -44,7 +44,10 @@ export default function ActionsMenu({ file }) {
 
   const handleShare = () => {
     closeMenu();
-    console.log("Share action triggered");
+    router.push({
+      pathname: `/(drive)/(screens)/share/${file.id}`,
+      params: { fileName: file.name },
+    });
   };
 
   const handleStar = async () => {

@@ -82,7 +82,7 @@ class Api {
 
   permissions = {
     create: async (fileUuid, userUuid, options) => {
-      return await this.#client.patch(
+      return await this.#client.post(
         `/api/files/${fileUuid}/permissions`,
         JSON_HEADER,
         {
@@ -99,7 +99,7 @@ class Api {
     },
 
     getAll: async (fileUuid) => {
-      return await this.#client.get(`/api/files/${fileUuid}/permissions/}`, {});
+      return await this.#client.get(`/api/files/${fileUuid}/permissions`, {});
     },
 
     update: async (fileUuid, permissionUuid, options) => {
