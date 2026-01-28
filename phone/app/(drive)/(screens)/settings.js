@@ -16,8 +16,6 @@ export default function Settings() {
 
   return (
     <View style={style.container}>
-      <ThemedText style={style.title}>Settings</ThemedText>
-
       <ThemedText style={style.subtitle}>Visuals</ThemedText>
       <TouchableOpacity
         style={style.button}

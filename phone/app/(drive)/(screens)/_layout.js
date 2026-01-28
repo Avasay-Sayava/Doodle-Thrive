@@ -1,13 +1,15 @@
-import { Slot, useRouter } from "expo-router";
+import {Slot, useRouter, useSegments} from "expo-router";
 import { Suspense, useMemo } from "react";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { styles } from "@/styles/app/(drive)/(screens)/_layout.styles";
 import { TouchableOpacity, View } from "react-native";
 import Icon from "@/src/components/common/Icon";
+import ThemedText from "@/src/components/common/ThemedText";
 
 export default function ScreensLayout() {
   const router = useRouter();
+  const segments = useSegments();
   const { theme } = useTheme();
   const style = useMemo(() => styles({ theme }), [theme]);
 
@@ -26,6 +28,7 @@ export default function ScreensLayout() {
           </TouchableOpacity>
         </View>
         <View style={style.content}>
+          <ThemedText style={style.title}>{segments[2].charAt(0).toUpperCase() + segments[2].substring(1)}</ThemedText>
           <Slot />
         </View>
       </View>

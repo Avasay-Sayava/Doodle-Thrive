@@ -8,11 +8,6 @@ export const styles = ({ theme }) =>
       paddingHorizontal: theme.spacing.medium,
       paddingVertical: theme.spacing.medium,
     },
-    title: {
-      fontSize: theme.fonts.sizes.large,
-      color: theme.colors.text,
-      fontWeight: theme.fonts.weights.bold,
-    },
     subtitle: {
       fontSize: theme.fonts.sizes.medium,
       fontWeight: theme.fonts.weights.medium,
