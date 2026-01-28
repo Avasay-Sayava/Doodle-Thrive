@@ -5,6 +5,7 @@ import LoadingScreen from "@/src/components/common/LoadingScreen";
 import Header from "@/src/components/drive/tabs/header/Header";
 import { View } from "react-native";
 import { styles } from "@/styles/app/(drive)/(tabs)/_layout.styles";
+import New from "@/src/components/drive/tabs/New";
 
 function Tabs() {
   const { theme } = useTheme();
@@ -36,6 +37,7 @@ function Tabs() {
         <Stack.Screen name="shared" options={{ title: "Shared" }} />
         <Stack.Screen name="files" options={{ title: "Files" }} />
       </Stack>
+      <New />
     </View>
   );
 }
