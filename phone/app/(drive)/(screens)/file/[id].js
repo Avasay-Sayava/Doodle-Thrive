@@ -7,7 +7,7 @@ import LoadingScreen from "@/src/components/common/LoadingScreen";
 import { useFile } from "@/src/hooks/api/files/useFile";
 import EditFile from "@/src/components/drive/screens/EditFile";
 import AnimatedPressable from "@/src/components/common/AnimatedPressable";
-const imageExtensionRegex = /\.(jpg|jpeg|png|webp)$/i;
+import isImageName from "@/src/utils/common/isImageName";
 const base64Regex = /^[A-Za-z0-9+/]+={0,2}$/;
 
 const getImageDataUri = (filename, content) => {
@@ -44,7 +44,7 @@ export default function ViewFile() {
   }
 
   const content = typeof file.content === "string" ? file.content : "";
-  const isImage = file.type === "file" && imageExtensionRegex.test(file.name);
+  const isImage = file.type === "file" && isImageName(file.name);
   const imageUri = isImage ? getImageDataUri(file.name, content) : null;
 
   if (isImage) {

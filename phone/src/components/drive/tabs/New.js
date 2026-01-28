@@ -9,12 +9,11 @@ import InputDialog from "@/src/components/drive/common/InputDialog";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 import { useFilesRefresh } from "@/src/contexts/FilesRefreshContext";
 import { styles } from "@/styles/components/drive/tabs/New.styles";
-
-const imageExtensionRegex = /\.(jpg|jpeg|png|webp)$/i;
+import isImageName from "@/src/utils/common/isImageName";
 
 const isImageAsset = (asset) => {
   if (asset?.mimeType?.startsWith("image/")) return true;
-  return imageExtensionRegex.test(asset?.name || "");
+  return isImageName(asset?.name);
 };
 
 export default function New({ currentFolderId = null }) {
