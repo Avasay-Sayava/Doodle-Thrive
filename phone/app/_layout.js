@@ -7,13 +7,11 @@ import {
 import { useEffect, useMemo, Suspense, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ErrorBoundary } from "react-error-boundary";
 import { AuthProvider, useAuth } from "@/src/contexts/AuthContext";
 import { ThemeProvider, useTheme } from "@/src/contexts/ThemeContext";
 import { ApiProvider } from "@/src/contexts/ApiContext";
 import { FilesRefreshProvider } from "@/src/contexts/FilesRefreshContext";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
-import ErrorFallback from "@/src/components/common/ErrorFallback";
 import { styles } from "@/styles/app/_layout.styles";
 
 function Root() {
@@ -66,18 +64,16 @@ function Root() {
 }
 
 function Boundary() {
-  const { error: authError, signout } = useAuth();
+  const { error: authError } = useAuth();
   const { error: themeError } = useTheme();
 
   if (authError) throw authError;
   if (themeError) throw themeError;
 
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback} onReset={signout}>
-      <Suspense fallback={<LoadingScreen />}>
-        <Root />
-      </Suspense>
-    </ErrorBoundary>
+    <Suspense fallback={<LoadingScreen />}>
+      <Root />
+    </Suspense>
   );
 }
 

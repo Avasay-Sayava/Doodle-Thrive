@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import LocalStorage from "@/src/utils/common/LocalStorage";
 import { useColorScheme } from "react-native";
-import { ThemeProvider as NavThemeProvider } from "@react-navigation/native";
 import themes from "@/styles/themes";
 
 const ThemeContext = createContext(null);
@@ -61,9 +60,7 @@ export function ThemeProvider({ children }) {
   };
 
   return (
-    <ThemeContext.Provider value={theme}>
-      <NavThemeProvider value={activeTheme}>{children}</NavThemeProvider>
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
   );
 }
 

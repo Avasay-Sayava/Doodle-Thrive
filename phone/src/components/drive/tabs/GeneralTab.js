@@ -2,6 +2,8 @@ import { useState } from "react";
 import TabHeader from "./TabHeader";
 import FileList from "@/src/components/drive/common/FileList";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
+import { View } from "react-native";
+import { useTheme } from "@/src/contexts/ThemeContext";
 
 export default function GeneralTab({
   useFilesHook,
@@ -9,6 +11,7 @@ export default function GeneralTab({
   initialViewMode = "list",
   isSortEnabled = true,
 }) {
+  const { theme } = useTheme();
   const [viewMode, setViewMode] = useState(initialViewMode);
   const [sortOptions, setSortOptions] = useState(initialSortOptions);
 
@@ -19,7 +22,7 @@ export default function GeneralTab({
   }
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <TabHeader
         sortOptions={sortOptions}
         setSortOptions={setSortOptions}
@@ -28,6 +31,6 @@ export default function GeneralTab({
         setViewMode={setViewMode}
       />
       <FileList files={files} viewMode={viewMode} sortOptions={sortOptions} />
-    </>
+    </View>
   );
 }

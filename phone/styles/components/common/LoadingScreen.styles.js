@@ -6,6 +6,6 @@ export const styles = ({ theme }) =>
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "transparent",
+      backgroundColor: theme.colors.background,
     },
   });
