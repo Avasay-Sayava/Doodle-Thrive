@@ -9,18 +9,22 @@ import {
 } from "react-native";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { useTheme } from "@/src/contexts/ThemeContext";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AnimatedPressable from "@/src/components/common/AnimatedPressable";
 import { styles } from "@/styles/app/(drive)/(screens)/share/[id].styles";
 import { useShareFile } from "@/src/hooks/api/files/useShareFile";
+import { useAuth } from "@/src/contexts/AuthContext";
 import Icon from "@/src/components/common/Icon";
 import PopupModal from "@/src/components/drive/common/PopupModal";
 
 export default function ShareScreen() {
   const { id } = useLocalSearchParams();
   const { theme } = useTheme();
-  const style = useMemo(() => styles({ theme }), [theme]);
+  const insets = useSafeAreaInsets();
+  const style = useMemo(() => styles({ theme, insets }), [theme, insets]);
 
-  const { permissions, loading, refresh, addShare, updateRole } =
+  const { user: currentUser } = useAuth();
+  const { permissions, loading, refresh, addShare, updateRole, ownerId } =
     useShareFile(id);
 
   const [inputUsername, setInputUsername] = useState("");
@@ -55,6 +59,34 @@ export default function ShareScreen() {
     setModalOpen(false);
     if (!selectedUser) return;
 
+    if (role === "owner") {
+      Alert.alert(
+        "Transfer Ownership?",
+        `Are you sure you want to make ${selectedUser.username} the owner? You will become an admin.`,
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Transfer",
+            style: "destructive",
+            onPress: async () => {
+              try {
+                await updateRole(
+                  selectedUser.permissionId,
+                  selectedUser.userId,
+                  "owner",
+                );
+              } catch (err) {
+                Alert.alert("Error", err.message || "Failed to transfer ownership");
+              } finally {
+                setSelectedUser(null);
+              }
+            },
+          },
+        ],
+      );
+      return;
+    }
+
     try {
       await updateRole(selectedUser.permissionId, selectedUser.userId, role);
     } catch (err) {
@@ -66,6 +98,9 @@ export default function ShareScreen() {
 
   const menuConfig = useMemo(() => {
     if (!selectedUser) return { title: {}, buttons: [] };
+
+    const isMeOwner = ownerId === currentUser?.id;
+    const isTargetOwner = selectedUser.userId === ownerId;
 
     return {
       title: {
@@ -91,6 +126,16 @@ export default function ShareScreen() {
           icon: selectedUser.role === "admin" ? "check" : undefined,
           onPress: () => handleRoleSelect("admin"),
         },
+        ...(isMeOwner && !isTargetOwner
+          ? [
+            {
+              key: "owner",
+              label: "Make Owner",
+              icon: "star",
+              onPress: () => handleRoleSelect("owner"),
+            },
+          ]
+          : []),
         {
           key: "remove",
           label: "Remove access",
@@ -100,7 +145,7 @@ export default function ShareScreen() {
         },
       ],
     };
-  }, [selectedUser, theme.colors.error]);
+  }, [selectedUser, ownerId, currentUser?.id, theme.colors.error]);
 
   const renderItem = ({ item }) => (
     <View style={style.userItem}>
@@ -114,10 +159,17 @@ export default function ShareScreen() {
           {item.username}
           {item.isCurrentUser && " (You)"}
         </Text>
-        <Text style={style.roleText}>{item.role}</Text>
+        <Text style={style.roleText}>
+          {item.role === "owner" ? "Owner" : item.role}
+        </Text>
       </View>
 
-      {!item.isCurrentUser && (
+      {/* Show menu dots if:
+          1. It's not me (I can't change my own role here easily)
+          2. AND (I am the owner OR the target is not the owner)
+             (Prevents admins from trying to edit the Owner's permissions)
+      */}
+      {!item.isCurrentUser && (ownerId === currentUser?.id || item.role !== "owner") && (
         <AnimatedPressable
           onPress={() => openRoleMenu(item)}
           style={{ padding: 8 }}
