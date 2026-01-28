@@ -20,7 +20,7 @@ import { useRouter } from "expo-router";
 
 const baseGridWidth = 150;
 
-export default function File({ file, viewMode }) {
+export default function File({ file, viewMode, onPress }) {
   const { theme } = useTheme();
   const style = useMemo(() => styles({ theme }), [theme]);
 
@@ -71,6 +71,11 @@ export default function File({ file, viewMode }) {
   }
 
   const handlePress = () => {
+    if (onPress) {
+      onPress(file);
+      return;
+    }
+
     if (file.type === "folder") {
       router.push({
         pathname: "(drive)/(screens)/folder/[id]",

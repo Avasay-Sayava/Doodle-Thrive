@@ -14,8 +14,10 @@ import InputDialog from "@/src/components/drive/common/InputDialog";
 import { useFilesRefresh } from "@/src/contexts/FilesRefreshContext";
 import PopupModal from "@/src/components/drive/common/PopupModal";
 import getFileIconName from "@/src/utils/common/getFileIconName";
+import { useRouter } from "expo-router";
 
 export default function ActionsMenu({ file }) {
+  const router = useRouter();
   const orientation = useOrientation();
   useEffect(() => {}, [orientation]);
 
@@ -42,7 +44,6 @@ export default function ActionsMenu({ file }) {
 
   const handleShare = () => {
     closeMenu();
-    // TODO
     console.log("Share action triggered");
   };
 
@@ -60,8 +61,6 @@ export default function ActionsMenu({ file }) {
         : `(drive)/(screens)/file/${file.id}`;
 
     const url = Linking.createURL(path);
-    console.log("Generated Link:", url);
-
     await Clipboard.setStringAsync(url);
   };
 
@@ -81,7 +80,6 @@ export default function ActionsMenu({ file }) {
         return;
       }
       const content = fileData.content || "";
-
       const fileUri =
         FileSystem.documentDirectory + (fileData.name || file.name);
 
@@ -112,9 +110,14 @@ export default function ActionsMenu({ file }) {
   };
 
   const handleMove = () => {
-    closeMenu();
-    // TODO
-    console.log("Move action triggered");
+    setIsOpen(false);
+    router.push({
+      pathname: "/(drive)/(screens)/move/root",
+      params: {
+        fileId: file.id,
+        fileOwner: file.owner,
+      },
+    });
   };
 
   const handleTrash = async () => {
@@ -147,9 +150,7 @@ export default function ActionsMenu({ file }) {
     ? {
         title: {
           text: file.name,
-          icon: {
-            name: titleIconName,
-          },
+          icon: { name: titleIconName },
         },
         buttons: [
           {
@@ -169,9 +170,7 @@ export default function ActionsMenu({ file }) {
     : {
         title: {
           text: file.name,
-          icon: {
-            name: titleIconName,
-          },
+          icon: { name: titleIconName },
         },
         buttons: [
           {
