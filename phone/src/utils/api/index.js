@@ -78,10 +78,6 @@ class Api {
     search: async (query) => {
       return await this.#client.get(`/api/search/${query}`, {});
     },
-
-    transferOwnership: async (id, owner) => {
-      return await this.#client.patch(`/api/files/${id}`, {}, {owner})
-    },
   };
 
   permissions = {

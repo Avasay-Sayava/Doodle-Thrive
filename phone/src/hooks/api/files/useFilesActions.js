@@ -47,9 +47,6 @@ export function useFilesActions() {
             original.description,
           );
         }),
-
-      transferOwnership: (id, ownerId) =>
-        run(() => api.files.transferOwnership(id, ownerId)),
     }),
     [api.files, run],
   );

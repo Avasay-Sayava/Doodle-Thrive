@@ -1,7 +1,6 @@
 import { useState, useCallback } from "react";
 import { usePermissionsActions } from "@/src/hooks/api/permissions/usePermissionsActions";
 import { useUsersActions } from "@/src/hooks/api/users/useUsersActions";
-import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 import { useAuth } from "@/src/contexts/AuthContext";
 
 const ROLES = {
@@ -28,18 +27,14 @@ const roleFromPermissions = (perms) => {
   return "viewer";
 };
 
-const wait = (ms = 350) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export function useShareFile(fileId) {
   const [permissions, setPermissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [ownerId, setOwnerId] = useState(null);
 
   const { user: currentUser } = useAuth();
   const permissionsActions = usePermissionsActions();
   const usersActions = useUsersActions();
-  const filesActions = useFilesActions();
 
   const loadPermissions = useCallback(async () => {
     if (!fileId) return;
@@ -47,12 +42,10 @@ export function useShareFile(fileId) {
     setError(null);
 
     try {
-      const fileData = await filesActions.get(fileId);
-      setOwnerId(fileData.owner);
-
       const rawPerms = await permissionsActions.getAll(fileId);
 
       const resolved = [];
+
       const permEntries = Object.entries(rawPerms || {});
 
       for (const [permId, userMap] of permEntries) {
@@ -60,17 +53,13 @@ export function useShareFile(fileId) {
           try {
             const userData = await usersActions.get(userId);
 
-            const isOwner = fileData.owner === userId;
-            const role = isOwner ? "owner" : roleFromPermissions(perms);
-
             resolved.push({
               permissionId: permId,
               userId,
               username: userData.username,
               image: userData.info?.image,
-              role,
+              role: roleFromPermissions(perms),
               isCurrentUser: userId === currentUser?.id,
-              isOwner,
             });
           } catch (err) {
             console.warn(`Failed to resolve user ${userId}`, err);
@@ -78,26 +67,7 @@ export function useShareFile(fileId) {
         }
       }
 
-      if (fileData.owner && !resolved.some((u) => u.userId === fileData.owner)) {
-        try {
-          const ownerData = await usersActions.get(fileData.owner);
-          resolved.push({
-            permissionId: "owner-implicit",
-            userId: fileData.owner,
-            username: ownerData.username,
-            image: ownerData.info?.image,
-            role: "owner",
-            isCurrentUser: fileData.owner === currentUser?.id,
-            isOwner: true,
-          });
-        } catch (err) {
-          console.warn("Failed to resolve owner data", err);
-        }
-      }
-
       resolved.sort((a, b) => {
-        if (a.isOwner) return -1;
-        if (b.isOwner) return 1;
         if (a.isCurrentUser) return -1;
         if (b.isCurrentUser) return 1;
         return (a.username || "").localeCompare(b.username || "");
@@ -110,7 +80,7 @@ export function useShareFile(fileId) {
     } finally {
       setLoading(false);
     }
-  }, [fileId, permissionsActions, usersActions, filesActions, currentUser?.id]);
+  }, [fileId, permissionsActions, usersActions, currentUser?.id]);
 
   const addShare = useCallback(
     async (username, role = "viewer") => {
@@ -144,50 +114,6 @@ export function useShareFile(fileId) {
   const updateRole = useCallback(
     async (permissionId, userId, newRole) => {
       try {
-        if (newRole === "owner") {
-          const isCurrentOwner = ownerId === currentUser?.id;
-          if (!isCurrentOwner) {
-            throw new Error("Only the owner can transfer ownership");
-          }
-
-          const adminOptions = ROLES["admin"];
-          if (permissionId && permissionId !== "owner-implicit") {
-            await permissionsActions.update(
-              fileId,
-              permissionId,
-              userId,
-              adminOptions,
-            );
-          } else {
-            await permissionsActions.create(fileId, userId, adminOptions);
-          }
-          await wait(200);
-
-          if (currentUser?.id) {
-            const myPerm = permissions.find((p) => p.userId === currentUser.id);
-            if (myPerm && myPerm.permissionId !== "owner-implicit") {
-              await permissionsActions.update(
-                fileId,
-                myPerm.permissionId,
-                currentUser.id,
-                adminOptions,
-              );
-            } else {
-              await permissionsActions.create(
-                fileId,
-                currentUser.id,
-                adminOptions,
-              );
-            }
-            await wait(200);
-          }
-
-          await filesActions.transferOwnership(fileId, userId);
-          await wait();
-          await loadPermissions();
-          return;
-        }
-
         if (newRole === "remove") {
           await permissionsActions.remove(fileId, permissionId);
         } else {
@@ -205,7 +131,7 @@ export function useShareFile(fileId) {
         throw err;
       }
     },
-    [fileId, permissions, ownerId, filesActions, loadPermissions, currentUser?.id],
+    [fileId, permissionsActions, loadPermissions],
   );
 
   return {
@@ -215,6 +141,5 @@ export function useShareFile(fileId) {
     refresh: loadPermissions,
     addShare,
     updateRole,
-    ownerId,
   };
 }
