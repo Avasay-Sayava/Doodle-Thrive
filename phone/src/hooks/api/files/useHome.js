@@ -16,7 +16,9 @@ export function useHome() {
 
   const files = useMemo(() => {
     const allFiles = data ? Object.values(data) : null;
-    const filtered = allFiles?.filter((file) => !allFiles.includes(file.parent));
+    const filtered = allFiles?.filter(
+      (file) => !allFiles.includes(file.parent),
+    );
     return filtered?.filter((file) => !file.trashed);
   }, [data]);
 

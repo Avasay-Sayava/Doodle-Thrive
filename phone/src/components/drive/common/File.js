@@ -1,7 +1,12 @@
 import { styles } from "@/styles/components/drive/common/File.styles";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { useEffect, useMemo } from "react";
-import { View, Text, useWindowDimensions, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  useWindowDimensions,
+  TouchableOpacity,
+} from "react-native";
 import { useAuth } from "@/src/contexts/AuthContext";
 import Icon from "@/src/components/common/Icon";
 import getFileIconName from "@/src/utils/common/getFileIconName";
@@ -73,12 +78,19 @@ export default function File({ file, viewMode }) {
         activeOpacity={0.7}
         onPress={
           isFolder
-            ? () => router.push({ pathname: "(drive)/(screens)/folder/[id]", params: { id: file.id } })
+            ? () =>
+                router.push({
+                  pathname: "(drive)/(screens)/folder/[id]",
+                  params: { id: file.id },
+                })
             : undefined
         }
       >
         <View
-          style={[{ width: gridCardSize, height: gridCardSize }, style.gridCard]}
+          style={[
+            { width: gridCardSize, height: gridCardSize },
+            style.gridCard,
+          ]}
         >
           <View style={style.gridActions}>
             <ActionsMenu file={file} />
@@ -119,50 +131,57 @@ export default function File({ file, viewMode }) {
       activeOpacity={0.7}
       onPress={
         file.type === "folder"
-          ? () => router.push({ pathname: "(drive)/(screens)/folder/[id]", params: { id: file.id } })
+          ? () =>
+              router.push({
+                pathname: "(drive)/(screens)/folder/[id]",
+                params: { id: file.id },
+              })
           : undefined
       }
     >
       <View style={style.row}>
-      <View style={style.iconBackdrop}>
-        <Icon
-          name={fileIconName}
-          size={style.iconBackdrop.fontSize}
-          color={style.iconBackdrop.color}
-        />
-      </View>
-      <View style={style.info}>
-        <Text style={style.name}>{file.name}</Text>
-        <View style={style.secondary}>
-          {file.starred && (
-            <Icon
-              name="star"
-              size={style.secondary.fontSize}
-              color={style.secondary.color}
-            />
-          )}
-          {file.owner !== uuid && (
-            <Icon
-              name="shared"
-              size={style.secondary.fontSize}
-              color={style.secondary.color}
-            />
-          )}
-          <Text style={style.secondary}>{user.username}</Text>
-          <Text
-            style={[style.secondary, { fontWeight: theme.fonts.weights.bold }]}
-          >
-            •
-          </Text>
-          <Text style={style.secondary}>
-            <RelativeDate timestamp={file.modified} />
-          </Text>
+        <View style={style.iconBackdrop}>
+          <Icon
+            name={fileIconName}
+            size={style.iconBackdrop.fontSize}
+            color={style.iconBackdrop.color}
+          />
         </View>
-      </View>
+        <View style={style.info}>
+          <Text style={style.name}>{file.name}</Text>
+          <View style={style.secondary}>
+            {file.starred && (
+              <Icon
+                name="star"
+                size={style.secondary.fontSize}
+                color={style.secondary.color}
+              />
+            )}
+            {file.owner !== uuid && (
+              <Icon
+                name="shared"
+                size={style.secondary.fontSize}
+                color={style.secondary.color}
+              />
+            )}
+            <Text style={style.secondary}>{user.username}</Text>
+            <Text
+              style={[
+                style.secondary,
+                { fontWeight: theme.fonts.weights.bold },
+              ]}
+            >
+              •
+            </Text>
+            <Text style={style.secondary}>
+              <RelativeDate timestamp={file.modified} />
+            </Text>
+          </View>
+        </View>
 
-      <View style={style.listActions}>
-        <ActionsMenu file={file} />
-      </View>
+        <View style={style.listActions}>
+          <ActionsMenu file={file} />
+        </View>
       </View>
     </TouchableOpacity>
   );
