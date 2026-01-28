@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const styles = ({ theme }) =>
-  new StyleSheet.create({
+  StyleSheet.create({
     button: {
       fontSize: theme.fonts.sizes.xxlarge,
       width: 40,

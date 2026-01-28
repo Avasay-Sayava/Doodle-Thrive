@@ -19,7 +19,11 @@ export default function Menu() {
 
     return (
         <PopupModal isOpen={isOpen} onClose={onClose}>
-            
+            <View>
+                <TouchableOpacity onPress={openRecent}>Recent</TouchableOpacity>
+                <TouchableOpacity onPress={openTrashed}>Trashed</TouchableOpacity>
+                <TouchableOpacity onPress={openSettings}>Settings</TouchableOpacity>
+            </View>
         </PopupModal>
     )
 }
