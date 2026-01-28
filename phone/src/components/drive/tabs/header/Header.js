@@ -57,7 +57,7 @@ export default function Header() {
     <>
       <View style={style.container}>
         <MenuButton onPress={() => setMenuOpen(true)} />
-        <SearchButton />
+        <SearchButton onPress={() => router.push("/(drive)/(screens)/search")} />
         <AskDemini />
         <LogoutButton />
         <Profile uuid={uuid} size={40} />

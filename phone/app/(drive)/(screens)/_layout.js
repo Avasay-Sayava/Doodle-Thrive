@@ -7,7 +7,6 @@ export default function ScreensLayout() {
     <Suspense fallback={<LoadingScreen />}>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
-        <Stack.Screen name="camera" />
         <Stack.Screen name="recent" />
         <Stack.Screen name="rickroll" />
         <Stack.Screen name="search" />
