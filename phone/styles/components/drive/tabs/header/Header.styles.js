@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = ({ theme }) =>
   StyleSheet.create({
     container: {
-      backgroundColor: theme.colors.card,
+      backgroundColor: theme.colors.border,
       justifyContent: "space-between",
       alignItems: "center",
       width: "100%",
@@ -11,6 +11,5 @@ export const styles = ({ theme }) =>
       gap: theme.spacing.small,
       paddingHorizontal: theme.spacing.medium,
       paddingVertical: theme.spacing.small,
-      marginBottom: theme.spacing.small,
     },
   });

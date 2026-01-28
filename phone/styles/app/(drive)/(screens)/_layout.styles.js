@@ -11,7 +11,6 @@ export const styles = ({ theme }) =>
       padding: theme.spacing.small,
       borderBottomWidth: 1,
       borderBottomColor: theme.colors.border,
-      marginBottom: theme.spacing.small,
     },
     backButton: {
       color: theme.colors.primary,
