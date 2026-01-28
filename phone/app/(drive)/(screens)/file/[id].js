@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { styles } from "@/styles/components/drive/screens/file.styles";
@@ -30,6 +31,7 @@ export default function ViewFile() {
 
   const { file, loading, error } = useFile(fileId);
   const [isEditing, setIsEditing] = useState(false);
+  const insets = useSafeAreaInsets();
 
   if (loading) {
     return <LoadingScreen />;
@@ -49,19 +51,18 @@ export default function ViewFile() {
 
   if (isImage) {
     return (
-      <ScrollView
-        style={style.scroll}
-        contentContainerStyle={style.contentContainer}
-      >
-        <Text style={style.title} numberOfLines={2}>
-          {file.name}
-        </Text>
-        {imageUri ? (
-          <Image source={{ uri: imageUri }} style={style.image} />
-        ) : (
-          <Text style={style.stateText}>Image preview not available.</Text>
-        )}
-      </ScrollView>
+      <SafeAreaView style={style.scroll}>
+        <ScrollView contentContainerStyle={style.contentContainer}>
+          <Text style={style.title} numberOfLines={2}>
+            {file.name}
+          </Text>
+          {imageUri ? (
+            <Image source={{ uri: imageUri }} style={style.image} />
+          ) : (
+            <Text style={style.stateText}>Image preview not available.</Text>
+          )}
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 
@@ -70,25 +71,28 @@ export default function ViewFile() {
   }
 
   return (
-    <ScrollView
-      style={style.scroll}
-      contentContainerStyle={style.contentContainer}
-    >
-      <View style={style.header}>
+    <SafeAreaView style={style.scroll}>
+      <ScrollView contentContainerStyle={style.contentContainer}>
         <Text style={style.title} numberOfLines={2}>
           {file.name}
         </Text>
-        <AnimatedPressable
-          onPress={() => setIsEditing(true)}
-          style={style.editButton}
-          backgroundColor={theme.colors.primary + "22"}
-          durationIn={50}
-          durationOut={150}
-        >
-          <Text style={style.editButtonText}>Edit</Text>
-        </AnimatedPressable>
-      </View>
-      <Text style={style.bodyText}>{content || "Empty file."}</Text>
-    </ScrollView>
+        <Text style={style.bodyText}>{content || "Empty file."}</Text>
+      </ScrollView>
+      <AnimatedPressable
+        onPress={() => setIsEditing(true)}
+        style={[
+          style.editButton,
+          {
+            right: theme.spacing.medium + insets.right,
+            bottom: theme.spacing.medium + insets.bottom,
+          },
+        ]}
+        backgroundColor={theme.colors.primary + "22"}
+        durationIn={50}
+        durationOut={150}
+      >
+        <Text style={style.editButtonText}>Edit</Text>
+      </AnimatedPressable>
+    </SafeAreaView>
   );
 }

@@ -19,18 +19,18 @@ export const styles = ({ theme }) =>
       color: theme.colors.text,
     },
     editButton: {
-      alignSelf: "flex-start",
+      position: "absolute",
       paddingVertical: theme.spacing.small,
       paddingHorizontal: theme.spacing.medium,
-      borderRadius: theme.borderRadius.small,
+      borderRadius: theme.borderRadius.medium,
       borderWidth: 1,
       borderColor: theme.colors.border,
-      backgroundColor: theme.colors.primary + "10",
+      backgroundColor: theme.colors.primary,
     },
     editButtonText: {
       fontSize: theme.fonts.sizes.medium,
       fontWeight: theme.fonts.weights.medium,
-      color: theme.colors.text,
+      color: theme.colors.textInverted,
     },
     bodyText: {
       fontSize: theme.fonts.sizes.medium,
