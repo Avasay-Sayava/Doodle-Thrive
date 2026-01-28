@@ -1,6 +1,9 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Clipboard } from "react-native";
+import { Alert } from "react-native";
+import * as Clipboard from "expo-clipboard";
 import * as Linking from "expo-linking";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import { styles } from "@/styles/components/drive/common/ActionsMenu.styles";
 import Icon from "@/src/components/common/Icon";
@@ -23,7 +26,7 @@ export default function ActionsMenu({ file }) {
   const { theme } = useTheme();
   const style = useMemo(() => styles({ theme }), [theme]);
 
-  const { star, trash, duplicate, rename, remove } = useFilesActions();
+  const { star, trash, duplicate, rename, remove, get } = useFilesActions();
 
   const triggerRefresh = () => {
     refreshAll();
@@ -58,7 +61,8 @@ export default function ActionsMenu({ file }) {
 
     const url = Linking.createURL(path);
     console.log("Generated Link:", url);
-    Clipboard.setString(url);
+
+    await Clipboard.setStringAsync(url);
   };
 
   const handleDuplicate = async () => {
@@ -67,10 +71,31 @@ export default function ActionsMenu({ file }) {
     triggerRefresh();
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     closeMenu();
-    // TODO
-    console.log("Download action triggered");
+    try {
+      const fileData = await get(file.id);
+
+      if (!fileData) {
+        Alert.alert("Error", "Could not retrieve file data.");
+        return;
+      }
+      const content = fileData.content || "";
+
+      const fileUri =
+        FileSystem.documentDirectory + (fileData.name || file.name);
+
+      await FileSystem.writeAsStringAsync(fileUri, content);
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileUri);
+      } else {
+        Alert.alert("Error", "Sharing is not available on this device");
+      }
+    } catch (error) {
+      console.error("Download failed:", error);
+      Alert.alert("Error", "Failed to download file");
+    }
   };
 
   const handleRenameOpen = () => {
@@ -175,14 +200,14 @@ export default function ActionsMenu({ file }) {
                   label: "Duplicate",
                   onPress: handleDuplicate,
                 },
+                {
+                  key: "download",
+                  icon: "download",
+                  label: "Download",
+                  onPress: handleDownload,
+                },
               ]
             : []),
-          {
-            key: "download",
-            icon: "download",
-            label: "Download",
-            onPress: handleDownload,
-          },
           {
             key: "rename",
             icon: "edit",

@@ -19,7 +19,9 @@ export default function FileList({ files, viewMode, sortOptions }) {
   const reversed = sortOptions.reversed ? sorted.reverse() : sorted;
 
   return (
-    <ScrollView contentContainerStyle={files.length === 0 ? style.centerContainer : null}>
+    <ScrollView
+      contentContainerStyle={files.length === 0 ? style.centerContainer : null}
+    >
       <View
         style={viewMode === "grid" ? style.gridContainer : style.listContainer}
       >

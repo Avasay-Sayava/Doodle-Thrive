@@ -38,8 +38,8 @@ export default function Settings() {
           activeOpacity={0.7}
           onPress={() => Alert.alert("Already sold to China.")}
         >
-          <ThemedText style={style.buttonText}>Enable Privacy Mode</ThemedText>
-          <ThemedText style={style.buttonNote}>Disabled</ThemedText>
+          <ThemedText style={style.buttonText}>Privacy Mode</ThemedText>
+          <ThemedText style={style.buttonNote}>Own your data!</ThemedText>
         </TouchableOpacity>
       </View>
     </>
