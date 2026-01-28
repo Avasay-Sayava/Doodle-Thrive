@@ -86,7 +86,7 @@ class Api {
         `/api/files/${fileUuid}/permissions`,
         JSON_HEADER,
         {
-          options,
+          options: { [userUuid]: options },
         },
       );
     },
@@ -102,12 +102,12 @@ class Api {
       return await this.#client.get(`/api/files/${fileUuid}/permissions`, {});
     },
 
-    update: async (fileUuid, permissionUuid, options) => {
+    update: async (fileUuid, permissionUuid, userUuid, options) => {
       return await this.#client.patch(
         `/api/files/${fileUuid}/permissions/${permissionUuid}`,
         JSON_HEADER,
         {
-          options,
+          options: { [userUuid]: options },
         },
       );
     },

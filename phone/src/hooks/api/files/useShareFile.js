@@ -118,7 +118,12 @@ export function useShareFile(fileId) {
           await permissionsActions.remove(fileId, permissionId);
         } else {
           const options = ROLES[newRole];
-          await permissionsActions.update(fileId, permissionId, options);
+          await permissionsActions.update(
+            fileId,
+            permissionId,
+            userId,
+            options,
+          );
         }
         await loadPermissions();
       } catch (err) {

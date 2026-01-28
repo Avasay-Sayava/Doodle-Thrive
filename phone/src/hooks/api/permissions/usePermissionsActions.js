@@ -16,8 +16,10 @@ export function usePermissionsActions() {
       create: (fileUuid, userUuid, options) =>
         run(() => api.permissions.create(fileUuid, userUuid, options)),
 
-      update: (fileUuid, permissionUuid, options) =>
-        run(() => api.permissions.update(fileUuid, permissionUuid, options)),
+      update: (fileUuid, permissionUuid, userUuid, options) =>
+        run(() =>
+          api.permissions.update(fileUuid, permissionUuid, userUuid, options),
+        ),
 
       remove: (fileUuid, permissionUuid) =>
         run(() => api.permissions.delete(fileUuid, permissionUuid)),
