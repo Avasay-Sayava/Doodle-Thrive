@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { View, Alert, TouchableOpacity, Text } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/src/contexts/ThemeContext";
 import PopupModal from "@/src/components/drive/common/PopupModal";
@@ -9,6 +9,13 @@ import InputDialog from "@/src/components/drive/common/InputDialog";
 import { useFilesActions } from "@/src/hooks/api/files/useFilesActions";
 import { useFilesRefresh } from "@/src/contexts/FilesRefreshContext";
 import { styles } from "@/styles/components/drive/tabs/New.styles";
+
+const imageExtensionRegex = /\.(jpg|jpeg|png|webp)$/i;
+
+const isImageAsset = (asset) => {
+  if (asset?.mimeType?.startsWith("image/")) return true;
+  return imageExtensionRegex.test(asset?.name || "");
+};
 
 export default function New({ currentFolderId = null }) {
   const { theme } = useTheme();
@@ -60,8 +67,9 @@ export default function New({ currentFolderId = null }) {
 
       const asset = result.assets[0];
 
+      const isImage = isImageAsset(asset);
       const content = await FileSystem.readAsStringAsync(asset.uri, {
-        encoding: FileSystem.EncodingType.UTF8,
+        encoding: isImage ? "base64" : "utf8",
       });
 
       await createFile(asset.name, content, currentFolderId);

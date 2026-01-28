@@ -70,22 +70,26 @@ export default function File({ file, viewMode }) {
     );
   }
 
-  if (viewMode === "grid") {
-    const isFolder = file.type === "folder";
+  const handlePress = () => {
+    if (file.type === "folder") {
+      router.push({
+        pathname: "(drive)/(screens)/folder/[id]",
+        params: { id: file.id },
+      });
+      return;
+    }
 
+    if (file.type === "file") {
+      router.push({
+        pathname: "(drive)/(screens)/file/[id]",
+        params: { id: file.id },
+      });
+    }
+  };
+
+  if (viewMode === "grid") {
     return (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={
-          isFolder
-            ? () =>
-                router.push({
-                  pathname: "(drive)/(screens)/folder/[id]",
-                  params: { id: file.id },
-                })
-            : undefined
-        }
-      >
+      <TouchableOpacity activeOpacity={0.7} onPress={handlePress}>
         <View
           style={[
             { width: gridCardSize, height: gridCardSize },
@@ -127,18 +131,7 @@ export default function File({ file, viewMode }) {
   }
 
   return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={
-        file.type === "folder"
-          ? () =>
-              router.push({
-                pathname: "(drive)/(screens)/folder/[id]",
-                params: { id: file.id },
-              })
-          : undefined
-      }
-    >
+    <TouchableOpacity activeOpacity={0.7} onPress={handlePress}>
       <View style={style.row}>
         <View style={style.iconBackdrop}>
           <Icon
