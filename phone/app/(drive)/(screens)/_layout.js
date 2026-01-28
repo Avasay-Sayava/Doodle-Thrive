@@ -2,7 +2,7 @@ import { Slot, useRouter } from "expo-router";
 import { Suspense, useMemo } from "react";
 import LoadingScreen from "@/src/components/common/LoadingScreen";
 import { useTheme } from "@/src/contexts/ThemeContext";
-import { styles } from "@/styles/app/(drive)/(screens).styles";
+import { styles } from "@/styles/app/(drive)/(screens)/_layout.styles";
 import { TouchableOpacity, View } from "react-native";
 import ThemedText from "@/src/components/common/ThemedText";
 
